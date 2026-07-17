@@ -1,12 +1,13 @@
 body { background-color: #fcfaf5; color: #1a1a1a; margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; }
 
-/* Навигация */
+/* Навигация и Лого */
 .navbar { display: flex; justify-content: space-between; align-items: center; padding: 30px 5%; }
-.logo-area img { width: 40px; }
+.logo-text { font-size: 1.2rem; font-weight: 700; color: #1a1a1a; text-decoration: none; letter-spacing: -0.5px; }
+.logo-text span { color: #888; font-weight: 300; }
 .navbar nav a { margin: 0 20px; text-decoration: none; color: #1a1a1a; font-size: 0.9rem; font-weight: 500; }
 
 /* Hero */
-.hero { display: flex; align-items: center; justify-content: space-between; padding: 100px 5%; gap: 80px; }
+.hero { display: flex; align-items: center; justify-content: space-between; padding: 80px 5%; gap: 80px; }
 .hero-text { flex: 1; max-width: 600px; }
 .hero-image img { width: 100%; max-width: 500px; height: auto; }
 h1 { font-size: 4rem; line-height: 1; margin: 20px 0; font-weight: 600; }
@@ -16,11 +17,12 @@ button { padding: 15px 30px; cursor: pointer; border: none; font-weight: bold; t
 .btn-primary { background: #1a1a1a; color: #fff; }
 .btn-secondary { background: transparent; border: 1px solid #ddd; }
 
-/* Секция Проекти */
-.recent-projects { padding: 50px 5%; }
-.header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 30px; }
+/* Проекти */
+.recent-projects { padding: 80px 5%; }
+.header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 40px; }
+.header-row h2 { font-size: 2rem; margin: 0; }
 .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-.project-card img { width: 100%; height: 350px; object-fit: cover; border: 1px solid #eee; }
+.project-card img { width: 100%; height: 300px; object-fit: cover; border: 1px solid #eee; }
 .project-info { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
 .project-card h3 { margin: 0; font-size: 1.1rem; }
 .project-card p { font-size: 0.85rem; color: #777; margin-top: 5px; }
