@@ -98,7 +98,7 @@
             <form id="authForm">
                 <div class="form-group">
                     <label>Имейл</label>
-                    <input type="email" id="email" required placeholder="kasim.feta@abv.bg">
+                    <input type="email" id="email" required placeholder="e-mail">
                 </div>
                 <div class="form-group">
                     <label>Парола</label>
@@ -143,7 +143,6 @@
 
             if (isRegisterMode) {
                 // --- РЕЖИМ: РЕГИСТРАЦИЯ ---
-                // Записваме въведените от теб данни в паметта на браузъра
                 localStorage.setItem('adminEmail', email);
                 localStorage.setItem('adminPassword', password);
                 
@@ -151,20 +150,18 @@
                 msgBox.innerText = "Успешна регистрация! Сега можете да влезете.";
                 msgBox.style.display = "block";
                 
-                // Автоматично те връща към екрана за Вход след 1.5 секунди
                 setTimeout(switchToLogin, 1500);
             } else {
                 // --- РЕЖИМ: ВХОД ---
-                // Проверяваме какво има записано в паметта
                 const savedEmail = localStorage.getItem('adminEmail');
                 const savedPassword = localStorage.getItem('adminPassword');
 
                 if (email === savedEmail && password === savedPassword) {
+                    localStorage.setItem('isLoggedIn', 'true');
                     msgBox.style.color = "green";
                     msgBox.innerText = "Успешен вход! Пренасочване...";
                     msgBox.style.display = "block";
                     
-                    // Пренасочване към твоя admin.html
                     setTimeout(() => {
                         window.location.href = "admin.html";
                     }, 1000);
