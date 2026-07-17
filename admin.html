@@ -17,12 +17,10 @@
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin: 20px 0; }
         .btn-save { width: 100%; padding: 15px; background: #000; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
 
-        /* Public View стилове */
-        .public-view-section { max-width: 800px; margin: 40px auto; }
-        .pub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .pub-card { background: white; padding: 15px; border: 1px solid #ddd; border-radius: 4px; }
+        .pub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .pub-card { background: white; padding: 15px; border: 1px solid #ddd; }
+        .pub-card img { width: 100%; height: 150px; object-fit: cover; margin-bottom: 10px; }
         .fav-border { border: 2px solid #ffd700; }
-        .pub-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -44,8 +42,8 @@
         </div>
 
         <div class="checkbox-group">
-            <input type="checkbox" id="isFav" style="width: 20px; height: 20px;">
-            <label for="isFav" style="margin:0;">Фаворитен проект (Home Page)</label>
+            <input type="checkbox" id="isFav">
+            <label for="isFav">Фаворитен проект (Home Page)</label>
         </div>
 
         <div class="form-group"><label>Снимка (за каталог)</label><input type="file" id="imgFile" accept="image/*" required></div>
@@ -53,8 +51,7 @@
     </form>
 </div>
 
-<!-- PUBLIC VIEW СЕКЦИЯ -->
-<div class="public-view-section">
+<div style="max-width: 800px; margin: 40px auto;">
     <h2>Public View (Преглед на публикацията)</h2>
     <div id="catalogContainer" class="pub-grid"></div>
 </div>
@@ -69,10 +66,10 @@
             container.innerHTML += `
                 <div class="pub-card ${p.isFav ? 'fav-border' : ''}">
                     <img src="${p.img}" alt="Project Image">
-                    ${p.isFav ? '<strong>★ Фаворит</strong>' : '<strong>Каталог</strong>'}
+                    <strong>${p.isFav ? '★ Фаворит' : 'Каталог'}</strong>
                     <h3>${p.title}</h3>
-                    <p><strong>Детайли:</strong> ${p.area}м², ${p.beds} сп, ${p.baths} бн</p>
-                    <p><strong>Стил:</strong> ${p.style} | <strong>Материал:</strong> ${p.material}</p>
+                    <p>${p.area}м² | ${p.beds} сп. | ${p.baths} бн.</p>
+                    <p>Стил: ${p.style} | Мат: ${p.material}</p>
                     <p><strong>Цена: ${p.price}</strong></p>
                 </div>
             `;
