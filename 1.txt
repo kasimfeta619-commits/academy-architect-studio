@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог | Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Използваме същия Header -->
+    <header class="navbar">...</header> 
+
+    <main class="catalog-page">
+        <h1>Каталог с проекти за къщи</h1>
+        <p>Филтрирай по площ, етажи, спални и стил.</p>
+
+        <!-- Филтри -->
+        <section class="filters">
+            <select><option>Тип</option></select>
+            <input type="number" placeholder="min">
+            <input type="number" placeholder="max">
+            <select><option>Етажи</option></select>
+            <select><option>Спални</option></select>
+            <select><option>Стил</option></select>
+            <button>Изчисти филтрите</button>
+        </section>
+
+        <!-- Решетка с проекти -->
+        <div class="projects-grid">
+            <!-- Пример за една карта от каталога -->
+            <div class="project-card">
+                <img src="assets/project1.jpg" alt="Проект">
+                <h3>Минималистична Къща</h3>
+                <div class="stats">
+                    <span>М²: 175</span> <span>ЕТАЖИ: 2</span> <span>СПАЛНИ: 4</span> <span>БАНИ: 2</span>
+                </div>
+            </div>
+            <!-- Добави останалите карти по същия модел -->
+        </div>
+    </main>
+</body>
+</html>

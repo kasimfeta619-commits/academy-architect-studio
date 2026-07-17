@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог | Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Навигация (копирана от index.html) -->
+    <header class="navbar">
+        <div class="logo-area">
+            <img src="assets/logo.png" alt="Logo" class="logo-img">
+            <a href="index.html" class="logo-text">Academy Architect <span>Studio</span></a>
+        </div>
+        <nav>
+            <a href="index.html">Начало</a>
+            <a href="catalog.html">Каталог</a>
+            <a href="#">За нас</a>
+            <a href="#">ИИ Планер</a>
+            <a href="#">Контакт</a>
+        </nav>
+        <div class="user-actions">EN | BG | Вход</div>
+    </header>
+
+    <main class="catalog-page" style="padding: 50px 5%;">
+        <h1 style="font-size: 2.5rem;">Каталог с проекти за къщи</h1>
+        <p>Филтрирай по площ, етажи, спални и стил.</p>
+
+        <section class="filters">
+            <select><option>Тип</option></select>
+            <input type="number" placeholder="min m²">
+            <input type="number" placeholder="max m²">
+            <select><option>Етажи</option></select>
+            <select><option>Спални</option></select>
+            <select><option>Стил</option></select>
+            <button class="btn-secondary">Изчисти</button>
+        </section>
+
+        <div class="projects-grid">
+            <!-- Карта 1 -->
+            <div class="project-card">
+                <img src="assets/project1.jpg" alt="Проект">
+                <h3>Минималистична Къща</h3>
+                <div class="stats">
+                    <span>М²: 175</span> <span>ЕТАЖИ: 2</span> <span>СПАЛНИ: 4</span> <span>БАНИ: 2</span>
+                </div>
+            </div>
+            <!-- Карта 2 -->
+            <div class="project-card">
+                <img src="assets/project2.jpg" alt="Проект">
+                <h3>Алпийски комплекс</h3>
+                <div class="stats">
+                    <span>М²: 280</span> <span>ЕТАЖИ: 2</span> <span>СПАЛНИ: 3</span> <span>БАНИ: 2</span>
+                </div>
+            </div>
+            <!-- Добави тук останалите проекти по същия модел -->
+        </div>
+    </main>
+
+</body>
+</html>
