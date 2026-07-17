@@ -1,29 +1,51 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>За нас | Academy Architect Studio</title>
+    <title>About | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="navbar">
         <div class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-img">
-            <a href="index.html" class="logo-text">Academy Architect <span>Studio</span></a>
+            <img src="assets/logo.png" alt="Logo" class="logo-icon">
+            <span class="logo-text">Academy Architect <span>Studio</span></span>
         </div>
         <nav>
-            <a href="index.html">Начало</a>
-            <a href="catalog.html">Каталог</a>
-            <a href="about.html">За нас</a>
-            <a href="#">ИИ Планер</a>
-            <a href="contact.html">Контакт</a>
+            <a href="index.html">Home</a>
+            <a href="catalog.html">Catalog</a>
+            <a href="about.html" class="active">About</a>
+            <a href="#">AI Planner</a>
+            <a href="contact.html">Contact</a>
         </nav>
-        <div class="user-actions">EN | BG | Вход</div>
+        <div class="user-actions">
+            <span>EN · BG</span>
+            <button class="btn-sign">Sign in</button>
+        </div>
     </header>
 
-    <main style="padding: 80px 5%; max-width: 800px;">
-        <h1>Личен архив на архитектурни проекти.</h1>
-        <p>Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал.</p>
+    <main class="about-page" style="padding: 80px 5%; max-width: 900px;">
+        <span class="eyebrow">ABOUT THE STUDIO</span>
+        <h1 style="font-size: 4rem; font-weight: 400; margin: 30px 0;">Personal archive of architectural projects.</h1>
+        
+        <div style="font-size: 1.2rem; color: #555; line-height: 1.8;">
+            <p>Academy Architect Studio is an author's catalog of house projects. Each project is developed with attention to proportions, light, and material — from the initial sketch to the detailed floor plan.</p>
+            <p>Here I upload my own works. Each project is ready for adaptation to a specific plot, climate, and budget.</p>
+        </div>
     </main>
+
+    <footer class="main-footer" style="margin-top: 100px;">
+        <div class="footer-left">
+            <img src="assets/logo.png" alt="Logo" class="footer-logo">
+            <p><strong>Academy Architect Studio</strong><br>ARCHITECTURAL DESIGN STUDIO</p>
+        </div>
+        <div class="footer-mid">
+            <h4>STUDIO</h4>
+            <p>Sofia · Plovdiv · Varna<br>hello@academyarchitectstudios.com</p>
+        </div>
+        <div class="footer-right">
+            <p>© 2026<br>Academy Architect Studio — All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>

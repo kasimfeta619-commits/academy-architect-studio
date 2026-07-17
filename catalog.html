@@ -1,16 +1,73 @@
-<main class="catalog-page">
-    <h1>Каталог с проекти за къщи</h1>
-    <section class="filters">
-        <!-- Твоите филтри -->
-    </section>
-
-    <!-- ТУК Е ВАЖНО - това трябва да обгръща картите -->
-    <div class="projects-grid">
-        <div class="project-card">
-            <img src="assets/project1.jpg">
-            <h3>Минималистична Къща</h3>
-            <p>М²: 175 ЕТАЖИ: 2</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalog | Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo-area">
+            <img src="assets/logo.png" alt="Logo" class="logo-icon">
+            <span class="logo-text">Academy Architect <span>Studio</span></span>
         </div>
-        <!-- Следващи карти тук -->
-    </div>
-</main>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="catalog.html" class="active">Catalog</a>
+            <a href="about.html">About</a>
+            <a href="#">AI Planner</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="user-actions">
+            <span>EN · BG</span>
+            <button class="btn-sign">Sign in</button>
+        </div>
+    </header>
+
+    <main class="catalog-page">
+        <div class="catalog-header">
+            <span class="eyebrow">CATALOG</span>
+            <h1>House Project Catalog</h1>
+            <p>Filter by area, floors, bedrooms and style.</p>
+        </div>
+
+        <section class="filters">
+            <select><option>Type</option></select>
+            <input type="text" placeholder="min">
+            <input type="text" placeholder="max">
+            <select><option>Floors</option></select>
+            <select><option>Bedrooms</option></select>
+            <select><option>Style</option></select>
+            <button class="btn-reset">Reset filters</button>
+        </section>
+
+        <p class="results-count">12 projects</p>
+
+        <div class="projects-grid">
+            <!-- Пример за структура на проект -->
+            <div class="project-card">
+                <img src="assets/project1.jpg" alt="Project">
+                <h3>MinimalistHouse</h3>
+                <div class="specs">
+                    <span>M²: 175</span> <span>FLOORS: 2</span> <span>BEDS: 4</span> <span>BATHS: 3</span>
+                </div>
+            </div>
+            <!-- Повтори за останалите проекти -->
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-left">
+            <img src="assets/logo.png" alt="Logo" class="footer-logo">
+            <p><strong>Academy Architect Studio</strong><br>ARCHITECTURAL DESIGN STUDIO</p>
+        </div>
+        <div class="footer-mid">
+            <h4>STUDIO</h4>
+            <p>Sofia · Plovdiv · Varna<br>hello@academyarchitectstudios.com</p>
+        </div>
+        <div class="footer-right">
+            <p>© 2026<br>Academy Architect Studio — All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
