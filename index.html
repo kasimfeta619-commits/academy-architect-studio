@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <title>Academy Architect Studio</title>
@@ -12,26 +12,57 @@
             <span>Academy Architect Studio</span>
         </a>
         <nav>
-            <a href="index.html" class="active">Home</a>
-            <a href="catalog.html">Catalog</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="index.html">Начало</a>
+            <a href="catalog.html">Каталог</a>
+            <a href="about.html">За нас</a>
+            <a href="#">ИИ Планер</a>
+            <a href="contact.html">Контакт</a>
         </nav>
         <div class="lang-switcher">
-            <button class="lang-btn active" onclick="setLang('en')">EN</button>
-            <button class="lang-btn" onclick="setLang('bg')">BG</button>
+            <button class="lang-btn active">EN</button>
+            <button class="lang-btn">BG</button>
+            <button class="lang-btn-login">Вход</button>
         </div>
     </header>
 
     <main class="content-wrapper">
-        <span class="eyebrow" id="eyebrow">HOUSE PROJECTS · EST. 2026</span>
-        <h1 id="title">Homes drawn with intention.</h1>
+        <section class="hero">
+            <div class="hero-text">
+                <span class="eyebrow">ПРОЕКТИ ЗА КЪЩИ · ОСН. 2026</span>
+                <h1>Домове, начертани с намерение.</h1>
+                <p>Academy Architect Studio е личен каталог с проекти за къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
+                <div class="hero-btns">
+                    <button class="btn-primary">Разгледай каталога →</button>
+                    <button class="btn-secondary">За студиото</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="placeholder-box"></div>
+                <div class="latest-label">
+                    <p>LATEST</p>
+                    <span>Timber-Stone series</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects-section">
+            <div class="section-header">
+                <h3>ИЗБРАНИ<br>Скорошни проекти</h3>
+                <a href="catalog.html">Каталог →</a>
+            </div>
+            <!-- Тук идва твоята мрежа от проекти -->
+        </section>
+
+        <section class="bottom-info">
+            <h2>Всеки план разказва как ще се живее в него.</h2>
+            <p>Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификация на материали и разчет на квадратура.</p>
+        </section>
     </main>
 
     <footer class="main-footer">
         <div class="footer-logo-area">
             <img src="assets/logo.png" alt="Logo" class="footer-logo">
-            <div><strong>Academy Architect Studio</strong><br>ARCHITECTURAL DESIGN STUDIO</div>
+            <div><strong>Academy Architect Studio</strong><br>АРХИТЕКТУРНО СТУДИО</div>
         </div>
         <div class="footer-col">
             <h4>STUDIO</h4>
@@ -39,20 +70,8 @@
             <p>hello@academyarchitectstudios.com</p>
         </div>
         <div class="footer-col">
-            <p>© 2026<br>Academy Architect Studio — All rights reserved.</p>
+            <p>© 2026<br>Academy Architect Studio — Всички права запазени.</p>
         </div>
     </footer>
-
-    <script>
-        function setLang(lang) {
-            const tr = {
-                en: { e: "HOUSE PROJECTS · EST. 2026", t: "Homes drawn with intention." },
-                bg: { e: "ПРОЕКТИ ЗА КЪЩИ · 2026", t: "Къщи, проектирани с намерение." }
-            };
-            document.getElementById('eyebrow').innerText = tr[lang].e;
-            document.getElementById('title').innerText = tr[lang].t;
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === lang));
-        }
-    </script>
 </body>
 </html>

@@ -1,18 +1,77 @@
-body { background-color: #fcfaf5; color: #1a1a1a; margin: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
-.navbar { display: flex; justify-content: space-between; align-items: center; padding: 30px 5%; }
-.logo-area { display: flex; align-items: center; gap: 10px; font-weight: 600; text-decoration: none; color: #1a1a1a; }
-.logo-icon { width: 25px; }
-.navbar nav a { margin: 0 15px; text-decoration: none; color: #1a1a1a; font-size: 0.9rem; }
-.navbar nav a.active { border-bottom: 1px solid #1a1a1a; }
-.lang-switcher { background: #fff; border: 1px solid #eee; padding: 4px; border-radius: 20px; display: flex; align-items: center; }
-.lang-btn { border: none; background: transparent; padding: 5px 10px; cursor: pointer; border-radius: 15px; font-size: 0.7rem; }
-.lang-btn.active { background: #1a1a1a; color: #fff; }
-.content-wrapper { padding: 80px 5%; min-height: 50vh; }
-.eyebrow { font-size: 0.7rem; letter-spacing: 2px; color: #888; text-transform: uppercase; margin-bottom: 10px; display: block; }
-h1 { font-size: 4rem; line-height: 1.1; font-weight: 400; margin: 20px 0; }
-.btn-primary { background: #1a1a1a; color: #fff; padding: 15px 30px; border-radius: 30px; border: none; cursor: pointer; font-size: 1rem; }
-.main-footer { display: flex; justify-content: space-between; padding: 80px 5%; border-top: 1px solid #e0e0e0; font-size: 0.8rem; color: #1a1a1a; }
-.footer-logo-area { display: flex; align-items: start; gap: 15px; }
-.footer-logo { width: 30px; }
-.footer-col h4 { font-size: 0.7rem; color: #888; margin-bottom: 10px; text-transform: uppercase; }
-.footer-col p { margin: 5px 0; }
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo-area">
+            <img src="assets/logo.png" alt="Logo" class="logo-icon">
+            <span>Academy Architect Studio</span>
+        </a>
+        <nav>
+            <a href="index.html">Начало</a>
+            <a href="catalog.html">Каталог</a>
+            <a href="about.html">За нас</a>
+            <a href="#">ИИ Планер</a>
+            <a href="contact.html">Контакт</a>
+        </nav>
+        <div class="lang-switcher">
+            <button class="lang-btn active">EN</button>
+            <button class="lang-btn">BG</button>
+            <button class="lang-btn-login">Вход</button>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <section class="hero">
+            <div class="hero-text">
+                <span class="eyebrow">ПРОЕКТИ ЗА КЪЩИ · ОСН. 2026</span>
+                <h1>Домове, начертани с намерение.</h1>
+                <p>Academy Architect Studio е личен каталог с проекти за къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
+                <div class="hero-btns">
+                    <button class="btn-primary">Разгледай каталога →</button>
+                    <button class="btn-secondary">За студиото</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="placeholder-box"></div>
+                <div class="latest-label">
+                    <p>LATEST</p>
+                    <span>Timber-Stone series</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects-section">
+            <div class="section-header">
+                <h3>ИЗБРАНИ<br>Скорошни проекти</h3>
+                <a href="catalog.html">Каталог →</a>
+            </div>
+            <!-- Тук идва твоята мрежа от проекти -->
+        </section>
+
+        <section class="bottom-info">
+            <h2>Всеки план разказва как ще се живее в него.</h2>
+            <p>Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификация на материали и разчет на квадратура.</p>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-logo-area">
+            <img src="assets/logo.png" alt="Logo" class="footer-logo">
+            <div><strong>Academy Architect Studio</strong><br>АРХИТЕКТУРНО СТУДИО</div>
+        </div>
+        <div class="footer-col">
+            <h4>STUDIO</h4>
+            <p>Sofia · Plovdiv · Varna</p>
+            <p>hello@academyarchitectstudios.com</p>
+        </div>
+        <div class="footer-col">
+            <p>© 2026<br>Academy Architect Studio — Всички права запазени.</p>
+        </div>
+    </footer>
+</body>
+</html>
