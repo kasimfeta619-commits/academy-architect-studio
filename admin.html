@@ -12,10 +12,10 @@
         input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; box-sizing: border-box; }
         .btn-upload { width: 100%; padding: 15px; background: #1a1a1a; color: #fff; border: none; cursor: pointer; }
         
-        /* Стил за списъка с публикации */
         .pub-list { margin-top: 40px; border-top: 2px solid #eadecc; padding-top: 20px; }
         .pub-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
-        .btn-view { padding: 8px 12px; background: #1a1a1a; color: #fff; text-decoration: none; font-size: 0.8rem; }
+        .btn-action { padding: 5px 10px; margin-left: 5px; cursor: pointer; border: none; }
+        .btn-view { background: #1a1a1a; color: #fff; text-decoration: none; font-size: 0.8rem; padding: 5px 10px; }
     </style>
 </head>
 <body>
@@ -41,7 +41,6 @@
             <button type="submit" class="btn-upload">Запази проект</button>
         </form>
 
-        <!-- Секция за преглед -->
         <div class="pub-list">
             <h3>Публикувани проекти</h3>
             <div id="projectList"></div>
@@ -61,9 +60,32 @@
             listContainer.innerHTML = projects.map((p, index) => `
                 <div class="pub-item">
                     <span>${p.title}</span>
-                    <a href="project.html?id=${index}" target="_blank" class="btn-view">View Publication</a>
+                    <div>
+                        <button onclick="editProject(${index})" class="btn-action">Редактирай</button>
+                        <a href="project.html?id=${index}" target="_blank" class="btn-view">Виж</a>
+                    </div>
                 </div>
             `).join('');
+        }
+
+        function editProject(index) {
+            let projects = JSON.parse(localStorage.getItem('myProjects'));
+            let p = projects[index];
+
+            p.title = prompt("Име на проекта:", p.title) || p.title;
+            p.description = prompt("Описание:", p.description) || p.description;
+            p.area = prompt("Площ (м²):", p.area) || p.area;
+            p.floors = prompt("Етажи:", p.floors) || p.floors;
+            p.beds = prompt("Спални:", p.beds) || p.beds;
+            p.baths = prompt("Бани:", p.baths) || p.baths;
+            p.garage = prompt("Гаражни места:", p.garage) || p.garage;
+            p.material = prompt("Материал:", p.material) || p.material;
+            p.style = prompt("Стил:", p.style) || p.style;
+            p.price = prompt("Цена:", p.price) || p.price;
+
+            localStorage.setItem('myProjects', JSON.stringify(projects));
+            alert("Проектът е актуализиран!");
+            renderList();
         }
 
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
@@ -93,6 +115,7 @@
             projects.push(project);
             localStorage.setItem('myProjects', JSON.stringify(projects));
             alert("Успешно добавено!");
+            document.getElementById('uploadForm').reset();
             renderList();
         });
 
