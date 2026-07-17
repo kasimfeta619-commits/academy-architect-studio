@@ -7,7 +7,7 @@
 </head>
 <body>
     <header class="navbar">
-        <a href="index.html" class="logo-area">
+        <a href="index.html" class="logo-area" style="text-decoration:none; color:#1a1a1a;">
             <img src="assets/logo.png" alt="Logo" class="logo-icon">
             <span>Academy Architect Studio</span>
         </a>
@@ -18,15 +18,39 @@
             <a href="contact.html">Contact</a>
         </nav>
         <div class="lang-switcher">
-            <button class="lang-btn active">EN</button>
-            <button class="lang-btn">BG</button>
+            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
         </div>
     </header>
 
     <main class="content-wrapper">
-        <span class="eyebrow">HOUSE PROJECTS · EST. 2026</span>
-        <h1>Homes drawn with intention.</h1>
-        <button class="btn-primary" onclick="window.location.href='catalog.html'">Browse the catalog →</button>
+        <span class="eyebrow" id="eyebrow">HOUSE PROJECTS · EST. 2026</span>
+        <h1 id="title">Homes drawn with intention.</h1>
+        <button class="btn-primary" onclick="window.location.href='catalog.html'" id="btn-browse">Browse the catalog →</button>
     </main>
+
+    <script>
+        const texts = {
+            en: {
+                eyebrow: "HOUSE PROJECTS · EST. 2026",
+                title: "Homes drawn with intention.",
+                btn: "Browse the catalog →"
+            },
+            bg: {
+                eyebrow: "ПРОЕКТИ ЗА КЪЩИ · 2026",
+                title: "Къщи, проектирани с намерение.",
+                btn: "Разгледай каталога →"
+            }
+        };
+
+        function setLanguage(lang) {
+            document.getElementById('eyebrow').innerText = texts[lang].eyebrow;
+            document.getElementById('title').innerText = texts[lang].title;
+            document.getElementById('btn-browse').innerText = texts[lang].btn;
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>

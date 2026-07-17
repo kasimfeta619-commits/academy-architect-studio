@@ -1,26 +1,15 @@
-/* General reset */
 body { background-color: #fcfaf5; color: #1a1a1a; margin: 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; }
-
-/* Navbar */
 .navbar { display: flex; justify-content: space-between; align-items: center; padding: 30px 5%; }
-.logo-area { display: flex; align-items: center; gap: 10px; font-weight: 600; text-decoration: none; color: #1a1a1a; }
+.logo-area { display: flex; align-items: center; gap: 10px; font-weight: 600; }
 .logo-icon { width: 25px; }
 .navbar nav a { margin: 0 15px; text-decoration: none; color: #1a1a1a; font-size: 0.9rem; }
 .navbar nav a.active { border-bottom: 1px solid #1a1a1a; }
 
-/* Language Switcher */
 .lang-switcher { background: #fff; border: 1px solid #eee; padding: 4px; border-radius: 20px; display: flex; align-items: center; }
 .lang-btn { border: none; background: transparent; padding: 5px 10px; cursor: pointer; border-radius: 15px; font-size: 0.7rem; }
 .lang-btn.active { background: #1a1a1a; color: #fff; }
 
-/* Typography & Layout */
+.content-wrapper { padding: 80px 5%; }
 .eyebrow { font-size: 0.7rem; letter-spacing: 2px; color: #888; text-transform: uppercase; margin-bottom: 10px; display: block; }
 h1 { font-size: 4rem; line-height: 1.1; font-weight: 400; margin: 20px 0; }
-.content-wrapper { padding: 80px 5%; }
-
-/* Buttons */
 .btn-primary { background: #1a1a1a; color: #fff; padding: 15px 30px; border-radius: 30px; border: none; cursor: pointer; }
-
-/* Grid & Cards */
-.projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 30px; }
-.project-card img { width: 100%; height: 350px; object-fit: cover; border: 1px solid #eee; }
