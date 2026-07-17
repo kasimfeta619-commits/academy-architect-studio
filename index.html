@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,63 +16,34 @@
         <nav id="nav-links">
             <a href="index.html" class="active" data-key="nav-home">Home</a>
             <a href="catalog.html" data-key="nav-catalog">Catalog</a>
-            <a href="about.html" data-key="nav-about">About</a>
+            <a href="#" data-key="nav-about">About</a>
             <a href="#" data-key="nav-planner">AI Planner</a>
-            <a href="contact.html" data-key="nav-contact">Contact</a>
+            <a href="#" data-key="nav-contact">Contact</a>
         </nav>
         <div class="header-actions">
             <div class="lang-switcher">
                 <button class="lang-btn active" onclick="changeLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="changeLanguage('bg')">BG</button>
             </div>
-            <button class="btn-login" id="btn-login">Sign in</button>
         </div>
     </header>
 
-    <main class="content-container">
-        <!-- HERO СЕКЦИЯ -->
-        <section class="hero">
-            <div class="hero-text">
-                <span class="eyebrow" id="hero-eyebrow">HOUSE PROJECTS · EST. 2026</span>
-                <h1 id="hero-title">Homes drawn<br>with intention.</h1>
-                <p class="hero-description" id="hero-desc">Academy Architect Studio is a personal catalog of residential house projects — plans, visualizations, and specifications for every square meter.</p>
-                <div class="hero-btns">
-                    <button class="btn-primary" id="btn-browse" onclick="window.location.href='catalog.html'">Browse the catalog →</button>
-                    <button class="btn-secondary" id="btn-about" onclick="window.location.href='about.html'">About the studio</button>
-                </div>
+    <main class="hero-section">
+        <div class="hero-text-area">
+            <span class="eyebrow" id="hero-eyebrow">ARCHITECTURAL STUDIO</span>
+            <h1 id="hero-title">We design the future houses</h1>
+            <p id="hero-desc">Modern, energy-efficient and custom tailored living concepts for your family.</p>
+            <a href="catalog.html" class="btn-primary" id="hero-btn">Explore Catalog</a>
+        </div>
+        <div class="hero-image-area">
+            <div class="hero-main-img">
+                <img src="assets/hero-blueprint.png" alt="House Blueprint" onerror="this.style.background='#ebd9c5'">
             </div>
-            <div class="hero-image-area">
-                <div class="hero-main-img">
-                    <img src="assets/hero-blueprint.png" alt="" onerror="this.style.display='none'">
-                </div>
-                <div class="latest-badge">
-                    <span class="badge-title">LATEST</span>
-                    <span class="badge-sub">Timber-Stone series</span>
-                </div>
+            <div class="latest-badge">
+                <span class="badge-title">LATEST</span>
+                <span class="badge-sub">Timber-Stone series</span>
             </div>
-        </section>
-
-        <!-- СЕКЦИЯ СКОРОШНИ ПРОЕКТИ -->
-        <section class="projects-header-section">
-            <div class="section-header">
-                <div>
-                    <span class="eyebrow" id="proj-eyebrow">SELECTED</span>
-                    <h2 id="proj-title">Recent projects</h2>
-                </div>
-                <a href="catalog.html" class="catalog-link" id="catalog-link">Catalog →</a>
-            </div>
-            <div class="projects-placeholder-gap"></div>
-        </section>
-
-        <!-- ДОЛНА ИНФО СЕКЦИЯ -->
-        <section class="bottom-info">
-            <div class="info-title">
-                <h2 id="bottom-title">Every plan is a hypothesis about how a life will be lived.</h2>
-            </div>
-            <div class="info-text">
-                <p id="bottom-desc">We work with small families, developers and municipalities. Every project in the catalog ships with floor drawings, 3D visualizations, a material specification and a full area breakdown.</p>
-            </div>
-        </section>
+        </div>
     </main>
 
     <footer class="main-footer">
@@ -94,82 +65,32 @@
         </div>
     </footer>
 
-    <!-- МАГИЯТА ЗА СМЯНА НА ЕЗИКА -->
     <script>
         const translations = {
             en: {
-                "nav-home": "Home",
-                "nav-catalog": "Catalog",
-                "nav-about": "About",
-                "nav-planner": "AI Planner",
-                "nav-contact": "Contact",
-                "btn-login": "Sign in",
-                "hero-eyebrow": "HOUSE PROJECTS · EST. 2026",
-                "hero-title": "Homes drawn<br>with intention.",
-                "hero-desc": "Academy Architect Studio is a personal catalog of residential house projects — plans, visualizations, and specifications for every square meter.",
-                "btn-browse": "Browse the catalog →",
-                "btn-about": "About the studio",
-                "proj-eyebrow": "SELECTED",
-                "proj-title": "Recent projects",
-                "catalog-link": "Catalog →",
-                "bottom-title": "Every plan is a hypothesis about how a life will be lived.",
-                "bottom-desc": "We work with small families, developers and municipalities. Every project in the catalog ships with floor drawings, 3D visualizations, a material specification and a full area breakdown.",
-                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO",
-                "footer-rights": "Academy Architect Studio — All rights reserved."
+                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact",
+                "hero-eyebrow": "ARCHITECTURAL STUDIO", "hero-title": "We design the future houses", "hero-desc": "Modern, energy-efficient and custom tailored living concepts for your family.", "hero-btn": "Explore Catalog",
+                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
             },
             bg: {
-                "nav-home": "Начало",
-                "nav-catalog": "Каталог",
-                "nav-about": "За нас",
-                "nav-planner": "ИИ Планер",
-                "nav-contact": "Контакт",
-                "btn-login": "Вход",
-                "hero-eyebrow": "ПРОЕКТИ ЗА КЪЩИ · ОСН. 2026",
-                "hero-title": "Домове, начертани<br>с намерение.",
-                "hero-desc": "Academy Architect Studio е личен каталог с проекти за къщи — планове, визуализации и спецификации до последния квадратен метър.",
-                "btn-browse": "Разгледай каталога →",
-                "btn-about": "За студиото",
-                "proj-eyebrow": "ИЗБРАНИ",
-                "proj-title": "Скорошни проекти",
-                "catalog-link": "Каталог →",
-                "bottom-title": "Всеки план разказва как ще се живее в него.",
-                "bottom-desc": "Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификация на материали и разчет на квадратура.",
-                "footer-subtext": "АРХИТЕКТУРНО СТУДИО",
-                "footer-rights": "Academy Architect Studio — Всички права запазени."
+                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт",
+                "hero-eyebrow": "АРХИТЕКТУРНО СТУДИО", "hero-title": "Ние проектираме къщите на бъдещето", "hero-desc": "Модерни, енергийноефективни и индивидуални концепции за вашия дом.", "hero-btn": "Виж каталога",
+                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
             }
         };
 
         function changeLanguage(lang) {
-            // Навигация
             document.querySelectorAll('#nav-links a').forEach(link => {
                 const key = link.getAttribute('data-key');
                 if (translations[lang][key]) link.innerText = translations[lang][key];
             });
-
-            // Бутон вход
-            document.getElementById('btn-login').innerText = translations[lang]['btn-login'];
-
-            // Hero секция
             document.getElementById('hero-eyebrow').innerText = translations[lang]['hero-eyebrow'];
-            document.getElementById('hero-title').innerHTML = translations[lang]['hero-title'];
+            document.getElementById('hero-title').innerText = translations[lang]['hero-title'];
             document.getElementById('hero-desc').innerText = translations[lang]['hero-desc'];
-            document.getElementById('btn-browse').innerText = translations[lang]['btn-browse'];
-            document.getElementById('btn-about').innerText = translations[lang]['btn-about'];
-
-            // Проекти секция
-            document.getElementById('proj-eyebrow').innerText = translations[lang]['proj-eyebrow'];
-            document.getElementById('proj-title').innerText = translations[lang]['proj-title'];
-            document.getElementById('catalog-link').innerText = translations[lang]['catalog-link'];
-
-            // Долно инфо
-            document.getElementById('bottom-title').innerText = translations[lang]['bottom-title'];
-            document.getElementById('bottom-desc').innerText = translations[lang]['bottom-desc'];
-
-            // Фуутър
+            document.getElementById('hero-btn').innerText = translations[lang]['hero-btn'];
             document.getElementById('footer-subtext').innerText = translations[lang]['footer-subtext'];
             document.getElementById('footer-rights').innerText = translations[lang]['footer-rights'];
 
-            // Активен клас на бутоните за език
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }

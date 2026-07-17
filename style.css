@@ -1,344 +1,38 @@
-/* Глобални стилове и нулиране */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-body { 
-    background-color: #f6f3eb; 
-    color: #1a1a1a; 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { background-color: #faf8f5; color: #1a1a1a; min-height: 100vh; display: flex; flex-direction: column; }
 
-/* Навигация (Header) */
-.navbar { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 25px 5%; 
-    background-color: #f6f3eb;
-}
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 25px 10%; background-color: #faf8f5; border-bottom: 1px solid #eadecc; }
+.logo-area { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #1a1a1a; font-weight: 500; font-size: 1.1rem; }
+.logo-icon { height: 38px; width: auto; display: block; }
+.logo-studio { font-weight: 700; color: #8c8275; }
 
-.logo-area { 
-    display: flex; 
-    align-items: center; 
-    gap: 10px; 
-    font-weight: 700; 
-    text-decoration: none; 
-    color: #1a1a1a;
-    font-size: 1.1rem;
-}
+#nav-links a { text-decoration: none; color: #8c8275; margin: 0 15px; font-size: 0.9rem; font-weight: 400; transition: color 0.2s; }
+#nav-links a.active, #nav-links a:hover { color: #1a1a1a; font-weight: 500; }
 
-.logo-icon { 
-    width: 24px; 
-    height: auto; 
-}
+.lang-switcher { display: flex; border: 1px solid #ccc; border-radius: 4px; overflow: hidden; }
+.lang-btn { background: #fff; border: none; padding: 6px 12px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
+.lang-btn.active { background: #1a1a1a; color: #fff; }
 
-.logo-studio {
-    color: #b05c3c; /* Акцентен цвят за думата Studio, ако има такъв */
-}
+.content-container, .hero-section { flex: 1; padding: 60px 10%; }
+.hero-section { display: flex; align-items: center; justify-content: space-between; gap: 50px; }
+.hero-text-area { max-width: 500px; }
+.eyebrow { font-size: 0.75rem; letter-spacing: 2px; color: #8c8275; font-weight: 700; display: block; margin-bottom: 15px; }
+h1 { font-size: 2.8rem; font-weight: 400; line-height: 1.2; margin-bottom: 20px; }
+.hero-text-area p { color: #555; margin-bottom: 30px; line-height: 1.6; }
+.btn-primary { display: inline-block; background: #1a1a1a; color: #fff; text-decoration: none; padding: 15px 35px; border-radius: 4px; font-size: 0.9rem; font-weight: 500; }
 
-.navbar nav { 
-    display: flex; 
-    gap: 30px; 
-}
+.hero-image-area { position: relative; }
+.hero-main-img { width: 100%; max-width: 480px; border-radius: 4px; overflow: hidden; }
+.hero-main-img img { width: 100%; height: auto; display: block; }
 
-.navbar nav a { 
-    text-decoration: none; 
-    color: #555; 
-    font-size: 0.9rem; 
-    font-weight: 500;
-    transition: color 0.2s;
-}
+.latest-badge { position: absolute; bottom: -20px; left: -20px; background: #1a1a1a; color: #fff; padding: 15px 25px; border-radius: 4px; }
+.badge-title { display: block; font-size: 0.65rem; letter-spacing: 2px; color: #8c8275; font-weight: 700; }
+.badge-sub { font-size: 0.9rem; font-weight: 400; }
 
-.navbar nav a:hover, .navbar nav a.active { 
-    color: #1a1a1a; 
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* Превключвател на езици */
-.lang-switcher { 
-    background: #eadecc; 
-    padding: 3px; 
-    border-radius: 30px; 
-    display: flex; 
-    align-items: center; 
-}
-
-.lang-btn { 
-    border: none; 
-    background: transparent; 
-    padding: 6px 12px; 
-    cursor: pointer; 
-    border-radius: 30px; 
-    font-size: 0.75rem; 
-    font-weight: 600;
-    color: #666;
-}
-
-.lang-btn.active { 
-    background: #1a1a1a; 
-    color: #fff; 
-}
-
-/* Бутон Вход */
-.btn-login {
-    background: #1a1a1a;
-    color: #fff;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 30px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-/* Основен контейнер */
-.content-container { 
-    padding: 40px 5%; 
-}
-
-/* Hero Секция */
-.hero { 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between;
-    gap: 80px; 
-    margin-bottom: 100px; 
-}
-
-.hero-text { 
-    flex: 1.2; 
-}
-
-.eyebrow { 
-    font-size: 0.75rem; 
-    letter-spacing: 2px; 
-    color: #8c8275; 
-    text-transform: uppercase; 
-    font-weight: 600;
-    margin-bottom: 15px; 
-    display: block; 
-}
-
-h1 { 
-    font-size: 3.8rem; 
-    line-height: 1.15; 
-    font-weight: 400; 
-    color: #1a1a1a;
-    margin-bottom: 25px; 
-}
-
-.hero-description {
-    font-size: 1.05rem;
-    line-height: 1.6;
-    color: #555;
-    max-width: 480px;
-    margin-bottom: 35px;
-}
-
-.hero-btns { 
-    display: flex; 
-    gap: 15px; 
-}
-
-.btn-primary { 
-    background: #1a1a1a; 
-    color: #fff; 
-    padding: 16px 32px; 
-    border-radius: 30px; 
-    border: none; 
-    cursor: pointer; 
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-
-.btn-secondary { 
-    background: transparent; 
-    border: 1px solid #b5ab9e; 
-    color: #1a1a1a;
-    padding: 16px 32px; 
-    border-radius: 30px; 
-    cursor: pointer; 
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-
-/* Дясна част на Hero (Голяма кутия/Blueprint) */
-.hero-image-area { 
-    flex: 1; 
-    height: 480px; 
-    background-color: #ebd9c5; /* Бежов цвят като оригиналната схема */
-    position: relative; 
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.hero-main-img img {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
-}
-
-.latest-badge { 
-    position: absolute; 
-    bottom: 30px; 
-    left: -30px; 
-    background: #fff; 
-    padding: 15px 25px; 
-    border: 1px solid #e3dac9; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.badge-title {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #999;
-}
-
-.badge-sub {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #1a1a1a;
-}
-
-/* Секция за Скорошни Проекти */
-.projects-header-section {
-    margin-bottom: 80px;
-}
-
-.section-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: flex-end; 
-    border-bottom: 1px solid #e3dac9;
-    padding-bottom: 20px;
-}
-
-.section-header h2 {
-    font-size: 2.2rem;
-    font-weight: 400;
-    margin-top: 5px;
-}
-
-.catalog-link {
-    color: #1a1a1a;
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
-    border-bottom: 1px solid #1a1a1a;
-    padding-bottom: 2px;
-}
-
-.projects-placeholder-gap {
-    margin-top: 30px;
-}
-
-/* Долна Текстова Секция */
-.bottom-info { 
-    display: flex; 
-    gap: 80px; 
-    padding: 80px 0; 
-    border-top: 1px solid #e3dac9; 
-}
-
-.info-title { 
-    flex: 1; 
-}
-
-.info-title h2 {
-    font-size: 2.4rem; 
-    font-weight: 400; 
-    line-height: 1.2;
-}
-
-.info-text { 
-    flex: 1; 
-    display: flex;
-    align-items: center;
-}
-
-.info-text p {
-    color: #555; 
-    line-height: 1.6; 
-    font-size: 1.05rem;
-}
-
-/* Фуутър (Footer) */
-.main-footer { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: flex-start;
-    padding: 60px 5%; 
-    border-top: 1px solid #e3dac9; 
-    font-size: 0.85rem; 
-    color: #555;
-    background-color: #f6f3eb;
-}
-
-.footer-logo-area { 
-    display: flex; 
-    align-items: center; 
-    gap: 15px; 
-}
-
-.footer-logo { 
-    width: 28px; 
-    height: auto;
-}
-
-.footer-brand {
-    font-weight: 700;
-    color: #1a1a1a;
-    font-size: 1rem;
-}
-
-.footer-subtext {
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    color: #8c8275;
-    margin-top: 2px;
-}
-
-.footer-col h4 { 
-    font-size: 0.75rem; 
-    color: #8c8275; 
-    margin-bottom: 15px; 
-    text-transform: uppercase; 
-    letter-spacing: 1px;
-}
-
-.footer-col p { 
-    margin: 6px 0; 
-    line-height: 1.4;
-}
-
-.footer-col a {
-    color: #555;
-    text-decoration: none;
-}
-
-.footer-col a:hover {
-    color: #1a1a1a;
-}
-
-.footer-right {
-    text-align: right;
-}
-
-.footer-right p {
-    margin: 4px 0;
-}
+.main-footer { background: #fff; border-top: 1px solid #eadecc; padding: 40px 10%; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #8c8275; }
+.footer-logo-area { display: flex; align-items: center; gap: 10px; }
+.footer-brand { font-weight: 600; color: #1a1a1a; }
+.footer-col h4 { margin-bottom: 10px; color: #1a1a1a; font-size: 0.85rem; }
+.footer-col a { color: #8c8275; text-decoration: none; }
