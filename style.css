@@ -1,77 +1,344 @@
-<!DOCTYPE html>
-<html lang="bg">
-<head>
-    <meta charset="UTF-8">
-    <title>Academy Architect Studio</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header class="navbar">
-        <a href="index.html" class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-icon">
-            <span>Academy Architect Studio</span>
-        </a>
-        <nav>
-            <a href="index.html">Начало</a>
-            <a href="catalog.html">Каталог</a>
-            <a href="about.html">За нас</a>
-            <a href="#">ИИ Планер</a>
-            <a href="contact.html">Контакт</a>
-        </nav>
-        <div class="lang-switcher">
-            <button class="lang-btn active">EN</button>
-            <button class="lang-btn">BG</button>
-            <button class="lang-btn-login">Вход</button>
-        </div>
-    </header>
+/* Глобални стилове и нулиране */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    <main class="content-wrapper">
-        <section class="hero">
-            <div class="hero-text">
-                <span class="eyebrow">ПРОЕКТИ ЗА КЪЩИ · ОСН. 2026</span>
-                <h1>Домове, начертани с намерение.</h1>
-                <p>Academy Architect Studio е личен каталог с проекти за къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
-                <div class="hero-btns">
-                    <button class="btn-primary">Разгледай каталога →</button>
-                    <button class="btn-secondary">За студиото</button>
-                </div>
-            </div>
-            <div class="hero-image">
-                <div class="placeholder-box"></div>
-                <div class="latest-label">
-                    <p>LATEST</p>
-                    <span>Timber-Stone series</span>
-                </div>
-            </div>
-        </section>
+body { 
+    background-color: #f6f3eb; 
+    color: #1a1a1a; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
 
-        <section class="projects-section">
-            <div class="section-header">
-                <h3>ИЗБРАНИ<br>Скорошни проекти</h3>
-                <a href="catalog.html">Каталог →</a>
-            </div>
-            <!-- Тук идва твоята мрежа от проекти -->
-        </section>
+/* Навигация (Header) */
+.navbar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 25px 5%; 
+    background-color: #f6f3eb;
+}
 
-        <section class="bottom-info">
-            <h2>Всеки план разказва как ще се живее в него.</h2>
-            <p>Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификация на материали и разчет на квадратура.</p>
-        </section>
-    </main>
+.logo-area { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-weight: 700; 
+    text-decoration: none; 
+    color: #1a1a1a;
+    font-size: 1.1rem;
+}
 
-    <footer class="main-footer">
-        <div class="footer-logo-area">
-            <img src="assets/logo.png" alt="Logo" class="footer-logo">
-            <div><strong>Academy Architect Studio</strong><br>АРХИТЕКТУРНО СТУДИО</div>
-        </div>
-        <div class="footer-col">
-            <h4>STUDIO</h4>
-            <p>Sofia · Plovdiv · Varna</p>
-            <p>hello@academyarchitectstudios.com</p>
-        </div>
-        <div class="footer-col">
-            <p>© 2026<br>Academy Architect Studio — Всички права запазени.</p>
-        </div>
-    </footer>
-</body>
-</html>
+.logo-icon { 
+    width: 24px; 
+    height: auto; 
+}
+
+.logo-studio {
+    color: #b05c3c; /* Акцентен цвят за думата Studio, ако има такъв */
+}
+
+.navbar nav { 
+    display: flex; 
+    gap: 30px; 
+}
+
+.navbar nav a { 
+    text-decoration: none; 
+    color: #555; 
+    font-size: 0.9rem; 
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.navbar nav a:hover, .navbar nav a.active { 
+    color: #1a1a1a; 
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Превключвател на езици */
+.lang-switcher { 
+    background: #eadecc; 
+    padding: 3px; 
+    border-radius: 30px; 
+    display: flex; 
+    align-items: center; 
+}
+
+.lang-btn { 
+    border: none; 
+    background: transparent; 
+    padding: 6px 12px; 
+    cursor: pointer; 
+    border-radius: 30px; 
+    font-size: 0.75rem; 
+    font-weight: 600;
+    color: #666;
+}
+
+.lang-btn.active { 
+    background: #1a1a1a; 
+    color: #fff; 
+}
+
+/* Бутон Вход */
+.btn-login {
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Основен контейнер */
+.content-container { 
+    padding: 40px 5%; 
+}
+
+/* Hero Секция */
+.hero { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    gap: 80px; 
+    margin-bottom: 100px; 
+}
+
+.hero-text { 
+    flex: 1.2; 
+}
+
+.eyebrow { 
+    font-size: 0.75rem; 
+    letter-spacing: 2px; 
+    color: #8c8275; 
+    text-transform: uppercase; 
+    font-weight: 600;
+    margin-bottom: 15px; 
+    display: block; 
+}
+
+h1 { 
+    font-size: 3.8rem; 
+    line-height: 1.15; 
+    font-weight: 400; 
+    color: #1a1a1a;
+    margin-bottom: 25px; 
+}
+
+.hero-description {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #555;
+    max-width: 480px;
+    margin-bottom: 35px;
+}
+
+.hero-btns { 
+    display: flex; 
+    gap: 15px; 
+}
+
+.btn-primary { 
+    background: #1a1a1a; 
+    color: #fff; 
+    padding: 16px 32px; 
+    border-radius: 30px; 
+    border: none; 
+    cursor: pointer; 
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.btn-secondary { 
+    background: transparent; 
+    border: 1px solid #b5ab9e; 
+    color: #1a1a1a;
+    padding: 16px 32px; 
+    border-radius: 30px; 
+    cursor: pointer; 
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Дясна част на Hero (Голяма кутия/Blueprint) */
+.hero-image-area { 
+    flex: 1; 
+    height: 480px; 
+    background-color: #ebd9c5; /* Бежов цвят като оригиналната схема */
+    position: relative; 
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-main-img img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+.latest-badge { 
+    position: absolute; 
+    bottom: 30px; 
+    left: -30px; 
+    background: #fff; 
+    padding: 15px 25px; 
+    border: 1px solid #e3dac9; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.badge-title {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #999;
+}
+
+.badge-sub {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+/* Секция за Скорошни Проекти */
+.projects-header-section {
+    margin-bottom: 80px;
+}
+
+.section-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end; 
+    border-bottom: 1px solid #e3dac9;
+    padding-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    margin-top: 5px;
+}
+
+.catalog-link {
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-bottom: 1px solid #1a1a1a;
+    padding-bottom: 2px;
+}
+
+.projects-placeholder-gap {
+    margin-top: 30px;
+}
+
+/* Долна Текстова Секция */
+.bottom-info { 
+    display: flex; 
+    gap: 80px; 
+    padding: 80px 0; 
+    border-top: 1px solid #e3dac9; 
+}
+
+.info-title { 
+    flex: 1; 
+}
+
+.info-title h2 {
+    font-size: 2.4rem; 
+    font-weight: 400; 
+    line-height: 1.2;
+}
+
+.info-text { 
+    flex: 1; 
+    display: flex;
+    align-items: center;
+}
+
+.info-text p {
+    color: #555; 
+    line-height: 1.6; 
+    font-size: 1.05rem;
+}
+
+/* Фуутър (Footer) */
+.main-footer { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start;
+    padding: 60px 5%; 
+    border-top: 1px solid #e3dac9; 
+    font-size: 0.85rem; 
+    color: #555;
+    background-color: #f6f3eb;
+}
+
+.footer-logo-area { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
+
+.footer-logo { 
+    width: 28px; 
+    height: auto;
+}
+
+.footer-brand {
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 1rem;
+}
+
+.footer-subtext {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: #8c8275;
+    margin-top: 2px;
+}
+
+.footer-col h4 { 
+    font-size: 0.75rem; 
+    color: #8c8275; 
+    margin-bottom: 15px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+}
+
+.footer-col p { 
+    margin: 6px 0; 
+    line-height: 1.4;
+}
+
+.footer-col a {
+    color: #555;
+    text-decoration: none;
+}
+
+.footer-col a:hover {
+    color: #1a1a1a;
+}
+
+.footer-right {
+    text-align: right;
+}
+
+.footer-right p {
+    margin: 4px 0;
+}

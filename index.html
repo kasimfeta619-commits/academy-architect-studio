@@ -2,76 +2,100 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <header class="navbar">
         <a href="index.html" class="logo-area">
             <img src="assets/logo.png" alt="Logo" class="logo-icon">
-            <span>Academy Architect Studio</span>
+            <span>Academy Architect <span class="logo-studio">Studio</span></span>
         </a>
         <nav>
-            <a href="index.html">Начало</a>
+            <a href="index.html" class="active">Начало</a>
             <a href="catalog.html">Каталог</a>
             <a href="about.html">За нас</a>
             <a href="#">ИИ Планер</a>
             <a href="contact.html">Контакт</a>
         </nav>
-        <div class="lang-switcher">
-            <button class="lang-btn active">EN</button>
-            <button class="lang-btn">BG</button>
-            <button class="lang-btn-login">Вход</button>
+        <div class="header-actions">
+            <div class="lang-switcher">
+                <button class="lang-btn active">EN</button>
+                <button class="lang-btn">BG</button>
+            </div>
+            <button class="btn-login">Вход</button>
         </div>
     </header>
 
-    <main class="content-wrapper">
+    <main class="content-container">
+        <!-- HERO СЕКЦИЯ -->
         <section class="hero">
             <div class="hero-text">
                 <span class="eyebrow">ПРОЕКТИ ЗА КЪЩИ · ОСН. 2026</span>
-                <h1>Домове, начертани с намерение.</h1>
-                <p>Academy Architect Studio е личен каталог с проекти за къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
+                <h1>Домове, начертани<br>с намерение.</h1>
+                <p class="hero-description">Academy Architect Studio е личен каталог с проекти за къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
                 <div class="hero-btns">
-                    <button class="btn-primary">Разгледай каталога →</button>
-                    <button class="btn-secondary">За студиото</button>
+                    <button class="btn-primary" onclick="window.location.href='catalog.html'">Разгледай каталога →</button>
+                    <button class="btn-secondary" onclick="window.location.href='about.html'">За студиото</button>
                 </div>
             </div>
-            <div class="hero-image">
-                <div class="placeholder-box"></div>
-                <div class="latest-label">
-                    <p>LATEST</p>
-                    <span>Timber-Stone series</span>
+            <div class="hero-image-area">
+                <div class="hero-main-img">
+                    <!-- Тук ще се зареди голямата схема/картинка -->
+                    <img src="assets/hero-blueprint.png" alt="" onerror="this.style.display='none'">
+                </div>
+                <div class="latest-badge">
+                    <span class="badge-title">LATEST</span>
+                    <span class="badge-sub">Timber-Stone series</span>
                 </div>
             </div>
         </section>
 
-        <section class="projects-section">
+        <!-- СЕКЦИЯ СКОРОШНИ ПРОЕКТИ (Празно заглавие) -->
+        <section class="projects-header-section">
             <div class="section-header">
-                <h3>ИЗБРАНИ<br>Скорошни проекти</h3>
-                <a href="catalog.html">Каталог →</a>
+                <div>
+                    <span class="eyebrow">ИЗБРАНИ</span>
+                    <h2>Скорошни проекти</h2>
+                </div>
+                <a href="catalog.html" class="catalog-link">Каталог →</a>
             </div>
-            <!-- Тук идва твоята мрежа от проекти -->
+            
+            <!-- Празно място за твоите 6 снимки (които ще добавиш в каталога) -->
+            <div class="projects-placeholder-gap"></div>
         </section>
 
+        <!-- ДОЛНА ИНФО СЕКЦИЯ -->
         <section class="bottom-info">
-            <h2>Всеки план разказва как ще се живее в него.</h2>
-            <p>Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификация на материали и разчет на квадратура.</p>
+            <div class="info-title">
+                <h2>Всеки план разказва как ще се живее в него.</h2>
+            </div>
+            <div class="info-text">
+                <p>Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификация на материали и разчет на квадратура.</p>
+            </div>
         </section>
     </main>
 
     <footer class="main-footer">
         <div class="footer-logo-area">
-            <img src="assets/logo.png" alt="Logo" class="footer-logo">
-            <div><strong>Academy Architect Studio</strong><br>АРХИТЕКТУРНО СТУДИО</div>
+            <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
+            <div>
+                <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
+                <p class="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
+            </div>
         </div>
         <div class="footer-col">
             <h4>STUDIO</h4>
             <p>Sofia · Plovdiv · Varna</p>
-            <p>hello@academyarchitectstudios.com</p>
+            <p><a href="mailto:hello@academyarchitectstudios.com">hello@academyarchitectstudios.com</a></p>
         </div>
-        <div class="footer-col">
-            <p>© 2026<br>Academy Architect Studio — Всички права запазени.</p>
+        <div class="footer-col footer-right">
+            <p>© 2026</p>
+            <p>Academy Architect Studio — Всички права запазени.</p>
         </div>
     </footer>
+
 </body>
 </html>
