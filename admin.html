@@ -8,16 +8,20 @@
         .admin-box { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         h2 { margin-top: 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         
-        /* Grid система за подредени полета */
         .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .full-width { grid-column: span 2; }
-        
         .form-group { margin-bottom: 15px; }
         label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
         input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
         
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin: 20px 0; }
         .btn-save { width: 100%; padding: 15px; background: #000; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+
+        /* Public View стилове */
+        .public-view-section { max-width: 800px; margin: 40px auto; }
+        .pub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .pub-card { background: white; padding: 15px; border: 1px solid #ddd; border-radius: 4px; }
+        .fav-border { border: 2px solid #ffd700; }
     </style>
 </head>
 <body>
@@ -42,12 +46,36 @@
         </div>
 
         <div class="form-group"><label>Снимка (за каталог)</label><input type="file" id="imgFile" accept="image/*" required></div>
-        
         <button type="submit" class="btn-save">Запази проекта</button>
     </form>
 </div>
 
+<!-- PUBLIC VIEW СЕКЦИЯ -->
+<div class="public-view-section">
+    <h2>Public View (Преглед на публикацията)</h2>
+    <div id="catalogContainer" class="pub-grid"></div>
+</div>
+
 <script>
+    // Функция за визуализация
+    const renderCatalog = () => {
+        const list = JSON.parse(localStorage.getItem('myProjects') || '[]');
+        const container = document.getElementById('catalogContainer');
+        container.innerHTML = '';
+        
+        list.forEach(p => {
+            container.innerHTML += `
+                <div class="pub-card ${p.isFav ? 'fav-border' : ''}">
+                    ${p.isFav ? '<strong>★ Фаворит</strong>' : '<strong>Каталог</strong>'}
+                    <h3>${p.title}</h3>
+                    <p>${p.desc}</p>
+                    <p>Площ: ${p.area}м² | ${p.beds} спални, ${p.baths} бани</p>
+                    <p><strong>Цена: ${p.price}</strong></p>
+                </div>
+            `;
+        });
+    };
+
     document.getElementById('uploadForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const reader = new FileReader();
@@ -66,11 +94,13 @@
             let list = JSON.parse(localStorage.getItem('myProjects') || '[]');
             list.push(project);
             localStorage.setItem('myProjects', JSON.stringify(list));
-            alert("Успешно записано!");
-            location.reload();
+            renderCatalog(); // Обновява визуализацията веднага
+            document.getElementById('uploadForm').reset();
         };
         reader.readAsDataURL(document.getElementById('imgFile').files[0]);
     });
+
+    renderCatalog(); // Зареди при отваряне
 </script>
 </body>
 </html>
