@@ -7,7 +7,7 @@
 </head>
 <body>
     <header class="navbar">
-        <a href="index.html" class="logo-area" style="text-decoration:none; color:#1a1a1a;">
+        <a href="index.html" class="logo-area">
             <img src="assets/logo.png" alt="Logo" class="logo-icon">
             <span>Academy Architect Studio</span>
         </a>
@@ -18,28 +18,40 @@
             <a href="contact.html">Contact</a>
         </nav>
         <div class="lang-switcher">
-            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-            <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
+            <button class="lang-btn active" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" onclick="setLang('bg')">BG</button>
         </div>
     </header>
 
     <main class="content-wrapper">
         <span class="eyebrow" id="eyebrow">HOUSE PROJECTS · EST. 2026</span>
         <h1 id="title">Homes drawn with intention.</h1>
-        <button class="btn-primary" onclick="window.location.href='catalog.html'" id="btn-browse">Browse the catalog →</button>
     </main>
 
+    <footer class="main-footer">
+        <div class="footer-logo-area">
+            <img src="assets/logo.png" alt="Logo" class="footer-logo">
+            <div><strong>Academy Architect Studio</strong><br>ARCHITECTURAL DESIGN STUDIO</div>
+        </div>
+        <div class="footer-col">
+            <h4>STUDIO</h4>
+            <p>Sofia · Plovdiv · Varna</p>
+            <p>hello@academyarchitectstudios.com</p>
+        </div>
+        <div class="footer-col">
+            <p>© 2026<br>Academy Architect Studio — All rights reserved.</p>
+        </div>
+    </footer>
+
     <script>
-        const texts = {
-            en: { eyebrow: "HOUSE PROJECTS · EST. 2026", title: "Homes drawn with intention.", btn: "Browse the catalog →" },
-            bg: { eyebrow: "ПРОЕКТИ ЗА КЪЩИ · 2026", title: "Къщи, проектирани с намерение.", btn: "Разгледай каталога →" }
-        };
-        function setLanguage(lang) {
-            document.getElementById('eyebrow').innerText = texts[lang].eyebrow;
-            document.getElementById('title').innerText = texts[lang].title;
-            document.getElementById('btn-browse').innerText = texts[lang].btn;
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        function setLang(lang) {
+            const tr = {
+                en: { e: "HOUSE PROJECTS · EST. 2026", t: "Homes drawn with intention." },
+                bg: { e: "ПРОЕКТИ ЗА КЪЩИ · 2026", t: "Къщи, проектирани с намерение." }
+            };
+            document.getElementById('eyebrow').innerText = tr[lang].e;
+            document.getElementById('title').innerText = tr[lang].t;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === lang));
         }
     </script>
 </body>
