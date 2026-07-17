@@ -4,96 +4,53 @@
     <meta charset="UTF-8">
     <title>Админ Панел | Academy Architect</title>
     <style>
-        .admin-container { max-width: 900px; margin: 40px auto; padding: 40px; background: #fbf9f4; border: 1px solid #eadecc; font-family: sans-serif; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .form-group { margin-bottom: 20px; }
+        body { font-family: sans-serif; padding: 40px; background: #fbf9f4; max-width: 800px; margin: auto; }
+        .form-group { margin-bottom: 15px; }
         input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; box-sizing: border-box; }
-        .btn-save { width: 100%; padding: 15px; background: #1a1a1a; color: #fff; border: none; cursor: pointer; }
-        
-        /* Public View Секция */
-        .public-view { margin-top: 50px; border-top: 4px solid #1a1a1a; padding-top: 20px; }
-        .pub-item { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; background: white; }
-        .fav-badge { color: gold; font-weight: bold; }
+        button { width: 100%; padding: 15px; background: #1a1a1a; color: white; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
-    <main class="admin-container">
-        <h2>Админ Панел</h2>
-        <form id="uploadForm">
-            <div class="form-group"><label>Име</label><input type="text" id="pTitle" required></div>
-            <div class="form-group"><label>Описание</label><textarea id="pDesc"></textarea></div>
-            <div class="grid-inputs">
-                <div class="form-group"><label>Площ (м²)</label><input type="text" id="pArea"></div>
-                <div class="form-group"><label>Етажи</label><input type="number" id="pFloors"></div>
-                <div class="form-group"><label>Спални</label><input type="number" id="pBeds"></div>
-                <div class="form-group"><label>Бани</label><input type="number" id="pBaths"></div>
-                <div class="form-group"><label>Гаражни места</label><input type="number" id="pGarage"></div>
-                <div class="form-group"><label>Материал</label><input type="text" id="pMat"></div>
-                <div class="form-group"><label>Стил</label><input type="text" id="pStyle"></div>
-                <div class="form-group"><label>Цена</label><input type="text" id="pPrice"></div>
-            </div>
-            <div class="form-group"><label><input type="checkbox" id="isFavorite"> Фаворитен проект</label></div>
-            <div class="form-group"><label>Снимки (Галерия)</label><input type="file" id="gPhotos" multiple></div>
-            <div class="form-group"><label>Снимки (Планове)</label><input type="file" id="pPlans" multiple></div>
-            <button type="submit" class="btn-save">Запази проект</button>
-        </form>
-
-        <section class="public-view">
-            <h2>Public View (Каталог)</h2>
-            <div id="catalogContainer"></div>
-        </section>
-    </main>
+    <h2>Админ Панел: Добавяне на проект</h2>
+    <form id="uploadForm">
+        <div class="form-group"><input type="text" id="title" placeholder="Име на проекта" required></div>
+        <div class="form-group"><textarea id="desc" placeholder="Описание"></textarea></div>
+        <div class="form-group"><input type="text" id="area" placeholder="Площ (м²)"></div>
+        <div class="form-group"><input type="number" id="floors" placeholder="Брой етажи"></div>
+        <div class="form-group"><input type="number" id="beds" placeholder="Брой спални"></div>
+        <div class="form-group"><input type="number" id="baths" placeholder="Брой бани"></div>
+        <div class="form-group"><input type="text" id="price" placeholder="Цена"></div>
+        <div class="form-group"><label><input type="checkbox" id="isFav"> Фаворитен проект</label></div>
+        <div class="form-group"><label>Снимка (за каталог)</label><input type="file" id="imgFile" accept="image/*" required></div>
+        <button type="submit">Запази проекта</button>
+    </form>
 
     <script>
-        const toBase64 = (file) => new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => resolve(e.target.result);
-        });
-
-        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+        document.getElementById('uploadForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const gFiles = document.getElementById('gPhotos').files;
-            const pFiles = document.getElementById('pPlans').files;
-            
-            const gArr = []; for(let f of gFiles) gArr.push(await toBase64(f));
-            const pArr = []; for(let f of pFiles) pArr.push(await toBase64(f));
-
-            const project = {
-                title: document.getElementById('pTitle').value,
-                desc: document.getElementById('pDesc').value,
-                area: document.getElementById('pArea').value,
-                floors: document.getElementById('pFloors').value,
-                beds: document.getElementById('pBeds').value,
-                baths: document.getElementById('pBaths').value,
-                garage: document.getElementById('pGarage').value,
-                mat: document.getElementById('pMat').value,
-                style: document.getElementById('pStyle').value,
-                price: document.getElementById('pPrice').value,
-                isFavorite: document.getElementById('isFavorite').checked,
-                gallery: gArr,
-                plans: pArr
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const project = {
+                    title: document.getElementById('title').value,
+                    desc: document.getElementById('desc').value,
+                    area: document.getElementById('area').value,
+                    floors: document.getElementById('floors').value,
+                    beds: document.getElementById('beds').value,
+                    baths: document.getElementById('baths').value,
+                    price: document.getElementById('price').value,
+                    isFav: document.getElementById('isFav').checked,
+                    img: e.target.result
+                };
+                
+                // Взимаме списъка, добавяме новия проект и записваме обратно
+                let list = JSON.parse(localStorage.getItem('myProjects') || '[]');
+                list.push(project);
+                localStorage.setItem('myProjects', JSON.stringify(list));
+                
+                alert("Проектът е успешно запазен и вече е достъпен в каталога!");
+                location.reload();
             };
-            
-            let list = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            list.push(project);
-            localStorage.setItem('myProjects', JSON.stringify(list));
-            location.reload();
-        });
-
-        const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-        const container = document.getElementById('catalogContainer');
-        projects.forEach(p => {
-            container.innerHTML += `
-                <div class="pub-item">
-                    ${p.isFavorite ? '<div class="fav-badge">★ Фаворитен проект</div>' : ''}
-                    <h3>${p.title}</h3>
-                    <p>${p.desc}</p>
-                    <p><strong>Площ:</strong> ${p.area}м² | <strong>Спални:</strong> ${p.beds} | <strong>Бани:</strong> ${p.baths} | <strong>Етажи:</strong> ${p.floors}</p>
-                    <p><strong>Стил:</strong> ${p.style} | <strong>Материал:</strong> ${p.mat} | <strong>Цена:</strong> ${p.price}</p>
-                    <p>Снимки: ${p.gallery.length} | Планове: ${p.plans.length}</p>
-                </div>
-            `;
+            reader.readAsDataURL(document.getElementById('imgFile').files[0]);
         });
     </script>
 </body>
