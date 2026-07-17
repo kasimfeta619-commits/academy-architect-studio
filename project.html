@@ -13,19 +13,14 @@
         .gallery-nav { margin: 20px 0; border-bottom: 1px solid #eadecc; padding-bottom: 10px; }
         .tab-btn { background: none; border: none; font-size: 1rem; cursor: pointer; margin-right: 20px; font-weight: bold; color: #888; }
         .tab-btn:hover { color: #1a1a1a; }
-        
-        /* Бутон за редакция */
-        .btn-edit { background: #eadecc; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
     <main class="project-wrapper">
+        <!-- Лява част -->
         <div>
             <a href="catalog.html" style="color:#1a1a1a;">← Назад</a>
-            <!-- Бутон за редакция (вижда се само от администратора) -->
-            <br><br>
-            <button class="btn-edit" onclick="editProject()">Редактирай проекта</button>
             
             <h1 id="projTitle" style="font-size: 3rem; margin: 20px 0;"></h1>
             <p id="projDesc" style="line-height: 1.6;"></p>
@@ -37,6 +32,7 @@
             <div id="displayArea"></div>
         </div>
 
+        <!-- Дясна част -->
         <div class="specs-column">
             <h4 id="projStyle" style="color: #888; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;"></h4>
             <h2 id="projTitleSide" style="margin-top: 0;"></h2>
@@ -57,8 +53,8 @@
 
     <script>
         const id = new URLSearchParams(window.location.search).get('id');
-        let projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-        let p = projects[id];
+        const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+        const p = projects[id];
 
         function renderProject() {
             if (!p) return;
@@ -74,20 +70,6 @@
             document.getElementById('dMat').innerText = p.material;
             document.getElementById('dStyle').innerText = p.style;
             document.getElementById('dPrice').innerText = p.price || "—";
-        }
-
-        function editProject() {
-            p.title = prompt("Име на проекта:", p.title) || p.title;
-            p.description = prompt("Описание:", p.description) || p.description;
-            p.area = prompt("Площ (m²):", p.area) || p.area;
-            p.floors = prompt("Етажи:", p.floors) || p.floors;
-            p.beds = prompt("Спални:", p.beds) || p.beds;
-            p.style = prompt("Стил:", p.style) || p.style;
-            p.price = prompt("Цена:", p.price) || p.price;
-
-            localStorage.setItem('myProjects', JSON.stringify(projects));
-            renderProject();
-            alert("Промените са запазени!");
         }
 
         window.show = (type) => {
