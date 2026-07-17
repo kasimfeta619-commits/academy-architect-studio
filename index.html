@@ -1,42 +1,59 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Каталог | Academy Architect Studio</title>
+    <title>Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="navbar">
         <div class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-img">
-            <a href="index.html" class="logo-text">Academy Architect <span>Studio</span></a>
+            <img src="assets/logo.png" alt="Logo" class="logo-icon">
+            <span class="logo-text">Academy Architect <span>Studio</span></span>
         </div>
         <nav>
-            <a href="index.html">Начало</a>
-            <a href="catalog.html">Каталог</a>
-            <a href="about.html">За нас</a>
-            <a href="#">ИИ Планер</a>
-            <a href="contact.html">Контакт</a>
+            <a href="index.html">Home</a>
+            <a href="catalog.html">Catalog</a>
+            <a href="about.html">About</a>
+            <a href="#">AI Planner</a>
+            <a href="contact.html">Contact</a>
         </nav>
-        <div class="user-actions">EN | BG | Вход</div>
+        <div class="user-actions">
+            <span>EN · BG</span>
+            <button class="btn-sign">Sign in</button>
+        </div>
     </header>
 
-    <main class="catalog-page" style="padding: 50px 5%;">
-        <h1>Каталог с проекти за къщи</h1>
-        <section class="filters">
-            <select><option>Тип</option></select>
-            <input type="number" placeholder="min m²">
-            <input type="number" placeholder="max m²">
-            <select><option>Етажи</option></select>
-            <button class="btn-secondary">Изчисти</button>
-        </section>
-        <div class="projects-grid">
-            <div class="project-card">
-                <img src="assets/project1.jpg">
-                <h3>Минималистична Къща</h3>
-                <div class="stats"><span>М²: 175</span> <span>ЕТАЖИ: 2</span></div>
+    <main class="hero">
+        <div class="hero-text">
+            <span class="eyebrow">HOUSE PROJECTS · EST. 2026</span>
+            <h1>Homes drawn with intention.</h1>
+            <p>Academy Architect Studio is a personal catalog of residential house projects — plans, visualizations, and specifications for every square meter.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="window.location.href='catalog.html'">Browse the catalog →</button>
+                <button class="btn-secondary">About the studio</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="assets/main-graphic.png" alt="House Outline">
+            <div class="latest-label">
+                <p>LATEST</p>
+                <strong>Timber & stone series</strong>
             </div>
         </div>
     </main>
+
+    <section class="recent-projects">
+        <div class="header-row">
+            <span class="eyebrow">SELECTED</span>
+            <h2>Recent projects</h2>
+            <a href="catalog.html" class="link-catalog">Catalog →</a>
+        </div>
+        <div class="projects-grid">
+            <div class="project-card"><img src="assets/project1.jpg"></div>
+            <div class="project-card"><img src="assets/project2.jpg"></div>
+            <div class="project-card"><img src="assets/project3.jpg"></div>
+        </div>
+    </section>
 </body>
 </html>
