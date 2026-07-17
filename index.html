@@ -61,73 +61,8 @@
             </div>
         </div>
 
-        <div class="projects-grid">
-            <!-- 1 -->
-            <div class="project-card">
-                <div class="project-img-box">
-                    <img src="assets/skyline.jpg" alt="Скайлайн Резиденция" onerror="this.src='https://placehold.co/400x260?text=Skyline+Residence'">
-                </div>
-                <div class="project-info">
-                    <span class="p-title">Скайлайн Резиденция</span>
-                    <span class="p-meta">2 етажа · Ultra Luxury Contemporary</span>
-                    <span class="p-area">340 м²</span>
-                </div>
-            </div>
-            <!-- 2 -->
-            <div class="project-card">
-                <div class="project-img-box">
-                    <img src="assets/alpine.jpg" alt="Алпийски комплекс Еделвайс" onerror="this.src='https://placehold.co/400x260?text=Alpine+Chalet'">
-                </div>
-                <div class="project-info">
-                    <span class="p-title">Алпийски комплекс Еделвайс</span>
-                    <span class="p-meta">2 етажа · Alpine Chalet</span>
-                    <span class="p-area">280 м²</span>
-                </div>
-            </div>
-            <!-- 3 -->
-            <div class="project-card">
-                <div class="project-img-box">
-                    <img src="assets/varna-wave.jpg" alt="Варна Уейв Комплекс" onerror="this.src='https://placehold.co/400x260?text=Varna+Wave'">
-                </div>
-                <div class="project-info">
-                    <span class="p-title">Варна Уейв Комплекс</span>
-                    <span class="p-meta">2 етажа · Mediterranean Modern</span>
-                    <span class="p-area">420 м²</span>
-                </div>
-            </div>
-            <!-- 4 -->
-            <div class="project-card">
-                <div class="project-img-box">
-                    <img src="assets/oasis.jpg" alt="Оазис Вила" onerror="this.src='https://placehold.co/400x260?text=Oasis+Villa'">
-                </div>
-                <div class="project-info">
-                    <span class="p-title">Оазис Вила</span>
-                    <span class="p-meta">1 етаж · Modern Minimalist</span>
-                    <span class="p-area">150 м²</span>
-                </div>
-            </div>
-            <!-- 5 -->
-            <div class="project-card">
-                <div class="project-img-box">
-                    <img src="assets/bungalow.jpg" alt="Бунгало 60" onerror="this.src='https://placehold.co/400x260?text=Bungalow+60'">
-                </div>
-                <div class="project-info">
-                    <span class="p-title">Бунгало 60</span>
-                    <span class="p-meta">1 етаж · Modern Minimalist</span>
-                    <span class="p-area">60 м²</span>
-                </div>
-            </div>
-            <!-- 6 -->
-            <div class="project-card">
-                <div class="project-img-box">
-                    <img src="assets/minimalist.jpg" alt="Минималистична Къща" onerror="this.src='https://placehold.co/400x260?text=Minimalist+House'">
-                </div>
-                <div class="project-info">
-                    <span class="p-title">Минималистична Къща</span>
-                    <span class="p-meta">2 етажа · Minimalist</span>
-                    <span class="p-area">175 м²</span>
-                </div>
-            </div>
+        <div class="projects-grid" id="favoritesGrid">
+            <!-- Проектите ще се заредят автоматично тук -->
         </div>
     </section>
 
@@ -157,8 +92,35 @@
         </div>
     </footer>
 
-    <!-- ЕЗИКОВА СИСТЕМА -->
     <script>
+        // ЛОГИКА ЗА ФАВОРИТИТЕ
+        function loadFavorites() {
+            const grid = document.getElementById('favoritesGrid');
+            const allProjects = JSON.parse(localStorage.getItem('myProjects')) || [];
+            
+            // Филтрираме само проектите с отметка isFavorite: true
+            const favorites = allProjects.filter(p => p.isFavorite === true);
+
+            if (favorites.length === 0) {
+                grid.innerHTML = '<p style="padding:40px; color:#888;">Няма избрани проекти за фаворити.</p>';
+                return;
+            }
+
+            grid.innerHTML = favorites.map(p => `
+                <div class="project-card" onclick="window.location.href='project.html?id=${allProjects.indexOf(p)}'" style="cursor:pointer;">
+                    <div class="project-img-box">
+                        <img src="${p.gallery && p.gallery[0] ? p.gallery[0] : 'https://placehold.co/400x260'}" alt="${p.title}">
+                    </div>
+                    <div class="project-info">
+                        <span class="p-title">${p.title}</span>
+                        <span class="p-meta">${p.floors || ''} етажа · ${p.style || ''}</span>
+                        <span class="p-area">${p.area || ''} м²</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ЕЗИКОВА СИСТЕМА
         const translations = {
             en: {
                 "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
@@ -197,6 +159,9 @@
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
+
+        // Стартираме зареждането на фаворитите при отваряне
+        loadFavorites();
     </script>
 </body>
 </html>
