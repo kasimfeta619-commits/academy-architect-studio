@@ -4,44 +4,53 @@ body {
     color: #1a1a1a;
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* Навигация - подрежда всичко в една линия */
+/* Навигация */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 5%;
+    padding: 30px 5%;
 }
 
-.logo-area img { width: 120px; }
+.logo-area img { width: 40px; } /* Логото изглежда по-добре, когато е по-малко */
 
 .navbar nav a {
-    margin: 0 15px;
+    margin: 0 20px;
     text-decoration: none;
-    color: #333;
+    color: #1a1a1a;
     font-size: 0.9rem;
+    font-weight: 500;
 }
 
-/* Герой секция - подрежда текст и изображение в две колони */
+/* Hero секция */
 .hero {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 80px 5%;
-    gap: 50px;
+    padding: 100px 5%;
+    gap: 80px;
 }
 
-.hero-text { flex: 1; }
-.hero-image { flex: 1; text-align: right; }
+.hero-text { flex: 1; max-width: 600px; }
 
-.hero-image img { width: 100%; max-width: 500px; height: auto; }
+/* Текстови стилове */
+h1 { font-size: 4.5rem; line-height: 1; margin: 20px 0; font-weight: 600; }
+p { font-size: 1.1rem; color: #444; line-height: 1.6; margin-bottom: 30px; }
 
-/* Елементи на текста */
-h1 { font-size: 3.5rem; line-height: 1.1; margin: 20px 0; }
-.eyebrow { text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; color: #666; }
-.hero-buttons { margin-top: 30px; }
-button { padding: 12px 25px; cursor: pointer; border: none; font-weight: bold; }
+.eyebrow { 
+    text-transform: uppercase; 
+    letter-spacing: 3px; 
+    font-size: 0.7rem; 
+    color: #888; 
+    font-weight: bold;
+}
+
+/* Бутони */
+.hero-buttons { display: flex; gap: 15px; }
+button { padding: 15px 30px; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
 .btn-primary { background: #1a1a1a; color: #fff; }
-.btn-secondary { background: transparent; border: 1px solid #ccc; margin-left: 10px; }
+.btn-primary:hover { background: #333; }
+.btn-secondary { background: transparent; border: 1px solid #ddd; }
