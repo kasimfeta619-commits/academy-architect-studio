@@ -1,49 +1,269 @@
-<!-- ЛЯВА СЕКЦИЯ: ДЕТАЙЛИ (Вече БЕЗ твоя личен имейл) -->
-<div class="contact-info-block">
-    <div class="info-group">
-        <h3 id="lbl-office">Офиси</h3>
-        <p>София · Пловдив · Варна</p>
-    </div>
-    <div class="info-group">
-        <h3 id="lbl-email">Директен контакт</h3>
-        <!-- Заменяме имейла с текст, който праща към формата -->
-        <p><a href="#form-heading" style="color: #8c8275; text-decoration: underline;">Използвайте формата за запитвания</a></p>
-    </div>
-    <div class="info-group">
-        <h3 id="lbl-phone">Телефон</h3>
-        <p>+359 888 123 456</p>
-    </div>
-    <div class="info-group">
-        <h3 id="lbl-hours">Работно време</h3>
-        <p id="txt-hours">Понеделник - Петък: 09:00 - 18:00</p>
-    </div>
-</div>
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Сигурни стилове за подредбата на контактната страница */
+        .content-container {
+            padding: 60px 10%;
+            background-color: #fbf9f4;
+            min-height: 70vh;
+        }
+        
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            margin-top: 40px;
+            margin-bottom: 60px;
+            align-items: flex-start;
+        }
 
-<!-- ДЯСНА СЕКЦИЯ: ФОРМА (Имейлът ти е скрит зад ключа!) -->
-<form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
-    
-    <!-- Твоят имейл НЕ СЕ пише тук. Сложи само генерирания ключ от Web3Forms: -->
-    <input type="hidden" name="access_key" value="СЛОЖИ_ТУК_КЛЮЧА_ОТ_САЙТА">
-    
-    <!-- Опция: автоматично пренасочване след изпращане (за да не излиза грозна страница) -->
-    <input type="hidden" name="redirect" value="https://academy-architect-studio-61pw12xqg-kasimfeta619-projects.vercel.app/contact.html">
+        /* Лява колона - информация */
+        .contact-info-block {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+        .info-group h3 {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #8c8275;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .info-group p, .info-group a {
+            font-size: 1.1rem;
+            color: #1a1a1a;
+            text-decoration: none;
+            line-height: 1.5;
+        }
+        .info-group a:hover {
+            color: #8c8275;
+        }
 
-    <h2 id="form-heading">Пишете ни директно</h2>
-    
-    <div class="form-field">
-        <label id="lbl-form-name">Вашето име</label>
-        <input type="text" name="name" placeholder="Иван Иванов" required>
-    </div>
-    
-    <div class="form-field">
-        <label id="lbl-form-email">Имейл за обратна връзка</label>
-        <input type="email" name="email" placeholder="name@example.com" required>
-    </div>
-    
-    <div class="form-field">
-        <label id="lbl-form-msg">Съобщение</label>
-        <textarea name="message" placeholder="Здравейте, интересувам се от проект..." required></textarea>
-    </div>
-    
-    <button type="submit" class="btn-submit" id="btn-submit">Изпрати запитване</button>
-</form>
+        /* Дясна колона - Кутия на формата */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #f4eee5;
+            padding: 40px;
+            border: 1px solid #eadecc;
+        }
+        .contact-form h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-field label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8c8275;
+            font-weight: 600;
+        }
+        .form-field input, .form-field textarea {
+            padding: 12px;
+            border: 1px solid #eadecc;
+            background: #fff;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+            border-radius: 0px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .form-field textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .btn-submit {
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .btn-submit:hover {
+            background: #333;
+        }
+
+        /* Мобилна адаптивност */
+        @media (max-width: 991px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+            .contact-form {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- НАВИГАЦИЯ -->
+    <header class="navbar">
+        <a href="index.html" class="logo-area">
+            <img src="assets/logo.png" alt="Logo" class="logo-icon" onerror="this.src='https://placehold.co/150x50?text=Logo'">
+            <span>Academy Architect <span class="logo-studio">Studio</span></span>
+        </a>
+        <nav id="nav-links">
+            <a href="index.html" data-key="nav-home">Начало</a>
+            <a href="catalog.html" data-key="nav-catalog">Каталог</a>
+            <a href="about.html" data-key="nav-about">За нас</a>
+            <a href="planner.html" data-key="nav-planner">ИИ Планер</a>
+            <a href="contact.html" class="active" data-key="nav-contact">Контакт</a>
+        </nav>
+        <div class="header-actions">
+            <div class="lang-switcher">
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
+            </div>
+            <a href="login.html" class="btn-login" id="btn-login">Вход</a>
+        </div>
+    </header>
+
+    <!-- ОСНОВНО СЪДЪРЖАНИЕ -->
+    <main class="content-container">
+        <span class="eyebrow" id="page-eyebrow">КОНТАКТИ</span>
+        <h1 id="page-title">Свържете се с нас</h1>
+        
+        <div class="contact-container">
+            
+            <!-- ЛЯВА СЕКЦИЯ: ИНФОРМАЦИЯ -->
+            <div class="contact-info-block">
+                <div class="info-group">
+                    <h3 id="lbl-office">Офиси</h3>
+                    <p>София · Пловдив · Варна</p>
+                </div>
+                <div class="info-group">
+                    <h3 id="lbl-email">Директен контакт</h3>
+                    <p><a href="#form-heading" style="color: #8c8275; text-decoration: underline;">Използвайте формата за запитвания</a></p>
+                </div>
+                <div class="info-group">
+                    <h3 id="lbl-phone">Телефон</h3>
+                    <p>+359 888 123 456</p>
+                </div>
+                <div class="info-group">
+                    <h3 id="lbl-hours">Работно време</h3>
+                    <p id="txt-hours">Понеделник - Петък: 09:00 - 18:00</p>
+                </div>
+            </div>
+
+            <!-- ДЯСНА СЕКЦИЯ: ЗАЩИТЕНА ФОРМА ЗА ИЗПРАЩАНЕ -->
+            <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+                
+                <!-- ЗАМЕНИ С ТВОЯ КЛЮЧ, КОЙТО ПОЛУЧИ ОТ WEB3FORMS -->
+                <input type="hidden" name="access_key" value="СЛОЖИ_ТУК_КЛЮЧА_ОТ_САЙТА">
+                
+                <!-- Автоматично връщане обратно към твоя сайт след успешно изпращане -->
+                <input type="hidden" name="redirect" value="https://academy-architect-studio-61pw12xqg-kasimfeta619-projects.vercel.app/contact.html">
+
+                <h2 id="form-heading">Пишете ни директно</h2>
+                
+                <div class="form-field">
+                    <label id="lbl-form-name">Вашето име</label>
+                    <input type="text" name="name" placeholder="Иван Иванов" required>
+                </div>
+                
+                <div class="form-field">
+                    <label id="lbl-form-email">Имейл за обратна връзка</label>
+                    <input type="email" name="email" placeholder="name@example.com" required>
+                </div>
+                
+                <div class="form-field">
+                    <label id="lbl-form-msg">Съобщение</label>
+                    <textarea name="message" placeholder="Здравейте, интересувам се от проект..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="btn-submit">Изпрати запитване</button>
+            </form>
+
+        </div>
+    </main>
+
+    <!-- ФУТЪР -->
+    <footer class="main-footer">
+        <div class="footer-logo-area">
+            <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
+            <div>
+                <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
+                <p class="footer-subtext" id="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>STUDIO</h4>
+            <p>Sofia · Plovdiv · Varna</p>
+            <p><a href="mailto:hello@academyarchitectstudios.com">info@architectstudio.com</a></p>
+        </div>
+        <div class="footer-col footer-right">
+            <p>© 2026</p>
+            <p id="footer-rights">Academy Architect Studio — Всички права запазени.</p>
+        </div>
+    </footer>
+
+    <!-- СИСТЕМА ЗА ПРЕВОД -->
+    <script>
+        const translations = {
+            en: {
+                "nav-home": "Home", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
+                "page-eyebrow": "CONTACT", "page-title": "Get in touch",
+                "lbl-office": "Offices", "lbl-email": "Email Address", "lbl-phone": "Phone", "lbl-hours": "Working Hours", "txt-hours": "Monday - Friday: 09:00 - 18:00",
+                "form-heading": "Write us directly", "lbl-form-name": "Your Name", "lbl-form-email": "Email", "lbl-form-msg": "Message", "btn-submit": "Send Inquiry",
+                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
+            },
+            bg: {
+                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", "btn-login": "Вход",
+                "page-eyebrow": "КОНТАКТИ", "page-title": "Свържете се с нас",
+                "lbl-office": "Офиси", "lbl-email": "Директен контакт", "lbl-phone": "Телефон", "lbl-hours": "Работно време", "txt-hours": "Понеделник - Петък: 09:00 - 18:00",
+                "form-heading": "Пишете ни директно", "lbl-form-name": "Вашето име", "lbl-form-email": "Имейл за обратна връзка", "lbl-form-msg": "Съобщение", "btn-submit": "Изпрати запитване",
+                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll('#nav-links a').forEach(link => {
+                const key = link.getAttribute('data-key');
+                if (translations[lang][key]) link.innerText = translations[lang][key];
+            });
+
+            const catalogLink = document.querySelector('#nav-links a[data-key="nav-catalog"]');
+            if (catalogLink) {
+                catalogLink.style.display = (lang === 'en') ? 'none' : 'inline-block';
+            }
+
+            const keysToTranslate = [
+                'btn-login', 'page-eyebrow', 'page-title', 'lbl-office', 'lbl-email', 
+                'lbl-phone', 'lbl-hours', 'txt-hours', 'form-heading', 'lbl-form-name', 
+                'lbl-form-email', 'lbl-form-msg', 'btn-submit', 'footer-subtext', 'footer-rights'
+            ];
+            
+            keysToTranslate.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && translations[lang][id]) el.innerText = translations[lang][id];
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            if(event && event.target) event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
