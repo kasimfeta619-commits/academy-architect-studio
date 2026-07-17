@@ -1,16 +1,47 @@
-body { background-color: #fcfaf5; color: #1a1a1a; margin: 0; font-family: 'Manrope', sans-serif; }
+/* Базови настройки */
+body {
+    background-color: #fcfaf5;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
 
-/* Навигация */
-.navbar { display: flex; justify-content: space-between; padding: 20px 50px; align-items: center; }
+/* Навигация - подрежда всичко в една линия */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+}
 
-/* Главна секция (две колони) */
-.hero { display: flex; padding: 50px; gap: 50px; align-items: center; }
+.logo-area img { width: 120px; }
+
+.navbar nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+/* Герой секция - подрежда текст и изображение в две колони */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 80px 5%;
+    gap: 50px;
+}
+
 .hero-text { flex: 1; }
-.hero-image { flex: 1; }
-.hero-image img { width: 100%; height: auto; border: 1px solid #ddd; }
+.hero-image { flex: 1; text-align: right; }
 
-/* Елементи */
-h1 { font-family: 'Fraunces', serif; font-size: 4rem; line-height: 1.1; }
-.eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #888; }
-.btn-primary { background: #1a1a1a; color: white; padding: 15px 30px; border: none; cursor: pointer; }
-.btn-secondary { background: transparent; border: 1px solid #ccc; padding: 15px 30px; cursor: pointer; }
+.hero-image img { width: 100%; max-width: 500px; height: auto; }
+
+/* Елементи на текста */
+h1 { font-size: 3.5rem; line-height: 1.1; margin: 20px 0; }
+.eyebrow { text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; color: #666; }
+.hero-buttons { margin-top: 30px; }
+button { padding: 12px 25px; cursor: pointer; border: none; font-weight: bold; }
+.btn-primary { background: #1a1a1a; color: #fff; }
+.btn-secondary { background: transparent; border: 1px solid #ccc; margin-left: 10px; }
