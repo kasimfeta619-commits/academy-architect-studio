@@ -2,93 +2,87 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>Academy Architect | Админ и Каталог</title>
+    <title>Админ Панел с Public View</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #fbf9f4; }
-        .container { max-width: 900px; margin: auto; }
-        .section { background: white; padding: 20px; border: 1px solid #eadecc; margin-bottom: 30px; }
-        .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        input, textarea { width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box; }
-        .btn-main { width: 100%; padding: 15px; background: #1a1a1a; color: white; border: none; cursor: pointer; }
-        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .card { border: 1px solid #ddd; padding: 15px; background: #fff; }
-        .card img { width: 100%; height: 150px; object-fit: cover; }
+        .admin-container { max-width: 900px; margin: 40px auto; padding: 40px; background: #fbf9f4; border: 1px solid #eadecc; font-family: sans-serif; }
+        .form-group { margin-bottom: 20px; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; box-sizing: border-box; }
+        .btn-upload { width: 100%; padding: 15px; background: #1a1a1a; color: #fff; border: none; cursor: pointer; }
+        
+        /* Public View Секция */
+        .public-view { margin-top: 50px; border-top: 3px solid #1a1a1a; padding-top: 20px; }
+        .pub-item { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; background: white; }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <!-- АДМИН ПАНЕЛ -->
-    <div class="section">
-        <h2>Добавяне на нов проект</h2>
+    <main class="admin-container">
+        <h2>Добавяне на проект (Админ)</h2>
         <form id="uploadForm">
-            <input type="text" id="pTitle" placeholder="Име на проекта" required>
-            <textarea id="pDesc" placeholder="Описание"></textarea>
-            <div class="grid-form">
-                <input type="text" id="pArea" placeholder="Площ (м²)">
-                <input type="number" id="pFloors" placeholder="Етажи">
-                <input type="number" id="pBeds" placeholder="Спални">
-                <input type="number" id="pBaths" placeholder="Бани">
-                <input type="number" id="pGarage" placeholder="Гаражни места">
-                <input type="text" id="pPrice" placeholder="Цена">
+            <div class="form-group"><label>Име</label><input type="text" id="pTitle" required></div>
+            <div class="form-group"><label>Описание</label><textarea id="pDesc" required></textarea></div>
+            <div class="grid-inputs">
+                <div class="form-group"><label>Площ (м²)</label><input type="text" id="pArea"></div>
+                <div class="form-group"><label>Етажи</label><input type="number" id="pFloors"></div>
+                <div class="form-group"><label>Спални</label><input type="number" id="pBeds"></div>
+                <div class="form-group"><label>Бани</label><input type="number" id="pBaths"></div>
+                <div class="form-group"><label>Гаражи</label><input type="number" id="pGarage"></div>
+                <div class="form-group"><label>Материал</label><input type="text" id="pMat"></div>
+                <div class="form-group"><label>Стил</label><input type="text" id="pStyle"></div>
+                <div class="form-group"><label>Цена</label><input type="text" id="pPrice"></div>
             </div>
-            <input type="file" id="pFile" accept="image/*" required>
-            <button type="submit" class="btn-main">Запази и публикувай</button>
+            <div class="form-group"><label>Снимка (за преглед)</label><input type="file" id="pImage" accept="image/*"></div>
+            <button type="submit" class="btn-upload">Запази проект</button>
         </form>
-    </div>
 
-    <!-- ПУБЛИЧЕН КАТАЛОГ -->
-    <h2>Публикувани проекти</h2>
-    <div id="catalog" class="catalog-grid"></div>
-</div>
+        <section class="public-view">
+            <h2>Public View (Каталог)</h2>
+            <div id="catalogContainer"></div>
+        </section>
+    </main>
 
-<script>
-    const render = () => {
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const file = document.getElementById('pImage').files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const project = {
+                    title: document.getElementById('pTitle').value,
+                    desc: document.getElementById('pDesc').value,
+                    area: document.getElementById('pArea').value,
+                    floors: document.getElementById('pFloors').value,
+                    beds: document.getElementById('pBeds').value,
+                    baths: document.getElementById('pBaths').value,
+                    garage: document.getElementById('pGarage').value,
+                    mat: document.getElementById('pMat').value,
+                    style: document.getElementById('pStyle').value,
+                    price: document.getElementById('pPrice').value,
+                    img: e.target.result
+                };
+                let projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+                projects.push(project);
+                localStorage.setItem('myProjects', JSON.stringify(projects));
+                location.reload();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Зареждане на каталога
         const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-        const cat = document.getElementById('catalog');
-        cat.innerHTML = projects.map((p, i) => `
-            <div class="card">
-                <img src="${p.img}">
-                <h3>${p.title}</h3>
-                <p>Площ: ${p.area}м² | Спални: ${p.beds}</p>
-                <p>Бани: ${p.baths} | Етажи: ${p.floors}</p>
-                <p><strong>Цена: ${p.price}</strong></p>
-                <button onclick="del(${i})">Изтрий</button>
-            </div>
-        `).join('');
-    };
-
-    document.getElementById('uploadForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const list = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            list.push({
-                title: document.getElementById('pTitle').value,
-                desc: document.getElementById('pDesc').value,
-                area: document.getElementById('pArea').value,
-                floors: document.getElementById('pFloors').value,
-                beds: document.getElementById('pBeds').value,
-                baths: document.getElementById('pBaths').value,
-                garage: document.getElementById('pGarage').value,
-                price: document.getElementById('pPrice').value,
-                img: e.target.result
-            });
-            localStorage.setItem('myProjects', JSON.stringify(list));
-            location.reload();
-        };
-        reader.readAsDataURL(document.getElementById('pFile').files[0]);
-    });
-
-    function del(i) {
-        let list = JSON.parse(localStorage.getItem('myProjects'));
-        list.splice(i, 1);
-        localStorage.setItem('myProjects', JSON.stringify(list));
-        location.reload();
-    }
-
-    render();
-</script>
-
+        const container = document.getElementById('catalogContainer');
+        projects.forEach(p => {
+            container.innerHTML += `
+                <div class="pub-item">
+                    <h3>${p.title}</h3>
+                    <img src="${p.img}" style="width:200px; display:block;">
+                    <p>${p.desc}</p>
+                    <p><strong>Детайли:</strong> ${p.area} м², ${p.beds} спални, ${p.baths} бани, ${p.floors} етажа, Гараж: ${p.garage}</p>
+                    <p><strong>Стил:</strong> ${p.style} | <strong>Материал:</strong> ${p.mat} | <strong>Цена:</strong> ${p.price}</p>
+                </div>
+            `;
+        });
+    </script>
 </body>
 </html>
