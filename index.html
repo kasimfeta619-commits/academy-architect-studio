@@ -8,49 +8,142 @@
 </head>
 <body>
 
+    <!-- НАВИГАЦИЯ -->
     <header class="navbar">
         <a href="index.html" class="logo-area">
             <img src="assets/logo.png" alt="Logo" class="logo-icon" onerror="this.src='https://placehold.co/150x50?text=Logo'">
             <span>Academy Architect <span class="logo-studio">Studio</span></span>
         </a>
         <nav id="nav-links">
-            <a href="index.html" class="active" data-key="nav-home">Home</a>
-            <a href="catalog.html" data-key="nav-catalog">Catalog</a>
-            <a href="about.html" data-key="nav-about">About</a>
-            <a href="contact.html" data-key="nav-contact">Contact</a>
+            <a href="index.html" class="active" data-key="nav-home">Начало</a>
+            <a href="catalog.html" data-key="nav-catalog">Каталог</a>
+            <a href="about.html" data-key="nav-about">За нас</a>
+            <a href="planner.html" data-key="nav-planner">ИИ Планер</a>
+            <a href="contact.html" data-key="nav-contact">Контакт</a>
         </nav>
         <div class="header-actions">
             <div class="lang-switcher">
-                <button class="lang-btn active" onclick="changeLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="changeLanguage('bg')">BG</button>
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
             </div>
+            <a href="login.html" class="btn-login" id="btn-login">Вход</a>
         </div>
     </header>
 
+    <!-- HERO СЕКЦИЯ -->
     <main class="hero-section">
         <div class="hero-text-area">
-            <span class="eyebrow" id="hero-eyebrow">ARCHITECTURAL STUDIO</span>
-            <h1 id="hero-title">We design the future houses</h1>
-            <p id="hero-desc">Modern, energy-efficient and custom tailored living concepts for your family.</p>
-            <a href="catalog.html" class="btn-primary" id="hero-btn">Explore Catalog</a>
+            <span class="eyebrow" id="hero-eyebrow">ПРОЕКТИ ЗА КЪЩИ - ОСН. 2026</span>
+            <h1 id="hero-title">Домове, начертани с намерение.</h1>
+            <p id="hero-desc">Academy Architect Studio е личен каталог с проекти на къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
+            <div class="hero-buttons">
+                <a href="catalog.html" class="btn-primary" id="hero-btn-catalog">Разгледай каталога →</a>
+                <a href="about.html" class="btn-secondary" id="hero-btn-about">За студиото</a>
+            </div>
         </div>
         <div class="hero-image-area">
             <div class="hero-main-img">
-                <img src="assets/hero-blueprint.png" alt="House Blueprint" onerror="this.src='https://placehold.co/500x400?text=Hero+Blueprint'">
+                <img src="assets/hero-blueprint.png" alt="House Blueprint" onerror="this.src='https://placehold.co/500x600?text=Hero+Blueprint'">
             </div>
             <div class="latest-badge">
                 <span class="badge-title">LATEST</span>
-                <span class="badge-sub">Timber-Stone series</span>
+                <span class="badge-sub">Timber & Stone series</span>
             </div>
         </div>
     </main>
 
+    <!-- СЕКЦИЯ ФАВОРИТНИ ПРОЕКТИ -->
+    <section class="recent-projects">
+        <div class="section-header">
+            <div>
+                <span class="eyebrow" id="recent-eyebrow">ИЗБРАНИ</span>
+                <h2 id="recent-title">Фаворитни проекти</h2>
+            </div>
+        </div>
+
+        <div class="projects-grid">
+            <!-- 1 -->
+            <div class="project-card">
+                <div class="project-img-box">
+                    <img src="assets/skyline.jpg" alt="Скайлайн Резиденция" onerror="this.src='https://placehold.co/400x260?text=Skyline+Residence'">
+                </div>
+                <div class="project-info">
+                    <span class="p-title">Скайлайн Резиденция</span>
+                    <span class="p-meta">2 етажа · Ultra Luxury Contemporary</span>
+                    <span class="p-area">340 м²</span>
+                </div>
+            </div>
+            <!-- 2 -->
+            <div class="project-card">
+                <div class="project-img-box">
+                    <img src="assets/alpine.jpg" alt="Алпийски комплекс Еделвайс" onerror="this.src='https://placehold.co/400x260?text=Alpine+Chalet'">
+                </div>
+                <div class="project-info">
+                    <span class="p-title">Алпийски комплекс Еделвайс</span>
+                    <span class="p-meta">2 етажа · Alpine Chalet</span>
+                    <span class="p-area">280 м²</span>
+                </div>
+            </div>
+            <!-- 3 -->
+            <div class="project-card">
+                <div class="project-img-box">
+                    <img src="assets/varna-wave.jpg" alt="Варна Уейв Комплекс" onerror="this.src='https://placehold.co/400x260?text=Varna+Wave'">
+                </div>
+                <div class="project-info">
+                    <span class="p-title">Варна Уейв Комплекс</span>
+                    <span class="p-meta">2 етажа · Mediterranean Modern</span>
+                    <span class="p-area">420 м²</span>
+                </div>
+            </div>
+            <!-- 4 -->
+            <div class="project-card">
+                <div class="project-img-box">
+                    <img src="assets/oasis.jpg" alt="Оазис Вила" onerror="this.src='https://placehold.co/400x260?text=Oasis+Villa'">
+                </div>
+                <div class="project-info">
+                    <span class="p-title">Оазис Вила</span>
+                    <span class="p-meta">1 етаж · Modern Minimalist</span>
+                    <span class="p-area">150 м²</span>
+                </div>
+            </div>
+            <!-- 5 -->
+            <div class="project-card">
+                <div class="project-img-box">
+                    <img src="assets/bungalow.jpg" alt="Бунгало 60" onerror="this.src='https://placehold.co/400x260?text=Bungalow+60'">
+                </div>
+                <div class="project-info">
+                    <span class="p-title">Бунгало 60</span>
+                    <span class="p-meta">1 етаж · Modern Minimalist</span>
+                    <span class="p-area">60 м²</span>
+                </div>
+            </div>
+            <!-- 6 -->
+            <div class="project-card">
+                <div class="project-img-box">
+                    <img src="assets/minimalist.jpg" alt="Минималистична Къща" onerror="this.src='https://placehold.co/400x260?text=Minimalist+House'">
+                </div>
+                <div class="project-info">
+                    <span class="p-title">Минималистична Къща</span>
+                    <span class="p-meta">2 етажа · Minimalist</span>
+                    <span class="p-area">175 м²</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ЦИТАТ СЕКЦИЯ -->
+    <section class="quote-section">
+        <h2 id="quote-text">Всеки план разказва как ще се живее в него.</h2>
+        <p id="quote-sub">Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификации на материали и разчет на квадратура.</p>
+    </section>
+
+    <!-- ФУТЪР -->
     <footer class="main-footer">
         <div class="footer-logo-area">
             <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
             <div>
                 <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
-                <p class="footer-subtext" id="footer-subtext">ARCHITECTURAL DESIGN STUDIO</p>
+                <p class="footer-subtext" id="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
             </div>
         </div>
         <div class="footer-col">
@@ -60,26 +153,47 @@
         </div>
         <div class="footer-col footer-right">
             <p>© 2026</p>
-            <p id="footer-rights">Academy Architect Studio — All rights reserved.</p>
+            <p id="footer-rights">Academy Architect Studio — Всички права запазени.</p>
         </div>
     </footer>
 
+    <!-- ЕЗИКОВА СИСТЕМА -->
     <script>
         const translations = {
-            en: { "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-contact": "Contact", "hero-eyebrow": "ARCHITECTURAL STUDIO", "hero-title": "We design the future houses", "hero-desc": "Modern, energy-efficient and custom tailored living concepts for your family.", "hero-btn": "Explore Catalog", "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved." },
-            bg: { "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-contact": "Контакт", "hero-eyebrow": "АРХИТЕКТУРНО СТУДИО", "hero-title": "Ние проектираме къщите на бъдещето", "hero-desc": "Модерни, енергийноефективни и индивидуални концепции за вашия дом.", "hero-btn": "Виж каталога", "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени." }
+            en: {
+                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
+                "hero-eyebrow": "HOUSE PROJECTS - EST. 2026", "hero-title": "Houses drawn with intention.", "hero-desc": "Academy Architect Studio is a personal house project catalog — plans, visualizations and specifications down to the last square meter.", "hero-btn-catalog": "Explore catalog →", "hero-btn-about": "About studio",
+                "recent-eyebrow": "FEATURED", "recent-title": "Favorite projects",
+                "quote-text": "Every plan tells a story of how it will be lived in.", "quote-sub": "We work with small families, investors and municipalities. Each project comes with floor plans, 3D renders, material specs and area estimates.",
+                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
+            },
+            bg: {
+                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", "btn-login": "Вход",
+                "hero-eyebrow": "ПРОЕКТИ ЗА КЪЩИ - ОСН. 2026", "hero-title": "Домове, начертани с намерение.", "hero-desc": "Academy Architect Studio е личен каталог с проекти на къщи — планове, визуализации и спецификации до последния квадратен метър.", "hero-btn-catalog": "Разгледай каталога →", "hero-btn-about": "За студиото",
+                "recent-eyebrow": "ИЗБРАНИ", "recent-title": "Фаворитни проекти",
+                "quote-text": "Всеки план разказва как ще се живее в него.", "quote-sub": "Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификации на материали и разчет на квадратура.",
+                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
+            }
         };
+
         function changeLanguage(lang) {
             document.querySelectorAll('#nav-links a').forEach(link => {
                 const key = link.getAttribute('data-key');
                 if (translations[lang][key]) link.innerText = translations[lang][key];
             });
+            document.getElementById('btn-login').innerText = translations[lang]['btn-login'];
             document.getElementById('hero-eyebrow').innerText = translations[lang]['hero-eyebrow'];
+            document.getElementById('recent-title').innerText = translations[lang]['recent-title'];
             document.getElementById('hero-title').innerText = translations[lang]['hero-title'];
             document.getElementById('hero-desc').innerText = translations[lang]['hero-desc'];
-            document.getElementById('hero-btn').innerText = translations[lang]['hero-btn'];
+            document.getElementById('hero-btn-catalog').innerText = translations[lang]['hero-btn-catalog'];
+            document.getElementById('hero-btn-about').innerText = translations[lang]['hero-btn-about'];
+            document.getElementById('recent-eyebrow').innerText = translations[lang]['recent-eyebrow'];
+            document.getElementById('quote-text').innerText = translations[lang]['quote-text'];
+            document.getElementById('quote-sub').innerText = translations[lang]['quote-sub'];
             document.getElementById('footer-subtext').innerText = translations[lang]['footer-subtext'];
             document.getElementById('footer-rights').innerText = translations[lang]['footer-rights'];
+
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
