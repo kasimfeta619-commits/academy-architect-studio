@@ -6,33 +6,102 @@
     <title>Contact | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .contact-info-grid {
-            display: flex;
-            gap: 60px;
+        /* ДВЕ КОЛОНИ ЗА КОНТАКТИТЕ */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
             margin-top: 40px;
-            flex-wrap: wrap;
+            margin-bottom: 60px;
         }
-        .contact-block {
+
+        /* ЛЯВА КОЛОНА: ИНФОРМАЦИЯ */
+        .contact-info-block {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 35px;
         }
-        .contact-block label {
+        .info-group h3 {
             font-size: 0.65rem;
-            color: #8c8275;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: #8c8275;
+            margin-bottom: 10px;
+            font-weight: 700;
         }
-        .contact-block p, .contact-block a {
-            font-size: 1rem;
+        .info-group p, .info-group a {
+            font-size: 1.1rem;
             color: #1a1a1a;
             text-decoration: none;
-            font-weight: 500;
+            line-height: 1.5;
         }
-        .contact-block a {
-            text-decoration: underline;
-            text-underline-offset: 4px;
+        .info-group a:hover {
+            color: #8c8275;
+        }
+
+        /* ВДЯСНО: ФОРМА ЗА КОНТАКТ */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #f4eee5;
+            padding: 40px;
+            border: 1px solid #eadecc;
+        }
+        .contact-form h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-field label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8c8275;
+            font-weight: 600;
+        }
+        .form-field input, .form-field textarea {
+            padding: 12px;
+            border: 1px solid #eadecc;
+            background: #fff;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+        }
+        .form-field textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .btn-submit {
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+        .btn-submit:hover {
+            background: #333;
+        }
+
+        /* АДАПТИВНОСТ ЗА МОБИЛНИ УСТРОЙСТВА */
+        @media (max-width: 991px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+            .contact-form {
+                padding: 25px;
+            }
         }
     </style>
 </head>
@@ -61,20 +130,54 @@
     </header>
 
     <!-- ОСНОВНО СЪДЪРЖАНИЕ -->
-    <main class="content-container">
-        <span class="eyebrow" id="contact-eyebrow">КОНТАКТ</span>
-        <h1 id="contact-title" style="max-width: 600px; margin-bottom: 20px;">Напишете за проект или адаптация.</h1>
+    <main class="content-container" style="padding: 60px 10%;">
+        <span class="eyebrow" id="page-eyebrow">КОНТАКТИ</span>
+        <h1 id="page-title">Свържете се с нас</h1>
         
-        <!-- КОНТАКТНА ИНФОРМАЦИЯ О СНИМКАТА -->
-        <div class="contact-info-grid">
-            <div class="contact-block">
-                <label id="lbl-email">EMAIL</label>
-                <a href="mailto:hello@academyarchitectstudios.com">hello@academyarchitectstudios.com</a>
+        <div class="contact-container">
+            
+            <!-- ЛЯВА СЕКЦИЯ: ДЕТАЙЛИ -->
+            <div class="contact-info-block">
+                <div class="info-group">
+                    <h3 id="lbl-office">Офиси</h3>
+                    <p>София · Пловдив · Варна</p>
+                </div>
+                <div class="info-group">
+                    <h3 id="lbl-email">Имейл адрес</h3>
+                    <p><a href="mailto:hello@academyarchitectstudios.com">hello@academyarchitectstudios.com</a></p>
+                </div>
+                <div class="info-group">
+                    <h3 id="lbl-phone">Телефон</h3>
+                    <p>+359 888 123 456</p>
+                </div>
+                <div class="info-group">
+                    <h3 id="lbl-hours">Работно време</h3>
+                    <p id="txt-hours">Понеделник - Петък: 09:00 - 18:00</p>
+                </div>
             </div>
-            <div class="contact-block">
-                <label id="lbl-studio">СТУДИО</label>
-                <p>Sofia · Plovdiv · Varna</p>
-            </div>
+
+            <!-- ДЯСНА СЕКЦИЯ: ФОРМА -->
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('Съобщението е изпратено успешно!');">
+                <h2 id="form-heading">Пишете ни директно</h2>
+                
+                <div class="form-field">
+                    <label id="lbl-form-name">Вашето име</label>
+                    <input type="text" placeholder="Иван Иванов" required>
+                </div>
+                
+                <div class="form-field">
+                    <label id="lbl-form-email">Имейл</label>
+                    <input type="email" placeholder="name@example.com" required>
+                </div>
+                
+                <div class="form-field">
+                    <label id="lbl-form-msg">Съобщение</label>
+                    <textarea placeholder="Здравейте, интересувам се от проект..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="btn-submit">Изпрати запитване</button>
+            </form>
+
         </div>
     </main>
 
@@ -98,43 +201,51 @@
         </div>
     </footer>
 
-    <!-- ЕЗИКОВА СИСТЕМА -->
+    <!-- СИСТЕМА ЗА ПРЕВОД (КАТАЛОГЪТ СЕ СКРИВА НА EN) -->
     <script>
         const translations = {
             en: {
-                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
-                "contact-eyebrow": "CONTACT",
-                "contact-title": "Write about a project or an adaptation.",
-                "lbl-email": "EMAIL", "lbl-studio": "STUDIO",
+                "nav-home": "Home", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
+                "page-eyebrow": "CONTACT", "page-title": "Get in touch",
+                "lbl-office": "Offices", "lbl-email": "Email Address", "lbl-phone": "Phone", "lbl-hours": "Working Hours", "txt-hours": "Monday - Friday: 09:00 - 18:00",
+                "form-heading": "Write us directly", "lbl-form-name": "Your Name", "lbl-form-email": "Email", "lbl-form-msg": "Message", "btn-submit": "Send Inquiry",
                 "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
             },
             bg: {
                 "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", "btn-login": "Вход",
-                "contact-eyebrow": "КОНТАКТ",
-                "contact-title": "Напишете за проект или адаптация.",
-                "lbl-email": "EMAIL", "lbl-studio": "СТУДИО",
+                "page-eyebrow": "КОНТАКТИ", "page-title": "Свържете се с нас",
+                "lbl-office": "Офиси", "lbl-email": "Имейл адрес", "lbl-phone": "Телефон", "lbl-hours": "Работно време", "txt-hours": "Понеделник - Петък: 09:00 - 18:00",
+                "form-heading": "Пишете ни директно", "lbl-form-name": "Вашето име", "lbl-form-email": "Имейл", "lbl-form-msg": "Съобщение", "btn-submit": "Изпрати запитване",
                 "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
             }
         };
 
         function changeLanguage(lang) {
-            // Смяна на линковете в менюто
             document.querySelectorAll('#nav-links a').forEach(link => {
                 const key = link.getAttribute('data-key');
                 if (translations[lang][key]) link.innerText = translations[lang][key];
             });
-            // Смяна на текстовете по страницата
-            document.getElementById('btn-login').innerText = translations[lang]['btn-login'];
-            document.getElementById('contact-eyebrow').innerText = translations[lang]['contact-eyebrow'];
-            document.getElementById('contact-title').innerText = translations[lang]['contact-title'];
-            document.getElementById('lbl-email').innerText = translations[lang]['lbl-email'];
-            document.getElementById('lbl-studio').innerText = translations[lang]['lbl-studio'];
-            document.getElementById('footer-subtext').innerText = translations[lang]['footer-subtext'];
-            document.getElementById('footer-rights').innerText = translations[lang]['footer-rights'];
 
-            // Актуализация на бутоните за език
+            // Скрива каталога на английски
+            const catalogLink = document.querySelector('#nav-links a[data-key="nav-catalog"]');
+            if (catalogLink) {
+                catalogLink.style.display = (lang === 'en') ? 'none' : 'inline-block';
+            }
+
+            // Динамична промяна на текстовете по страницата
+            const keysToTranslate = [
+                'btn-login', 'page-eyebrow', 'page-title', 'lbl-office', 'lbl-email', 
+                'lbl-phone', 'lbl-hours', 'txt-hours', 'form-heading', 'lbl-form-name', 
+                'lbl-form-email', 'lbl-form-msg', 'btn-submit', 'footer-subtext', 'footer-rights'
+            ];
+            
+            keysToTranslate.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && translations[lang][id]) el.innerText = translations[lang][id];
+            });
+
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if(event && event.target) event.target.classList.add('active');
         }
     </script>
 </body>
