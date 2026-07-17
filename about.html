@@ -5,57 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Основен контейнер за съдържанието */
-        .content-container {
-            padding: 60px 10%;
-            background-color: #fbf9f4;
-            min-height: 70vh;
-        }
-
-        /* Модерна секция "За нас" на две колони */
-        .about-intro {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 80px;
-            margin-top: 40px;
-            margin-bottom: 80px;
-            align-items: flex-start;
-        }
-        
-        .about-story h1 {
-            font-size: 2.5rem;
-            font-weight: 400;
-            line-height: 1.2;
-            color: #1a1a1a;
-            margin: 0;
-        }
-        
-        .about-details {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            margin-top: 10px;
-        }
-        
-        .about-details p {
-            font-size: 1.05rem;
-            color: #333;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* Адаптивност за мобилни телефони */
-        @media (max-width: 991px) {
-            .about-intro {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-            .about-story h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
 </head>
 <body>
 
@@ -81,25 +30,33 @@
         </div>
     </header>
 
-    <!-- ОСНОВНО СЪДЪРЖАНИЕ -->
-    <main class="content-container">
-        <span class="eyebrow" id="page-eyebrow">ЗА СТУДИОТО</span>
+    <!-- ОСНОВНО СЪДЪРЖАНИЕ (СЪС СИЛНО ФОРСИРАНИ СТИЛОВЕ) -->
+    <main class="content-container" style="padding: 60px 10% !important; background-color: #fbf9f4 !important; min-height: 70vh !important; display: block !important;">
+        <span class="eyebrow" id="page-eyebrow" style="display: block !important; margin-bottom: 20px !important;">ЗА СТУДИОТО</span>
         
-        <div class="about-intro">
+        <!-- ДВЕТЕ КОЛОНИ С ГАРАНТИРАНО РАЗДЕЛЕНИЕ -->
+        <div class="about-intro-grid" style="display: grid !important; grid-template-columns: 1.2fr 1fr !important; gap: 80px !important; margin-top: 40px !important; margin-bottom: 80px !important; align-items: flex-start !important;">
+            
             <!-- ЛЯВА КОЛОНА: ГОЛЯМОТО ЗАГЛАВИЕ -->
-            <div class="about-story">
-                <h1 id="page-title">Личен архив на архитектурни проекти.</h1>
+            <div class="about-story" style="display: block !important;">
+                <h1 id="page-title" style="font-size: 2.8rem !important; font-weight: 400 !important; line-height: 1.2 !important; color: #1a1a1a !important; margin: 0 !important; letter-spacing: -0.5px !important;">
+                    Личен архив на архитектурни проекти.
+                </h1>
             </div>
             
             <!-- ДЯСНА КОЛОНА: ТВОЯТ ОРИГИНАЛЕН ТЕКСТ -->
-            <div class="about-details">
-                <p id="txt-p1">Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.</p>
-                <p id="txt-p2">Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.</p>
+            <div class="about-details" style="display: flex !important; flex-direction: column !important; gap: 24px !important; margin-top: 10px !important;">
+                <p id="txt-p1" style="font-size: 1.05rem !important; color: #333 !important; line-height: 1.7 !important; margin: 0 !important;">
+                    Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.
+                </p>
+                <p id="txt-p2" style="font-size: 1.05rem !important; color: #333 !important; line-height: 1.7 !important; margin: 0 !important;">
+                    Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.
+                </p>
             </div>
         </div>
     </main>
 
-    <!-- ФУТЪР (СЪС ЗАЩИТЕН ИМЕЙЛ) -->
+    <!-- ФУТЪР -->
     <footer class="main-footer">
         <div class="footer-logo-area">
             <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
@@ -111,7 +68,6 @@
         <div class="footer-col">
             <h4>STUDIO</h4>
             <p>Sofia · Plovdiv · Varna</p>
-            <!-- Променен имейл за защита на личните ти данни -->
             <p><a href="mailto:info@architectstudio.com">info@architectstudio.com</a></p>
         </div>
         <div class="footer-col footer-right">
@@ -136,7 +92,7 @@
                 "page-eyebrow": "ЗА СТУДИОТО", 
                 "page-title": "Личен архив на архитектурни проекти.",
                 "txt-p1": "Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.",
-                "txt-p2": "Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и budget.",
+                "txt-p2": "Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.",
                 "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
             }
         };
