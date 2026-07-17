@@ -9,11 +9,14 @@
     <header class="navbar">
         <div class="logo-area">
             <img src="assets/logo.png" alt="Logo" class="logo-img">
-            <a href="#" class="logo-text">Academy Architect <span>Studio</span></a>
+            <a href="index.html" class="logo-text">Academy Architect <span>Studio</span></a>
         </div>
         <nav>
-            <a href="#">Начало</a><a href="#">Каталог</a><a href="#">За нас</a>
-            <a href="#">ИИ Планер</a><a href="#">Контакт</a>
+            <a href="index.html">Начало</a>
+            <a href="catalog.html">Каталог</a>
+            <a href="#">За нас</a>
+            <a href="#">ИИ Планер</a>
+            <a href="#">Контакт</a>
         </nav>
         <div class="user-actions">EN | BG | Вход</div>
     </header>
@@ -24,7 +27,7 @@
             <h1>Домове, начертани с намерение.</h1>
             <p>Academy Architect Studio е личен каталог с проекти за къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
             <div class="hero-buttons">
-                <button class="btn-primary">Разгледай каталога →</button>
+                <button class="btn-primary" onclick="window.location.href='catalog.html'">Разгледай каталога →</button>
                 <button class="btn-secondary">За студиото</button>
             </div>
         </div>
@@ -34,7 +37,10 @@
     </main>
 
     <section class="recent-projects">
-        <div class="header-row"><h2>Скорошни проекти</h2><a href="#">Каталог →</a></div>
+        <div class="header-row">
+            <h2>Скорошни проекти</h2>
+            <a href="catalog.html">Каталог →</a>
+        </div>
         <div class="projects-grid">
             <div class="project-card"><img src="assets/project1.jpg"><div class="project-info"><h3>Скайлайн Резиденция</h3><span class="sqm">340 m²</span></div><p>5 етажа · Ultra-Luxury</p></div>
             <div class="project-card"><img src="assets/project2.jpg"><div class="project-info"><h3>Алпийски комплекс</h3><span class="sqm">280 m²</span></div><p>2 етажа · Alpine</p></div>
