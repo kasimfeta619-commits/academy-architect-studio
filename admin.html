@@ -1,110 +1,89 @@
-<script>
-        // Функция за автоматично смаляване на снимки
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ Панел | Academy Architect</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; }
+        .admin-container { max-width: 800px; margin: 40px auto; padding: 40px; background: #fff; border: 1px solid #ddd; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; }
+        .btn-upload { width: 100%; padding: 15px; background: #333; color: #fff; border: none; cursor: pointer; }
+        .pub-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <main class="admin-container">
+        <h2>Добавяне на проект</h2>
+        <form id="uploadForm">
+            <div class="form-group"><label>Име</label><input type="text" id="projectTitle" required></div>
+            <div class="form-group"><label>Описание</label><textarea id="projectDesc"></textarea></div>
+            <div class="form-group"><label>Площ</label><input type="text" id="pArea"></div>
+            <div class="form-group"><label>Цена</label><input type="text" id="pPrice"></div>
+            <div class="form-group"><input type="checkbox" id="isFavorite"> Фаворитен проект</div>
+            <div class="form-group"><label>Снимки (Галерия)</label><input type="file" id="galleryPhotos" multiple accept="image/*"></div>
+            <button type="submit" class="btn-upload">Запази проект</button>
+        </form>
+        <div id="projectList" style="margin-top:30px;"></div>
+    </main>
+
+    <script>
+        // Функция за компресия на снимки
         const toBase64 = (file) => new Promise((resolve) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onload = (event) => {
+            reader.onload = (e) => {
                 const img = new Image();
-                img.src = event.target.result;
+                img.src = e.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800;
+                    const MAX_WIDTH = 600;
                     const scale = Math.min(MAX_WIDTH / img.width, 1);
                     canvas.width = img.width * scale;
                     canvas.height = img.height * scale;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.7));
+                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.6));
                 };
             };
         });
 
-        function renderList() {
-            const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-            const listContainer = document.getElementById('projectList');
-            listContainer.innerHTML = projects.map((p, index) => `
-                <div class="pub-item">
-                    <span>${p.title} ${p.isFavorite ? '⭐' : ''}</span>
-                    <div>
-                        <button onclick="editProject(${index})" class="btn-action">Редактирай</button>
-                        <a href="project.html?id=${index}" target="_blank" class="btn-view">Виж</a>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Поправена функция за редакция - добавени всички полета
-        function editProject(index) {
-            let projects = JSON.parse(localStorage.getItem('myProjects'));
-            let p = projects[index];
-
-            p.title = prompt("Име на проекта:", p.title) || p.title;
-            p.description = prompt("Описание:", p.description) || p.description;
-            p.area = prompt("Площ (м²):", p.area) || p.area;
-            p.floors = prompt("Етажи:", p.floors) || p.floors;
-            p.price = prompt("Цена:", p.price) || p.price;
-            p.isFavorite = confirm("Маркирай като Фаворитен?");
-
-            localStorage.setItem('myProjects', JSON.stringify(projects));
-            alert("Проектът е актуализиран!");
-            renderList();
-        }
-
+        // Основен логически цикъл
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert("Обработвам снимките... моля изчакайте.");
-            
-            const gFiles = document.getElementById('galleryPhotos').files;
-            const pFiles = document.getElementById('floorPlans').files;
-            
-            const gArr = []; for(let f of gFiles) gArr.push(await toBase64(f));
-            const pArr = []; for(let f of pFiles) pArr.push(await toBase64(f));
+            const files = document.getElementById('galleryPhotos').files;
+            const gallery = [];
+            for (let f of files) gallery.push(await toBase64(f));
 
-            // Добавени всички полета в обекта
             const project = {
                 title: document.getElementById('projectTitle').value,
                 description: document.getElementById('projectDesc').value,
                 area: document.getElementById('pArea').value,
-                floors: document.getElementById('pFloors').value,
-                beds: document.getElementById('pBeds').value,
-                baths: document.getElementById('pBaths').value,
-                garage: document.getElementById('pGarage').value,
-                material: document.getElementById('pMat').value,
-                style: document.getElementById('pStyle').value,
                 price: document.getElementById('pPrice').value,
                 isFavorite: document.getElementById('isFavorite').checked,
-                gallery: gArr,
-                plans: pArr
+                gallery: gallery
             };
-            
-            let projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+
+            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
             projects.push(project);
             localStorage.setItem('myProjects', JSON.stringify(projects));
-            alert("Успешно добавено!");
-            document.getElementById('uploadForm').reset();
-            renderList();
+            alert("Проектът е запазен!");
+            location.reload(); // Презарежда, за да се появи в списъка
         });
 
-        function exportData() {
-            const data = localStorage.getItem('myProjects');
-            if (!data) return alert("Няма данни!");
-            const blob = new Blob([data], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'backup_projects.json';
-            a.click();
-        }
+        // Показване на списъка
+        const list = JSON.parse(localStorage.getItem('myProjects') || '[]');
+        const container = document.getElementById('projectList');
+        list.forEach((p, i) => {
+            container.innerHTML += `<div class="pub-item">${p.title} <button onclick="deleteProject(${i})">Изтрий</button></div>`;
+        });
 
-        function importData(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                localStorage.setItem('myProjects', e.target.result);
-                renderList();
-                alert("Данните са възстановени!");
-            };
-            reader.readAsText(file);
+        function deleteProject(i) {
+            const projects = JSON.parse(localStorage.getItem('myProjects'));
+            projects.splice(i, 1);
+            localStorage.setItem('myProjects', JSON.stringify(projects));
+            location.reload();
         }
-
-        renderList();
     </script>
+</body>
+</html>
