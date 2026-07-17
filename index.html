@@ -2,7 +2,7 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>Academy Architect Studio</title>
+    <title>Каталог | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,62 +14,29 @@
         <nav>
             <a href="index.html">Начало</a>
             <a href="catalog.html">Каталог</a>
-            <a href="#">За нас</a>
+            <a href="about.html">За нас</a>
             <a href="#">ИИ Планер</a>
-            <a href="#">Контакт</a>
+            <a href="contact.html">Контакт</a>
         </nav>
         <div class="user-actions">EN | BG | Вход</div>
     </header>
 
-    <main class="hero">
-        <div class="hero-text">
-            <span class="eyebrow">ПРОЕКТИ ЗА КЪЩИ · ОСН. 2026</span>
-            <h1>Домове, начертани с намерение.</h1>
-            <p>Academy Architect Studio е личен каталог с проекти за къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
-            <div class="hero-buttons">
-                <button class="btn-primary" onclick="window.location.href='catalog.html'">Разгледай каталога →</button>
-                <button class="btn-secondary">За студиото</button>
+    <main class="catalog-page" style="padding: 50px 5%;">
+        <h1>Каталог с проекти за къщи</h1>
+        <section class="filters">
+            <select><option>Тип</option></select>
+            <input type="number" placeholder="min m²">
+            <input type="number" placeholder="max m²">
+            <select><option>Етажи</option></select>
+            <button class="btn-secondary">Изчисти</button>
+        </section>
+        <div class="projects-grid">
+            <div class="project-card">
+                <img src="assets/project1.jpg">
+                <h3>Минималистична Къща</h3>
+                <div class="stats"><span>М²: 175</span> <span>ЕТАЖИ: 2</span></div>
             </div>
         </div>
-        <div class="hero-image">
-            <img src="assets/main-graphic.png" alt="Main Graphic">
-        </div>
     </main>
-
-    <section class="recent-projects">
-        <div class="header-row">
-            <h2>Скорошни проекти</h2>
-            <a href="catalog.html">Каталог →</a>
-        </div>
-        <div class="projects-grid">
-            <div class="project-card"><img src="assets/project1.jpg"><div class="project-info"><h3>Скайлайн Резиденция</h3><span class="sqm">340 m²</span></div><p>5 етажа · Ultra-Luxury</p></div>
-            <div class="project-card"><img src="assets/project2.jpg"><div class="project-info"><h3>Алпийски комплекс</h3><span class="sqm">280 m²</span></div><p>2 етажа · Alpine</p></div>
-            <div class="project-card"><img src="assets/project3.jpg"><div class="project-info"><h3>Варна Уейв</h3><span class="sqm">420 m²</span></div><p>2 етажа · Modern</p></div>
-            <div class="project-card"><img src="assets/project4.jpg"><div class="project-info"><h3>Минималистична</h3><span class="sqm">200 m²</span></div><p>1 етаж · Minimalist</p></div>
-            <div class="project-card"><img src="assets/project5.jpg"><div class="project-info"><h3>Проект 5</h3><span class="sqm">300 m²</span></div><p>2 етажа · Modern</p></div>
-            <div class="project-card"><img src="assets/project6.jpg"><div class="project-info"><h3>Проект 6</h3><span class="sqm">450 m²</span></div><p>3 етажа · Luxury</p></div>
-        </div>
-    </section>
-
-    <section class="mission-section">
-        <div class="mission-content">
-            <h2>Всеки план разказва как ще се живее в него.</h2>
-            <p>Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификация на материали и разчет на квадратура.</p>
-        </div>
-    </section>
-
-    <footer class="main-footer">
-        <div class="footer-col">
-            <img src="assets/logo.png" alt="Logo" style="width: 30px;">
-            <p><strong>Academy Architect Studio</strong><br>АРХИТЕКТУРНО СТУДИО</p>
-        </div>
-        <div class="footer-col">
-            <h4>STUDIO</h4>
-            <p>Sofia · Plovdiv · Varna<br>hello@academyarchitectstudios.com</p>
-        </div>
-        <div class="footer-col">
-            <p>© 2026<br>Academy Architect Studio — Всички права запазени.</p>
-        </div>
-    </footer>
 </body>
 </html>
