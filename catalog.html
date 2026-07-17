@@ -2,42 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Contact | Academy Architect Studio</title>
+    <title>Catalog | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="navbar">
-        <div class="logo-area">
+        <a href="index.html" class="logo-area" style="text-decoration:none; color:#1a1a1a;">
             <img src="assets/logo.png" alt="Logo" class="logo-icon">
-            <span class="logo-text">Academy Architect <span>Studio</span></span>
-        </div>
+            <span>Academy Architect Studio</span>
+        </a>
         <nav>
             <a href="index.html">Home</a>
-            <a href="catalog.html">Catalog</a>
+            <a href="catalog.html" class="active">Catalog</a>
             <a href="about.html">About</a>
-            <a href="#">AI Planner</a>
-            <a href="contact.html" class="active">Contact</a>
+            <a href="contact.html">Contact</a>
         </nav>
-        <div class="user-actions">
-            <span>EN · BG</span>
-            <button class="btn-sign">Sign in</button>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
         </div>
     </header>
-
-    <main class="contact-page">
-        <span class="eyebrow">CONTACT</span>
-        <h1>Write about a project or an adaptation.</h1>
-        
-        <div class="contact-details">
-            <div>
-                <span class="eyebrow">EMAIL</span>
-                <p><a href="mailto:hello@academyarchitectstudios.com" class="email-link">hello@academyarchitectstudios.com</a></p>
-            </div>
-            <div>
-                <span class="eyebrow">STUDIO</span>
-                <p class="location-text">Sofia · Plovdiv · Varna</p>
-            </div>
-        </div>
+    <main class="content-wrapper">
+        <h1 id="cat-title">House Project Catalog</h1>
     </main>
+    <script>
+        function setLanguage(lang) {
+            document.getElementById('cat-title').innerText = (lang === 'en') ? "House Project Catalog" : "Каталог с проекти";
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>

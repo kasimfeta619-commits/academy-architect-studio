@@ -7,45 +7,30 @@
 </head>
 <body>
     <header class="navbar">
-        <div class="logo-area">
+        <a href="index.html" class="logo-area" style="text-decoration:none; color:#1a1a1a;">
             <img src="assets/logo.png" alt="Logo" class="logo-icon">
-            <span class="logo-text">Academy Architect <span>Studio</span></span>
-        </div>
+            <span>Academy Architect Studio</span>
+        </a>
         <nav>
             <a href="index.html">Home</a>
             <a href="catalog.html">Catalog</a>
             <a href="about.html" class="active">About</a>
-            <a href="#">AI Planner</a>
             <a href="contact.html">Contact</a>
         </nav>
-        <div class="user-actions">
-            <span>EN · BG</span>
-            <button class="btn-sign">Sign in</button>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
         </div>
     </header>
-
-    <main class="about-page" style="padding: 80px 5%; max-width: 900px;">
-        <span class="eyebrow">ABOUT THE STUDIO</span>
-        <h1 style="font-size: 4rem; font-weight: 400; margin: 30px 0;">Personal archive of architectural projects.</h1>
-        
-        <div style="font-size: 1.2rem; color: #555; line-height: 1.8;">
-            <p>Academy Architect Studio is an author's catalog of house projects. Each project is developed with attention to proportions, light, and material — from the initial sketch to the detailed floor plan.</p>
-            <p>Here I upload my own works. Each project is ready for adaptation to a specific plot, climate, and budget.</p>
-        </div>
+    <main class="content-wrapper">
+        <h1 id="about-title">Personal archive of architectural projects.</h1>
     </main>
-
-    <footer class="main-footer" style="margin-top: 100px;">
-        <div class="footer-left">
-            <img src="assets/logo.png" alt="Logo" class="footer-logo">
-            <p><strong>Academy Architect Studio</strong><br>ARCHITECTURAL DESIGN STUDIO</p>
-        </div>
-        <div class="footer-mid">
-            <h4>STUDIO</h4>
-            <p>Sofia · Plovdiv · Varna<br>hello@academyarchitectstudios.com</p>
-        </div>
-        <div class="footer-right">
-            <p>© 2026<br>Academy Architect Studio — All rights reserved.</p>
-        </div>
-    </footer>
+    <script>
+        function setLanguage(lang) {
+            document.getElementById('about-title').innerText = (lang === 'en') ? "Personal archive of architectural projects." : "Личен архив от архитектурни проекти.";
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>

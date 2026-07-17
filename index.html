@@ -31,23 +31,13 @@
 
     <script>
         const texts = {
-            en: {
-                eyebrow: "HOUSE PROJECTS · EST. 2026",
-                title: "Homes drawn with intention.",
-                btn: "Browse the catalog →"
-            },
-            bg: {
-                eyebrow: "ПРОЕКТИ ЗА КЪЩИ · 2026",
-                title: "Къщи, проектирани с намерение.",
-                btn: "Разгледай каталога →"
-            }
+            en: { eyebrow: "HOUSE PROJECTS · EST. 2026", title: "Homes drawn with intention.", btn: "Browse the catalog →" },
+            bg: { eyebrow: "ПРОЕКТИ ЗА КЪЩИ · 2026", title: "Къщи, проектирани с намерение.", btn: "Разгледай каталога →" }
         };
-
         function setLanguage(lang) {
             document.getElementById('eyebrow').innerText = texts[lang].eyebrow;
             document.getElementById('title').innerText = texts[lang].title;
             document.getElementById('btn-browse').innerText = texts[lang].btn;
-            
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }

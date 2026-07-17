@@ -1,30 +1,36 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Контакт | Academy Architect Studio</title>
+    <title>Contact | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="navbar">
-        <div class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-img">
-            <a href="index.html" class="logo-text">Academy Architect <span>Studio</span></a>
-        </div>
+        <a href="index.html" class="logo-area" style="text-decoration:none; color:#1a1a1a;">
+            <img src="assets/logo.png" alt="Logo" class="logo-icon">
+            <span>Academy Architect Studio</span>
+        </a>
         <nav>
-            <a href="index.html">Начало</a>
-            <a href="catalog.html">Каталог</a>
-            <a href="about.html">За нас</a>
-            <a href="#">ИИ Планер</a>
-            <a href="contact.html">Контакт</a>
+            <a href="index.html">Home</a>
+            <a href="catalog.html">Catalog</a>
+            <a href="about.html">About</a>
+            <a href="contact.html" class="active">Contact</a>
         </nav>
-        <div class="user-actions">EN | BG | Вход</div>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
+        </div>
     </header>
-
-    <main style="padding: 80px 5%; max-width: 800px;">
-        <h1>Напишете за проект или адаптация.</h1>
-        <p><a href="mailto:hello@academyarchitectstudios.com">hello@academyarchitectstudios.com</a></p>
-        <p>Sofia · Plovdiv · Varna</p>
+    <main class="content-wrapper">
+        <h1 id="cont-title">Write about a project or an adaptation.</h1>
     </main>
+    <script>
+        function setLanguage(lang) {
+            document.getElementById('cont-title').innerText = (lang === 'en') ? "Write about a project or an adaptation." : "Пишете за проект или адаптация.";
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>
