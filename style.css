@@ -1,37 +1,26 @@
+/* БАЗОВИ СТИЛОВЕ */
 body { background-color: #fcfaf5; color: #1a1a1a; margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; }
 
-/* Navbar */
+/* НАВИГАЦИЯ */
 .navbar { display: flex; justify-content: space-between; align-items: center; padding: 30px 5%; }
 .logo-area { display: flex; align-items: center; gap: 10px; }
-.logo-img { width: 40px; }
 .logo-text { font-size: 1.2rem; font-weight: 700; color: #1a1a1a; text-decoration: none; }
-.logo-text span { color: #888; font-weight: 300; }
-.navbar nav a { margin: 0 20px; text-decoration: none; color: #1a1a1a; font-size: 0.9rem; font-weight: 500; }
+.navbar nav a { margin: 0 15px; text-decoration: none; color: #1a1a1a; font-size: 0.9rem; font-weight: 500; }
 
-/* Hero */
-.hero { display: flex; align-items: center; justify-content: space-between; padding: 80px 5%; gap: 80px; }
-.hero-text { flex: 1; max-width: 600px; }
-.hero-image img { width: 100%; max-width: 500px; height: auto; }
-h1 { font-size: 4rem; line-height: 1; margin: 20px 0; font-weight: 600; }
-.eyebrow { text-transform: uppercase; letter-spacing: 3px; font-size: 0.7rem; color: #888; font-weight: bold; }
-.btn-primary { background: #1a1a1a; color: #fff; padding: 15px 30px; border: none; cursor: pointer; }
-.btn-secondary { background: transparent; border: 1px solid #ddd; padding: 15px 30px; cursor: pointer; }
+/* КАТАЛОГ И ФИЛТРИ */
+.catalog-page { padding: 50px 5%; }
+.filters { display: flex; gap: 10px; margin-bottom: 30px; align-items: center; }
+.filters input, .filters select { padding: 8px; border: 1px solid #ddd; }
 
-/* Projects */
-.recent-projects { padding: 80px 5%; }
-.header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 40px; }
-.projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-.project-card img { width: 100%; height: 300px; object-fit: cover; border: 1px solid #eee; }
-.project-info { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
-.project-card h3 { margin: 0; font-size: 1.1rem; }
-.project-card p { font-size: 0.85rem; color: #777; margin-top: 5px; }
-.sqm { font-size: 0.8rem; color: #aaa; }
+/* РЕШЕТКА ЗА ПРОЕКТИ - ТОВА ЛИПСВАШЕ */
+.projects-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 40px; 
+}
+.project-card img { width: 100%; height: 300px; object-fit: cover; }
+.project-card h3 { margin: 10px 0 5px 0; font-size: 1.1rem; }
+.project-card p { margin: 0; font-size: 0.85rem; color: #777; }
 
-/* Mission & Footer */
-.mission-section { padding: 100px 5%; background: #f7f3ed; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
-.mission-content { display: flex; gap: 50px; align-items: center; max-width: 1000px; margin: 0 auto; }
-.mission-content h2 { flex: 1; font-size: 2.5rem; margin: 0; }
-.mission-content p { flex: 1; color: #555; line-height: 1.6; }
-.main-footer { display: flex; justify-content: space-between; padding: 60px 5%; font-size: 0.85rem; color: #666; }
-.footer-col { flex: 1; }
-.footer-col h4 { color: #1a1a1a; margin-top: 0; }
+/* БУТОНИ И ЕЛЕМЕНТИ */
+.btn-secondary { background: transparent; border: 1px solid #ddd; padding: 8px 15px; cursor: pointer; }
