@@ -6,84 +6,41 @@
     <style>
         body { font-family: sans-serif; padding: 40px; background: #f4f4f4; }
         .admin-box { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h2 { margin-top: 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        
-        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-home { padding: 10px 20px; background: #444; color: white; text-decoration: none; border-radius: 4px; }
-        
         .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .full-width { grid-column: span 2; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
         input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        
-        .checkbox-group { display: flex; align-items: center; gap: 10px; margin: 20px 0; }
-        .btn-save { width: 100%; padding: 15px; background: #000; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
-
-        .pub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .pub-card { background: white; padding: 15px; border: 1px solid #ddd; }
-        .pub-card img { width: 100%; height: 150px; object-fit: cover; margin-bottom: 5px; }
-        .fav-border { border: 2px solid #ffd700; }
+        .btn-save { width: 100%; padding: 15px; background: #000; color: white; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="admin-box">
-    <div class="header-nav">
-        <h2>Админ Панел</h2>
-        <a href="index.html" class="btn-home">← Home Page</a>
-    </div>
-
+    <h2>Админ Панел: Добавяне на проект</h2>
     <form id="uploadForm">
-        <div class="form-group full-width"><label>Име на проекта</label><input type="text" id="title" required></div>
+        <div class="form-group full-width"><label>Име</label><input type="text" id="title" required></div>
         <div class="form-group full-width"><label>Описание</label><textarea id="desc" rows="3"></textarea></div>
         
         <div class="grid-layout">
             <div class="form-group"><label>Площ (м²)</label><input type="text" id="area"></div>
-            <div class="form-group"><label>Брой етажи</label><input type="number" id="floors"></div>
-            <div class="form-group"><label>Брой спални</label><input type="number" id="beds"></div>
-            <div class="form-group"><label>Брой бани</label><input type="number" id="baths"></div>
+            <div class="form-group"><label>Етажи</label><input type="number" id="floors"></div>
+            <div class="form-group"><label>Спални</label><input type="number" id="beds"></div>
+            <div class="form-group"><label>Бани</label><input type="number" id="baths"></div>
             <div class="form-group"><label>Материал</label><input type="text" id="material"></div>
             <div class="form-group"><label>Стил</label><input type="text" id="style"></div>
             <div class="form-group full-width"><label>Цена</label><input type="text" id="price"></div>
         </div>
 
-        <div class="checkbox-group">
-            <input type="checkbox" id="isFav"> <label for="isFav">Фаворитен проект (Home Page)</label>
+        <div class="form-group">
+            <input type="checkbox" id="isFav"> <label style="display:inline;" for="isFav">Фаворитен проект</label>
         </div>
 
-        <div class="form-group"><label>Снимки (избери няколко за галерия)</label><input type="file" id="imgFile" accept="image/*" multiple required></div>
+        <div class="form-group"><label>Снимки</label><input type="file" id="imgFile" accept="image/*" multiple required></div>
         <button type="submit" class="btn-save">Запази проекта</button>
     </form>
 </div>
 
-<div style="max-width: 800px; margin: 40px auto;">
-    <h2>Public View (Преглед на публикацията)</h2>
-    <div id="catalogContainer" class="pub-grid"></div>
-</div>
-
 <script>
-    const renderCatalog = () => {
-        const list = JSON.parse(localStorage.getItem('myProjects') || '[]');
-        const container = document.getElementById('catalogContainer');
-        container.innerHTML = '';
-        
-        list.forEach(p => {
-            const firstImg = p.imgs[0] || '';
-            container.innerHTML += `
-                <div class="pub-card ${p.isFav ? 'fav-border' : ''}">
-                    <img src="${firstImg}" alt="Project">
-                    <strong>${p.isFav ? '★ Фаворит' : 'Каталог'}</strong>
-                    <h3>${p.title}</h3>
-                    <p>${p.area}м² | ${p.beds} сп. | ${p.baths} бн.</p>
-                    <p>Стил: ${p.style} | Мат: ${p.material}</p>
-                    <p>Снимки в галерия: ${p.imgs.length}</p>
-                    <p><strong>Цена: ${p.price}</strong></p>
-                </div>
-            `;
-        });
-    };
-
     document.getElementById('uploadForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const files = document.getElementById('imgFile').files;
@@ -96,6 +53,7 @@
         });
 
         Promise.all(promises).then(images => {
+            // ВАЖНО: Тези имена трябва да отговарят точно на това, което чете index.html
             const project = {
                 title: document.getElementById('title').value,
                 desc: document.getElementById('desc').value,
@@ -107,17 +65,18 @@
                 style: document.getElementById('style').value,
                 price: document.getElementById('price').value,
                 isFav: document.getElementById('isFav').checked,
-                imgs: images
+                imgs: images,
+                img: images[0] // Слагаме първата снимка като основна за index.html
             };
+
             let list = JSON.parse(localStorage.getItem('myProjects') || '[]');
             list.push(project);
             localStorage.setItem('myProjects', JSON.stringify(list));
-            renderCatalog();
-            document.getElementById('uploadForm').reset();
+            
+            alert("Проектът е записан успешно!");
+            location.reload();
         });
     });
-
-    renderCatalog();
 </script>
 </body>
 </html>
