@@ -2,35 +2,79 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>Преглед на проект</title>
+    <title>Преглед на проект | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .project-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 60px; padding: 40px 10%; background: #fbf9f4; }
+        .specs-column { background: #fbf9f4; border-left: 1px solid #eadecc; padding-left: 30px; }
+        .spec-item { margin-bottom: 25px; }
+        .spec-item h5 { color: #888; text-transform: uppercase; font-size: 0.7rem; margin: 0 0 5px 0; letter-spacing: 1px; }
+        .spec-item p { font-size: 1.1rem; font-weight: bold; margin: 0; color: #1a1a1a; }
+        .gallery-nav { margin: 20px 0; border-bottom: 1px solid #eadecc; padding-bottom: 10px; }
+        .tab-btn { background: none; border: none; font-size: 1rem; cursor: pointer; margin-right: 20px; font-weight: bold; }
+    </style>
 </head>
-<body style="padding: 50px; background: #fbf9f4;">
-    <a href="catalog.html">← Назад</a>
-    <h1 id="projTitle"></h1>
-    <p id="projDesc"></p>
+<body>
 
-    <div class="tabs">
-        <button onclick="show('gallery')">Галерия</button>
-        <button onclick="show('plans')">Планове</button>
-    </div>
-    
-    <div id="displayArea" style="margin-top: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;"></div>
+    <main class="project-wrapper">
+        <!-- Лява част: Описание и Галерии -->
+        <div>
+            <a href="catalog.html" style="color:#1a1a1a;">← Назад</a>
+            <h1 id="projTitle" style="font-size: 3rem; margin: 20px 0;"></h1>
+            <p id="projDesc" style="line-height: 1.6;"></p>
+            
+            <div class="gallery-nav">
+                <button class="tab-btn" onclick="show('gallery')">Галерия</button>
+                <button class="tab-btn" onclick="show('plans')">Планове по етажи</button>
+            </div>
+            <div id="displayArea"></div>
+        </div>
+
+        <!-- Дясна част: Спецификации -->
+        <div class="specs-column">
+            <h4 id="projStyle"></h4>
+            <h2 id="projTitleSide"></h2>
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eadecc;">
+            
+            <div class="spec-item"><h5>Обща площ</h5><p id="dArea"></p></div>
+            <div class="spec-item"><h5>Етажи</h5><p id="dFloors"></p></div>
+            <div class="spec-item"><h5>Спални</h5><p id="dBeds"></p></div>
+            <div class="spec-item"><h5>Бани</h5><p id="dBaths"></p></div>
+            <div class="spec-item"><h5>Гаражни места</h5><p id="dGarage"></p></div>
+            <div class="spec-item"><h5>Материал</h5><p id="dMat"></p></div>
+            <div class="spec-item"><h5>Цена</h5><p id="dPrice"></p></div>
+        </div>
+    </main>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
-        const project = JSON.parse(localStorage.getItem('myProjects'))[id];
+        const id = new URLSearchParams(window.location.search).get('id');
+        const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+        const p = projects[id];
 
-        document.getElementById('projTitle').innerText = project.title;
-        document.getElementById('projDesc').innerText = project.description;
+        if (p) {
+            // Текстове
+            document.getElementById('projTitle').innerText = p.title;
+            document.getElementById('projTitleSide').innerText = p.title;
+            document.getElementById('projDesc').innerText = p.description;
+            document.getElementById('projStyle').innerText = p.style;
 
-        function show(type) {
-            const arr = (type === 'gallery') ? project.gallery : project.plans;
-            document.getElementById('displayArea').innerHTML = arr.map(img => 
-                `<img src="${img}" style="width:100%; border:1px solid #ccc;">`).join('');
+            // Спецификации
+            document.getElementById('dArea').innerText = p.area + " m²";
+            document.getElementById('dFloors').innerText = p.floors;
+            document.getElementById('dBeds').innerText = p.beds;
+            document.getElementById('dBaths').innerText = p.baths;
+            document.getElementById('dGarage').innerText = p.garage;
+            document.getElementById('dMat').innerText = p.material;
+            document.getElementById('dPrice').innerText = p.price || "—";
+            
+            // Галерия логика
+            window.show = (type) => {
+                const arr = (type === 'gallery') ? p.gallery : p.plans;
+                document.getElementById('displayArea').innerHTML = arr.map(img => 
+                    `<img src="${img}" style="width:100%; margin-bottom:20px; border:1px solid #eadecc;">`).join('');
+            };
+            show('gallery');
         }
-        show('gallery'); // покажи галерията по подразбиране
     </script>
 </body>
 </html>
