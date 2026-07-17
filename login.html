@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход | Academy Architect Studio</title>
+    <title>Вход / Регистрация | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Включваме библиотеката на Supabase за JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .login-container {
             max-width: 400px;
@@ -23,6 +21,7 @@
             margin-bottom: 30px;
             color: #1a1a1a;
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
         .form-group {
             margin-bottom: 20px;
@@ -65,11 +64,21 @@
         .btn-submit:hover {
             background: #333;
         }
-        .error-msg {
-            color: #b22222;
+        .toggle-text {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .toggle-text a {
+            color: #8c8275;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .message-box {
             font-size: 0.9rem;
             margin-top: 15px;
             display: none;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -78,73 +87,92 @@
     <!-- НАВИГАЦИЯ -->
     <header class="navbar">
         <a href="index.html" class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-icon" onerror="this.src='https://placehold.co/150x50?text=Logo'">
             <span>Academy Architect <span class="logo-studio">Studio</span></span>
         </a>
     </header>
 
-    <!-- ФОРМА ЗА ВХОД -->
+    <!-- КОНТЕЙНЕР ЗА ВХОД / РЕГИСТРАЦИЯ -->
     <main>
         <div class="login-container">
-            <h2>ВХОД ЗА АДМИНИСТРАТОР</h2>
-            <form id="loginForm">
+            <h2 id="formTitle">Вход за Администратор</h2>
+            <form id="authForm">
                 <div class="form-group">
                     <label>Имейл</label>
-                    <input type="email" id="email" required placeholder="your@email.com">
+                    <input type="email" id="email" required placeholder="kasim.feta@abv.bg">
                 </div>
                 <div class="form-group">
                     <label>Парола</label>
                     <input type="password" id="password" required placeholder="••••••••">
                 </div>
-                <button type="submit" class="btn-submit" id="loginBtn">Влизане</button>
-                <div class="error-msg" id="errorMsg">Грешен имейл или парола!</div>
+                <button type="submit" class="btn-submit" id="submitBtn">Влизане</button>
+                
+                <div class="message-box" id="messageBox"></div>
+                
+                <div class="toggle-text" id="toggleBlock">
+                    Нямате профил? <a onclick="switchToRegister()">Регистрирайте се тук</a>
+                </div>
             </form>
         </div>
     </main>
 
     <script>
-        // ⚠️ ЗАМЕНИ ТЕЗИ ДВЕ С ТВОИТЕ СЪЩИ ДАННИ ОТ SUPABASE НАСТРОЙКИТЕ (както в admin.html):
-        const SUPABASE_URL = "https://your-project.supabase.co";
-        const SUPABASE_ANON_KEY = "your-anon-key-here";
+        let isRegisterMode = false;
 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // Ако потребителят вече е влязъл, директно го пренасочваме към админ панела
-        window.onload = async function() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                window.location.href = "admin.html";
-            }
+        function switchToRegister() {
+            isRegisterMode = true;
+            document.getElementById('formTitle').innerText = "Регистрация";
+            document.getElementById('submitBtn').innerText = "Създай профил";
+            document.getElementById('toggleBlock').innerHTML = 'Вече имате профил? <a onclick="switchToLogin()">Влезте оттук</a>';
+            document.getElementById('messageBox').style.display = "none";
         }
 
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        function switchToLogin() {
+            isRegisterMode = false;
+            document.getElementById('formTitle').innerText = "Вход за Администратор";
+            document.getElementById('submitBtn').innerText = "Влизане";
+            document.getElementById('toggleBlock').innerHTML = 'Нямате профил? <a onclick="switchToRegister()">Регистрирайте се тук</a>';
+            document.getElementById('messageBox').style.display = "none";
+        }
+
+        document.getElementById('authForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const loginBtn = document.getElementById('loginBtn');
-            const errorMsg = document.getElementById('errorMsg');
-            
-            loginBtn.innerText = "Проверка...";
-            loginBtn.disabled = true;
-            errorMsg.style.display = "none";
-
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const msgBox = document.getElementById('messageBox');
 
-            // Реална автентификация през Supabase облака
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                // При грешни данни показва съобщението
-                errorMsg.innerText = "Грешен имейл или парола!";
-                errorMsg.style.display = "block";
-                loginBtn.innerText = "Влизане";
-                loginBtn.disabled = false;
+            if (isRegisterMode) {
+                // --- РЕЖИМ: РЕГИСТРАЦИЯ ---
+                // Записваме въведените от теб данни в паметта на браузъра
+                localStorage.setItem('adminEmail', email);
+                localStorage.setItem('adminPassword', password);
+                
+                msgBox.style.color = "green";
+                msgBox.innerText = "Успешна регистрация! Сега можете да влезете.";
+                msgBox.style.display = "block";
+                
+                // Автоматично те връща към екрана за Вход след 1.5 секунди
+                setTimeout(switchToLogin, 1500);
             } else {
-                // При успешен вход пренасочва към admin.html
-                window.location.href = "admin.html";
+                // --- РЕЖИМ: ВХОД ---
+                // Проверяваме какво има записано в паметта
+                const savedEmail = localStorage.getItem('adminEmail');
+                const savedPassword = localStorage.getItem('adminPassword');
+
+                if (email === savedEmail && password === savedPassword) {
+                    msgBox.style.color = "green";
+                    msgBox.innerText = "Успешен вход! Пренасочване...";
+                    msgBox.style.display = "block";
+                    
+                    // Пренасочване към твоя admin.html
+                    setTimeout(() => {
+                        window.location.href = "admin.html";
+                    }, 1000);
+                } else {
+                    msgBox.style.color = "#b22222";
+                    msgBox.innerText = "Грешен имейл или парола!";
+                    msgBox.style.display = "block";
+                }
             }
         });
     </script>
