@@ -36,6 +36,13 @@
                 <div class="form-group"><label>Цена</label><input type="text" id="pPrice"></div>
             </div>
 
+            <!-- ДОБАВЕН ЧЕКБОКС ЗА ФАВОРИТ -->
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="isFavorite" style="width: auto;"> Маркирай като "Фаворитен проект" (Начална страница)
+                </label>
+            </div>
+
             <div class="form-group"><label>Снимки за Галерия</label><input type="file" id="galleryPhotos" accept="image/*" multiple></div>
             <div class="form-group"><label>Снимки за Планове</label><input type="file" id="floorPlans" accept="image/*" multiple></div>
             <button type="submit" class="btn-upload">Запази проект</button>
@@ -59,7 +66,7 @@
             const listContainer = document.getElementById('projectList');
             listContainer.innerHTML = projects.map((p, index) => `
                 <div class="pub-item">
-                    <span>${p.title}</span>
+                    <span>${p.title} ${p.isFavorite ? '⭐' : ''}</span>
                     <div>
                         <button onclick="editProject(${index})" class="btn-action">Редактирай</button>
                         <a href="project.html?id=${index}" target="_blank" class="btn-view">Виж</a>
@@ -74,14 +81,7 @@
 
             p.title = prompt("Име на проекта:", p.title) || p.title;
             p.description = prompt("Описание:", p.description) || p.description;
-            p.area = prompt("Площ (м²):", p.area) || p.area;
-            p.floors = prompt("Етажи:", p.floors) || p.floors;
-            p.beds = prompt("Спални:", p.beds) || p.beds;
-            p.baths = prompt("Бани:", p.baths) || p.baths;
-            p.garage = prompt("Гаражни места:", p.garage) || p.garage;
-            p.material = prompt("Материал:", p.material) || p.material;
-            p.style = prompt("Стил:", p.style) || p.style;
-            p.price = prompt("Цена:", p.price) || p.price;
+            p.isFavorite = confirm("Да бъде ли проектът 'Фаворитен'?");
 
             localStorage.setItem('myProjects', JSON.stringify(projects));
             alert("Проектът е актуализиран!");
@@ -107,6 +107,7 @@
                 material: document.getElementById('pMat').value,
                 style: document.getElementById('pStyle').value,
                 price: document.getElementById('pPrice').value,
+                isFavorite: document.getElementById('isFavorite').checked, // Запазваме статуса
                 gallery: gArr,
                 plans: pArr
             };
