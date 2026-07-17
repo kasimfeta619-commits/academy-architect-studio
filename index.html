@@ -10,15 +10,12 @@
 
     <header class="navbar">
         <a href="index.html" class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-icon">
+            <img src="assets/logo.png" alt="Logo" class="logo-icon" onerror="this.src='https://placehold.co/150x50?text=Logo'">
             <span>Academy Architect <span class="logo-studio">Studio</span></span>
         </a>
         <nav id="nav-links">
             <a href="index.html" class="active" data-key="nav-home">Home</a>
             <a href="catalog.html" data-key="nav-catalog">Catalog</a>
-            <a href="#" data-key="nav-about">About</a>
-            <a href="#" data-key="nav-planner">AI Planner</a>
-            <a href="#" data-key="nav-contact">Contact</a>
         </nav>
         <div class="header-actions">
             <div class="lang-switcher">
@@ -37,7 +34,7 @@
         </div>
         <div class="hero-image-area">
             <div class="hero-main-img">
-                <img src="assets/hero-blueprint.png" alt="House Blueprint" onerror="this.style.background='#ebd9c5'">
+                <img src="assets/hero-blueprint.png" alt="House Blueprint" onerror="this.src='https://placehold.co/500x400?text=Hero+Blueprint'">
             </div>
             <div class="latest-badge">
                 <span class="badge-title">LATEST</span>
@@ -46,39 +43,11 @@
         </div>
     </main>
 
-    <footer class="main-footer">
-        <div class="footer-logo-area">
-            <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
-            <div>
-                <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
-                <p class="footer-subtext" id="footer-subtext">ARCHITECTURAL DESIGN STUDIO</p>
-            </div>
-        </div>
-        <div class="footer-col">
-            <h4>STUDIO</h4>
-            <p>Sofia · Plovdiv · Varna</p>
-            <p><a href="mailto:hello@academyarchitectstudios.com">hello@academyarchitectstudios.com</a></p>
-        </div>
-        <div class="footer-col footer-right">
-            <p>© 2026</p>
-            <p id="footer-rights">Academy Architect Studio — All rights reserved.</p>
-        </div>
-    </footer>
-
     <script>
         const translations = {
-            en: {
-                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact",
-                "hero-eyebrow": "ARCHITECTURAL STUDIO", "hero-title": "We design the future houses", "hero-desc": "Modern, energy-efficient and custom tailored living concepts for your family.", "hero-btn": "Explore Catalog",
-                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
-            },
-            bg: {
-                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт",
-                "hero-eyebrow": "АРХИТЕКТУРНО СТУДИО", "hero-title": "Ние проектираме къщите на бъдещето", "hero-desc": "Модерни, енергийноефективни и индивидуални концепции за вашия дом.", "hero-btn": "Виж каталога",
-                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
-            }
+            en: { "nav-home": "Home", "nav-catalog": "Catalog", "hero-eyebrow": "ARCHITECTURAL STUDIO", "hero-title": "We design the future houses", "hero-desc": "Modern, energy-efficient and custom tailored living concepts for your family.", "hero-btn": "Explore Catalog" },
+            bg: { "nav-home": "Начало", "nav-catalog": "Каталог", "hero-eyebrow": "АРХИТЕКТУРНО СТУДИО", "hero-title": "Ние проектираме къщите на бъдещето", "hero-desc": "Модерни, енергийноефективни и индивидуални концепции за вашия дом.", "hero-btn": "Виж каталога" }
         };
-
         function changeLanguage(lang) {
             document.querySelectorAll('#nav-links a').forEach(link => {
                 const key = link.getAttribute('data-key');
@@ -88,9 +57,6 @@
             document.getElementById('hero-title').innerText = translations[lang]['hero-title'];
             document.getElementById('hero-desc').innerText = translations[lang]['hero-desc'];
             document.getElementById('hero-btn').innerText = translations[lang]['hero-btn'];
-            document.getElementById('footer-subtext').innerText = translations[lang]['footer-subtext'];
-            document.getElementById('footer-rights').innerText = translations[lang]['footer-rights'];
-
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }

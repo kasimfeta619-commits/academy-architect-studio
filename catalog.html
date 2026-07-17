@@ -34,29 +34,19 @@
 
     <header class="navbar">
         <a href="index.html" class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-icon">
+            <img src="assets/logo.png" alt="Logo" class="logo-icon" onerror="this.src='https://placehold.co/150x50?text=Logo'">
             <span>Academy Architect <span class="logo-studio">Studio</span></span>
         </a>
         <nav id="nav-links">
             <a href="index.html" data-key="nav-home">Home</a>
             <a href="catalog.html" class="active" data-key="nav-catalog">Catalog</a>
-            <a href="#" data-key="nav-about">About</a>
-            <a href="#" data-key="nav-planner">AI Planner</a>
-            <a href="#" data-key="nav-contact">Contact</a>
         </nav>
-        <div class="header-actions">
-            <div class="lang-switcher">
-                <button class="lang-btn active" onclick="changeLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="changeLanguage('bg')">BG</button>
-            </div>
-        </div>
     </header>
 
     <main class="content-container">
-        <span class="eyebrow" id="cat-eyebrow">CATALOG</span>
+        <span class="eyebrow">CATALOG</span>
         <h1 id="cat-title">House Project Catalog</h1>
-        <p style="color: #8c8275; font-size: 0.9rem; margin-top: -15px; margin-bottom: 30px;" id="cat-desc">Filter by area, floors, bedrooms and style.</p>
-
+        
         <div class="filters-container">
             <div class="filter-group"><label>Type</label><select><option>Any</option></select></div>
             <div class="filter-group">
@@ -64,51 +54,33 @@
                 <div class="area-inputs"><input type="number" placeholder="min"><input type="number" placeholder="max"></div>
             </div>
             <div class="filter-group"><label>Floors</label><select><option>Any</option><option>1</option><option>2</option></select></div>
-            <div class="filter-group"><label>Bedrooms</label><select><option>Any</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
-            <div class="filter-group"><label>Style</label><select><option>Any</option><option>Minimalist</option><option>Modern</option><option>Alpine</option></select></div>
+            <div class="filter-group"><label>Bedrooms</label><select><option>Any</option><option>1</option><option>2</option><option>3</option></select></div>
             <button class="btn-reset">Reset filters</button>
         </div>
 
         <div class="quick-add-panel">
-            <h3 id="admin-title">Добави нов проект в сайта (Качи твоя снимка и инфо)</h3>
+            <h3>Добави нов проект в сайта</h3>
             <div class="admin-form">
                 <input type="text" id="new-title" placeholder="Име на проекта">
-                <input type="text" id="new-img" placeholder="Път до снимката (напр. assets/къща.jpg)">
-                <input type="number" id="new-area" placeholder="Квадратура (m²)">
+                <input type="text" id="new-img" placeholder="Линк или път до снимка">
+                <input type="number" id="new-area" placeholder="Квадратура">
                 <input type="number" id="new-floors" placeholder="Етажи">
                 <input type="number" id="new-beds" placeholder="Спални">
                 <input type="number" id="new-baths" placeholder="Бани">
-                <button onclick="addNewProject()" id="admin-add-btn">Добави проекта веднага</button>
+                <button onclick="addNewProject()">Добави проекта веднага</button>
             </div>
         </div>
 
-        <p style="font-size: 0.85rem; color: #8c8275;" id="project-count"><span id="count-num">0</span> projects</p>
+        <p style="font-size: 0.85rem; color: #8c8275;"><span id="count-num">0</span> проекти</p>
         <div class="projects-grid" id="projectsGrid"></div>
     </main>
 
-    <footer class="main-footer">
-        <div class="footer-logo-area">
-            <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
-            <div>
-                <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
-                <p class="footer-subtext" id="footer-subtext">ARCHITECTURAL DESIGN STUDIO</p>
-            </div>
-        </div>
-        <div class="footer-col">
-            <h4>STUDIO</h4>
-            <p>Sofia · Plovdiv · Varna</p>
-        </div>
-        <div class="footer-col footer-right">
-            <p>© 2026</p>
-            <p id="footer-rights">Academy Architect Studio — All rights reserved.</p>
-        </div>
-    </footer>
-
     <script>
+        // Тук сложих работещи линкове от интернет, за да видиш снимки ВЕДНАГА, дори без папка assets!
         const defaultProjects = [
-            { title: "MinimalistHouse", img: "assets/minimalist.jpg", area: 175, floors: 2, beds: 4, baths: 2 },
-            { title: "Alpine Complex Edelweiss", img: "assets/alpine.jpg", area: 280, floors: 2, beds: 5, baths: 2 },
-            { title: "SlimHouse 95", img: "assets/slimhouse.jpg", area: 95, floors: 2, beds: 2, baths: 2 }
+            { title: "MinimalistHouse", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80", area: 175, floors: 2, beds: 4, baths: 2 },
+            { title: "Alpine Complex Edelweiss", img: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80", area: 280, floors: 2, beds: 5, baths: 2 },
+            { title: "SlimHouse 95", img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80", area: 95, floors: 2, beds: 2, baths: 2 }
         ];
 
         let projects = JSON.parse(localStorage.getItem('myProjects')) || defaultProjects;
@@ -120,7 +92,7 @@
                 grid.innerHTML += `
                     <div class="project-card">
                         <div class="project-img-box">
-                            <img src="${p.img}" alt="${p.title}" onerror="this.src='assets/hero-blueprint.png'">
+                            <img src="${p.img}" alt="${p.title}" onerror="this.src='https://placehold.co/400x260?text=No+Image'">
                         </div>
                         <div class="project-info">
                             <div class="project-title">${p.title}</div>
@@ -145,21 +117,11 @@
             const beds = document.getElementById('new-beds').value;
             const baths = document.getElementById('new-baths').value;
 
-            if(!title || !img) { alert('Въведете име и път до снимка!'); return; }
+            if(!title || !img) { alert('Моля, въведете име и снимка!'); return; }
 
             projects.push({ title, img, area: parseInt(area)||0, floors: parseInt(floors)||1, beds: parseInt(beds)||1, baths: parseInt(baths)||1 });
             localStorage.setItem('myProjects', JSON.stringify(projects));
             renderProjects();
-        }
-
-        const translations = {
-            en: { "nav-home": "Home", "nav-catalog": "Catalog", "cat-title": "House Project Catalog", "admin-title": "Add New Project (Upload photo/info)" },
-            bg: { "nav-home": "Начало", "nav-catalog": "Каталог", "cat-title": "Каталог с проекти", "admin-title": "Добави нов проект в сайта (Качи твоя снимка и инфо)" }
-        };
-
-        function changeLanguage(lang) {
-            document.getElementById('cat-title').innerText = translations[lang]['cat-title'];
-            document.getElementById('admin-title').innerText = translations[lang]['admin-title'];
         }
 
         renderProjects();
