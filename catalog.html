@@ -31,6 +31,15 @@
         .admin-form input, .admin-form button { padding: 12px; border: 1px solid #eadecc; border-radius: 0px; font-size: 0.85rem; }
         .admin-form button { background: #1a1a1a; color: #fff; cursor: pointer; grid-column: span 3; font-weight: bold; border: none; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s; }
         .admin-form button:hover { background: #333; }
+
+        @media (max-width: 991px) {
+            .projects-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .projects-grid { grid-template-columns: 1fr; }
+            .admin-form { grid-template-columns: 1fr; }
+            .admin-form button { grid-column: span 1; }
+        }
     </style>
 </head>
 <body>
@@ -53,7 +62,7 @@
                 <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
                 <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
             </div>
-            <a href="login.html" class="btn-login">Вход</a>
+            <a href="login.html" class="btn-login" id="btn-login">Вход</a>
         </div>
     </header>
 
@@ -81,7 +90,7 @@
         <!-- РЕШЕТКА С ПРОЕКТИ -->
         <div class="projects-grid" id="projectsGrid"></div>
 
-        <!-- АДМИН ПАНЕЛ (ИЗНЕСЕН НАЙ-ДОЛУ) -->
+        <!-- АДМИН ПАНЕЛ -->
         <div class="quick-add-panel">
             <h3 id="admin-title">Добави нов проект в сайта</h3>
             <div class="admin-form">
@@ -102,7 +111,7 @@
             <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
             <div>
                 <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
-                <p class="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
+                <p class="footer-subtext" id="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
             </div>
         </div>
         <div class="footer-col">
@@ -117,7 +126,6 @@
     </footer>
 
     <script>
-        // Пълният списък от 12 проекта точно от снимката на оригинала
         const defaultProjects = [
             { title: "Минималистична Къща", img: "assets/minimalist.jpg", area: 175, floors: 2, beds: 4, baths: 2 },
             { title: "Алпийски комплекс Еделвайс", img: "assets/alpine.jpg", area: 280, floors: 2, beds: 5, baths: 3 },
@@ -172,6 +180,38 @@
             projects.push({ title, img, area: parseInt(area)||0, floors: parseInt(floors)||1, beds: parseInt(beds)||1, baths: parseInt(baths)||1 });
             localStorage.setItem('myProjects', JSON.stringify(projects));
             renderProjects();
+        }
+
+        // СИСТЕМА ЗА ЕЗИЦИ (СЪОБРАЗЕНА С БГ КАТАЛОГА)
+        const translations = {
+            en: {
+                "nav-home": "Home", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
+                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
+            },
+            bg: {
+                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", "btn-login": "Вход",
+                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll('#nav-links a').forEach(link => {
+                const key = link.getAttribute('data-key');
+                if (translations[lang][key]) link.innerText = translations[lang][key];
+            });
+
+            // Скрива бутона "Каталог" на EN, защото няма превод
+            const catalogLink = document.querySelector('#nav-links a[data-key="nav-catalog"]');
+            if (catalogLink) {
+                catalogLink.style.display = (lang === 'en') ? 'none' : 'inline-block';
+            }
+
+            if(document.getElementById('btn-login')) document.getElementById('btn-login').innerText = translations[lang]['btn-login'];
+            if(document.getElementById('footer-subtext')) document.getElementById('footer-subtext').innerText = translations[lang]['footer-subtext'];
+            if(document.getElementById('footer-rights')) document.getElementById('footer-rights').innerText = translations[lang]['footer-rights'];
+
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            if(event && event.target) event.target.classList.add('active');
         }
 
         renderProjects();
