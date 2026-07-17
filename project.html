@@ -7,17 +7,21 @@
     <style>
         .project-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 60px; padding: 40px 10%; background: #fbf9f4; }
         .specs-column { background: #fbf9f4; border-left: 1px solid #eadecc; padding-left: 30px; }
-        .spec-item { margin-bottom: 25px; }
-        .spec-item h5 { color: #888; text-transform: uppercase; font-size: 0.7rem; margin: 0 0 5px 0; letter-spacing: 1px; }
+        
+        /* Стилизиране на техническите данни в 2 колони */
+        .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .spec-item h5 { color: #888; text-transform: uppercase; font-size: 0.65rem; margin: 0 0 5px 0; letter-spacing: 1px; }
         .spec-item p { font-size: 1.1rem; font-weight: bold; margin: 0; color: #1a1a1a; }
+        
         .gallery-nav { margin: 20px 0; border-bottom: 1px solid #eadecc; padding-bottom: 10px; }
-        .tab-btn { background: none; border: none; font-size: 1rem; cursor: pointer; margin-right: 20px; font-weight: bold; }
+        .tab-btn { background: none; border: none; font-size: 1rem; cursor: pointer; margin-right: 20px; font-weight: bold; color: #888; }
+        .tab-btn:hover { color: #1a1a1a; }
     </style>
 </head>
 <body>
 
     <main class="project-wrapper">
-        <!-- Лява част: Описание и Галерии -->
+        <!-- Лява част -->
         <div>
             <a href="catalog.html" style="color:#1a1a1a;">← Назад</a>
             <h1 id="projTitle" style="font-size: 3rem; margin: 20px 0;"></h1>
@@ -30,19 +34,22 @@
             <div id="displayArea"></div>
         </div>
 
-        <!-- Дясна част: Спецификации -->
+        <!-- Дясна част -->
         <div class="specs-column">
-            <h4 id="projStyle"></h4>
-            <h2 id="projTitleSide"></h2>
+            <h4 id="projStyle" style="color: #888; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;"></h4>
+            <h2 id="projTitleSide" style="margin-top: 0;"></h2>
             <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eadecc;">
             
-            <div class="spec-item"><h5>Обща площ</h5><p id="dArea"></p></div>
-            <div class="spec-item"><h5>Етажи</h5><p id="dFloors"></p></div>
-            <div class="spec-item"><h5>Спални</h5><p id="dBeds"></p></div>
-            <div class="spec-item"><h5>Бани</h5><p id="dBaths"></p></div>
-            <div class="spec-item"><h5>Гаражни места</h5><p id="dGarage"></p></div>
-            <div class="spec-item"><h5>Материал</h5><p id="dMat"></p></div>
-            <div class="spec-item"><h5>Цена</h5><p id="dPrice"></p></div>
+            <div class="specs-grid">
+                <div class="spec-item"><h5>Обща площ</h5><p id="dArea"></p></div>
+                <div class="spec-item"><h5>Етажи</h5><p id="dFloors"></p></div>
+                <div class="spec-item"><h5>Спални</h5><p id="dBeds"></p></div>
+                <div class="spec-item"><h5>Бани</h5><p id="dBaths"></p></div>
+                <div class="spec-item"><h5>Гаражни места</h5><p id="dGarage"></p></div>
+                <div class="spec-item"><h5>Материал</h5><p id="dMat"></p></div>
+                <div class="spec-item"><h5>Стил</h5><p id="dStyle"></p></div>
+                <div class="spec-item"><h5>Цена</h5><p id="dPrice"></p></div>
+            </div>
         </div>
     </main>
 
@@ -52,22 +59,20 @@
         const p = projects[id];
 
         if (p) {
-            // Текстове
             document.getElementById('projTitle').innerText = p.title;
             document.getElementById('projTitleSide').innerText = p.title;
             document.getElementById('projDesc').innerText = p.description;
             document.getElementById('projStyle').innerText = p.style;
 
-            // Спецификации
-            document.getElementById('dArea').innerText = p.area + " m²";
-            document.getElementById('dFloors').innerText = p.floors;
-            document.getElementById('dBeds').innerText = p.beds;
-            document.getElementById('dBaths').innerText = p.baths;
-            document.getElementById('dGarage').innerText = p.garage;
-            document.getElementById('dMat').innerText = p.material;
+            document.getElementById('dArea').innerText = p.area ? p.area + " m²" : "—";
+            document.getElementById('dFloors').innerText = p.floors || "—";
+            document.getElementById('dBeds').innerText = p.beds || "—";
+            document.getElementById('dBaths').innerText = p.baths || "—";
+            document.getElementById('dGarage').innerText = p.garage || "0";
+            document.getElementById('dMat').innerText = p.material || "—";
+            document.getElementById('dStyle').innerText = p.style || "—";
             document.getElementById('dPrice').innerText = p.price || "—";
             
-            // Галерия логика
             window.show = (type) => {
                 const arr = (type === 'gallery') ? p.gallery : p.plans;
                 document.getElementById('displayArea').innerHTML = arr.map(img => 
