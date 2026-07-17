@@ -1,57 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .about-text-block {
+            max-width: 680px;
+            margin-top: 30px;
+        }
+        .about-text-block p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 25px;
+        }
+    </style>
 </head>
 <body>
+
+    <!-- НАВИГАЦИЯ -->
     <header class="navbar">
         <a href="index.html" class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-icon">
-            <span>Academy Architect Studio</span>
+            <img src="assets/logo.png" alt="Logo" class="logo-icon" onerror="this.src='https://placehold.co/150x50?text=Logo'">
+            <span>Academy Architect <span class="logo-studio">Studio</span></span>
         </a>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="catalog.html">Catalog</a>
-            <a href="about.html" class="active">About</a>
-            <a href="contact.html">Contact</a>
+        <nav id="nav-links">
+            <a href="index.html" data-key="nav-home">Начало</a>
+            <a href="catalog.html" data-key="nav-catalog">Каталог</a>
+            <a href="about.html" class="active" data-key="nav-about">За нас</a>
+            <a href="planner.html" data-key="nav-planner">ИИ Планер</a>
+            <a href="contact.html" data-key="nav-contact">Контакт</a>
         </nav>
-        <div class="lang-switcher">
-            <button class="lang-btn active" onclick="setLang('en')">EN</button>
-            <button class="lang-btn" onclick="setLang('bg')">BG</button>
+        <div class="header-actions">
+            <div class="lang-switcher">
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
+            </div>
+            <a href="login.html" class="btn-login" id="btn-login">Вход</a>
         </div>
     </header>
 
-    <main class="content-wrapper">
-        <span class="eyebrow" id="eyebrow">OUR STORY</span>
-        <h1 id="title">Personal archive of architectural projects.</h1>
+    <!-- ОСНОВНО СЪДЪРЖАНИЕ -->
+    <main class="content-container">
+        <span class="eyebrow" id="about-eyebrow">ЗА СТУДИОТО</span>
+        <h1 id="about-title" style="max-width: 750px; margin-bottom: 30px;">Личен архив на архитектурни проекти.</h1>
+        
+        <div class="about-text-block">
+            <p id="about-p1">Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.</p>
+            <p id="about-p2">Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.</p>
+        </div>
     </main>
 
+    <!-- ФУТЪР -->
     <footer class="main-footer">
         <div class="footer-logo-area">
-            <img src="assets/logo.png" alt="Logo" class="footer-logo">
-            <div><strong>Academy Architect Studio</strong><br>ARCHITECTURAL DESIGN STUDIO</div>
+            <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
+            <div>
+                <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
+                <p class="footer-subtext" id="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
+            </div>
         </div>
         <div class="footer-col">
             <h4>STUDIO</h4>
             <p>Sofia · Plovdiv · Varna</p>
-            <p>hello@academyarchitectstudios.com</p>
+            <p><a href="mailto:hello@academyarchitectstudios.com">hello@academyarchitectstudios.com</a></p>
         </div>
-        <div class="footer-col">
-            <p>© 2026<br>Academy Architect Studio — All rights reserved.</p>
+        <div class="footer-col footer-right">
+            <p>© 2026</p>
+            <p id="footer-rights">Academy Architect Studio — Всички права запазени.</p>
         </div>
     </footer>
 
+    <!-- ЕЗИКОВА СИСТЕМА -->
     <script>
-        function setLang(lang) {
-            const tr = {
-                en: { e: "OUR STORY", t: "Personal archive of architectural projects." },
-                bg: { e: "ЗА НАС", t: "Личен архив от архитектурни проекти." }
-            };
-            document.getElementById('eyebrow').innerText = tr[lang].e;
-            document.getElementById('title').innerText = tr[lang].t;
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === lang));
+        const translations = {
+            en: {
+                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
+                "about-eyebrow": "ABOUT STUDIO", 
+                "about-title": "Personal archive of architectural projects.",
+                "about-p1": "Academy Architect Studio is a personal archive and catalog of house projects. Each project is developed with attention to proportion, light, and material — from the initial sketch to the detailed plan of each floor.",
+                "about-p2": "Here I upload my own work. Every project is ready for adaptation to a specific plot, climate, and budget.",
+                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
+            },
+            bg: {
+                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", "btn-login": "Вход",
+                "about-eyebrow": "ЗА СТУДИОТО", 
+                "about-title": "Личен архив на архитектурни проекти.",
+                "about-p1": "Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.",
+                "about-p2": "Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.",
+                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll('#nav-links a').forEach(link => {
+                const key = link.getAttribute('data-key');
+                if (translations[lang][key]) link.innerText = translations[lang][key];
+            });
+            document.getElementById('btn-login').innerText = translations[lang]['btn-login'];
+            document.getElementById('about-eyebrow').innerText = translations[lang]['about-eyebrow'];
+            document.getElementById('about-title').innerText = translations[lang]['about-title'];
+            document.getElementById('about-p1').innerText = translations[lang]['about-p1'];
+            document.getElementById('about-p2').innerText = translations[lang]['about-p2'];
+            document.getElementById('footer-subtext').innerText = translations[lang]['footer-subtext'];
+            document.getElementById('footer-rights').innerText = translations[lang]['footer-rights'];
+
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
         }
     </script>
 </body>
