@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Включваме библиотеката на Supabase за JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: #fbf9f4;
+            border: 1px solid #eadecc;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            text-align: center;
+        }
+        .login-container h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #8c8275;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #eadecc;
+            background: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #8c8275;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .btn-submit:hover {
+            background: #333;
+        }
+        .error-msg {
+            color: #b22222;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- НАВИГАЦИЯ -->
+    <header class="navbar">
+        <a href="index.html" class="logo-area">
+            <img src="assets/logo.png" alt="Logo" class="logo-icon" onerror="this.src='https://placehold.co/150x50?text=Logo'">
+            <span>Academy Architect <span class="logo-studio">Studio</span></span>
+        </a>
+    </header>
+
+    <!-- ФОРМА ЗА ВХОД -->
+    <main>
+        <div class="login-container">
+            <h2>ВХОД ЗА АДМИНИСТРАТОР</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Имейл</label>
+                    <input type="email" id="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Парола</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-submit" id="loginBtn">Влизане</button>
+                <div class="error-msg" id="errorMsg">Грешен имейл или парола!</div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // ⚠️ ЗАМЕНИ ТЕЗИ ДВЕ С ТВОИТЕ СЪЩИ ДАННИ ОТ SUPABASE НАСТРОЙКИТЕ (както в admin.html):
+        const SUPABASE_URL = "https://your-project.supabase.co";
+        const SUPABASE_ANON_KEY = "your-anon-key-here";
+
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Ако потребителят вече е влязъл, директно го пренасочваме към админ панела
+        window.onload = async function() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                window.location.href = "admin.html";
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            loginBtn.innerText = "Проверка...";
+            loginBtn.disabled = true;
+            errorMsg.style.display = "none";
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Реална автентификация през Supabase облака
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                // При грешни данни показва съобщението
+                errorMsg.innerText = "Грешен имейл или парола!";
+                errorMsg.style.display = "block";
+                loginBtn.innerText = "Влизане";
+                loginBtn.disabled = false;
+            } else {
+                // При успешен вход пренасочва към admin.html
+                window.location.href = "admin.html";
+            }
+        });
+    </script>
+</body>
+</html>

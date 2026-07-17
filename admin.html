@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ Панел | Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Включваме Supabase библиотеката -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .admin-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 40px;
+            background: #fbf9f4;
+            border: 1px solid #eadecc;
+        }
+        .admin-container h2 {
+            font-size: 1.6rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #8c8275;
+            font-weight: 600;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #eadecc;
+            background: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .btn-upload {
+            width: 100%;
+            padding: 14px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-upload:hover {
+            background: #333;
+        }
+        .status-msg {
+            margin-top: 15px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="index.html" class="logo-area">
+            <span>Academy Architect <span class="logo-studio">Studio - Admin</span></span>
+        </a>
+        <button onclick="logout()" style="background:none; border:1px solid #1a1a1a; padding: 8px 15px; cursor:pointer;">Изход</button>
+    </header>
+
+    <main>
+        <div class="admin-container">
+            <h2>Добавяне на нов проект</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label>Име на проекта</label>
+                    <input type="text" id="projectTitle" required placeholder="Модерна къща в София">
+                </div>
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="projectDesc" required placeholder="Кратко описание на проекта, материали..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Снимка на проекта</label>
+                    <input type="file" id="projectImage" accept="image/*" required style="border: none; padding: 5px 0;">
+                </div>
+                <button type="submit" class="btn-upload" id="submitBtn">Качи в каталога</button>
+                <div class="status-msg" id="statusMsg"></div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // ⚠️ ЗАМЕНИ ТЕЗИ ДВЕ С ТВОИТЕ ДАННИ ОТ SUPABASE НАСТРОЙКИТЕ:
+        const SUPABASE_URL = "https://your-project.supabase.co";
+        const SUPABASE_ANON_KEY = "your-anon-key-here";
+
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Защита: Ако не си влязъл, те изхвърля обратно в login.html
+        window.onload = async function() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = "login.html";
+            }
+        }
+
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const statusMsg = document.getElementById('statusMsg');
+            submitBtn.innerText = "Качване...";
+            submitBtn.disabled = true;
+
+            const title = document.getElementById('projectTitle').value;
+            const desc = document.getElementById('projectDesc').value;
+            const file = document.getElementById('projectImage').files[0];
+
+            try {
+                // 1. Качване на снимката в Supabase Storage (в папка 'project-images')
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}.${fileExt}`;
+                
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('project-images')
+                    .upload(fileName, file);
+
+                if (uploadError) throw uploadError;
+
+                // Вземане на публичния линк на снимката
+                const { data: { publicUrl } } = supabase.storage
+                    .from('project-images')
+                    .getPublicUrl(fileName);
+
+                // 2. Записване на проекта в таблица 'projects'
+                const { error: insertError } = await supabase
+                    .from('projects')
+                    .insert([{ title: title, description: desc, image_url: publicUrl }]);
+
+                if (insertError) throw insertError;
+
+                statusMsg.style.color = "green";
+                statusMsg.innerText = "Успешно качен проект!";
+                statusMsg.style.display = "block";
+                document.getElementById('uploadForm').reset();
+
+            } catch (error) {
+                statusMsg.style.color = "red";
+                statusMsg.innerText = "Грешка: " + error.message;
+                statusMsg.style.display = "block";
+            } finally {
+                submitBtn.innerText = "Качи в каталога";
+                submitBtn.disabled = false;
+            }
+        });
+
+        async function logout() {
+            await supabase.auth.signOut();
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>
