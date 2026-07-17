@@ -1,0 +1,16 @@
+body { background-color: #fcfaf5; color: #1a1a1a; margin: 0; font-family: 'Manrope', sans-serif; }
+
+/* Навигация */
+.navbar { display: flex; justify-content: space-between; padding: 20px 50px; align-items: center; }
+
+/* Главна секция (две колони) */
+.hero { display: flex; padding: 50px; gap: 50px; align-items: center; }
+.hero-text { flex: 1; }
+.hero-image { flex: 1; }
+.hero-image img { width: 100%; height: auto; border: 1px solid #ddd; }
+
+/* Елементи */
+h1 { font-family: 'Fraunces', serif; font-size: 4rem; line-height: 1.1; }
+.eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #888; }
+.btn-primary { background: #1a1a1a; color: white; padding: 15px 30px; border: none; cursor: pointer; }
+.btn-secondary { background: transparent; border: 1px solid #ccc; padding: 15px 30px; cursor: pointer; }

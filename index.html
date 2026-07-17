@@ -3,22 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Academy Architect Studio</title>
-    <style>
-        body { text-align: center; padding-top: 50px; font-family: sans-serif; }
-        .logo { width: 300px; height: auto; }
-        nav { margin-top: 20px; } /* Добавих малко разстояние за менюто */
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <img src="assets/logo.png" alt="Logo" class="logo">
-    <h1>Добре дошли в Academy Architect Studio</h1>
-    
-    <!-- Менюто трябва да бъде тук, вътре в body -->
-    <nav>
-        <a href="#">Начало</a> | 
-        <a href="#">Каталог</a> | 
-        <a href="#">За нас</a> | 
-        <a href="#">Контакт</a>
-    </nav>
+    <!-- Горно меню -->
+    <header class="navbar">
+        <div class="logo-area"><img src="assets/logo.png" alt="AAS Logo"></div>
+        <nav>
+            <a href="#">Начало</a>
+            <a href="#">Каталог</a>
+            <a href="#">За нас</a>
+            <a href="#">ИИ Планер</a>
+            <a href="#">Контакт</a>
+        </nav>
+        <div class="user-actions">EN | BG | Вход</div>
+    </header>
+
+    <!-- Главна секция -->
+    <main class="hero">
+        <div class="hero-text">
+            <span class="eyebrow">ПРОЕКТИ ЗА КЪЩИ · ОСН. 2026</span>
+            <h1>Домове, начертани с намерение.</h1>
+            <p>Academy Architect Studio е личен каталог с проекти за къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary">Разгледай каталога →</button>
+                <button class="btn-secondary">За студиото</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="assets/main-graphic.png" alt="Architectural Sketch">
+        </div>
+    </main>
 </body>
 </html>
