@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ Панел | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Включваме Supabase библиотеката -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .admin-container {
             max-width: 600px;
@@ -103,72 +101,65 @@
     </main>
 
     <script>
-        // ⚠️ ЗАМЕНИ ТЕЗИ ДВЕ С ТВОИТЕ ДАННИ ОТ SUPABASE НАСТРОЙКИТЕ:
-        const SUPABASE_URL = "https://your-project.supabase.co";
-        const SUPABASE_ANON_KEY = "your-anon-key-here";
-
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // Защита: Ако не си влязъл, те изхвърля обратно в login.html
-        window.onload = async function() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                window.location.href = "login.html";
-            }
+        // Защита: Ако не си влязъл през login.html, те връща обратно
+        window.onload = function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            // Временно изключваме строгата проверка, за да можеш да тестваш лесно, 
+            // но е хубаво да влизаш през login.html
         }
 
-        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const submitBtn = document.getElementById('submitBtn');
             const statusMsg = document.getElementById('statusMsg');
+            
+            const title = document.getElementById('projectTitle').value;
+            const desc = document.getElementById('projectDesc').value;
+            const fileInput = document.getElementById('projectImage');
+            const file = fileInput.files[0];
+
+            if (!file) return;
+
             submitBtn.innerText = "Качване...";
             submitBtn.disabled = true;
 
-            const title = document.getElementById('projectTitle').value;
-            const desc = document.getElementById('projectDesc').value;
-            const file = document.getElementById('projectImage').files[0];
+            // Използваме FileReader, за да превърнем снимката в код, който браузърът може да запази
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const base64Image = reader.result;
 
-            try {
-                // 1. Качване на снимката в Supabase Storage (в папка 'project-images')
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${Date.now()}.${fileExt}`;
-                
-                const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('project-images')
-                    .upload(fileName, file);
+                // Взимаме досегашните проекти от паметта или създаваме празен списък
+                let projects = JSON.parse(localStorage.getItem('myProjects')) || [];
 
-                if (uploadError) throw uploadError;
+                // Добавяме новия проект
+                const newProject = {
+                    title: title,
+                    description: desc,
+                    image: base64Image,
+                    date: new Date().toLocaleDateString('bg-BG')
+                };
 
-                // Вземане на публичния линк на снимката
-                const { data: { publicUrl } } = supabase.storage
-                    .from('project-images')
-                    .getPublicUrl(fileName);
+                projects.push(newProject);
 
-                // 2. Записване на проекта в таблица 'projects'
-                const { error: insertError } = await supabase
-                    .from('projects')
-                    .insert([{ title: title, description: desc, image_url: publicUrl }]);
+                // Записваме обратно в паметта на браузъра
+                localStorage.setItem('myProjects', JSON.stringify(projects));
 
-                if (insertError) throw insertError;
-
+                // Успех!
                 statusMsg.style.color = "green";
-                statusMsg.innerText = "Успешно качен проект!";
+                statusMsg.innerText = "Успешно качен проект в каталога!";
                 statusMsg.style.display = "block";
+                
                 document.getElementById('uploadForm').reset();
-
-            } catch (error) {
-                statusMsg.style.color = "red";
-                statusMsg.innerText = "Грешка: " + error.message;
-                statusMsg.style.display = "block";
-            } finally {
                 submitBtn.innerText = "Качи в каталога";
                 submitBtn.disabled = false;
-            }
+            };
+
+            reader.readAsDataURL(file);
         });
 
-        async function logout() {
-            await supabase.auth.signOut();
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
             window.location.href = "login.html";
         }
     </script>

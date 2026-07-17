@@ -3,42 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalog | Academy Architect Studio</title>
+    <title>Каталог | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .filters-container { display: flex; gap: 15px; background: transparent; padding: 20px 0; border-top: 1px solid #eadecc; border-bottom: 1px solid #eadecc; margin-bottom: 20px; font-size: 0.8rem; flex-wrap: wrap; align-items: flex-end; }
-        .filter-group { display: flex; flex-direction: column; gap: 5px; }
-        .filter-group label { text-transform: uppercase; color: #8c8275; font-weight: 600; font-size: 0.65rem; letter-spacing: 1px; }
-        .filter-group select, .filter-group input { padding: 10px; border: 1px solid #eadecc; background: #fff; border-radius: 0px; min-width: 140px; font-size: 0.8rem; color: #1a1a1a; }
-        .area-inputs { display: flex; gap: 5px; }
-        .area-inputs input { width: 70px; min-width: unset; }
-        .btn-reset { padding: 10px 20px; border: 1px solid #eadecc; background: transparent; cursor: pointer; border-radius: 0px; height: 38px; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
-
-        .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 30px; margin-top: 30px; }
-        .project-card { background: transparent; }
-        .project-img-box { width: 100%; height: 260px; background: #ebd9c5; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #e3dac9; }
-        .project-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .project-info { margin-top: 15px; }
-        .project-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 12px; color: #1a1a1a; }
-        
-        .project-specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; border-top: 1px solid #eadecc; padding-top: 8px; }
-        .spec-item { font-size: 0.65rem; color: #8c8275; text-transform: uppercase; letter-spacing: 0.5px; }
-        .spec-item span { display: block; color: #1a1a1a; font-weight: 500; font-size: 0.8rem; margin-top: 2px; }
-
-        .quick-add-panel { background: #f4eee5; padding: 30px; border-radius: 0px; margin: 60px 0 30px 0; border: 1px solid #eadecc; }
-        .quick-add-panel h3 { margin-bottom: 15px; font-size: 1rem; font-weight: 600; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px; }
-        .admin-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .admin-form input, .admin-form button { padding: 12px; border: 1px solid #eadecc; border-radius: 0px; font-size: 0.85rem; }
-        .admin-form button { background: #1a1a1a; color: #fff; cursor: pointer; grid-column: span 3; font-weight: bold; border: none; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s; }
-        .admin-form button:hover { background: #333; }
-
-        @media (max-width: 991px) {
-            .projects-grid { grid-template-columns: repeat(2, 1fr); }
+        /* Модерна минималистична решетка за проектите */
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
         }
-        @media (max-width: 768px) {
-            .projects-grid { grid-template-columns: 1fr; }
-            .admin-form { grid-template-columns: 1fr; }
-            .admin-form button { grid-column: span 1; }
+
+        .project-card {
+            background: #fff;
+            border: 1px solid #eadecc;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-image-wrapper {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            background: #eee;
+        }
+
+        .project-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-info {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .project-info h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .project-info p {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .project-date {
+            font-size: 0.75rem;
+            color: #8c8275;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .no-projects {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 0;
+            color: #8c8275;
+            font-style: italic;
         }
     </style>
 </head>
@@ -67,41 +102,13 @@
     </header>
 
     <!-- ОСНОВНО СЪДЪРЖАНИЕ -->
-    <main class="content-container">
-        <span class="eyebrow" id="cat-eyebrow">КАТАЛОГ</span>
-        <h1 id="cat-title">Каталог с проекти за къщи</h1>
-        <p style="color: #8c8275; font-size: 0.85rem; margin-top: -15px; margin-bottom: 30px;" id="cat-desc">Филтрирай по площ, етажи, спални и стил.</p>
-        
-        <!-- ФИЛТРИ -->
-        <div class="filters-container">
-            <div class="filter-group"><label id="lbl-type">Тип</label><select><option>Всички</option></select></div>
-            <div class="filter-group">
-                <label id="lbl-area">Площ (м²)</label>
-                <div class="area-inputs"><input type="number" placeholder="min"><input type="number" placeholder="max"></div>
-            </div>
-            <div class="filter-group"><label id="lbl-floors">Етажи</label><select><option>Всички</option><option>1</option><option>2</option></select></div>
-            <div class="filter-group"><label id="lbl-beds">Спални</label><select><option>Всички</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
-            <div class="filter-group"><label id="lbl-style">Стил</label><select><option>Всички</option></select></div>
-            <button class="btn-reset" id="btn-reset">Изчисти филтрите</button>
-        </div>
+    <main class="content-container" style="padding: 60px 10%; background-color: #fbf9f4; min-height: 70vh;">
+        <span class="eyebrow" id="page-eyebrow">АРХИВ</span>
+        <h1 id="page-title">Каталог с проекти</h1>
 
-        <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 10px;"><span id="count-num">12</span> проекта</p>
-        
-        <!-- РЕШЕТКА С ПРОЕКТИ -->
-        <div class="projects-grid" id="projectsGrid"></div>
-
-        <!-- АДМИН ПАНЕЛ -->
-        <div class="quick-add-panel">
-            <h3 id="admin-title">Добави нов проект в сайта</h3>
-            <div class="admin-form">
-                <input type="text" id="new-title" placeholder="Име на проекта">
-                <input type="text" id="new-img" placeholder="Път до снимка (напр. assets/house.jpg)">
-                <input type="number" id="new-area" placeholder="Квадратура (м²)">
-                <input type="number" id="new-floors" placeholder="Етажи">
-                <input type="number" id="new-beds" placeholder="Спални">
-                <input type="number" id="new-baths" placeholder="Бани">
-                <button onclick="addNewProject()" id="admin-add-btn">Добави проекта веднага</button>
-            </div>
+        <!-- Динамична решетка, в която се зареждат проектите -->
+        <div class="catalog-grid" id="catalogGrid">
+            <!-- Проектите от админ панела ще се генерират автоматично тук чрез JavaScript -->
         </div>
     </main>
 
@@ -117,7 +124,7 @@
         <div class="footer-col">
             <h4>STUDIO</h4>
             <p>Sofia · Plovdiv · Varna</p>
-            <p><a href="mailto:hello@academyarchitectstudios.com">hello@academyarchitectstudios.com</a></p>
+            <p><a href="mailto:info@architectstudio.com">info@architectstudio.com</a></p>
         </div>
         <div class="footer-col footer-right">
             <p>© 2026</p>
@@ -125,71 +132,48 @@
         </div>
     </footer>
 
+    <!-- СКРИПТ ЗА ДИНАМИЧНО ЗАРЕЖДАНЕ И ПРЕВОД -->
     <script>
-        const defaultProjects = [
-            { title: "Минималистична Къща", img: "assets/minimalist.jpg", area: 175, floors: 2, beds: 4, baths: 2 },
-            { title: "Алпийски комплекс Еделвайс", img: "assets/alpine.jpg", area: 280, floors: 2, beds: 5, baths: 3 },
-            { title: "СлимХаус 95", img: "assets/slimhouse.jpg", area: 95, floors: 2, beds: 2, baths: 2 },
-            { title: "Оазис Вила", img: "assets/oasis.jpg", area: 150, floors: 1, beds: 3, baths: 2 },
-            { title: "Куб Хаус 120", img: "assets/cubhouse.jpg", area: 120, floors: 2, beds: 3, baths: 2 },
-            { title: "Горско убежище", img: "assets/forest.jpg", area: 85, floors: 1, beds: 1, baths: 1 },
-            { title: "Еко-Модул 45", img: "assets/ecomodule.jpg", area: 45, floors: 1, beds: 1, baths: 1 },
-            { title: "Ливада Барн", img: "assets/barn.jpg", area: 135, floors: 2, beds: 3, baths: 2 },
-            { title: "Варна Уейв Комплекс", img: "assets/varna-wave.jpg", area: 420, floors: 2, beds: 5, baths: 3 },
-            { title: "Хъб Студио", img: "assets/hub.jpg", area: 210, floors: 1, beds: 0, baths: 2 },
-            { title: "Скайлайн Резиденция", img: "assets/skyline.jpg", area: 340, floors: 2, beds: 5, baths: 4 },
-            { title: "Бунгало 60", img: "assets/bungalow.jpg", area: 60, floors: 1, beds: 1, baths: 1 }
-        ];
-
-        let projects = JSON.parse(localStorage.getItem('myProjects')) || defaultProjects;
-
+        // Функция, която изважда проектите на екрана
         function renderProjects() {
-            const grid = document.getElementById('projectsGrid');
-            grid.innerHTML = '';
-            projects.forEach(p => {
-                grid.innerHTML += `
-                    <div class="project-card">
-                        <div class="project-img-box">
-                            <img src="${p.img}" alt="${p.title}" onerror="this.src='https://placehold.co/400x260?text=${encodeURIComponent(p.title)}'">
-                        </div>
-                        <div class="project-info">
-                            <div class="project-title">${p.title}</div>
-                            <div class="project-specs">
-                                <div class="spec-item">М² <span>${p.area}</span></div>
-                                <div class="spec-item">Етажи <span>${p.floors}</span></div>
-                                <div class="spec-item">Спални <span>${p.beds}</span></div>
-                                <div class="spec-item">Бани <span>${p.baths}</span></div>
-                            </div>
-                        </div>
+            const grid = document.getElementById('catalogGrid');
+            const savedProjects = JSON.parse(localStorage.getItem('myProjects')) || [];
+
+            if (savedProjects.length === 0) {
+                grid.innerHTML = '<div class="no-projects">Все още няма добавени проекти в каталога. Влезте в админ панела, за да качите първия си проект!</div>';
+                return;
+            }
+
+            // Подреждаме ги така, че най-новият проект да излиза първи (най-отгоре)
+            grid.innerHTML = savedProjects.reverse().map(project => `
+                <div class="project-card">
+                    <div class="project-image-wrapper">
+                        <img src="${project.image}" alt="${project.title}">
                     </div>
-                `;
-            });
-            document.getElementById('count-num').innerText = projects.length;
+                    <div class="project-info">
+                        <span class="project-date">${project.date || 'Проект'}</span>
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function addNewProject() {
-            const title = document.getElementById('new-title').value;
-            const img = document.getElementById('new-img').value;
-            const area = document.getElementById('new-area').value;
-            const floors = document.getElementById('new-floors').value;
-            const beds = document.getElementById('new-beds').value;
-            const baths = document.getElementById('new-baths').value;
-
-            if(!title || !img) { alert('Моля, въведете име и път до снимка!'); return; }
-
-            projects.push({ title, img, area: parseInt(area)||0, floors: parseInt(floors)||1, beds: parseInt(beds)||1, baths: parseInt(baths)||1 });
-            localStorage.setItem('myProjects', JSON.stringify(projects));
+        // Стартиране на рендерирането при зареждане на страницата
+        window.onload = function() {
             renderProjects();
-        }
+        };
 
-        // СИСТЕМА ЗА ЕЗИЦИ (СЪОБРАЗЕНА С БГ КАТАЛОГА)
+        // Логика за чужди езици
         const translations = {
             en: {
                 "nav-home": "Home", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
+                "page-eyebrow": "ARCHIVE", "page-title": "Project Catalog",
                 "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
             },
             bg: {
                 "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", "btn-login": "Вход",
+                "page-eyebrow": "АРХИВ", "page-title": "Каталог с проекти",
                 "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
             }
         };
@@ -200,21 +184,20 @@
                 if (translations[lang][key]) link.innerText = translations[lang][key];
             });
 
-            // Скрива бутона "Каталог" на EN, защото няма превод
             const catalogLink = document.querySelector('#nav-links a[data-key="nav-catalog"]');
             if (catalogLink) {
                 catalogLink.style.display = (lang === 'en') ? 'none' : 'inline-block';
             }
 
-            if(document.getElementById('btn-login')) document.getElementById('btn-login').innerText = translations[lang]['btn-login'];
-            if(document.getElementById('footer-subtext')) document.getElementById('footer-subtext').innerText = translations[lang]['footer-subtext'];
-            if(document.getElementById('footer-rights')) document.getElementById('footer-rights').innerText = translations[lang]['footer-rights'];
+            const keysToTranslate = ['btn-login', 'page-eyebrow', 'page-title', 'footer-subtext', 'footer-rights'];
+            keysToTranslate.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && translations[lang][id]) el.innerText = translations[lang][id];
+            });
 
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             if(event && event.target) event.target.classList.add('active');
         }
-
-        renderProjects();
     </script>
 </body>
 </html>
