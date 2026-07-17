@@ -1,4 +1,4 @@
-/* Базови настройки */
+/* --- БАЗОВИ НАСТРОЙКИ --- */
 body {
     background-color: #fcfaf5;
     color: #1a1a1a;
@@ -7,7 +7,7 @@ body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* Навигация */
+/* --- НАВИГАЦИЯ --- */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -23,7 +23,7 @@ body {
     font-weight: 500;
 }
 
-/* Hero секция */
+/* --- HERO СЕКЦИЯ --- */
 .hero {
     display: flex;
     align-items: center;
@@ -34,7 +34,6 @@ body {
 .hero-text { flex: 1; max-width: 600px; }
 .hero-image img { width: 100%; max-width: 500px; height: auto; }
 
-/* Текстови стилове */
 h1 { font-size: 4rem; line-height: 1; margin: 20px 0; font-weight: 600; }
 .eyebrow { text-transform: uppercase; letter-spacing: 3px; font-size: 0.7rem; color: #888; font-weight: bold; }
 .hero-buttons { margin-top: 30px; display: flex; gap: 15px; }
@@ -43,12 +42,18 @@ button { padding: 15px 30px; cursor: pointer; border: none; font-weight: bold; t
 .btn-primary { background: #1a1a1a; color: #fff; }
 .btn-secondary { background: transparent; border: 1px solid #ddd; }
 
-/* Секция Скорошни проекти (подготвена) */
+/* --- СЕКЦИЯ СКОРОШНИ ПРОЕКТИ --- */
 .recent-projects { padding: 50px 5%; }
+.header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 30px; }
+
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-top: 40px;
+    gap: 40px;
 }
-.project-card img { width: 100%; height: 300px; object-fit: cover; border: 1px solid #eee; }
+
+.project-card img { width: 100%; height: 350px; object-fit: cover; border: 1px solid #eee; }
+.project-info { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+.project-card h3 { margin: 0; font-size: 1.1rem; }
+.project-card p { font-size: 0.85rem; color: #777; margin-top: 5px; }
+.sqm { font-size: 0.8rem; color: #aaa; }
