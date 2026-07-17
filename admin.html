@@ -2,348 +2,56 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Админ Панел | Academy Architect Studio</title>
+    <title>Админ Панел | Academy Architect</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .admin-container {
-            max-width: 700px;
-            margin: 60px auto;
-            padding: 40px;
-            background: #fbf9f4;
-            border: 1px solid #eadecc;
-        }
-        .admin-container h2 {
-            font-size: 1.6rem;
-            font-weight: 400;
-            margin-bottom: 30px;
-            color: #1a1a1a;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            color: #8c8275;
-            font-weight: 600;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #eadecc;
-            background: #fff;
-            font-family: inherit;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        .btn-upload {
-            width: 100%;
-            padding: 14px;
-            background: #1a1a1a;
-            color: #fff;
-            border: none;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .btn-upload:hover {
-            background: #333;
-        }
-        .status-msg {
-            margin-top: 15px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            display: none;
-        }
-        
-        /* Списък с проекти за управление */
-        .projects-list-section {
-            margin-top: 50px;
-            border-top: 2px solid #eadecc;
-            padding-top: 30px;
-        }
-        .projects-list-section h3 {
-            font-size: 1.3rem;
-            font-weight: 400;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #1a1a1a;
-        }
-        .admin-project-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #fff;
-            border: 1px solid #eadecc;
-            padding: 15px;
-            margin-bottom: 15px;
-            gap: 20px;
-        }
-        .admin-project-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .admin-project-thumb {
-            width: 70px;
-            height: 50px;
-            object-fit: cover;
-            border: 1px solid #eadecc;
-        }
-        .admin-project-title {
-            font-weight: 600;
-            color: #1a1a1a;
-            font-size: 1rem;
-        }
-        .admin-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .btn-action {
-            padding: 8px 15px;
-            border: 1px solid #1a1a1a;
-            background: transparent;
-            cursor: pointer;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.2s;
-        }
-        .btn-edit {
-            border-color: #8c8275;
-            color: #8c8275;
-        }
-        .btn-edit:hover {
-            background: #8c8275;
-            color: #fff;
-        }
-        .btn-delete {
-            border-color: #b22222;
-            color: #b22222;
-        }
-        .btn-delete:hover {
-            background: #b22222;
-            color: #fff;
-        }
-        .cancel-edit-btn {
-            background: #eadecc;
-            color: #1a1a1a;
-            margin-top: 10px;
-            display: none;
-        }
+        .admin-container { max-width: 800px; margin: 40px auto; padding: 40px; background: #fbf9f4; border: 1px solid #eadecc; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; }
+        .btn-upload { width: 100%; padding: 15px; background: #1a1a1a; color: #fff; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <header class="navbar">
-        <a href="index.html" class="logo-area">
-            <span>Academy Architect <span class="logo-studio">Studio - Admin</span></span>
-        </a>
-        <button onclick="logout()" style="background:none; border:1px solid #1a1a1a; padding: 8px 15px; cursor:pointer;">Изход</button>
-    </header>
-
-    <main>
-        <div class="admin-container">
-            <h2 id="formTitle">Добавяне на нов проект</h2>
-            
-            <form id="uploadForm">
-                <div class="form-group">
-                    <label>Име на проекта</label>
-                    <input type="text" id="projectTitle" required placeholder="Модерна къща в София">
-                </div>
-                <div class="form-group">
-                    <label>Описание</label>
-                    <textarea id="projectDesc" required placeholder="Кратко описание на проекта..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Снимка на проекта (остави празно, ако редактираш и не искаш да я сменяш)</label>
-                    <input type="file" id="projectImage" accept="image/*" style="border: none; padding: 5px 0;">
-                </div>
-                
-                <button type="submit" class="btn-upload" id="submitBtn">Качи в каталога</button>
-                <button type="button" class="btn-upload cancel-edit-btn" id="cancelEditBtn" onclick="resetForm()">Откажи редактиране</button>
-                
-                <div class="status-msg" id="statusMsg"></div>
-            </form>
-
-            <!-- Секция за Управление на проекти -->
-            <div class="projects-list-section">
-                <h3>Твоите проекти</h3>
-                <div id="projectsAdminList">
-                    <!-- Списъкът се генерира тук -->
-                </div>
-            </div>
-        </div>
+    <main class="admin-container">
+        <h2>Добавяне на нов проект</h2>
+        <form id="uploadForm">
+            <div class="form-group"><label>Име</label><input type="text" id="projectTitle" required></div>
+            <div class="form-group"><label>Описание</label><textarea id="projectDesc" required></textarea></div>
+            <div class="form-group"><label>Снимки за Галерия</label><input type="file" id="galleryPhotos" accept="image/*" multiple></div>
+            <div class="form-group"><label>Снимки за Планове</label><input type="file" id="floorPlans" accept="image/*" multiple></div>
+            <button type="submit" class="btn-upload">Запази проект</button>
+        </form>
     </main>
 
     <script>
-        let editIndex = null; // Пазим тук кой проект редактираме в момента
-
-        window.onload = function() {
-            renderAdminProjects();
-        }
-
-        // Показване на всички качени проекти с бутони за Редактиране/Изтриване
-        function renderAdminProjects() {
-            const listContainer = document.getElementById('projectsAdminList');
-            const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-
-            if (projects.length === 0) {
-                listContainer.innerHTML = '<p style="color:#8c8275; font-style:italic;">Нямаш качени проекти.</p>';
-                return;
-            }
-
-            // Рендерираме ги в списъка
-            listContainer.innerHTML = projects.map((project, index) => `
-                <div class="admin-project-item">
-                    <div class="admin-project-info">
-                        <img src="${project.image}" class="admin-project-thumb">
-                        <span class="admin-project-title">${project.title}</span>
-                    </div>
-                    <div class="admin-actions">
-                        <button class="btn-action btn-edit" onclick="startEdit(${index})">Редактирай</button>
-                        <button class="btn-action btn-delete" onclick="deleteProject(${index})">Изтрий</button>
-                    </div>
-                </div>
-            `).reverse().join(''); // Най-новите най-отгоре
-        }
-
-        // Пълнене на формата обратно при натискане на "Редактирай"
-        function startEdit(index) {
-            const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-            const project = projects[index];
-
-            if (!project) return;
-
-            editIndex = index;
-
-            // Попълваме полетата
-            document.getElementById('projectTitle').value = project.title;
-            document.getElementById('projectDesc').value = project.description;
-            
-            // Променяме визията на формата за режим Редактиране
-            document.getElementById('formTitle').innerText = "Редактиране на проект";
-            document.getElementById('submitBtn').innerText = "Запази промените";
-            document.getElementById('cancelEditBtn').style.display = "block";
-            document.getElementById('projectImage').required = false; // При редактиране не е задължително да качва наново същата снимка
-
-            // Превъртане на екрана нагоре до формата
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Изтриване на проект
-        function deleteProject(index) {
-            if (confirm("Сигурен ли си, че искаш да изтриеш този проект?")) {
-                let projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-                projects.splice(index, 1); // Махаме проекта от списъка
-                localStorage.setItem('myProjects', JSON.stringify(projects));
-                
-                renderAdminProjects(); // Обновяваме списъка на екрана
-                
-                const statusMsg = document.getElementById('statusMsg');
-                statusMsg.style.color = "green";
-                statusMsg.innerText = "Проектът беше успешно изтрит!";
-                statusMsg.style.display = "block";
-                setTimeout(() => { statusMsg.style.display = "none"; }, 3000);
-            }
-        }
-
-        // Логика при изпращане на формата (Качване ИЛИ Запазване на промени)
-        document.getElementById('uploadForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const statusMsg = document.getElementById('statusMsg');
-            
-            const title = document.getElementById('projectTitle').value;
-            const desc = document.getElementById('projectDesc').value;
-            const fileInput = document.getElementById('projectImage');
-            const file = fileInput.files[0];
-
-            submitBtn.disabled = true;
-
-            let projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-
-            const saveProcess = (imageSrc) => {
-                if (editIndex !== null) {
-                    // --- РЕЖИМ: РЕДАКТИРАНЕ ---
-                    projects[editIndex].title = title;
-                    projects[editIndex].description = desc;
-                    // Сменяме снимката само ако потребителят е избрал нов файл
-                    if (imageSrc) {
-                        projects[editIndex].image = imageSrc;
-                    }
-                    statusMsg.innerText = "Успешно редактиран проект!";
-                } else {
-                    // --- РЕЖИМ: ДОБАВЯНЕ ---
-                    if (!imageSrc) {
-                        alert("Моля, изберете снимка!");
-                        submitBtn.disabled = false;
-                        return;
-                    }
-                    const newProject = {
-                        title: title,
-                        description: desc,
-                        image: imageSrc,
-                        date: new Date().toLocaleDateString('bg-BG')
-                    };
-                    projects.push(newProject);
-                    statusMsg.innerText = "Успешно качен проект!";
-                }
-
-                // Записваме промените
-                localStorage.setItem('myProjects', JSON.stringify(projects));
-
-                // Изчистваме и рестартираме всичко
-                statusMsg.style.color = "green";
-                statusMsg.style.display = "block";
-                setTimeout(() => { statusMsg.style.display = "none"; }, 3000);
-
-                resetForm();
-                renderAdminProjects();
-            };
-
-            if (file) {
-                // Ако има нова снимка, я конвертираме
-                const reader = new FileReader();
-                reader.onloadend = function() {
-                    saveProcess(reader.result);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                // Ако няма избрана нова снимка (при редактиране), продължаваме директно
-                saveProcess(null);
-            }
+        const toBase64 = file => new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(file);
         });
 
-        // Функция за изчистване на формата и връщане към режим "Добавяне"
-        function resetForm() {
-            editIndex = null;
-            document.getElementById('uploadForm').reset();
-            document.getElementById('formTitle').innerText = "Добавяне на нов проект";
-            document.getElementById('submitBtn').innerText = "Качи в каталога";
-            document.getElementById('submitBtn').disabled = false;
-            document.getElementById('cancelEditBtn').style.display = "none";
-            document.getElementById('projectImage').required = true;
-        }
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const gFiles = document.getElementById('galleryPhotos').files;
+            const pFiles = document.getElementById('floorPlans').files;
+            
+            const gArr = []; for(let f of gFiles) gArr.push(await toBase64(f));
+            const pArr = []; for(let f of pFiles) pArr.push(await toBase64(f));
 
-        function logout() {
-            localStorage.removeItem('isLoggedIn');
-            window.location.href = "login.html";
-        }
+            const project = {
+                title: document.getElementById('projectTitle').value,
+                description: document.getElementById('projectDesc').value,
+                gallery: gArr,
+                plans: pArr
+            };
+            
+            let projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+            projects.push(project);
+            localStorage.setItem('myProjects', JSON.stringify(projects));
+            alert("Успешно добавено!");
+            location.reload();
+        });
     </script>
 </body>
 </html>
