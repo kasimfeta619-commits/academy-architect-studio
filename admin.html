@@ -4,54 +4,73 @@
     <meta charset="UTF-8">
     <title>Админ Панел | Academy Architect</title>
     <style>
-        body { font-family: sans-serif; padding: 40px; background: #fbf9f4; max-width: 800px; margin: auto; }
+        body { font-family: sans-serif; padding: 40px; background: #f4f4f4; }
+        .admin-box { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        /* Grid система за подредени полета */
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: span 2; }
+        
         .form-group { margin-bottom: 15px; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #1a1a1a; color: white; border: none; cursor: pointer; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin: 20px 0; }
+        .btn-save { width: 100%; padding: 15px; background: #000; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
     </style>
 </head>
 <body>
+
+<div class="admin-box">
     <h2>Админ Панел: Добавяне на проект</h2>
     <form id="uploadForm">
-        <div class="form-group"><input type="text" id="title" placeholder="Име на проекта" required></div>
-        <div class="form-group"><textarea id="desc" placeholder="Описание"></textarea></div>
-        <div class="form-group"><input type="text" id="area" placeholder="Площ (м²)"></div>
-        <div class="form-group"><input type="number" id="floors" placeholder="Брой етажи"></div>
-        <div class="form-group"><input type="number" id="beds" placeholder="Брой спални"></div>
-        <div class="form-group"><input type="number" id="baths" placeholder="Брой бани"></div>
-        <div class="form-group"><input type="text" id="price" placeholder="Цена"></div>
-        <div class="form-group"><label><input type="checkbox" id="isFav"> Фаворитен проект</label></div>
-        <div class="form-group"><label>Снимка (за каталог)</label><input type="file" id="imgFile" accept="image/*" required></div>
-        <button type="submit">Запази проекта</button>
-    </form>
+        <div class="form-group full-width"><label>Име на проекта</label><input type="text" id="title" required></div>
+        <div class="form-group full-width"><label>Описание</label><textarea id="desc" rows="3"></textarea></div>
+        
+        <div class="grid-layout">
+            <div class="form-group"><label>Площ (м²)</label><input type="text" id="area"></div>
+            <div class="form-group"><label>Брой етажи</label><input type="number" id="floors"></div>
+            <div class="form-group"><label>Брой спални</label><input type="number" id="beds"></div>
+            <div class="form-group"><label>Брой бани</label><input type="number" id="baths"></div>
+            <div class="form-group full-width"><label>Цена</label><input type="text" id="price"></div>
+        </div>
 
-    <script>
-        document.getElementById('uploadForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const project = {
-                    title: document.getElementById('title').value,
-                    desc: document.getElementById('desc').value,
-                    area: document.getElementById('area').value,
-                    floors: document.getElementById('floors').value,
-                    beds: document.getElementById('beds').value,
-                    baths: document.getElementById('baths').value,
-                    price: document.getElementById('price').value,
-                    isFav: document.getElementById('isFav').checked,
-                    img: e.target.result
-                };
-                
-                // Взимаме списъка, добавяме новия проект и записваме обратно
-                let list = JSON.parse(localStorage.getItem('myProjects') || '[]');
-                list.push(project);
-                localStorage.setItem('myProjects', JSON.stringify(list));
-                
-                alert("Проектът е успешно запазен и вече е достъпен в каталога!");
-                location.reload();
+        <div class="checkbox-group">
+            <input type="checkbox" id="isFav" style="width: 20px; height: 20px;">
+            <label for="isFav" style="margin:0;">Фаворитен проект (Home Page)</label>
+        </div>
+
+        <div class="form-group"><label>Снимка (за каталог)</label><input type="file" id="imgFile" accept="image/*" required></div>
+        
+        <button type="submit" class="btn-save">Запази проекта</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const project = {
+                title: document.getElementById('title').value,
+                desc: document.getElementById('desc').value,
+                area: document.getElementById('area').value,
+                floors: document.getElementById('floors').value,
+                beds: document.getElementById('beds').value,
+                baths: document.getElementById('baths').value,
+                price: document.getElementById('price').value,
+                isFav: document.getElementById('isFav').checked,
+                img: e.target.result
             };
-            reader.readAsDataURL(document.getElementById('imgFile').files[0]);
-        });
-    </script>
+            let list = JSON.parse(localStorage.getItem('myProjects') || '[]');
+            list.push(project);
+            localStorage.setItem('myProjects', JSON.stringify(list));
+            alert("Успешно записано!");
+            location.reload();
+        };
+        reader.readAsDataURL(document.getElementById('imgFile').files[0]);
+    });
+</script>
 </body>
 </html>
