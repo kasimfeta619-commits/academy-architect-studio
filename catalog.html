@@ -6,81 +6,131 @@
     <title>Catalog | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .filters-container { display: flex; gap: 15px; background: #fff; padding: 20px; border: 1px solid #e3dac9; border-radius: 4px; margin-bottom: 20px; font-size: 0.8rem; flex-wrap: wrap; align-items: flex-end; }
+        .filters-container { display: flex; gap: 15px; background: transparent; padding: 20px 0; border-top: 1px solid #eadecc; border-bottom: 1px solid #eadecc; margin-bottom: 20px; font-size: 0.8rem; flex-wrap: wrap; align-items: flex-end; }
         .filter-group { display: flex; flex-direction: column; gap: 5px; }
-        .filter-group label { text-transform: uppercase; color: #8c8275; font-weight: 600; font-size: 0.7rem; letter-spacing: 1px; }
-        .filter-group select, .filter-group input { padding: 10px; border: 1px solid #ccc; background: #fff; border-radius: 4px; min-width: 120px; }
+        .filter-group label { text-transform: uppercase; color: #8c8275; font-weight: 600; font-size: 0.65rem; letter-spacing: 1px; }
+        .filter-group select, .filter-group input { padding: 10px; border: 1px solid #eadecc; background: #fff; border-radius: 0px; min-width: 140px; font-size: 0.8rem; color: #1a1a1a; }
         .area-inputs { display: flex; gap: 5px; }
         .area-inputs input { width: 70px; min-width: unset; }
-        .btn-reset { padding: 10px 20px; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 4px; height: 38px; }
+        .btn-reset { padding: 10px 20px; border: 1px solid #eadecc; background: transparent; cursor: pointer; border-radius: 0px; height: 38px; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
 
-        .quick-add-panel { background: #eadecc; padding: 20px; border-radius: 4px; margin-bottom: 30px; border: 1px solid #b5ab9e; }
-        .quick-add-panel h3 { margin-bottom: 15px; font-size: 1rem; font-weight: 500; color: #1a1a1a; }
-        .admin-form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .admin-form input, .admin-form button { padding: 10px; border: 1px solid #b5ab9e; border-radius: 4px; font-size: 0.85rem; }
-        .admin-form button { background: #1a1a1a; color: #fff; cursor: pointer; grid-column: span 4; font-weight: bold; border: none; margin-top: 5px; }
-
-        .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 30px; }
+        .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 30px; margin-top: 30px; }
         .project-card { background: transparent; }
-        .project-img-box { width: 100%; height: 260px; background: #ebd9c5; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #e3dac9; }
+        .project-img-box { width: 100%; height: 260px; background: #ebd9c5; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #e3dac9; }
         .project-img-box img { width: 100%; height: 100%; object-fit: cover; }
         .project-info { margin-top: 15px; }
-        .project-title { font-size: 1.1rem; font-weight: 500; margin-bottom: 10px; color: #1a1a1a; }
-        .project-specs { display: flex; gap: 20px; font-size: 0.7rem; color: #8c8275; text-transform: uppercase; letter-spacing: 0.5px; }
-        .spec-item span { display: block; color: #1a1a1a; font-weight: bold; font-size: 0.85rem; margin-top: 2px; }
+        .project-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 12px; color: #1a1a1a; }
+        
+        .project-specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; border-top: 1px solid #eadecc; padding-top: 8px; }
+        .spec-item { font-size: 0.65rem; color: #8c8275; text-transform: uppercase; letter-spacing: 0.5px; }
+        .spec-item span { display: block; color: #1a1a1a; font-weight: 500; font-size: 0.8rem; margin-top: 2px; }
+
+        .quick-add-panel { background: #f4eee5; padding: 30px; border-radius: 0px; margin: 60px 0 30px 0; border: 1px solid #eadecc; }
+        .quick-add-panel h3 { margin-bottom: 15px; font-size: 1rem; font-weight: 600; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px; }
+        .admin-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .admin-form input, .admin-form button { padding: 12px; border: 1px solid #eadecc; border-radius: 0px; font-size: 0.85rem; }
+        .admin-form button { background: #1a1a1a; color: #fff; cursor: pointer; grid-column: span 3; font-weight: bold; border: none; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s; }
+        .admin-form button:hover { background: #333; }
     </style>
 </head>
 <body>
 
+    <!-- НАВИГАЦИЯ -->
     <header class="navbar">
         <a href="index.html" class="logo-area">
             <img src="assets/logo.png" alt="Logo" class="logo-icon" onerror="this.src='https://placehold.co/150x50?text=Logo'">
             <span>Academy Architect <span class="logo-studio">Studio</span></span>
         </a>
         <nav id="nav-links">
-            <a href="index.html" data-key="nav-home">Home</a>
-            <a href="catalog.html" class="active" data-key="nav-catalog">Catalog</a>
+            <a href="index.html" data-key="nav-home">Начало</a>
+            <a href="catalog.html" class="active" data-key="nav-catalog">Каталог</a>
+            <a href="about.html" data-key="nav-about">За нас</a>
+            <a href="planner.html" data-key="nav-planner">ИИ Планер</a>
+            <a href="contact.html" data-key="nav-contact">Контакт</a>
         </nav>
+        <div class="header-actions">
+            <div class="lang-switcher">
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
+            </div>
+            <a href="login.html" class="btn-login">Вход</a>
+        </div>
     </header>
 
+    <!-- ОСНОВНО СЪДЪРЖАНИЕ -->
     <main class="content-container">
-        <span class="eyebrow">CATALOG</span>
-        <h1 id="cat-title">House Project Catalog</h1>
+        <span class="eyebrow" id="cat-eyebrow">КАТАЛОГ</span>
+        <h1 id="cat-title">Каталог с проекти за къщи</h1>
+        <p style="color: #8c8275; font-size: 0.85rem; margin-top: -15px; margin-bottom: 30px;" id="cat-desc">Филтрирай по площ, етажи, спални и стил.</p>
         
+        <!-- ФИЛТРИ -->
         <div class="filters-container">
-            <div class="filter-group"><label>Type</label><select><option>Any</option></select></div>
+            <div class="filter-group"><label id="lbl-type">Тип</label><select><option>Всички</option></select></div>
             <div class="filter-group">
-                <label>Area (m²)</label>
+                <label id="lbl-area">Площ (м²)</label>
                 <div class="area-inputs"><input type="number" placeholder="min"><input type="number" placeholder="max"></div>
             </div>
-            <div class="filter-group"><label>Floors</label><select><option>Any</option><option>1</option><option>2</option></select></div>
-            <div class="filter-group"><label>Bedrooms</label><select><option>Any</option><option>1</option><option>2</option><option>3</option></select></div>
-            <button class="btn-reset">Reset filters</button>
+            <div class="filter-group"><label id="lbl-floors">Етажи</label><select><option>Всички</option><option>1</option><option>2</option></select></div>
+            <div class="filter-group"><label id="lbl-beds">Спални</label><select><option>Всички</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+            <div class="filter-group"><label id="lbl-style">Стил</label><select><option>Всички</option></select></div>
+            <button class="btn-reset" id="btn-reset">Изчисти филтрите</button>
         </div>
 
+        <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 10px;"><span id="count-num">12</span> проекта</p>
+        
+        <!-- РЕШЕТКА С ПРОЕКТИ -->
+        <div class="projects-grid" id="projectsGrid"></div>
+
+        <!-- АДМИН ПАНЕЛ (ИЗНЕСЕН НАЙ-ДОЛУ) -->
         <div class="quick-add-panel">
-            <h3>Добави нов проект в сайта</h3>
+            <h3 id="admin-title">Добави нов проект в сайта</h3>
             <div class="admin-form">
                 <input type="text" id="new-title" placeholder="Име на проекта">
-                <input type="text" id="new-img" placeholder="Линк или път до снимка">
-                <input type="number" id="new-area" placeholder="Квадратура">
+                <input type="text" id="new-img" placeholder="Път до снимка (напр. assets/house.jpg)">
+                <input type="number" id="new-area" placeholder="Квадратура (м²)">
                 <input type="number" id="new-floors" placeholder="Етажи">
                 <input type="number" id="new-beds" placeholder="Спални">
                 <input type="number" id="new-baths" placeholder="Бани">
-                <button onclick="addNewProject()">Добави проекта веднага</button>
+                <button onclick="addNewProject()" id="admin-add-btn">Добави проекта веднага</button>
             </div>
         </div>
-
-        <p style="font-size: 0.85rem; color: #8c8275;"><span id="count-num">0</span> проекти</p>
-        <div class="projects-grid" id="projectsGrid"></div>
     </main>
 
+    <!-- ФУТЪР -->
+    <footer class="main-footer">
+        <div class="footer-logo-area">
+            <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
+            <div>
+                <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
+                <p class="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>STUDIO</h4>
+            <p>Sofia · Plovdiv · Varna</p>
+            <p><a href="mailto:hello@academyarchitectstudios.com">hello@academyarchitectstudios.com</a></p>
+        </div>
+        <div class="footer-col footer-right">
+            <p>© 2026</p>
+            <p id="footer-rights">Academy Architect Studio — Всички права запазени.</p>
+        </div>
+    </footer>
+
     <script>
-        // Тук сложих работещи линкове от интернет, за да видиш снимки ВЕДНАГА, дори без папка assets!
+        // Пълният списък от 12 проекта точно от снимката на оригинала
         const defaultProjects = [
-            { title: "MinimalistHouse", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80", area: 175, floors: 2, beds: 4, baths: 2 },
-            { title: "Alpine Complex Edelweiss", img: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80", area: 280, floors: 2, beds: 5, baths: 2 },
-            { title: "SlimHouse 95", img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80", area: 95, floors: 2, beds: 2, baths: 2 }
+            { title: "Минималистична Къща", img: "assets/minimalist.jpg", area: 175, floors: 2, beds: 4, baths: 2 },
+            { title: "Алпийски комплекс Еделвайс", img: "assets/alpine.jpg", area: 280, floors: 2, beds: 5, baths: 3 },
+            { title: "СлимХаус 95", img: "assets/slimhouse.jpg", area: 95, floors: 2, beds: 2, baths: 2 },
+            { title: "Оазис Вила", img: "assets/oasis.jpg", area: 150, floors: 1, beds: 3, baths: 2 },
+            { title: "Куб Хаус 120", img: "assets/cubhouse.jpg", area: 120, floors: 2, beds: 3, baths: 2 },
+            { title: "Горско убежище", img: "assets/forest.jpg", area: 85, floors: 1, beds: 1, baths: 1 },
+            { title: "Еко-Модул 45", img: "assets/ecomodule.jpg", area: 45, floors: 1, beds: 1, baths: 1 },
+            { title: "Ливада Барн", img: "assets/barn.jpg", area: 135, floors: 2, beds: 3, baths: 2 },
+            { title: "Варна Уейв Комплекс", img: "assets/varna-wave.jpg", area: 420, floors: 2, beds: 5, baths: 3 },
+            { title: "Хъб Студио", img: "assets/hub.jpg", area: 210, floors: 1, beds: 0, baths: 2 },
+            { title: "Скайлайн Резиденция", img: "assets/skyline.jpg", area: 340, floors: 2, beds: 5, baths: 4 },
+            { title: "Бунгало 60", img: "assets/bungalow.jpg", area: 60, floors: 1, beds: 1, baths: 1 }
         ];
 
         let projects = JSON.parse(localStorage.getItem('myProjects')) || defaultProjects;
@@ -92,15 +142,15 @@
                 grid.innerHTML += `
                     <div class="project-card">
                         <div class="project-img-box">
-                            <img src="${p.img}" alt="${p.title}" onerror="this.src='https://placehold.co/400x260?text=No+Image'">
+                            <img src="${p.img}" alt="${p.title}" onerror="this.src='https://placehold.co/400x260?text=${encodeURIComponent(p.title)}'">
                         </div>
                         <div class="project-info">
                             <div class="project-title">${p.title}</div>
                             <div class="project-specs">
-                                <div class="spec-item">M² <span>${p.area}</span></div>
-                                <div class="spec-item">Floors <span>${p.floors}</span></div>
-                                <div class="spec-item">Beds <span>${p.beds}</span></div>
-                                <div class="spec-item">Baths <span>${p.baths}</span></div>
+                                <div class="spec-item">М² <span>${p.area}</span></div>
+                                <div class="spec-item">Етажи <span>${p.floors}</span></div>
+                                <div class="spec-item">Спални <span>${p.beds}</span></div>
+                                <div class="spec-item">Бани <span>${p.baths}</span></div>
                             </div>
                         </div>
                     </div>
@@ -117,7 +167,7 @@
             const beds = document.getElementById('new-beds').value;
             const baths = document.getElementById('new-baths').value;
 
-            if(!title || !img) { alert('Моля, въведете име и снимка!'); return; }
+            if(!title || !img) { alert('Моля, въведете име и път до снимка!'); return; }
 
             projects.push({ title, img, area: parseInt(area)||0, floors: parseInt(floors)||1, beds: parseInt(beds)||1, baths: parseInt(baths)||1 });
             localStorage.setItem('myProjects', JSON.stringify(projects));
