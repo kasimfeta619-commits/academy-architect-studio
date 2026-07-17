@@ -2,80 +2,74 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>Админ Панел | Academy Architect</title>
+    <title>Админ Панел</title>
     <style>
         body { font-family: sans-serif; padding: 40px; background: #f4f4f4; }
         .admin-box { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .full-width { grid-column: span 2; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-home { padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; }
         .form-group { margin-bottom: 15px; }
-        input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; box-sizing: border-box; }
         .btn-save { width: 100%; padding: 15px; background: #000; color: white; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="admin-box">
-    <h2>Админ Панел: Добавяне на проект</h2>
+    <div class="header">
+        <h2>Админ Панел</h2>
+        <a href="index.html" class="btn-home">Home Page</a>
+    </div>
+    
     <form id="uploadForm">
-        <div class="form-group full-width"><label>Име</label><input type="text" id="title" required></div>
-        <div class="form-group full-width"><label>Описание</label><textarea id="desc" rows="3"></textarea></div>
-        
-        <div class="grid-layout">
-            <div class="form-group"><label>Площ (м²)</label><input type="text" id="area"></div>
-            <div class="form-group"><label>Етажи</label><input type="number" id="floors"></div>
-            <div class="form-group"><label>Спални</label><input type="number" id="beds"></div>
-            <div class="form-group"><label>Бани</label><input type="number" id="baths"></div>
-            <div class="form-group"><label>Материал</label><input type="text" id="material"></div>
-            <div class="form-group"><label>Стил</label><input type="text" id="style"></div>
-            <div class="form-group full-width"><label>Цена</label><input type="text" id="price"></div>
-        </div>
-
-        <div class="form-group">
-            <input type="checkbox" id="isFav"> <label style="display:inline;" for="isFav">Фаворитен проект</label>
-        </div>
-
-        <div class="form-group"><label>Снимки</label><input type="file" id="imgFile" accept="image/*" multiple required></div>
+        <div class="form-group"><label>Име</label><input type="text" id="title" required></div>
+        <div class="form-group"><label>Описание</label><textarea id="desc"></textarea></div>
+        <div class="form-group"><label>Площ (м²)</label><input type="text" id="area"></div>
+        <div class="form-group"><label>Етажи</label><input type="text" id="floors"></div>
+        <div class="form-group"><label>Спални</label><input type="text" id="beds"></div>
+        <div class="form-group"><label>Бани</label><input type="text" id="baths"></div>
+        <div class="form-group"><label>Материал</label><input type="text" id="material"></div>
+        <div class="form-group"><label>Стил</label><input type="text" id="style"></div>
+        <div class="form-group"><label>Цена</label><input type="text" id="price"></div>
+        <div class="form-group"><input type="checkbox" id="isFav"> <label style="display:inline;">Фаворитен проект</label></div>
+        <div class="form-group"><label>Снимки</label><input type="file" id="imgFile" multiple required></div>
         <button type="submit" class="btn-save">Запази проекта</button>
     </form>
 </div>
 
 <script>
-    document.getElementById('uploadForm').addEventListener('submit', (e) => {
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const files = document.getElementById('imgFile').files;
-        const promises = Array.from(files).map(file => {
-            return new Promise((resolve) => {
+        const imageUrls = await Promise.all(Array.from(files).map(file => {
+            return new Promise(resolve => {
                 const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
+                reader.onload = e => resolve(e.target.result);
                 reader.readAsDataURL(file);
             });
-        });
+        }));
 
-        Promise.all(promises).then(images => {
-            // ВАЖНО: Тези имена трябва да отговарят точно на това, което чете index.html
-            const project = {
-                title: document.getElementById('title').value,
-                desc: document.getElementById('desc').value,
-                area: document.getElementById('area').value,
-                floors: document.getElementById('floors').value,
-                beds: document.getElementById('beds').value,
-                baths: document.getElementById('baths').value,
-                material: document.getElementById('material').value,
-                style: document.getElementById('style').value,
-                price: document.getElementById('price').value,
-                isFav: document.getElementById('isFav').checked,
-                imgs: images,
-                img: images[0] // Слагаме първата снимка като основна за index.html
-            };
+        // ТОВА са ключовете, които index.html очаква
+        const project = {
+            title: document.getElementById('title').value,
+            desc: document.getElementById('desc').value,
+            area: document.getElementById('area').value,
+            floors: document.getElementById('floors').value,
+            beds: document.getElementById('beds').value,
+            baths: document.getElementById('baths').value,
+            material: document.getElementById('material').value,
+            style: document.getElementById('style').value,
+            price: document.getElementById('price').value,
+            isFav: document.getElementById('isFav').checked,
+            img: imageUrls[0], // Първата снимка за обложка
+            imgs: imageUrls    // Всички снимки за галерия
+        };
 
-            let list = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            list.push(project);
-            localStorage.setItem('myProjects', JSON.stringify(list));
-            
-            alert("Проектът е записан успешно!");
-            location.reload();
-        });
+        let list = JSON.parse(localStorage.getItem('myProjects') || '[]');
+        list.push(project);
+        localStorage.setItem('myProjects', JSON.stringify(list));
+        alert("Проектът е запазен!");
+        location.reload();
     });
 </script>
 </body>
