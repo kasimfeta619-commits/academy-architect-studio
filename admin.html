@@ -1,62 +1,5 @@
-<!DOCTYPE html>
-<html lang="bg">
-<head>
-    <meta charset="UTF-8">
-    <title>Админ Панел | Academy Architect</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .admin-container { max-width: 800px; margin: 40px auto; padding: 40px; background: #fbf9f4; border: 1px solid #eadecc; }
-        .form-group { margin-bottom: 20px; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; box-sizing: border-box; }
-        .btn-upload { width: 100%; padding: 15px; background: #1a1a1a; color: #fff; border: none; cursor: pointer; }
-        .pub-list { margin-top: 40px; border-top: 2px solid #eadecc; padding-top: 20px; }
-        .pub-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
-        .btn-action { padding: 5px 10px; margin-left: 5px; cursor: pointer; border: none; }
-        .btn-view { background: #1a1a1a; color: #fff; text-decoration: none; font-size: 0.8rem; padding: 5px 10px; }
-    </style>
-</head>
-<body>
-    <main class="admin-container">
-        <h2>Добавяне на нов проект</h2>
-        <form id="uploadForm">
-            <div class="form-group"><label>Име</label><input type="text" id="projectTitle" required></div>
-            <div class="form-group"><label>Описание</label><textarea id="projectDesc" required></textarea></div>
-            <div class="grid-inputs">
-                <div class="form-group"><label>Площ (м²)</label><input type="text" id="pArea"></div>
-                <div class="form-group"><label>Етажи</label><input type="number" id="pFloors"></div>
-                <div class="form-group"><label>Спални</label><input type="number" id="pBeds"></div>
-                <div class="form-group"><label>Бани</label><input type="number" id="pBaths"></div>
-                <div class="form-group"><label>Гаражни места</label><input type="number" id="pGarage"></div>
-                <div class="form-group"><label>Материал</label><input type="text" id="pMat"></div>
-                <div class="form-group"><label>Стил</label><input type="text" id="pStyle"></div>
-                <div class="form-group"><label>Цена</label><input type="text" id="pPrice"></div>
-            </div>
-            <div class="form-group">
-                <label style="display: flex; align-items: center; gap: 10px;">
-                    <input type="checkbox" id="isFavorite" style="width: auto;"> Маркирай като "Фаворитен проект"
-                </label>
-            </div>
-            <div class="form-group"><label>Снимки за Галерия</label><input type="file" id="galleryPhotos" accept="image/*" multiple></div>
-            <div class="form-group"><label>Снимки за Планове</label><input type="file" id="floorPlans" accept="image/*" multiple></div>
-            <button type="submit" class="btn-upload">Запази проект</button>
-        </form>
-
-        <div class="form-group" style="margin-top: 30px; padding: 20px; background: #eee;">
-            <label>Архив (Безопасност на данните)</label>
-            <button type="button" onclick="exportData()" class="btn-action">Изтегли всички проекти (JSON)</button>
-            <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="margin-top:10px;">
-        </div>
-
-        <div class="pub-list">
-            <h3>Публикувани проекти</h3>
-            <div id="projectList"></div>
-        </div>
-    </main>
-
-    <script>
-        // Функция за автоматично смаляване на снимки преди запис
+<script>
+        // Функция за автоматично смаляване на снимки
         const toBase64 = (file) => new Promise((resolve) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -65,7 +8,7 @@
                 img.src = event.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800; // Оптимална ширина за уеб
+                    const MAX_WIDTH = 800;
                     const scale = Math.min(MAX_WIDTH / img.width, 1);
                     canvas.width = img.width * scale;
                     canvas.height = img.height * scale;
@@ -90,6 +33,23 @@
             `).join('');
         }
 
+        // Поправена функция за редакция - добавени всички полета
+        function editProject(index) {
+            let projects = JSON.parse(localStorage.getItem('myProjects'));
+            let p = projects[index];
+
+            p.title = prompt("Име на проекта:", p.title) || p.title;
+            p.description = prompt("Описание:", p.description) || p.description;
+            p.area = prompt("Площ (м²):", p.area) || p.area;
+            p.floors = prompt("Етажи:", p.floors) || p.floors;
+            p.price = prompt("Цена:", p.price) || p.price;
+            p.isFavorite = confirm("Маркирай като Фаворитен?");
+
+            localStorage.setItem('myProjects', JSON.stringify(projects));
+            alert("Проектът е актуализиран!");
+            renderList();
+        }
+
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             alert("Обработвам снимките... моля изчакайте.");
@@ -100,9 +60,18 @@
             const gArr = []; for(let f of gFiles) gArr.push(await toBase64(f));
             const pArr = []; for(let f of pFiles) pArr.push(await toBase64(f));
 
+            // Добавени всички полета в обекта
             const project = {
                 title: document.getElementById('projectTitle').value,
                 description: document.getElementById('projectDesc').value,
+                area: document.getElementById('pArea').value,
+                floors: document.getElementById('pFloors').value,
+                beds: document.getElementById('pBeds').value,
+                baths: document.getElementById('pBaths').value,
+                garage: document.getElementById('pGarage').value,
+                material: document.getElementById('pMat').value,
+                style: document.getElementById('pStyle').value,
+                price: document.getElementById('pPrice').value,
                 isFavorite: document.getElementById('isFavorite').checked,
                 gallery: gArr,
                 plans: pArr
@@ -139,5 +108,3 @@
 
         renderList();
     </script>
-</body>
-</html>
