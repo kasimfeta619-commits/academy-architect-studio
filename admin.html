@@ -22,6 +22,7 @@
         .pub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .pub-card { background: white; padding: 15px; border: 1px solid #ddd; border-radius: 4px; }
         .fav-border { border: 2px solid #ffd700; }
+        .pub-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -37,6 +38,8 @@
             <div class="form-group"><label>Брой етажи</label><input type="number" id="floors"></div>
             <div class="form-group"><label>Брой спални</label><input type="number" id="beds"></div>
             <div class="form-group"><label>Брой бани</label><input type="number" id="baths"></div>
+            <div class="form-group"><label>Материал</label><input type="text" id="material"></div>
+            <div class="form-group"><label>Стил</label><input type="text" id="style"></div>
             <div class="form-group full-width"><label>Цена</label><input type="text" id="price"></div>
         </div>
 
@@ -57,7 +60,6 @@
 </div>
 
 <script>
-    // Функция за визуализация
     const renderCatalog = () => {
         const list = JSON.parse(localStorage.getItem('myProjects') || '[]');
         const container = document.getElementById('catalogContainer');
@@ -66,10 +68,11 @@
         list.forEach(p => {
             container.innerHTML += `
                 <div class="pub-card ${p.isFav ? 'fav-border' : ''}">
+                    <img src="${p.img}" alt="Project Image">
                     ${p.isFav ? '<strong>★ Фаворит</strong>' : '<strong>Каталог</strong>'}
                     <h3>${p.title}</h3>
-                    <p>${p.desc}</p>
-                    <p>Площ: ${p.area}м² | ${p.beds} спални, ${p.baths} бани</p>
+                    <p><strong>Детайли:</strong> ${p.area}м², ${p.beds} сп, ${p.baths} бн</p>
+                    <p><strong>Стил:</strong> ${p.style} | <strong>Материал:</strong> ${p.material}</p>
                     <p><strong>Цена: ${p.price}</strong></p>
                 </div>
             `;
@@ -87,6 +90,8 @@
                 floors: document.getElementById('floors').value,
                 beds: document.getElementById('beds').value,
                 baths: document.getElementById('baths').value,
+                material: document.getElementById('material').value,
+                style: document.getElementById('style').value,
                 price: document.getElementById('price').value,
                 isFav: document.getElementById('isFav').checked,
                 img: e.target.result
@@ -94,13 +99,13 @@
             let list = JSON.parse(localStorage.getItem('myProjects') || '[]');
             list.push(project);
             localStorage.setItem('myProjects', JSON.stringify(list));
-            renderCatalog(); // Обновява визуализацията веднага
+            renderCatalog();
             document.getElementById('uploadForm').reset();
         };
         reader.readAsDataURL(document.getElementById('imgFile').files[0]);
     });
 
-    renderCatalog(); // Зареди при отваряне
+    renderCatalog();
 </script>
 </body>
 </html>
