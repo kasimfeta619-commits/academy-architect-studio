@@ -1,57 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .contact-info-grid {
+            display: flex;
+            gap: 60px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .contact-block {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .contact-block label {
+            font-size: 0.65rem;
+            color: #8c8275;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .contact-block p, .contact-block a {
+            font-size: 1rem;
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .contact-block a {
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+    </style>
 </head>
 <body>
+
+    <!-- НАВИГАЦИЯ -->
     <header class="navbar">
         <a href="index.html" class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-icon">
-            <span>Academy Architect Studio</span>
+            <img src="assets/logo.png" alt="Logo" class="logo-icon" onerror="this.src='https://placehold.co/150x50?text=Logo'">
+            <span>Academy Architect <span class="logo-studio">Studio</span></span>
         </a>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="catalog.html">Catalog</a>
-            <a href="about.html">About</a>
-            <a href="contact.html" class="active">Contact</a>
+        <nav id="nav-links">
+            <a href="index.html" data-key="nav-home">Начало</a>
+            <a href="catalog.html" data-key="nav-catalog">Каталог</a>
+            <a href="about.html" data-key="nav-about">За нас</a>
+            <a href="planner.html" data-key="nav-planner">ИИ Планер</a>
+            <a href="contact.html" class="active" data-key="nav-contact">Контакт</a>
         </nav>
-        <div class="lang-switcher">
-            <button class="lang-btn active" onclick="setLang('en')">EN</button>
-            <button class="lang-btn" onclick="setLang('bg')">BG</button>
+        <div class="header-actions">
+            <div class="lang-switcher">
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
+            </div>
+            <a href="login.html" class="btn-login" id="btn-login">Вход</a>
         </div>
     </header>
 
-    <main class="content-wrapper">
-        <span class="eyebrow" id="eyebrow">CONTACT</span>
-        <h1 id="title">Write about a project or an adaptation.</h1>
+    <!-- ОСНОВНО СЪДЪРЖАНИЕ -->
+    <main class="content-container">
+        <span class="eyebrow" id="contact-eyebrow">КОНТАКТ</span>
+        <h1 id="contact-title" style="max-width: 600px; margin-bottom: 20px;">Напишете за проект или адаптация.</h1>
+        
+        <!-- КОНТАКТНА ИНФОРМАЦИЯ О СНИМКАТА -->
+        <div class="contact-info-grid">
+            <div class="contact-block">
+                <label id="lbl-email">EMAIL</label>
+                <a href="mailto:hello@academyarchitectstudios.com">hello@academyarchitectstudios.com</a>
+            </div>
+            <div class="contact-block">
+                <label id="lbl-studio">СТУДИО</label>
+                <p>Sofia · Plovdiv · Varna</p>
+            </div>
+        </div>
     </main>
 
+    <!-- ФУТЪР -->
     <footer class="main-footer">
         <div class="footer-logo-area">
-            <img src="assets/logo.png" alt="Logo" class="footer-logo">
-            <div><strong>Academy Architect Studio</strong><br>ARCHITECTURAL DESIGN STUDIO</div>
+            <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
+            <div>
+                <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
+                <p class="footer-subtext" id="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
+            </div>
         </div>
         <div class="footer-col">
             <h4>STUDIO</h4>
             <p>Sofia · Plovdiv · Varna</p>
-            <p>hello@academyarchitectstudios.com</p>
+            <p><a href="mailto:hello@academyarchitectstudios.com">hello@academyarchitectstudios.com</a></p>
         </div>
-        <div class="footer-col">
-            <p>© 2026<br>Academy Architect Studio — All rights reserved.</p>
+        <div class="footer-col footer-right">
+            <p>© 2026</p>
+            <p id="footer-rights">Academy Architect Studio — Всички права запазени.</p>
         </div>
     </footer>
 
+    <!-- ЕЗИКОВА СИСТЕМА -->
     <script>
-        function setLang(lang) {
-            const tr = {
-                en: { e: "CONTACT", t: "Write about a project or an adaptation." },
-                bg: { e: "КОНТАКТ", t: "Пишете за проект или адаптация." }
-            };
-            document.getElementById('eyebrow').innerText = tr[lang].e;
-            document.getElementById('title').innerText = tr[lang].t;
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === lang));
+        const translations = {
+            en: {
+                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
+                "contact-eyebrow": "CONTACT",
+                "contact-title": "Write about a project or an adaptation.",
+                "lbl-email": "EMAIL", "lbl-studio": "STUDIO",
+                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
+            },
+            bg: {
+                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", "btn-login": "Вход",
+                "contact-eyebrow": "КОНТАКТ",
+                "contact-title": "Напишете за проект или адаптация.",
+                "lbl-email": "EMAIL", "lbl-studio": "СТУДИО",
+                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
+            }
+        };
+
+        function changeLanguage(lang) {
+            // Смяна на линковете в менюто
+            document.querySelectorAll('#nav-links a').forEach(link => {
+                const key = link.getAttribute('data-key');
+                if (translations[lang][key]) link.innerText = translations[lang][key];
+            });
+            // Смяна на текстовете по страницата
+            document.getElementById('btn-login').innerText = translations[lang]['btn-login'];
+            document.getElementById('contact-eyebrow').innerText = translations[lang]['contact-eyebrow'];
+            document.getElementById('contact-title').innerText = translations[lang]['contact-title'];
+            document.getElementById('lbl-email').innerText = translations[lang]['lbl-email'];
+            document.getElementById('lbl-studio').innerText = translations[lang]['lbl-studio'];
+            document.getElementById('footer-subtext').innerText = translations[lang]['footer-subtext'];
+            document.getElementById('footer-rights').innerText = translations[lang]['footer-rights'];
+
+            // Актуализация на бутоните за език
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
         }
     </script>
 </body>
