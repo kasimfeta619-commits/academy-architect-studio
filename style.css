@@ -1,102 +1,44 @@
-<!DOCTYPE html>
-<html lang="bg">
-<head>
-    <meta charset="UTF-8">
-    <title>Academy Architect Studio</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+/* Базови настройки */
+body {
+    background-color: #fcfaf5;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
 
-    <!-- Горно меню -->
-    <header class="navbar">
-        <div class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-img">
-            <a href="#" class="logo-text">Academy Architect <span>Studio</span></a>
-        </div>
-        <nav>
-            <a href="#">Начало</a>
-            <a href="#">Каталог</a>
-            <a href="#">За нас</a>
-            <a href="#">ИИ Планер</a>
-            <a href="#">Контакт</a>
-        </nav>
-        <div class="user-actions">EN | BG | Вход</div>
-    </header>
+/* Навигация */
+.navbar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 30px 5%; 
+}
+.logo-area { display: flex; align-items: center; gap: 10px; }
+.logo-img { width: 30px; }
+.logo-text { font-size: 1.2rem; font-weight: 700; color: #1a1a1a; text-decoration: none; }
+.logo-text span { color: #888; font-weight: 300; }
+.navbar nav a { margin: 0 20px; text-decoration: none; color: #1a1a1a; font-size: 0.9rem; font-weight: 500; }
 
-    <!-- Главна секция -->
-    <main class="hero">
-        <div class="hero-text">
-            <span class="eyebrow">ПРОЕКТИ ЗА КЪЩИ · ОСН. 2026</span>
-            <h1>Домове, начертани с намерение.</h1>
-            <p>Academy Architect Studio е личен каталог с проекти за къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
-            <div class="hero-buttons">
-                <button class="btn-primary">Разгледай каталога →</button>
-                <button class="btn-secondary">За студиото</button>
-            </div>
-        </div>
-        <div class="hero-image">
-            <img src="assets/main-graphic.png" alt="Architectural Sketch">
-        </div>
-    </main>
+/* Hero */
+.hero { display: flex; align-items: center; justify-content: space-between; padding: 80px 5%; gap: 80px; }
+.hero-text { flex: 1; max-width: 600px; }
+.hero-image img { width: 100%; max-width: 500px; height: auto; }
+h1 { font-size: 4rem; line-height: 1; margin: 20px 0; font-weight: 600; }
+.eyebrow { text-transform: uppercase; letter-spacing: 3px; font-size: 0.7rem; color: #888; font-weight: bold; }
+.btn-primary { background: #1a1a1a; color: #fff; padding: 15px 30px; border: none; cursor: pointer; }
+.btn-secondary { background: transparent; border: 1px solid #ddd; padding: 15px 30px; cursor: pointer; }
 
-    <!-- Секция Скорошни проекти -->
-    <section class="recent-projects">
-        <div class="header-row">
-            <h2>Скорошни проекти</h2>
-            <a href="#">Каталог →</a>
-        </div>
-        
-        <div class="projects-grid">
-            <div class="project-card">
-                <img src="assets/project1.jpg" alt="Скайлайн Резиденция">
-                <div class="project-info">
-                    <h3>Скайлайн Резиденция</h3>
-                    <span class="sqm">340 m²</span>
-                </div>
-                <p>5 етажа · Ultra-Luxury Contemporary</p>
-            </div>
-            <div class="project-card">
-                <img src="assets/project2.jpg" alt="Алпийски комплекс">
-                <div class="project-info">
-                    <h3>Алпийски комплекс Еделвайс</h3>
-                    <span class="sqm">280 m²</span>
-                </div>
-                <p>2 етажа · Alpine Chalet</p>
-            </div>
-            <div class="project-card">
-                <img src="assets/project3.jpg" alt="Варна Уейв">
-                <div class="project-info">
-                    <h3>Варна Уейв Комплекс</h3>
-                    <span class="sqm">420 m²</span>
-                </div>
-                <p>2 етажа · Mediterranean Modern</p>
-            </div>
-            <div class="project-card">
-                <img src="assets/project4.jpg" alt="Минималистична Къща">
-                <div class="project-info">
-                    <h3>Минималистична Къща</h3>
-                    <span class="sqm">200 m²</span>
-                </div>
-                <p>1 етаж · Minimalist</p>
-            </div>
-            <div class="project-card">
-                <img src="assets/project5.jpg" alt="Проект 5">
-                <div class="project-info">
-                    <h3>Проект 5</h3>
-                    <span class="sqm">300 m²</span>
-                </div>
-                <p>2 етажа · Modern</p>
-            </div>
-            <div class="project-card">
-                <img src="assets/project6.jpg" alt="Проект 6">
-                <div class="project-info">
-                    <h3>Проект 6</h3>
-                    <span class="sqm">450 m²</span>
-                </div>
-                <p>3 етажа · Luxury</p>
-            </div>
-        </div>
-    </section>
-
-</body>
-</html>
+/* Проекти */
+.recent-projects { padding: 80px 5%; }
+.header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 40px; }
+.projects-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 40px; 
+}
+.project-card img { width: 100%; height: 300px; object-fit: cover; border: 1px solid #eee; }
+.project-info { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+.project-card h3 { margin: 0; font-size: 1.1rem; }
+.project-card p { font-size: 0.85rem; color: #777; margin-top: 5px; }
+.sqm { font-size: 0.8rem; color: #aaa; }
