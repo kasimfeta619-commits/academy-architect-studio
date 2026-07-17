@@ -7,38 +7,32 @@
     <style>
         .admin-container { max-width: 800px; margin: 40px auto; padding: 40px; background: #fbf9f4; border: 1px solid #eadecc; }
         .form-group { margin-bottom: 20px; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; }
         .btn-upload { width: 100%; padding: 15px; background: #1a1a1a; color: #fff; border: none; cursor: pointer; }
+        
+        /* Стил за списъка с публикации */
+        .pub-list { margin-top: 40px; border-top: 2px solid #eadecc; padding-top: 20px; }
+        .pub-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
+        .btn-view { padding: 8px 12px; background: #1a1a1a; color: #fff; text-decoration: none; font-size: 0.8rem; }
     </style>
 </head>
 <body>
     <main class="admin-container">
-        <h2>Добавяне на проект</h2>
+        <h2>Добавяне на нов проект</h2>
         <form id="uploadForm">
-            <!-- Основни данни -->
             <div class="form-group"><label>Име</label><input type="text" id="projectTitle" required></div>
             <div class="form-group"><label>Описание</label><textarea id="projectDesc" required></textarea></div>
-            
-            <!-- Технически детайли (това което искаше) -->
-            <div class="grid-inputs">
-                <div class="form-group"><label>Площ (м²)</label><input type="text" id="pArea"></div>
-                <div class="form-group"><label>Етажи</label><input type="number" id="pFloors"></div>
-                <div class="form-group"><label>Спални</label><input type="number" id="pBeds"></div>
-                <div class="form-group"><label>Бани</label><input type="number" id="pBaths"></div>
-                <div class="form-group"><label>Гаражни места</label><input type="number" id="pGarage"></div>
-                <div class="form-group"><label>Материал</label><input type="text" id="pMat"></div>
-                <div class="form-group"><label>Стил</label><input type="text" id="pStyle"></div>
-                <div class="form-group"><label>Цена</label><input type="text" id="pPrice"></div>
-            </div>
-
-            <!-- Галерии -->
             <div class="form-group"><label>Снимки за Галерия</label><input type="file" id="galleryPhotos" accept="image/*" multiple></div>
             <div class="form-group"><label>Снимки за Планове</label><input type="file" id="floorPlans" accept="image/*" multiple></div>
-            
             <button type="submit" class="btn-upload">Запази проект</button>
         </form>
+
+        <!-- Секция за преглед -->
+        <div class="pub-list">
+            <h3>Публикувани проекти</h3>
+            <div id="projectList"></div>
+        </div>
     </main>
 
     <script>
@@ -48,25 +42,29 @@
             reader.readAsDataURL(file);
         });
 
+        // Функция за рендиране на списъка
+        function renderList() {
+            const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+            const listContainer = document.getElementById('projectList');
+            listContainer.innerHTML = projects.map((p, index) => `
+                <div class="pub-item">
+                    <span>${p.title}</span>
+                    <a href="project.html?id=${index}" target="_blank" class="btn-view">View Publication</a>
+                </div>
+            `).join('');
+        }
+
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const gFiles = document.getElementById('galleryPhotos').files;
             const pFiles = document.getElementById('floorPlans').files;
+            
             const gArr = []; for(let f of gFiles) gArr.push(await toBase64(f));
             const pArr = []; for(let f of pFiles) pArr.push(await toBase64(f));
 
             const project = {
                 title: document.getElementById('projectTitle').value,
                 description: document.getElementById('projectDesc').value,
-                area: document.getElementById('pArea').value,
-                floors: document.getElementById('pFloors').value,
-                beds: document.getElementById('pBeds').value,
-                baths: document.getElementById('pBaths').value,
-                garage: document.getElementById('pGarage').value,
-                material: document.getElementById('pMat').value,
-                style: document.getElementById('pStyle').value,
-                price: document.getElementById('pPrice').value,
                 gallery: gArr,
                 plans: pArr
             };
@@ -74,10 +72,12 @@
             let projects = JSON.parse(localStorage.getItem('myProjects')) || [];
             projects.push(project);
             localStorage.setItem('myProjects', JSON.stringify(projects));
-            
-            alert("Проектът е запазен успешно!");
-            location.reload();
+            alert("Успешно добавено!");
+            renderList(); // Обновява списъка без презареждане
         });
+
+        // Зареди списъка при отваряне
+        renderList();
     </script>
 </body>
 </html>
