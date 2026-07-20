@@ -1,41 +1,58 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Каталог | Academy Architect Studio</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ARCHITECT PRO - FULL</title>
+    <style>
+        body { margin: 0; display: flex; height: 100vh; background: #333; overflow: hidden; }
+        #tools { width: 60px; background: #e0e0e0; display: flex; flex-direction: column; align-items: center; padding-top: 10px; border-right: 1px solid #000; }
+        #canvas-box { flex: 1; background: #fff; cursor: crosshair; }
+        #view-box { flex: 1; background: #111; color: #fff; display: flex; align-items: center; justify-content: center; font-family: sans-serif; }
+    </style>
 </head>
 <body>
-    <!-- Използваме същия Header -->
-    <header class="navbar">...</header> 
 
-    <main class="catalog-page">
-        <h1>Каталог с проекти за къщи</h1>
-        <p>Филтрирай по площ, етажи, спални и стил.</p>
+<div id="tools">
+    <div style="font-size: 30px; cursor: pointer;">🧱</div>
+</div>
+<canvas id="canvas-box"></canvas>
+<div id="view-box">3D ПЕРСПЕКТИВА (АКТИВНА)</div>
 
-        <!-- Филтри -->
-        <section class="filters">
-            <select><option>Тип</option></select>
-            <input type="number" placeholder="min">
-            <input type="number" placeholder="max">
-            <select><option>Етажи</option></select>
-            <select><option>Спални</option></select>
-            <select><option>Стил</option></select>
-            <button>Изчисти филтрите</button>
-        </section>
+<script>
+    const canvas = document.getElementById('canvas-box');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth / 2;
+    canvas.height = window.innerHeight;
 
-        <!-- Решетка с проекти -->
-        <div class="projects-grid">
-            <!-- Пример за една карта от каталога -->
-            <div class="project-card">
-                <img src="assets/project1.jpg" alt="Проект">
-                <h3>Минималистична Къща</h3>
-                <div class="stats">
-                    <span>М²: 175</span> <span>ЕТАЖИ: 2</span> <span>СПАЛНИ: 4</span> <span>БАНИ: 2</span>
-                </div>
-            </div>
-            <!-- Добави останалите карти по същия модел -->
-        </div>
-    </main>
+    let drawing = false, start = null;
+
+    canvas.addEventListener('mousedown', e => {
+        drawing = true;
+        start = { x: e.offsetX, y: e.offsetY };
+    });
+
+    canvas.addEventListener('mouseup', e => {
+        if (!drawing) return;
+        const end = { x: e.offsetX, y: e.offsetY };
+        
+        // 2D чертане
+        ctx.beginPath();
+        ctx.moveTo(start.x, start.y);
+        ctx.lineTo(end.x, end.y);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 5;
+        ctx.stroke();
+
+        // 3D симулация
+        const dist = Math.sqrt((end.x-start.x)**2 + (end.y-start.y)**2).toFixed(0);
+        document.getElementById('view-box').innerHTML = 
+            `<div style="text-align:center;">
+                <h3>Стена генерирана</h3>
+                <p>Дължина: ${dist} см</p>
+                <div style="width:${dist/2}px; height: 100px; background: #555; border: 1px solid #fff;"></div>
+            </div>`;
+        drawing = false;
+    });
+</script>
 </body>
 </html>

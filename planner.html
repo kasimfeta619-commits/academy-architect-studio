@@ -2,79 +2,131 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>Professional 3D Architect</title>
+    <title>ARCHI PLANNER: Pro Features</title>
     <style>
-        body { margin: 0; display: flex; height: 100vh; font-family: sans-serif; overflow: hidden; }
-        #sidebar { width: 300px; background: #fff; border-right: 1px solid #ccc; z-index: 10; padding: 15px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); }
-        #render-area { flex: 1; position: relative; background: #222; }
-        .btn { display: block; width: 100%; padding: 10px; margin-bottom: 10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: sans-serif; overflow: hidden; }
+        .app-container { display: grid; grid-template-rows: 60px 1fr; height: 100vh; }
+        .toolbar { background: #222; color: #fff; display: flex; align-items: center; padding: 0 10px; gap: 5px; flex-wrap: wrap; }
+        .viewport { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+        #canvas2d { background: #fff; width: 100%; height: 100%; cursor: crosshair; }
+        #canvas3d { background: #2d5a27; width: 100%; height: 100%; }
+        button { padding: 6px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .tool-btn { background: #444; color: white; }
+        .action-btn { background: #27ae60; color: white; }
+        .undo-btn { background: #f39c12; color: white; }
+        .reset-btn { background: #c0392b; color: white; }
+        .level-btn { background: #3498db; color: white; }
     </style>
-    <!-- Зареждане на Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-<div id="sidebar">
-    <h3>Инструменти</h3>
-    <button class="btn" onclick="drawingMode = true">🧱 Стена</button>
-    <button class="btn" style="background:#666" onclick="clearScene()">🧹 Изчисти всичко</button>
-    <p><small>Кликни в черния прозорец, за да добавяш точки.</small></p>
+<div class="app-container">
+    <div class="toolbar">
+        <button class="tool-btn" onclick="setTool('wall')">Стена</button>
+        <button class="tool-btn" onclick="setTool('door')">Врата</button>
+        <button class="tool-btn" onclick="setTool('window')">Прозорец</button>
+        <button class="level-btn" onclick="toggleLevel()">2-ри ЕТАЖ</button>
+        <button class="undo-btn" onclick="undo()">ИЗТРИЙ</button>
+        <button class="action-btn" onclick="generateSlab()">ПЛОЧА</button>
+        <button class="reset-btn" onclick="location.reload()">НУЛИРАНЕ</button>
+    </div>
+    <div class="viewport">
+        <canvas id="canvas2d"></canvas>
+        <div id="canvas3d"></div>
+    </div>
 </div>
 
-<div id="render-area"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
-    // 1. Инициализация на 3D сцена
+    let tool = 'wall';
+    let currentLevel = 0; // 0 = приземен, 1 = втори
+    const walls = [], elements = [];
+    let lastPoint = null;
+    const canvas = document.getElementById('canvas2d');
+    const ctx = canvas.getContext('2d');
+    const container3d = document.getElementById('canvas3d');
+    const SCALE = 0.05;
+
+    // --- 3D ИНИЦИАЛИЗАЦИЯ ---
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    scene.background = new THREE.Color(0x2d5a27);
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({antialias: true});
-    renderer.setSize(window.innerWidth - 300, window.innerHeight);
-    document.getElementById('render-area').appendChild(renderer.domElement);
+    container3d.appendChild(renderer.domElement);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    scene.add(new THREE.GridHelper(50, 10, 0xffffff, 0xaaaaaa));
+    camera.position.set(0, 20, 20);
 
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 10, 5);
-    scene.add(light);
-    scene.add(new THREE.AmbientLight(0x404040));
-
-    camera.position.set(5, 5, 5);
-    camera.lookAt(0, 0, 0);
-
-    // 2. Логика за чертане
-    let drawingMode = false;
-    let points = [];
-
-    function addWall(x1, z1, x2, z2) {
-        const length = Math.sqrt((x2-x1)**2 + (z2-z1)**2);
-        const geometry = new THREE.BoxGeometry(length, 2, 0.2);
-        const material = new THREE.MeshPhongMaterial({color: 0xdddddd});
-        const wall = new THREE.Mesh(geometry, material);
-        wall.position.set((x1+x2)/2, 1, (z1+z2)/2);
-        wall.rotation.y = Math.atan2(z1-z2, x1-x2);
-        scene.add(wall);
+    // --- ФУНКЦИИ ---
+    function draw2D() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Грид
+        ctx.strokeStyle = "#eee";
+        for(let i=0; i<canvas.width; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i, canvas.height); ctx.stroke(); }
+        for(let i=0; i<canvas.height; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width, i); ctx.stroke(); }
+        
+        // Стени + Размери
+        walls.forEach(w => {
+            ctx.strokeStyle = w.level === 1 ? "#3498db" : "black";
+            ctx.lineWidth = 6; ctx.lineJoin = "round";
+            ctx.beginPath(); ctx.moveTo(w.x1, w.y1); ctx.lineTo(w.x2, w.y2); ctx.stroke();
+            
+            // Размери
+            ctx.fillStyle = "red"; ctx.font = "bold 12px Arial";
+            let midX = (w.x1 + w.x2) / 2;
+            let midY = (w.y1 + w.y2) / 2;
+            ctx.fillText(Math.round(w.len/2) + " см", midX, midY - 10);
+        });
     }
 
-    // Клик за чертане (опростено за прототип)
-    document.getElementById('render-area').addEventListener('mousedown', (e) => {
-        if (!drawingMode) return;
-        const x = (e.clientX - 300) / 100;
-        const z = e.clientY / 100;
-        points.push({x, z});
-        if (points.length >= 2) {
-            addWall(points[points.length-2].x, points[points.length-2].z, x, z);
+    canvas.addEventListener('mousedown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        let x = Math.round((e.clientX - rect.left) / 40) * 40;
+        let y = Math.round((e.clientY - rect.top) / 40) * 40;
+
+        if (tool === 'wall') {
+            if (lastPoint) {
+                let dx = Math.abs(x - lastPoint.x);
+                let dy = Math.abs(y - lastPoint.y);
+                if (dx > dy) y = lastPoint.y; else x = lastPoint.x;
+                walls.push({ x1: lastPoint.x, y1: lastPoint.y, x2: x, y2: y, level: currentLevel, len: Math.sqrt((x-lastPoint.x)**2 + (y-lastPoint.y)**2) });
+                lastPoint = { x, y };
+                update3D();
+            } else { lastPoint = { x, y }; }
+        } else {
+            elements.push({ type: tool, x, y, level: currentLevel });
+            update3D();
         }
+        draw2D();
     });
 
-    function clearScene() {
-        while(scene.children.length > 2) scene.remove(scene.children[2]);
-        points = [];
+    function update3D() {
+        scene.children = scene.children.filter(c => c.type !== 'Mesh');
+        walls.forEach(w => {
+            const h = 3; const yPos = (w.level * 3) + 1.5;
+            const wall = new THREE.Mesh(new THREE.BoxGeometry(0.2, h, w.len * SCALE), new THREE.MeshLambertMaterial({color: w.level === 1 ? 0x3498db : 0xffffff}));
+            wall.position.set(((w.x1+w.x2)/2 - canvas.width/2) * SCALE, yPos, ((w.y1+w.y2)/2 - canvas.height/2) * SCALE);
+            wall.rotation.y = Math.atan2(w.x2-w.x1, w.y2-w.y1);
+            scene.add(wall);
+        });
     }
 
-    // 3. Рендериране
-    function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-    }
+    function toggleLevel() { currentLevel = currentLevel === 0 ? 1 : 0; alert("Текущ етаж: " + (currentLevel + 1)); }
+    function undo() { walls.pop(); lastPoint = null; update3D(); draw2D(); }
+    function setTool(t) { tool = t; lastPoint = null; }
+    function generateSlab() { alert("Плочата е генерирана"); }
+    
+    function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
+    window.addEventListener('resize', () => { 
+        canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; 
+        renderer.setSize(container3d.clientWidth, container3d.clientHeight);
+        draw2D();
+    });
+    draw2D();
 </script>
 </body>
 </html>
