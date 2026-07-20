@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Добавени стилове за филтрите към твоя дизайн */
+        .filter-bar { display: flex; justify-content: center; gap: 12px; margin-bottom: 50px; flex-wrap: wrap; }
+        .filter-btn { background: transparent; border: 1px solid #eadecc; padding: 8px 20px; cursor: pointer; font-size: 0.85rem; color: #8c8275; border-radius: 20px; transition: all 0.3s ease; }
+        .filter-btn:hover { border-color: #1a1a1a; color: #1a1a1a; }
+        .filter-btn.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+    </style>
 </head>
 <body>
 
@@ -26,19 +33,19 @@
                 <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
                 <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
             </div>
-            <a href="login.html" class="btn-login" id="btn-login">Вход</a>
+            <a href="login.html" class="btn-login" id="btn-login" data-key="btn-login">Вход</a>
         </div>
     </header>
 
     <!-- HERO СЕКЦИЯ -->
     <main class="hero-section">
         <div class="hero-text-area">
-            <span class="eyebrow" id="hero-eyebrow">ПРОЕКТИ ЗА КЪЩИ - ОСН. 2026</span>
-            <h1 id="hero-title">Домове, начертани с намерение.</h1>
-            <p id="hero-desc">Academy Architect Studio е личен каталог с проекти на къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
+            <span class="eyebrow" id="hero-eyebrow" data-key="hero-eyebrow">ПРОЕКТИ ЗА КЪЩИ - ОСН. 2026</span>
+            <h1 id="hero-title" data-key="hero-title">Домове, начертани с намерение.</h1>
+            <p id="hero-desc" data-key="hero-desc">Academy Architect Studio е личен каталог с проекти на къщи — планове, визуализации и спецификации до последния квадратен метър.</p>
             <div class="hero-buttons">
-                <a href="catalog.html" class="btn-primary" id="hero-btn-catalog">Разгледай каталога →</a>
-                <a href="about.html" class="btn-secondary" id="hero-btn-about">За студиото</a>
+                <a href="catalog.html" class="btn-primary" id="hero-btn-catalog" data-key="hero-btn-catalog">Разгледай каталога →</a>
+                <a href="about.html" class="btn-secondary" id="hero-btn-about" data-key="hero-btn-about">За студиото</a>
             </div>
         </div>
         <div class="hero-image-area">
@@ -52,24 +59,32 @@
         </div>
     </main>
 
-    <!-- СЕКЦИЯ ФАВОРИТНИ ПРОЕКТИ -->
+    <!-- СЕКЦИЯ ПРОЕКТИ -->
     <section class="recent-projects">
         <div class="section-header">
             <div>
-                <span class="eyebrow" id="recent-eyebrow">ИЗБРАНИ</span>
-                <h2 id="recent-title">Фаворитни проекти</h2>
+                <span class="eyebrow" id="recent-eyebrow" data-key="recent-eyebrow">ИЗБРАНИ</span>
+                <h2 id="recent-title" data-key="recent-title">Фаворитни проекти</h2>
             </div>
         </div>
 
+        <!-- ФИЛТРИ -->
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="renderAll(); setActive(this)" data-key="filter-all">Всички</button>
+            <button class="filter-btn" onclick="filterBy('Модерен'); setActive(this)" data-key="filter-modern">Модерен</button>
+            <button class="filter-btn" onclick="filterBy('Минималистичен'); setActive(this)" data-key="filter-minimal">Минималистичен</button>
+            <button class="filter-btn" onclick="filterBy('Класически'); setActive(this)" data-key="filter-classic">Класически</button>
+        </div>
+
         <div class="projects-grid" id="favoritesGrid">
-            <!-- Проектите ще се заредят автоматично тук -->
+            <!-- Проектите ще се заредят автоматично -->
         </div>
     </section>
 
     <!-- ЦИТАТ СЕКЦИЯ -->
     <section class="quote-section">
-        <h2 id="quote-text">Всеки план разказва как ще се живее в него.</h2>
-        <p id="quote-sub">Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификации на материали и разчет на квадратура.</p>
+        <h2 id="quote-text" data-key="quote-text">Всеки план разказва как ще се живее в него.</h2>
+        <p id="quote-sub" data-key="quote-sub">Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификации на материали и разчет на квадратура.</p>
     </section>
 
     <!-- ФУТЪР -->
@@ -78,7 +93,7 @@
             <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
             <div>
                 <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
-                <p class="footer-subtext" id="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
+                <p class="footer-subtext" id="footer-subtext" data-key="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
             </div>
         </div>
         <div class="footer-col">
@@ -88,80 +103,86 @@
         </div>
         <div class="footer-col footer-right">
             <p>© 2026</p>
-            <p id="footer-rights">Academy Architect Studio — Всички права запазени.</p>
+            <p id="footer-rights" data-key="footer-rights">Academy Architect Studio — Всички права запазени.</p>
         </div>
     </footer>
 
     <script>
-        // ЛОГИКА ЗА ФАВОРИТИТЕ
-        function loadFavorites() {
+        // ЛОГИКА ЗА ЗАРЕЖДАНЕ НА ПРОЕКТИ
+        function renderProjects(projectsArray) {
             const grid = document.getElementById('favoritesGrid');
             const allProjects = JSON.parse(localStorage.getItem('myProjects')) || [];
             
-            // Филтрираме само проектите с отметка isFavorite: true
-            const favorites = allProjects.filter(p => p.isFavorite === true);
-
-            if (favorites.length === 0) {
-                grid.innerHTML = '<p style="padding:40px; color:#888;">Няма избрани проекти за фаворити.</p>';
+            if (projectsArray.length === 0) {
+                grid.innerHTML = '<p style="padding:40px; text-align:center; color:#888;">Няма проекти в тази категория.</p>';
                 return;
             }
 
-            grid.innerHTML = favorites.map(p => `
+            grid.innerHTML = projectsArray.map(p => `
                 <div class="project-card" onclick="window.location.href='project.html?id=${allProjects.indexOf(p)}'" style="cursor:pointer;">
                     <div class="project-img-box">
-                        <img src="${p.gallery && p.gallery[0] ? p.gallery[0] : 'https://placehold.co/400x260'}" alt="${p.title}">
+                        <img src="${(p.gallery && p.gallery[0]) ? p.gallery[0] : 'https://placehold.co/400x260'}" alt="${p.title}">
                     </div>
                     <div class="project-info">
                         <span class="p-title">${p.title}</span>
-                        <span class="p-meta">${p.floors || ''} етажа · ${p.style || ''}</span>
-                        <span class="p-area">${p.area || ''} м²</span>
+                        <span class="p-meta">${p.floors || '0'} етажа · ${p.style || 'без стил'}</span>
+                        <span class="p-area">${p.area || '0'} м²</span>
                     </div>
                 </div>
             `).join('');
         }
 
+        function renderAll() {
+            const allProjects = JSON.parse(localStorage.getItem('myProjects')) || [];
+            renderProjects(allProjects);
+        }
+
+        function filterBy(style) {
+            const allProjects = JSON.parse(localStorage.getItem('myProjects')) || [];
+            const filtered = allProjects.filter(p => p.style === style);
+            renderProjects(filtered);
+        }
+        
+        function setActive(btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // ИНИЦИАЛИЗАЦИЯ
+        renderAll();
+
         // ЕЗИКОВА СИСТЕМА
         const translations = {
-            en: {
-                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
-                "hero-eyebrow": "HOUSE PROJECTS - EST. 2026", "hero-title": "Houses drawn with intention.", "hero-desc": "Academy Architect Studio is a personal house project catalog — plans, visualizations and specifications down to the last square meter.", "hero-btn-catalog": "Explore catalog →", "hero-btn-about": "About studio",
-                "recent-eyebrow": "FEATURED", "recent-title": "Favorite projects",
-                "quote-text": "Every plan tells a story of how it will be lived in.", "quote-sub": "We work with small families, investors and municipalities. Each project comes with floor plans, 3D renders, material specs and area estimates.",
-                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
+            en: { 
+                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", 
+                "btn-login": "Login", "hero-eyebrow": "HOUSE PROJECTS - EST. 2026", "hero-title": "Houses drawn with intention.", 
+                "hero-desc": "Academy Architect Studio is a personal house project catalog — plans, visualizations and specifications down to the last square meter.", 
+                "hero-btn-catalog": "Explore catalog →", "hero-btn-about": "About studio", "recent-eyebrow": "FEATURED", 
+                "recent-title": "Favorite projects", "quote-text": "Every plan tells a story of how it will be lived in.", 
+                "quote-sub": "We work with small families, investors and municipalities. Each project comes with floor plans, 3D renders, material specs and area estimates.", 
+                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved.",
+                "filter-all": "All", "filter-modern": "Modern", "filter-minimal": "Minimalist", "filter-classic": "Classic" 
             },
-            bg: {
-                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", "btn-login": "Вход",
-                "hero-eyebrow": "ПРОЕКТИ ЗА КЪЩИ - ОСН. 2026", "hero-title": "Домове, начертани с намерение.", "hero-desc": "Academy Architect Studio е личен каталог с проекти на къщи — планове, визуализации и спецификации до последния квадратен метър.", "hero-btn-catalog": "Разгледай каталога →", "hero-btn-about": "За студиото",
-                "recent-eyebrow": "ИЗБРАНИ", "recent-title": "Фаворитни проекти",
-                "quote-text": "Всеки план разказва как ще се живее в него.", "quote-sub": "Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификации на материали и разчет на квадратура.",
-                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
+            bg: { 
+                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", 
+                "btn-login": "Вход", "hero-eyebrow": "ПРОЕКТИ ЗА КЪЩИ - ОСН. 2026", "hero-title": "Домове, начертани с намерение.", 
+                "hero-desc": "Academy Architect Studio е личен каталог с проекти на къщи — планове, визуализации и спецификации до последния квадратен метър.", 
+                "hero-btn-catalog": "Разгледай каталога →", "hero-btn-about": "За студиото", "recent-eyebrow": "ИЗБРАНИ", 
+                "recent-title": "Фаворитни проекти", "quote-text": "Всеки план разказва как ще се живее в него.", 
+                "quote-sub": "Работим с малки семейства, инвеститори и общини. Всеки проект в каталога идва с чертежи по етажи, 3D визуализации, спецификации на материали и разчет на квадратура.", 
+                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени.",
+                "filter-all": "Всички", "filter-modern": "Модерен", "filter-minimal": "Минималистичен", "filter-classic": "Класически" 
             }
         };
 
         function changeLanguage(lang) {
-            document.querySelectorAll('#nav-links a').forEach(link => {
-                const key = link.getAttribute('data-key');
-                if (translations[lang][key]) link.innerText = translations[lang][key];
+            document.querySelectorAll('[data-key]').forEach(el => { 
+                const key = el.getAttribute('data-key'); 
+                if (translations[lang][key]) el.innerText = translations[lang][key]; 
             });
-            document.getElementById('btn-login').innerText = translations[lang]['btn-login'];
-            document.getElementById('hero-eyebrow').innerText = translations[lang]['hero-eyebrow'];
-            document.getElementById('recent-title').innerText = translations[lang]['recent-title'];
-            document.getElementById('hero-title').innerText = translations[lang]['hero-title'];
-            document.getElementById('hero-desc').innerText = translations[lang]['hero-desc'];
-            document.getElementById('hero-btn-catalog').innerText = translations[lang]['hero-btn-catalog'];
-            document.getElementById('hero-btn-about').innerText = translations[lang]['hero-btn-about'];
-            document.getElementById('recent-eyebrow').innerText = translations[lang]['recent-eyebrow'];
-            document.getElementById('quote-text').innerText = translations[lang]['quote-text'];
-            document.getElementById('quote-sub').innerText = translations[lang]['quote-sub'];
-            document.getElementById('footer-subtext').innerText = translations[lang]['footer-subtext'];
-            document.getElementById('footer-rights').innerText = translations[lang]['footer-rights'];
-
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
-
-        // Стартираме зареждането на фаворитите при отваряне
-        loadFavorites();
     </script>
 </body>
 </html>

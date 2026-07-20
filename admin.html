@@ -49,7 +49,7 @@
             });
         }));
 
-        // ТОВА са ключовете, които index.html очаква
+        // Синхронизирани ключове с index.html
         const project = {
             title: document.getElementById('title').value,
             desc: document.getElementById('desc').value,
@@ -60,9 +60,12 @@
             material: document.getElementById('material').value,
             style: document.getElementById('style').value,
             price: document.getElementById('price').value,
+            
+            // Тези двете осигуряват, че index.html ще види проекта
+            isFavorite: document.getElementById('isFav').checked, 
             isFav: document.getElementById('isFav').checked,
-            img: imageUrls[0], // Първата снимка за обложка
-            imgs: imageUrls    // Всички снимки за галерия
+            
+            gallery: imageUrls // index.html търси 'gallery'
         };
 
         let list = JSON.parse(localStorage.getItem('myProjects') || '[]');

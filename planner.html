@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Professional 3D Architect</title>
+    <style>
+        body { margin: 0; display: flex; height: 100vh; font-family: sans-serif; overflow: hidden; }
+        #sidebar { width: 300px; background: #fff; border-right: 1px solid #ccc; z-index: 10; padding: 15px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); }
+        #render-area { flex: 1; position: relative; background: #222; }
+        .btn { display: block; width: 100%; padding: 10px; margin-bottom: 10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+    </style>
+    <!-- Зареждане на Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+<div id="sidebar">
+    <h3>Инструменти</h3>
+    <button class="btn" onclick="drawingMode = true">🧱 Стена</button>
+    <button class="btn" style="background:#666" onclick="clearScene()">🧹 Изчисти всичко</button>
+    <p><small>Кликни в черния прозорец, за да добавяш точки.</small></p>
+</div>
+
+<div id="render-area"></div>
+
+<script>
+    // 1. Инициализация на 3D сцена
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setSize(window.innerWidth - 300, window.innerHeight);
+    document.getElementById('render-area').appendChild(renderer.domElement);
+
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(5, 10, 5);
+    scene.add(light);
+    scene.add(new THREE.AmbientLight(0x404040));
+
+    camera.position.set(5, 5, 5);
+    camera.lookAt(0, 0, 0);
+
+    // 2. Логика за чертане
+    let drawingMode = false;
+    let points = [];
+
+    function addWall(x1, z1, x2, z2) {
+        const length = Math.sqrt((x2-x1)**2 + (z2-z1)**2);
+        const geometry = new THREE.BoxGeometry(length, 2, 0.2);
+        const material = new THREE.MeshPhongMaterial({color: 0xdddddd});
+        const wall = new THREE.Mesh(geometry, material);
+        wall.position.set((x1+x2)/2, 1, (z1+z2)/2);
+        wall.rotation.y = Math.atan2(z1-z2, x1-x2);
+        scene.add(wall);
+    }
+
+    // Клик за чертане (опростено за прототип)
+    document.getElementById('render-area').addEventListener('mousedown', (e) => {
+        if (!drawingMode) return;
+        const x = (e.clientX - 300) / 100;
+        const z = e.clientY / 100;
+        points.push({x, z});
+        if (points.length >= 2) {
+            addWall(points[points.length-2].x, points[points.length-2].z, x, z);
+        }
+    });
+
+    function clearScene() {
+        while(scene.children.length > 2) scene.remove(scene.children[2]);
+        points = [];
+    }
+
+    // 3. Рендериране
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+    animate();
+</script>
+</body>
+</html>

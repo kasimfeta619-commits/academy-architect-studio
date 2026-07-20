@@ -5,13 +5,10 @@
     <title>Каталог | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Добавяме това тук, за да сме сигурни, че дизайнът се запазва */
-        .catalog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 40px;
-            padding: 40px 10%;
-        }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px; padding: 40px 10%; }
+        .lang-switcher { display: flex; gap: 10px; margin-right: 20px; }
+        .lang-btn { background: none; border: 1px solid #1a1a1a; cursor: pointer; padding: 5px 10px; }
+        .lang-btn.active { background: #1a1a1a; color: #fff; }
     </style>
 </head>
 <body>
@@ -23,63 +20,78 @@
             <span>Academy Architect <span class="logo-studio">Studio</span></span>
         </a>
         <nav id="nav-links">
-            <a href="index.html">Начало</a>
-            <a href="catalog.html" class="active">Каталог</a>
-            <a href="about.html">За нас</a>
-            <a href="planner.html">ИИ Планер</a>
-            <a href="contact.html">Контакт</a>
+            <a href="index.html" data-key="nav-home">Начало</a>
+            <a href="catalog.html" class="active" data-key="nav-catalog">Каталог</a>
+            <a href="about.html" data-key="nav-about">За нас</a>
+            <a href="planner.html" data-key="nav-planner">ИИ Планер</a>
+            <a href="contact.html" data-key="nav-contact">Контакт</a>
         </nav>
         <div class="header-actions">
-            <a href="login.html" class="btn-login">Вход</a>
+            <div class="lang-switcher">
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
+            </div>
+            <a href="login.html" class="btn-login" data-key="btn-login">Вход</a>
         </div>
     </header>
 
     <!-- СЪДЪРЖАНИЕ -->
     <main class="content-container" style="background-color: #fbf9f4; min-height: 70vh;">
-        <span class="eyebrow" style="padding: 40px 10% 0 10%; display:block;">АРХИВ</span>
-        <h1 style="padding: 0 10%;">Каталог с проекти</h1>
+        <span class="eyebrow" style="padding: 40px 10% 0 10%; display:block;" data-key="cat-eyebrow">АРХИВ</span>
+        <h1 style="padding: 0 10%;" data-key="cat-title">Каталог с проекти</h1>
 
-        <div class="catalog-grid" id="catalogGrid">
-            <!-- Тук проектите ще се появят автоматично -->
-        </div>
+        <div class="catalog-grid" id="catalogGrid"></div>
     </main>
 
     <!-- ФУТЪР -->
     <footer class="main-footer">
         <div class="footer-logo-area">
             <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
-            <p class="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
-        </div>
-        <div class="footer-col">
-            <h4>STUDIO</h4>
-            <p>Sofia · Plovdiv · Varna</p>
-            <p>info@architectstudio.com</p>
+            <p class="footer-subtext" data-key="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
         </div>
         <div class="footer-col footer-right">
             <p>© 2026</p>
-            <p>Academy Architect Studio — Всички права запазени.</p>
+            <p data-key="footer-rights">Academy Architect Studio — Всички права запазени.</p>
         </div>
     </footer>
 
     <script>
+        const translations = {
+            en: { 
+                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", 
+                "btn-login": "Login", "cat-eyebrow": "ARCHIVE", "cat-title": "Project Catalog", 
+                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "All rights reserved." 
+            },
+            bg: { 
+                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", 
+                "btn-login": "Вход", "cat-eyebrow": "АРХИВ", "cat-title": "Каталог с проекти", 
+                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Всички права запазени." 
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.innerText = translations[lang][key];
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
         function renderProjects() {
             const grid = document.getElementById('catalogGrid');
             const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-
-            grid.innerHTML = projects.map((p, index) => {
-                const imgSrc = p.image || (p.gallery && p.gallery[0] ? p.gallery[0] : '');
-                return `
+            grid.innerHTML = projects.map((p, index) => `
                 <div class="project-card" onclick="window.location.href='project.html?id=${index}'" style="cursor:pointer; background:#fff; border:1px solid #eadecc;">
                     <div class="project-image-wrapper" style="height:250px; overflow:hidden;">
-                        <img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover;">
+                        <img src="${p.gallery?.[0] || 'https://placehold.co/400x260'}" style="width:100%; height:100%; object-fit:cover;">
                     </div>
                     <div class="project-info" style="padding:20px;">
                         <span style="font-size:0.7rem; color:#8c8275;">ПРОЕКТ</span>
                         <h3>${p.title}</h3>
                         <p>${p.description ? p.description.substring(0, 50) + '...' : ''}</p>
                     </div>
-                </div>`;
-            }).reverse().join('');
+                </div>`).reverse().join('');
         }
         renderProjects();
     </script>
