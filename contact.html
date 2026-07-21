@@ -127,9 +127,9 @@
                 Let's discuss your project or book a meeting.
             </h1>
             <div style="font-size: 1.05rem; line-height: 1.7; color: var(--text-color, #4a453e); display: flex; flex-direction: column; gap: 15px;">
-                <p style="margin: 0;"><strong data-key="footer-address-label">Address:</strong> Sofia, Bulgaria</p>
-                <p style="margin: 0;"><strong data-key="email-label">Email:</strong> <a href="mailto:office@architect-studio.bg" style="color: inherit; text-decoration: underline;">office@architect-studio.bg</a></p>
-                <p style="margin: 0;"><strong data-key="contact-phone-label">Phone:</strong> +359 88 123 4567</p>
+                <p style="margin: 0;"><strong data-key="footer-address-label">Address:</strong> <span id="pubAddress">Sofia, Bulgaria</span></p>
+                <p style="margin: 0;"><strong data-key="email-label">Email:</strong> <a href="mailto:office@architect-studio.bg" id="pubEmailLink" style="color: inherit; text-decoration: underline;"><span id="pubEmail">office@architect-studio.bg</span></a></p>
+                <p style="margin: 0;"><strong data-key="contact-phone-label">Phone:</strong> <span id="pubPhone">+359 88 123 4567</span></p>
             </div>
         </div>
 
@@ -191,9 +191,9 @@
         
         <div class="footer-col">
             <h4 data-key="footer-contacts">Contacts</h4>
-            <p data-key="footer-address">Sofia, Bulgaria</p>
-            <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
-            <p>+359 88 123 4567</p>
+            <p><span id="footAddress">Sofia, Bulgaria</span></p>
+            <p><a href="mailto:office@architect-studio.bg" id="footEmailLink"><span id="footEmail">office@architect-studio.bg</span></a></p>
+            <p><span id="footPhone">+359 88 123 4567</span></p>
         </div>
         
         <div class="footer-col">
@@ -211,349 +211,66 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
-        // Превключване на тъмния режим
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('siteTheme', 'dark');
-            } else {
-                localStorage.setItem('siteTheme', 'light');
-            }
-        }
-
-        // Мобилно меню
-        function toggleMobileMenu() {
-            const navLinks = document.getElementById('nav-links');
-            navLinks.classList.toggle('mobile-open');
-        }
-
-        function toggleBookingFields() {
-            const type = document.getElementById('inquiryType').value;
-            const bookingFields = document.getElementById('bookingFields');
-            if (type === 'booking') {
-                bookingFields.style.display = 'block';
-            } else {
-                bookingFields.style.display = 'none';
-            }
-        }
-
-        // Динамична проверка на статуса на входа за навигацията
-        function updateNavAuthStatus() {
-            const container = document.getElementById('navAuthContainer');
-            if (!container) return;
-
-            const isUserLoggedIn = localStorage.getItem('isUserLoggedIn') === 'true';
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Contacts & Booking | Academy Architect Studio</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Скрипт за мигновено зареждане на темата без премигване -->
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('siteTheme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-            }
-        })();
-    </script>
-    <style>
-        .contact-main-container {
-            padding: 80px 8%; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-start; 
-            gap: 60px; 
-            min-height: 60vh; 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            flex-wrap: wrap;
-        }
-        .contact-card {
-            flex: 1; 
-            min-width: 300px; 
-            max-width: 500px; 
-            background: #ffffff; 
-            border: 1px solid #eadecc; 
-            border-radius: 12px; 
-            padding: 40px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        .contact-input {
-            width: 100%; 
-            padding: 12px 15px; 
-            border: 1px solid #eadecc; 
-            border-radius: 8px; 
-            font-size: 1rem; 
-            background: transparent; 
-            color: inherit; 
-            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-        }
-        .contact-submit-btn {
-            width: 100%; 
-            background-color: #1a1a1a; 
-            color: #fff; 
-            padding: 12px; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 1rem; 
-            cursor: pointer; 
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-        .contact-submit-btn:hover {
-            background-color: #333;
-        }
-
-        /* Dark Mode Overrides */
-        body.dark-mode .contact-card {
-            background: #1e1e1e !important;
-            border-color: #2c2c2c !important;
-        }
-        body.dark-mode .contact-input {
-            border-color: #444 !important;
-            background: #121212 !important;
-            color: #ffffff !important;
-        }
-        body.dark-mode .contact-submit-btn {
-            background-color: #eadecc;
-            color: #1a1a1a;
-        }
-        body.dark-mode .contact-submit-btn:hover {
-            background-color: #d4c8b6;
-        }
-        body.dark-mode h1, 
-        body.dark-mode label {
-            color: #ffffff !important;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- НАВИГАЦИЯ -->
-    <nav class="navbar">
-        <a href="index.html" class="logo-area">
-            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" onerror="this.style.display='none'">
-            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
-        </a>
-        
-        <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
-
-        <div id="nav-links">
-            <a href="index.html" data-key="nav-home">Home</a>
-            <a href="catalog.html" data-key="nav-catalog">Projects</a>
-            <a href="about.html" data-key="nav-about">About Us</a>
-            <a href="planner.html" data-key="nav-planner">AI Planner</a>
-            <a href="estimator.html" data-key="nav-estimator">Estimator</a>
-            <a href="contact.html" class="active" data-key="nav-contact">Contacts</a>
-        </div>
-
-        <div class="header-actions">
-            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
-            <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
-            </div>
-            <!-- Динамичен контейнер за състоянието на входа -->
-            <div id="navAuthContainer">
-                <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- СЪДЪРЖАНИЕ -->
-    <main class="contact-main-container">
-        <div style="flex: 1; min-width: 300px; max-width: 500px;">
-            <span style="font-size: 0.75rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; display: block; margin-bottom: 20px;" data-key="contact-eyebrow">GET IN TOUCH & BOOKING</span>
-            <h1 style="font-size: 3rem; font-weight: normal; line-height: 1.2; margin: 0 0 30px 0;" data-key="contact-title">
-                Let's discuss your project or book a meeting.
-            </h1>
-            <div style="font-size: 1.05rem; line-height: 1.7; color: var(--text-color, #4a453e); display: flex; flex-direction: column; gap: 15px;">
-                <p style="margin: 0;"><strong data-key="footer-address-label">Address:</strong> <span id="contactDisplayAddress">Sofia, Bulgaria</span></p>
-                <p style="margin: 0;"><strong data-key="email-label">Email:</strong> <a href="mailto:office@architect-studio.bg" id="contactDisplayEmailLink" style="color: inherit; text-decoration: underline;"><span id="contactDisplayEmail">office@architect-studio.bg</span></a></p>
-                <p style="margin: 0;"><strong data-key="contact-phone-label">Phone:</strong> <span id="contactDisplayPhone">+359 88 123 4567</span></p>
-            </div>
-        </div>
-
-        <div class="contact-card">
-            <form onsubmit="event.preventDefault(); alert('Successfully submitted!');">
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="inquiry-type-label">Inquiry Type</label>
-                    <select id="inquiryType" onchange="toggleBookingFields()" class="contact-input">
-                        <option value="message" data-key="option-general">General Message</option>
-                        <option value="booking" data-key="option-booking">Book Consultation / Meeting</option>
-                    </select>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-name">Your Name</label>
-                    <input type="text" required class="contact-input">
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-email">Your Email</label>
-                    <input type="email" required class="contact-input">
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-phone">Phone Number</label>
-                    <input type="tel" required placeholder="+359..." class="contact-input">
-                </div>
-
-                <div id="bookingFields" style="display: none; margin-bottom: 20px;">
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-date">Preferred Date</label>
-                        <input type="date" id="bookDate" class="contact-input">
-                    </div>
-                    <div>
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-time">Preferred Time</label>
-                        <input type="time" id="bookTime" class="contact-input">
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 25px;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-message">Message / Details</label>
-                    <textarea rows="4" required class="contact-input" style="resize: vertical;"></textarea>
-                </div>
-
-                <button type="submit" class="contact-submit-btn" data-key="form-submit">Send Request</button>
-            </form>
-        </div>
-    </main>
-
-    <!-- ФУТЪР -->
-    <footer class="main-footer">
-        <div class="footer-logo-area">
-            <div>
-                <div class="footer-brand">Academy Architect Studio</div>
-                <div class="footer-subtext" data-key="footer-subtitle">Design & Engineering</div>
-            </div>
-        </div>
-        
-        <div class="footer-col">
-            <h4 data-key="footer-contacts">Contacts</h4>
-            <p><span id="footerDisplayAddress">Sofia, Bulgaria</span></p>
-            <p><a href="mailto:office@architect-studio.bg" id="footerDisplayEmailLink"><span id="footerDisplayEmail">office@architect-studio.bg</span></a></p>
-            <p><span id="footerDisplayPhone">+359 88 123 4567</span></p>
-        </div>
-        
-        <div class="footer-col">
-            <h4 data-key="footer-links-title">Links</h4>
-            <p><a href="index.html" data-key="nav-home">Home</a></p>
-            <p><a href="catalog.html" data-key="nav-catalog">Projects</a></p>
-            <p><a href="about.html" data-key="nav-about">About Us</a></p>
-        </div>
-        
-        <div class="footer-right">
-            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- СКРИПТОВЕ -->
-    <script src="translations.js"></script>
-    <script>
-        // Превключване на тъмния режим
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('siteTheme', 'dark');
-            } else {
-                localStorage.setItem('siteTheme', 'light');
-            }
-        }
-
-        // Мобилно меню
-        function toggleMobileMenu() {
-            const navLinks = document.getElementById('nav-links');
-            navLinks.classList.toggle('mobile-open');
-        }
-
-        function toggleBookingFields() {
-            const type = document.getElementById('inquiryType').value;
-            const bookingFields = document.getElementById('bookingFields');
-            if (type === 'booking') {
-                bookingFields.style.display = 'block';
-            } else {
-                bookingFields.style.display = 'none';
-            }
-        }
-
-        // Динамична проверка на статуса на входа за навигацията
-        function updateNavAuthStatus() {
-            const container = document.getElementById('navAuthContainer');
-            if (!container) return;
-
-            const isUserLoggedIn = localStorage.getItem('isUserLoggedIn') === 'true';
-
-            if (isUserLoggedIn) {
-                container.innerHTML = `
-                    <a href="login.html" title="Профил" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(0,0,0,0.06); border-radius: 50%; color: inherit; text-decoration: none; transition: background 0.2s;">
-                        <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: currentColor;">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
-                        <span style="position: absolute; top: 4px; right: 4px; width: 11px; height: 11px; background-color: #ff8b8b; border: 2px solid var(--bg-color, #fff); border-radius: 50%;"></span>
-                    </a>
-                `;
-            } else {
-                container.innerHTML = `
-                    <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
-                `;
-            }
-        }
-
-        // Зареждане на актуалните данни за контакти от localStorage (Админ панела)
-        function loadContactInfo() {
+        // Автоматично зареждане на променените контакти от админ панела
+        window.addEventListener('DOMContentLoaded', () => {
             const savedContact = localStorage.getItem('siteContact');
             if (savedContact) {
                 try {
-                    const contactData = JSON.parse(savedContact);
+                    const data = JSON.parse(savedContact);
                     
-                    // Обновяване в основната част
-                    const addressEl = document.getElementById('contactDisplayAddress');
-                    const emailEl = document.getElementById('contactDisplayEmail');
-                    const emailLinkEl = document.getElementById('contactDisplayEmailLink');
-                    const phoneEl = document.getElementById('contactDisplayPhone');
-
-                    if (addressEl && contactData.address) addressEl.textContent = contactData.address;
-                    if (emailEl && contactData.email) {
-                        emailEl.textContent = contactData.email;
-                        if (emailLinkEl) emailLinkEl.href = `mailto:${contactData.email}`;
+                    if (data.address) {
+                        if (document.getElementById('pubAddress')) document.getElementById('pubAddress').textContent = data.address;
+                        if (document.getElementById('footAddress')) document.getElementById('footAddress').textContent = data.address;
                     }
-                    if (phoneEl && contactData.phone) phoneEl.textContent = contactData.phone;
-
-                    // Обновяване във футъра
-                    const footerAddressEl = document.getElementById('footerDisplayAddress');
-                    const footerEmailEl = document.getElementById('footerDisplayEmail');
-                    const footerEmailLinkEl = document.getElementById('footerDisplayEmailLink');
-                    const footerPhoneEl = document.getElementById('footerDisplayPhone');
-
-                    if (footerAddressEl && contactData.address) footerAddressEl.textContent = contactData.address;
-                    if (footerEmailEl && contactData.email) {
-                        footerEmailEl.textContent = contactData.email;
-                        if (footerEmailLinkEl) footerEmailLinkEl.href = `mailto:${contactData.email}`;
+                    if (data.email) {
+                        if (document.getElementById('pubEmail')) document.getElementById('pubEmail').textContent = data.email;
+                        if (document.getElementById('pubEmailLink')) document.getElementById('pubEmailLink').href = 'mailto:' + data.email;
+                        if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
+                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
                     }
-                    if (footerPhoneEl && contactData.phone) footerPhoneEl.textContent = contactData.phone;
-
+                    if (data.phone) {
+                        if (document.getElementById('pubPhone')) document.getElementById('pubPhone').textContent = data.phone;
+                        if (document.getElementById('footPhone')) document.getElementById('footPhone').textContent = data.phone;
+                    }
                 } catch (e) {
-                    console.error('Грешка при четене на контактите:', e);
+                    console.error('Грешка при зареждане на контактите', e);
                 }
+            }
+        });
+
+        // Превключване на тъмния режим
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('siteTheme', 'dark');
+            } else {
+                localStorage.setItem('siteTheme', 'light');
             }
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            if (typeof initLanguage === 'function') {
-                initLanguage();
+        // Мобилно меню
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('mobile-open');
+        }
+
+        function toggleBookingFields() {
+            const type = document.getElementById('inquiryType').value;
+            const bookingFields = document.getElementById('bookingFields');
+            if (type === 'booking') {
+                bookingFields.style.display = 'block';
+            } else {
+                bookingFields.style.display = 'none';
             }
-            updateNavAuthStatus();
-            loadContactInfo();
-        });
-    </script>
-</body>
-</html>
+        }
+
+        // Динамична проверка на статуса на входа за навигацията
+        function updateNavAuthStatus() {
+            const container = document.getElementById('navAuthContainer');
+            if (!container) return;
+
+            const isUserLoggedIn = localStorage.getItem('isUserLoggedIn') === 'true';
+
             if (isUserLoggedIn) {
                 container.innerHTML = `
                     <a href="login.html" title="Профил" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(0,0,0,0.06); border-radius: 50%; color: inherit; text-decoration: none; transition: background 0.2s;">

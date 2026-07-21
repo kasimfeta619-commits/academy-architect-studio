@@ -260,9 +260,9 @@
         
         <div class="footer-col">
             <h4 data-key="footer-contacts">Contacts</h4>
-            <p data-key="footer-address">Sofia / Gotse Delchev, Bulgaria</p>
-            <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
-            <p>+359 88 123 4567</p>
+            <p><span id="footAddress">Sofia, Bulgaria</span></p>
+            <p><a href="mailto:office@architect-studio.bg" id="footEmailLink"><span id="footEmail">office@architect-studio.bg</span></a></p>
+            <p><span id="footPhone">+359 88 123 4567</span></p>
         </div>
         
         <div class="footer-col">
@@ -500,6 +500,26 @@
         document.addEventListener("DOMContentLoaded", function() {
             setLanguage(currentLang);
             updateNavAuthStatus();
+            
+            // Автоматично зареждане на контактите за футъра
+            const savedContact = localStorage.getItem('siteContact');
+            if (savedContact) {
+                try {
+                    const data = JSON.parse(savedContact);
+                    if (data.address && document.getElementById('footAddress')) {
+                        document.getElementById('footAddress').textContent = data.address;
+                    }
+                    if (data.email) {
+                        if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
+                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
+                    }
+                    if (data.phone && document.getElementById('footPhone')) {
+                        document.getElementById('footPhone').textContent = data.phone;
+                    }
+                } catch (e) {
+                    console.error('Грешка при зареждане на контактите', e);
+                }
+            }
         });
     </script>
 </body>

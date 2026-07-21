@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Projects | Academy Architect Studio</title>
+    <title id="pageTitle" data-key="page-title">Projects | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
     <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
@@ -179,8 +179,8 @@
         <div class="header-actions">
             <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
             <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn active" id="btn-bg" onclick="setLanguage('bg')">BG</button>
             </div>
             <!-- Динамичен контейнер за състоянието на входа -->
             <div id="navAuthContainer">
@@ -217,9 +217,9 @@
         
         <div class="footer-col">
             <h4 data-key="footer-contacts">Contacts</h4>
-            <p data-key="footer-address">Sofia, Bulgaria</p>
-            <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
-            <p>+359 88 123 4567</p>
+            <p><span id="footAddress">Sofia, Bulgaria</span></p>
+            <p><a href="mailto:office@architect-studio.bg" id="footEmailLink"><span id="footEmail">office@architect-studio.bg</span></a></p>
+            <p><span id="footPhone">+359 88 123 4567</span></p>
         </div>
         
         <div class="footer-col">
@@ -259,7 +259,7 @@
             const container = document.getElementById('catalogProjectsContainer');
             const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
             const favorites = JSON.parse(localStorage.getItem('myFavorites') || '[]');
-            const currentLang = localStorage.getItem('preferredLang') || 'en';
+            const currentLang = localStorage.getItem('siteLang') || localStorage.getItem('preferredLang') || 'bg';
             const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
 
             let filteredProjects = projects;
@@ -323,15 +323,15 @@
             const container = document.getElementById('navAuthContainer');
             if (!container) return;
 
-            const isUserLoggedIn = localStorage.getItem('isUserLoggedIn') === 'true';
+            const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('isUserLoggedIn') === 'true';
 
             if (isUserLoggedIn) {
                 container.innerHTML = `
-                    <a href="login.html" title="Профил" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(0,0,0,0.06); border-radius: 50%; color: inherit; text-decoration: none; transition: background 0.2s;">
+                    <a href="login.html" title="Профил" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(0,0,0,0.05); border-radius: 50%; color: inherit; text-decoration: none; transition: background 0.2s;">
                         <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: currentColor;">
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                         </svg>
-                        <span style="position: absolute; top: 4px; right: 4px; width: 11px; height: 11px; background-color: #ff8b8b; border: 2px solid var(--bg-color, #fff); border-radius: 50%;"></span>
+                        <span style="position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; background-color: #2ecc71; border: 2px solid var(--bg-color, #fff); border-radius: 50%;"></span>
                     </a>
                 `;
             } else {
@@ -344,9 +344,33 @@
         document.addEventListener("DOMContentLoaded", function() {
             if (typeof initLanguage === 'function') {
                 initLanguage();
+            } else if (typeof setLanguage === 'function') {
+                const savedLang = localStorage.getItem('siteLang') || 'bg';
+                setLanguage(savedLang);
             }
+            
             updateNavAuthStatus();
             renderProjects();
+
+            // Автоматично зареждане на контактите за футъра от админ панела
+            const savedContact = localStorage.getItem('siteContact');
+            if (savedContact) {
+                try {
+                    const data = JSON.parse(savedContact);
+                    if (data.address && document.getElementById('footAddress')) {
+                        document.getElementById('footAddress').textContent = data.address;
+                    }
+                    if (data.email) {
+                        if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
+                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
+                    }
+                    if (data.phone && document.getElementById('footPhone')) {
+                        document.getElementById('footPhone').textContent = data.phone;
+                    }
+                } catch (e) {
+                    console.error('Грешка при зареждане на контактите', e);
+                }
+            }
         });
     </script>
 </body>
