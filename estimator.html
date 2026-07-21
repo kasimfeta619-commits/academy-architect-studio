@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Estimator | Academy Architect Studio</title>
+    <title id="pageTitle" data-key="page-title">Estimator | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
     <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
@@ -28,45 +28,64 @@
         }
         .calc-card {
             flex: 1; 
-            min-width: 300px; 
-            max-width: 500px; 
+            min-width: 320px; 
+            max-width: 540px; 
             background: #ffffff; 
             border: 1px solid #eadecc; 
             border-radius: 12px; 
-            padding: 40px; 
+            padding: 35px; 
             box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
             transition: background-color 0.3s, border-color 0.3s;
+        }
+        .calc-group {
+            margin-bottom: 20px;
+        }
+        .calc-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8c8275;
         }
         .calc-input {
             width: 100%; 
             padding: 12px 15px; 
             border: 1px solid #eadecc; 
             border-radius: 8px; 
-            font-size: 1rem; 
+            font-size: 0.95rem; 
             background: transparent; 
             color: inherit; 
+            box-sizing: border-box;
+            outline: none;
             transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
+        .calc-input option, .calc-input optgroup {
+            background: #fff;
+            color: #1a1a1a;
+        }
         .calc-result {
-            margin-top: 20px; 
-            padding: 15px; 
+            margin-top: 25px; 
+            padding: 20px; 
             background: #f9f8f6; 
-            border-radius: 8px; 
-            text-align: center; 
-            display: none; 
-            transition: background-color 0.3s;
+            border: 1px solid #eadecc;
+            border-radius: 10px; 
+            transition: background-color 0.3s, border-color 0.3s;
         }
         .calc-btn {
             width: 100%; 
             background-color: #1a1a1a; 
             color: #fff; 
-            padding: 12px; 
+            padding: 14px; 
             border: none; 
             border-radius: 8px; 
-            font-size: 1rem; 
+            font-size: 0.95rem; 
             cursor: pointer; 
-            font-weight: 500; 
-            margin-bottom: 20px;
+            font-weight: 600; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
             transition: background-color 0.2s;
         }
         .calc-btn:hover {
@@ -83,8 +102,14 @@
             background: #121212 !important;
             color: #ffffff !important;
         }
+        body.dark-mode .calc-input option,
+        body.dark-mode .calc-input optgroup {
+            background: #1e1e1e !important;
+            color: #ffffff !important;
+        }
         body.dark-mode .calc-result {
             background: #121212 !important;
+            border-color: #2c2c2c !important;
         }
         body.dark-mode .calc-btn {
             background-color: #eadecc;
@@ -94,7 +119,8 @@
             background-color: #d4c8b6;
         }
         body.dark-mode h1, 
-        body.dark-mode label {
+        body.dark-mode label,
+        body.dark-mode .calc-label {
             color: #ffffff !important;
         }
     </style>
@@ -122,8 +148,8 @@
         <div class="header-actions">
             <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
             <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn active" id="btn-bg" onclick="setLanguage('bg')">BG</button>
             </div>
             <!-- Динамичен контейнер за състоянието на входа -->
             <div id="navAuthContainer">
@@ -135,37 +161,89 @@
     <!-- СЪДЪРЖАНИЕ НА КАЛКУЛАТОРА -->
     <main class="estimator-container">
         <div style="flex: 1; min-width: 300px; max-width: 500px;">
-            <span style="font-size: 0.75rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; display: block; margin-bottom: 20px;" data-key="estimator-eyebrow">COST ESTIMATOR</span>
-            <h1 style="font-size: 3rem; font-weight: normal; line-height: 1.2; margin: 0 0 30px 0;" data-key="estimator-title">
-                Calculate the approximate budget for your project.
+            <span style="font-size: 0.75rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; display: block; margin-bottom: 20px;" data-key="estimator-eyebrow">БЮДЖЕТЕН КАЛКУЛАТОР</span>
+            <h1 style="font-size: 2.8rem; font-weight: normal; line-height: 1.2; margin: 0 0 25px 0;" data-key="estimator-title">
+                Изчислете ориентировъчния си бюджет за проектиране.
             </h1>
-            <p style="font-size: 1.05rem; line-height: 1.7; color: #666; margin: 0;" data-key="estimator-desc">
-                Use our interactive calculator to get a preliminary cost estimate based on area and project type.
+            <p style="font-size: 1.05rem; line-height: 1.7; color: #666; margin: 0 0 15px 0;" data-key="estimator-desc">
+                Изберете типа обект, населеното място/област и обхвата на проекта, за да получите бърза и точна справка за необходимия архитектурен и инженерен хонорар.
+            </p>
+            <p style="font-size: 0.85rem; color: #8c8275; line-height: 1.5;" data-key="estimator-disclaimer">
+                * Цените са базирани на националните и регионални пазарни стандарти за проектиране за 2026 г.
             </p>
         </div>
 
         <div class="calc-card">
             <form onsubmit="event.preventDefault(); calculateBudget();">
                 
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-type-label">Project Type</label>
+                <!-- 1. ТИП ОБЕКТ -->
+                <div class="calc-group">
+                    <label class="calc-label" data-key="label-type">Тип обект</label>
                     <select id="projectType" class="calc-input">
-                        <option value="house" data-key="option-house">House Design</option>
-                        <option value="interior" data-key="option-interior">Interior Design</option>
-                        <option value="renovation" data-key="option-renovation">Renovation</option>
+                        <option value="house" data-key="opt-house">Еднофамилна къща / Вила</option>
+                        <option value="multi" data-key="opt-multi">Многофамилна жилищна сграда</option>
+                        <option value="industrial" data-key="opt-industrial">Промишлена / Стопанска сграда</option>
+                        <option value="interior" data-key="opt-interior">Интериорен дизайн</option>
                     </select>
                 </div>
 
-                <div style="margin-bottom: 25px;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-area-label">Total Area (sq.m)</label>
-                    <input type="number" id="projectArea" min="10" value="100" required class="calc-input">
+                <!-- 2. ЛОКАЦИЯ / РЕГИОН -->
+                <div class="calc-group">
+                    <label class="calc-label" data-key="label-location">Локация / Населено място</label>
+                    <select id="projectLocation" class="calc-input">
+                        <optgroup label="Югозападна България & Благоевград" data-key="grp-sw">
+                            <option value="gd_town" selected data-key="opt-gd-town">гр. Гоце Делчев</option>
+                            <option value="gd_villages" data-key="opt-gd-villages">Регион Гоце Делчев (Гърмен, Хаджидимово, Сатовча)</option>
+                            <option value="resorts" data-key="opt-resorts">Планински & СПА курорти (Делчево, Огняново, Банско, Сандански)</option>
+                            <option value="blagoevgrad" data-key="opt-blagoevgrad">гр. Благоевград (Областен център)</option>
+                        </optgroup>
+                        <optgroup label="Столица & Големи градове" data-key="grp-capital">
+                            <option value="sofia" data-key="opt-sofia">гр. София и района (Столица)</option>
+                            <option value="large_cities" data-key="opt-large-cities">Пловдив, Варна, Бургас</option>
+                        </optgroup>
+                        <optgroup label="Останалата част от страната" data-key="grp-other">
+                            <option value="regional_centers" data-key="opt-regional-centers">Други областни градове (Русе, Ст. Загора, Плевен и др.)</option>
+                            <option value="other_locations" data-key="opt-other-locations">По-малки градове и села в страната</option>
+                        </optgroup>
+                    </select>
                 </div>
 
-                <button type="submit" class="calc-btn" data-key="estimator-btn">Calculate Cost</button>
+                <!-- 3. ОБХВАТ НА ПРОЕКТИРАНЕ -->
+                <div class="calc-group">
+                    <label class="calc-label" data-key="label-scope">Обхват на проектирането</label>
+                    <select id="projectScope" class="calc-input">
+                        <option value="full" data-key="opt-scope-full">Пълен комплект (Архитектура + Всички Инженери)</option>
+                        <option value="arch_only" data-key="opt-scope-arch">Само част "Архитектура" (Идеен проект)</option>
+                        <option value="full_interior" data-key="opt-scope-interior">Пълен проект + 3D Визуализации & Интериор</option>
+                    </select>
+                </div>
+
+                <!-- 4. РЗП В КВ.М -->
+                <div class="calc-group" style="margin-bottom: 25px;">
+                    <label class="calc-label" data-key="label-area">Обща площ (РЗП в кв.м)</label>
+                    <input type="number" id="projectArea" min="10" value="160" required class="calc-input">
+                </div>
+
+                <button type="submit" class="calc-btn" data-key="btn-calc">Изчисли бюджет</button>
             
-                <div id="resultBox" class="calc-result">
-                    <span style="font-size: 0.85rem; color: #8c8275; display: block; margin-bottom: 5px;" data-key="estimator-result-title">Estimated Budget:</span>
-                    <strong id="resultOutput" style="font-size: 1.4rem; color: inherit;">0 €</strong>
+                <!-- РЕЗУЛТАТИ -->
+                <div id="resultBox" class="calc-result" style="display: block;">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <span style="font-size: 0.85rem; color: #8c8275; display: block; margin-bottom: 5px;" data-key="res-title">Ориентировъчен бюджет:</span>
+                        <strong id="resultOutput" style="font-size: 2rem; color: inherit; display: block;">0 €</strong>
+                        <span id="sqmRateOutput" style="font-size: 0.85rem; color: #8c8275;">~ 0 € / кв.м</span>
+                    </div>
+
+                    <div style="border-top: 1px dashed #eadecc; padding-top: 12px; margin-top: 10px; font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span data-key="lbl-arch-share">Част Архитектура:</span>
+                            <strong id="archShareOutput">0 €</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span data-key="lbl-eng-share">Инженерни части (ВиК, Ел, Констр. и др.):</span>
+                            <strong id="engShareOutput">0 €</strong>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -182,7 +260,7 @@
         
         <div class="footer-col">
             <h4 data-key="footer-contacts">Contacts</h4>
-            <p data-key="footer-address">Sofia, Bulgaria</p>
+            <p data-key="footer-address">Sofia / Gotse Delchev, Bulgaria</p>
             <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
             <p>+359 88 123 4567</p>
         </div>
@@ -202,6 +280,108 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
+        // ДВУЕЗИЧЕН РЕЧНИК ЗА ТАЗИ СТРАНИЦА
+        const pageTranslations = {
+            bg: {
+                "page-title": "Калкулатор | Academy Architect Studio",
+                "estimator-eyebrow": "БЮДЖЕТЕН КАЛКУЛАТОР",
+                "estimator-title": "Изчислете ориентировъчния си бюджет за проектиране.",
+                "estimator-desc": "Изберете типа обект, населеното място/област и обхвата на проекта, за да получите бърза и точна справка за необходимия архитектурен и инженерен хонорар.",
+                "estimator-disclaimer": "* Цените са базирани на националните и регионални пазарни стандарти за проектиране за 2026 г.",
+                "label-type": "Тип обект",
+                "opt-house": "Еднофамилна къща / Вила",
+                "opt-multi": "Многофамилна жилищна сграда",
+                "opt-industrial": "Промишлена / Стопанска сграда",
+                "opt-interior": "Интериорен дизайн",
+                "label-location": "Локация / Населено място",
+                "grp-capital": "Столица & Големи градове",
+                "opt-sofia": "гр. София и района (Столица)",
+                "opt-large-cities": "Пловдив, Варна, Бургас",
+                "grp-sw": "Югозападна България & Благоевград",
+                "opt-blagoevgrad": "гр. Благоевград (Областен център)",
+                "opt-gd-town": "гр. Гоце Делчев",
+                "opt-gd-villages": "Регион Гоце Делчев (Гърмен, Хаджидимово, Сатовча)",
+                "opt-resorts": "Планински & СПА курорти (Делчево, Огняново, Банско, Сандански)",
+                "grp-other": "Останалата част от страната",
+                "opt-regional-centers": "Други областни градове (Русе, Ст. Загора, Плевен и др.)",
+                "opt-other-locations": "По-малки градове и села в страната",
+                "label-scope": "Обхват на проектирането",
+                "opt-scope-full": "Пълен комплект (Архитектура + Всички Инженери)",
+                "opt-scope-arch": "Само част \"Архитектура\" (Идеен проект)",
+                "opt-scope-interior": "Пълен проект + 3D Визуализации & Интериор",
+                "label-area": "Обща площ (РЗП в кв.м)",
+                "btn-calc": "Изчисли бюджет",
+                "res-title": "Ориентировъчен бюджет:",
+                "lbl-arch-share": "Част Архитектура:",
+                "lbl-eng-share": "Инженерни части (ВиК, Ел, Констр. и др.):",
+                "text-not-included": "Не е включено",
+                "unit-sqm": "кв.м"
+            },
+            en: {
+                "page-title": "Estimator | Academy Architect Studio",
+                "estimator-eyebrow": "COST ESTIMATOR",
+                "estimator-title": "Calculate the estimated budget for your project.",
+                "estimator-desc": "Select the project type, location/region in Bulgaria, and scope of work to get a fast and accurate fee estimation.",
+                "estimator-disclaimer": "* Prices are based on national and regional architectural & engineering design market standards for 2026.",
+                "label-type": "Project Type",
+                "opt-house": "Single-family House / Villa",
+                "opt-multi": "Multi-family Residential Building",
+                "opt-industrial": "Industrial / Commercial Building",
+                "opt-interior": "Interior Design",
+                "label-location": "Location / Region",
+                "grp-capital": "Capital & Major Cities",
+                "opt-sofia": "Sofia City & Region (Capital)",
+                "opt-large-cities": "Plovdiv, Varna, Burgas",
+                "grp-sw": "Southwest Bulgaria & Blagoevgrad",
+                "opt-blagoevgrad": "Blagoevgrad City (Regional Center)",
+                "opt-gd-town": "Gotse Delchev City",
+                "opt-gd-villages": "Gotse Delchev Region (Garmen, Hadzhidimovo, Satovcha)",
+                "opt-resorts": "Mountain & SPA Resorts (Delchevo, Ognyanovo, Bansko, Sandanski)",
+                "grp-other": "Rest of the Country",
+                "opt-regional-centers": "Other Regional Centers (Ruse, St. Zagora, Pleven, etc.)",
+                "opt-other-locations": "Smaller towns & villages in Bulgaria",
+                "label-scope": "Scope of Work",
+                "opt-scope-full": "Full Package (Architecture + All Engineering Parts)",
+                "opt-scope-arch": "Architectural Design Only (Concept/Detailed)",
+                "opt-scope-interior": "Full Package + 3D Visualizations & Interior",
+                "label-area": "Total Built-up Area (GFA in sq.m)",
+                "btn-calc": "Calculate Budget",
+                "res-title": "Estimated Budget:",
+                "lbl-arch-share": "Architectural Portion:",
+                "lbl-eng-share": "Engineering Portions (Structural, MEP, HVAC, etc.):",
+                "text-not-included": "Not included",
+                "unit-sqm": "sq.m"
+            }
+        };
+
+        let currentLang = localStorage.getItem('siteLang') || 'bg';
+
+        // Функция за смяна на езика
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('siteLang', lang);
+
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${lang}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const dictionary = pageTranslations[lang] || pageTranslations['bg'];
+            document.querySelectorAll('[data-key]').forEach(elem => {
+                const key = elem.getAttribute('data-key');
+                if (dictionary[key]) {
+                    if (elem.tagName === 'OPTGROUP') {
+                        elem.label = dictionary[key];
+                    } else if (elem.tagName === 'TITLE') {
+                        document.title = dictionary[key];
+                    } else {
+                        elem.textContent = dictionary[key];
+                    }
+                }
+            });
+
+            calculateBudget();
+        }
+
         // Превключване на тъмния режим
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
@@ -218,29 +398,88 @@
             navLinks.classList.toggle('mobile-open');
         }
 
+        // ИЗЧИСЛЯВАНЕ НА БЮДЖЕТА (ОПТИМИЗИРАНО ЗА ГОЦЕ ДЕЛЧЕВ)
         function calculateBudget() {
             const type = document.getElementById('projectType').value;
+            const location = document.getElementById('projectLocation').value;
+            const scope = document.getElementById('projectScope').value;
             const area = parseFloat(document.getElementById('projectArea').value) || 0;
-            let rate = 40; // цена на кв.м по подразбиране
 
-            if (type === 'house') rate = 50;
-            if (type === 'interior') rate = 35;
-            if (type === 'renovation') rate = 45;
+            if (area <= 0) return;
 
-            const total = area * rate;
-            const resultBox = document.getElementById('resultBox');
-            const resultOutput = document.getElementById('resultOutput');
+            // 1. Достъпна базова цена на кв.м (в EUR)
+            let baseRate = 10; 
+            if (type === 'house') baseRate = 11;          // Къща / Вила: ~11 €/кв.м
+            else if (type === 'multi') baseRate = 8.5;    // Многофамилна: ~8.5 €/кв.м
+            else if (type === 'industrial') baseRate = 6; // Промишлена: ~6 €/кв.м
+            else if (type === 'interior') baseRate = 9;   // Интериор: ~9 €/кв.м
 
-            resultOutput.textContent = total.toLocaleString() + ' €';
-            resultBox.style.display = 'block';
+            // 2. Коефициенти по локации (База 1.00 = Гоце Делчев)
+            let locCoeff = 1.0;
+            switch(location) {
+                case 'gd_town': 
+                    locCoeff = 1.00; // Гоце Делчев (~11 €/кв.м)
+                    break;
+                case 'gd_villages': 
+                    locCoeff = 0.85; // Села в района (~9.3 €/кв.м)
+                    break;
+                case 'resorts': 
+                    locCoeff = 1.25; // Курорти (~13.7 €/кв.м)
+                    break;
+                case 'blagoevgrad':
+                case 'regional_centers': 
+                    locCoeff = 1.35; // Благоевград / Областни градове (~15 €/кв.м)
+                    break;
+                case 'large_cities': 
+                    locCoeff = 1.80; // Пловдив, Варна, Бургас (~20 €/кв.м)
+                    break;
+                case 'sofia': 
+                    locCoeff = 2.25; // София (~25 €/кв.м)
+                    break;
+                case 'other_locations': 
+                    locCoeff = 0.90;
+                    break;
+                default: 
+                    locCoeff = 1.00;
+            }
+
+            // 3. Коефициент за Обхват
+            let scopeCoeff = 1.0;
+            if (scope === 'arch_only') scopeCoeff = 0.40; // Само Архитектура (~4.40 €/кв.м)
+            else if (scope === 'full_interior') scopeCoeff = 1.35; // Пълен + Интериор
+
+            // Изчисляване
+            let sqmRate = baseRate * locCoeff * scopeCoeff;
+            let total = area * sqmRate;
+
+            // Минимален хонорар за малки обекти (350 EUR / ~680 лв.)
+            const minFee = 350;
+            if (total < minFee && scope !== 'arch_only') {
+                total = minFee;
+                sqmRate = total / area;
+            }
+
+            let archShare = total * (scope === 'arch_only' ? 1.0 : 0.42);
+            let engShare = scope === 'arch_only' ? 0 : total * 0.58;
+
+            const unitText = pageTranslations[currentLang]["unit-sqm"] || "кв.м";
+            const notIncText = pageTranslations[currentLang]["text-not-included"] || "Не е включено";
+
+            // Показване на резултатите
+            document.getElementById('resultOutput').textContent = Math.round(total).toLocaleString(currentLang === 'bg' ? 'bg-BG' : 'en-US') + ' €';
+            document.getElementById('sqmRateOutput').textContent = `~ ${sqmRate.toFixed(2)} € / ${unitText}`;
+            document.getElementById('archShareOutput').textContent = `~ ${Math.round(archShare).toLocaleString(currentLang === 'bg' ? 'bg-BG' : 'en-US')} €`;
+            document.getElementById('engShareOutput').textContent = scope === 'arch_only' ? notIncText : `~ ${Math.round(engShare).toLocaleString(currentLang === 'bg' ? 'bg-BG' : 'en-US')} €`;
+
+            document.getElementById('resultBox').style.display = 'block';
         }
 
-        // Динамична проверка на статуса на входа в навигацията
+        // Динамична проверка на статуса на входа
         function updateNavAuthStatus() {
             const container = document.getElementById('navAuthContainer');
             if (!container) return;
 
-            const isUserLoggedIn = localStorage.getItem('isUserLoggedIn') === 'true';
+            const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
             if (isUserLoggedIn) {
                 container.innerHTML = `
@@ -248,7 +487,7 @@
                         <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: currentColor;">
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                         </svg>
-                        <span style="position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; background-color: #ff8b8b; border: 2px solid var(--bg-color, #fff); border-radius: 50%;"></span>
+                        <span style="position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; background-color: #2ecc71; border: 2px solid var(--bg-color, #fff); border-radius: 50%;"></span>
                     </a>
                 `;
             } else {
@@ -259,9 +498,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            if (typeof initLanguage === 'function') {
-                initLanguage();
-            }
+            setLanguage(currentLang);
             updateNavAuthStatus();
         });
     </script>
