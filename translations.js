@@ -1,130 +1,107 @@
 const translations = {
-    bg: {
-        "nav-studio": "Academy Architect Studio",
-        "nav-home": "Начало",
-        "nav-catalog": "Проекти",
-        "nav-about": "За нас",
-        "nav-estimator": "Калкулатор",
-        "nav-contact": "Контакти",
-        "nav-login": "Вход",
-        "hero-eyebrow": "Архитектурно Студио",
-        "hero-title": "Проектираме бъдещето с внимание към детайла",
-        "hero-desc": "Създаваме минималистични и функционални пространства, съчетавайки съвременните технологии с изчистената архитектура.",
-        "btn-browse": "Разгледай проектите",
-        "btn-contact": "Свържи се с нас",
-        "badge-title": "LATEST",
-        "badge-sub": "Проект \"Минимализъм\"",
-        "section-featured": "Избрани проекти",
-        "quote-text": "\"Добрата архитектура не просто заема пространство, тя го осмисля.\"",
-        "quote-sub": "Вярваме, че всеки детайл има значение при изграждането на перфектния дом или работно пространство, за да създадем среда, която вдъхновява всеки ден.",
-        "footer-subtitle": "Проектиране и дизайн",
-        "footer-contacts": "Контакти",
-        "footer-address": "София, България",
-        "footer-links-title": "Линкове",
-        "footer-rights": "&copy; 2026 Academy Architect Studio.<br>Всички права запазени.",
-        "no-projects": "Все още няма добавени проекти.",
-        "catalog-title": "Нашите Проекти",
-        
-        /* Филтри за каталога */
-        "filter-all": "Всички",
-        "filter-residential": "Жилищни",
-        "filter-commercial": "Обществени",
-        "filter-interior": "Интериор",
-        
-        /* За нас (About) */
-        "about-title": "За нашето студио",
-        "about-subtitle": "Иновации и минимализъм в архитектурата",
-        "about-text-1": "Academy Architect Studio е създадено с идеята да превърне съвременните концепции за пространство в реалност. Ние вярваме, че добрата архитектура променя начина, по който хората живеят и работят.",
-        "about-text-2": "Нашият екип от професионалисти съчетава дългогодишен опит с модерни технологии, за да предложи индивидуални решения за всеки клиент.",
-
-        /* Калкулатор (Estimator) */
-        "estimator-title": "Калкулатор за цена",
-        "estimator-subtitle": "Изчислете ориентировъчен бюджет за вашия проект",
-        "label-type": "Тип проект",
-        "type-residential": "Жилищен (Къща / Апартамент)",
-        "type-commercial": "Обществен (Офис / Магазин)",
-        "type-interior": "Интериорен дизайн",
-        "label-area": "Квадратура (кв.м)",
-        "label-package": "Пакет услуги",
-        "pkg-basic": "Идеен проект (Базов)",
-        "pkg-full": "Пълен технически проект",
-        "pkg-vip": "VIP (Пълен проект + Авторски надзор)",
-        "result-title": "Ориентировъчна цена:",
-
-        /* Контакти (Contact) */
-        "contact-title": "Свържете се с нас",
-        "contact-subtitle": "Нека обсъдим вашия следващ проект",
-        "form-name": "Вашето име",
-        "form-email": "Вашият имейл",
-        "form-message": "Вашето съобщение",
-        "form-submit": "Изпрати съобщение"
-    },
     en: {
         "nav-studio": "Academy Architect Studio",
         "nav-home": "Home",
         "nav-catalog": "Projects",
         "nav-about": "About Us",
+        "nav-planner": "AI Planner",
         "nav-estimator": "Estimator",
         "nav-contact": "Contacts",
         "nav-login": "Login",
-        "hero-eyebrow": "Architectural Studio",
-        "hero-title": "Designing the future with attention to detail",
-        "hero-desc": "We create minimalist and functional spaces, combining modern technologies with clean architecture.",
-        "btn-browse": "Browse Projects",
-        "btn-contact": "Contact Us",
-        "badge-title": "LATEST",
-        "badge-sub": "\"Minimalism\" Project",
-        "section-featured": "Featured Projects",
-        "quote-text": "\"Good architecture doesn't just occupy space, it gives it meaning.\"",
-        "quote-sub": "We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.",
+        
+        // About page
+        "about-eyebrow": "ABOUT THE STUDIO",
+        "about-title": "Personal archive of architectural projects.",
+        "about-p1": "Academy Architect Studio is an author's catalog of house designs. Each project is developed with attention to proportion, light, and material — from the initial sketch to the detailed floor plan.",
+        "about-p2": "Here I share my own work. Every project is ready for adaptation to a specific plot, climate, and budget.",
+        
+        // Estimator page
+        "estimator-title": "Price Calculator",
+        "estimator-subtitle": "Calculate an approximate budget for your project",
+        "estimator-type-label": "Project Type",
+        "estimator-area-label": "Area (sq.m)",
+        "estimator-package-label": "Service Package",
+        "estimator-result-label": "Estimated price:",
+        "opt-residential": "Residential (House / Apartment)",
+        "opt-commercial": "Commercial Building",
+        "opt-interior": "Interior Design",
+        "pkg-basic": "Idea Project (Basic)",
+        "pkg-standard": "Full Technical Project (Standard)",
+        "pkg-full": "Turnkey with Supervision (Full)",
+
+        // Contact page
+        "contact-eyebrow": "GET IN TOUCH & BOOKING",
+        "contact-title": "Let's discuss your project or book a meeting.",
+        "form-name": "Your Name",
+        "form-email": "Your Email",
+        "form-phone": "Phone Number",
+        "form-message": "Message / Details",
+        "form-submit": "Send Request",
+
+        // Catalog page
+        "no-projects": "No projects added yet.",
+
+        // Footer
         "footer-subtitle": "Design & Engineering",
         "footer-contacts": "Contacts",
         "footer-address": "Sofia, Bulgaria",
         "footer-links-title": "Links",
-        "footer-rights": "&copy; 2026 Academy Architect Studio.<br>All rights reserved.",
-        "no-projects": "No projects added yet.",
-        "catalog-title": "Our Projects",
+        "footer-rights": "&copy; 2026 Academy Architect Studio.<br>All rights reserved."
+    },
+    bg: {
+        "nav-studio": "Academy Architect Studio",
+        "nav-home": "Начало",
+        "nav-catalog": "Проекти",
+        "nav-about": "За нас",
+        "nav-planner": "ИИ Планер",
+        "nav-estimator": "Калкулатор",
+        "nav-contact": "Контакти",
+        "nav-login": "Вход",
         
-        /* Catalog filters */
-        "filter-all": "All",
-        "filter-residential": "Residential",
-        "filter-commercial": "Commercial",
-        "filter-interior": "Interior",
+        // About page
+        "about-eyebrow": "ЗА СТУДИОТО",
+        "about-title": "Личен архив на архитектурни проекти.",
+        "about-p1": "Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.",
+        "about-p2": "Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.",
         
-        /* About */
-        "about-title": "About Our Studio",
-        "about-subtitle": "Innovation and minimalism in architecture",
-        "about-text-1": "Academy Architect Studio was founded with the vision to turn modern space concepts into reality. We believe that good architecture transforms the way people live and work.",
-        "about-text-2": "Our team of professionals combines years of experience with modern technologies to deliver tailored solutions for every client.",
+        // Estimator page
+        "estimator-title": "Калкулатор за цена",
+        "estimator-subtitle": "Изчислете ориентировъчен бюджет за вашия проект",
+        "estimator-type-label": "Тип проект",
+        "estimator-area-label": "Квадратура (кв.м)",
+        "estimator-package-label": "Пакет услуги",
+        "estimator-result-label": "Ориентировъчна цена:",
+        "opt-residential": "Жилищен (Къща / Апартамент)",
+        "opt-commercial": "Търговска сграда",
+        "opt-interior": "Интериорен дизайн",
+        "pkg-basic": "Идеен проект (Базов)",
+        "pkg-standard": "Пълен технически проект (Стандартен)",
+        "pkg-full": "Пълен пакет с авторски надзор",
 
-        /* Estimator */
-        "estimator-title": "Cost Estimator",
-        "estimator-subtitle": "Calculate an approximate budget for your project",
-        "label-type": "Project Type",
-        "type-residential": "Residential (House / Apartment)",
-        "type-commercial": "Commercial (Office / Store)",
-        "type-interior": "Interior Design",
-        "label-area": "Area (sq.m)",
-        "label-package": "Service Package",
-        "pkg-basic": "Conceptual Design (Basic)",
-        "pkg-full": "Full Technical Project",
-        "pkg-vip": "VIP (Full + Supervision)",
-        "result-title": "Estimated Cost:",
+        // Contact page
+        "contact-eyebrow": "КОНТАКТИ И РЕЗЕРВАЦИЯ",
+        "contact-title": "Нека обсъдим вашия проект или запазим среща.",
+        "form-name": "Вашето име",
+        "form-email": "Вашият имейл",
+        "form-phone": "Телефонен номер",
+        "form-message": "Съобщение / Детайли",
+        "form-submit": "Изпрати запитване",
 
-        /* Contact */
-        "contact-title": "Get in Touch",
-        "contact-subtitle": "Let's discuss your next project",
-        "form-name": "Your Name",
-        "form-email": "Your Email",
-        "form-message": "Your Message",
-        "form-submit": "Send Message"
+        // Catalog page
+        "no-projects": "Все още няма добавени проекти.",
+
+        // Footer
+        "footer-subtitle": "Дизайн и инженеринг",
+        "footer-contacts": "Контакти",
+        "footer-address": "София, България",
+        "footer-links-title": "Линкове",
+        "footer-rights": "&copy; 2026 Academy Architect Studio.<br>Всички права запазени."
     }
 };
 
 function setLanguage(lang) {
     localStorage.setItem('siteLang', lang);
     applyTranslations(lang);
-    window.location.reload();
 }
 
 function applyTranslations(lang) {
@@ -137,44 +114,14 @@ function applyTranslations(lang) {
     });
 
     document.querySelectorAll('.lang-btn').forEach(btn => {
-        if (btn.textContent.toLowerCase() === lang) {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes(lang)) {
             btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
         }
     });
 }
 
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
-    updateDarkModeButtonText(isDark);
-}
-
-function updateDarkModeButtonText(isDark) {
-    const btn = document.getElementById('darkModeBtn');
-    if (btn) {
-        const lang = localStorage.getItem('siteLang') || 'en';
-        if (isDark) {
-            btn.textContent = lang === 'bg' ? '☀️ Светла' : '☀️ Light';
-        } else {
-            btn.textContent = lang === 'bg' ? '🌙 Тъмна' : '🌙 Dark';
-        }
-    }
-}
-
-function initDarkMode() {
-    const isDark = localStorage.getItem('darkMode') === 'enabled';
-    if (isDark) {
-        document.body.classList.add('dark-mode');
-    }
-    updateDarkModeButtonText(isDark);
-}
-
 function initLanguage() {
     const savedLang = localStorage.getItem('siteLang') || 'en';
-    document.documentElement.lang = savedLang;
     applyTranslations(savedLang);
-    initDarkMode();
 }

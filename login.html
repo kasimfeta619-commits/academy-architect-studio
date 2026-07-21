@@ -1,105 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Academy Architect Studio</title>
+    <title>Вход | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #665c52;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            color: #1a1a1a;
+            border-bottom: 2px solid #1a1a1a;
+            font-weight: bold;
+        }
+        .login-form-container {
+            display: none;
+        }
+        .login-form-container.active {
+            display: block;
+        }
+    </style>
 </head>
-<body>
+<body style="background-color: #fdfbf7; color: #1a1a1a; font-family: sans-serif; margin: 0;">
 
     <!-- НАВИГАЦИЯ -->
-    <nav class="navbar">
-        <a href="index.html" class="logo-area">
-            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
-            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
+    <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; border-bottom: 1px solid #e6dec9;">
+        <a href="index.html" class="logo-area" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+            <img src="assets/main-graphic.png" alt="Лого" class="logo-icon" onerror="this.style.display='none'" style="height: 24px;">
+            <span class="logo-studio" style="font-weight: 600; letter-spacing: 0.5px;">Academy Architect Studio</span>
         </a>
         
-        <div id="nav-links">
-            <a href="index.html" data-key="nav-home">Home</a>
-            <a href="catalog.html" data-key="nav-catalog">Projects</a>
-            <a href="about.html" data-key="nav-about">About Us</a>
-            <a href="estimator.html" data-key="nav-estimator">Estimator</a>
-            <a href="contact.html" data-key="nav-contact">Contacts</a>
+        <div id="nav-links" style="display: flex; gap: 30px;">
+            <a href="index.html" style="text-decoration: none; color: #665c52;">Начало</a>
+            <a href="catalog.html" style="text-decoration: none; color: #665c52;">Проекти</a>
+            <a href="about.html" style="text-decoration: none; color: #665c52;">За нас</a>
+            <a href="planner.html" style="text-decoration: none; color: #665c52;">ИИ Планер</a>
+            <a href="estimator.html" style="text-decoration: none; color: #665c52;">Калкулатор</a>
+            <a href="contact.html" style="text-decoration: none; color: #665c52;">Контакти</a>
         </div>
 
-        <div class="header-actions">
-            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
-            <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
+        <div class="header-actions" style="display: flex; align-items: center; gap: 15px;">
+            <button id="darkModeBtn" onclick="toggleDarkMode()" style="background: none; border: 1px solid #e6dec9; padding: 6px 12px; border-radius: 20px; cursor: pointer;">🌙 Тъмна</button>
+            <div class="lang-switcher" style="display: flex; gap: 5px;">
+                <button class="lang-btn" onclick="setLanguage('en')" style="background: none; border: none; cursor: pointer; color: #888;">EN</button>
+                <button class="lang-btn active" onclick="setLanguage('bg')" style="background: none; border: none; cursor: pointer; font-weight: bold;">BG</button>
             </div>
-            <a href="booking.html" class="btn-login" style="margin-left: 10px;" data-key="nav-booking">Booking</a>
-            <a href="login.html" class="btn-login active" data-key="nav-login">Login</a>
+            <a href="booking.html" class="btn-login" style="background-color: #1a1a1a; color: #fff; padding: 8px 20px; text-decoration: none; border-radius: 20px; font-size: 0.9rem;">Booking</a>
+            <a href="login.html" class="btn-login active" style="background-color: #1a1a1a; color: #fff; padding: 8px 20px; text-decoration: none; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">Вход</a>
         </div>
     </nav>
 
-    <!-- ФОРМА ЗА ВХОД (ЗА АДМИН И ПОТРЕБИТЕЛИ) -->
-    <main style="padding: 60px 8%; display: flex; justify-content: center; align-items: center;">
-        <div style="background-color: #fdfbf7; border: 1px solid #e6dec9; padding: 40px; width: 100%; max-width: 450px; box-sizing: border-box;">
-            <h2 style="text-align: center; font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 30px; font-weight: normal; line-height: 1.4; color: #1a1a1a;">
-                ВХОД В СИСТЕМАТА
-            </h2>
+    <!-- СЪДЪРЖАНИЕ -->
+    <main style="padding: 80px 8%; display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+        <div style="width: 100%; max-width: 500px; background: #ffffff; border: 1px solid #e6dec9; border-radius: 12px; padding: 40px 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
             
-            <form id="loginForm" style="display: flex; flex-direction: column; gap: 20px;">
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 1px; color: #665c52;">ИМЕЙЛ</label>
-                    <input type="email" id="loginEmail" placeholder="e-mail" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #dcd6c8; background: #fff; border-radius: 0;">
-                </div>
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 1px; color: #665c52;">ПАРОЛА</label>
-                    <input type="password" id="loginPassword" placeholder="•••••••" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #dcd6c8; background: #fff; border-radius: 0;">
-                </div>
-                <button type="submit" style="width: 100%; padding: 14px; background-color: #1a1a1a; color: #fff; border: none; font-weight: bold; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; margin-top: 10px;">ВЛИЗАНЕ</button>
-            </form>
-            
-            <div style="text-align: center; margin-top: 25px; font-size: 0.85rem; color: #736b5e;">
-                Нямате профил? <a href="register.html" style="color: #1a1a1a; text-decoration: underline;">Регистрирайте се тук</a>
+            <!-- Табове за превключване -->
+            <div style="display: flex; border-bottom: 1px solid #e6dec9; margin-bottom: 30px;">
+                <button class="tab-btn active" onclick="switchTab('user')">Потребител</button>
+                <button class="tab-btn" onclick="switchTab('admin')">Администратор</button>
             </div>
+
+            <!-- 1. Потребителски вход -->
+            <div id="userFormContainer" class="login-form-container active">
+                <h1 style="font-size: 1.5rem; font-weight: normal; margin: 0 0 30px 0; text-align: center; letter-spacing: 1px; color: #1a1a1a;">ВХОД ЗА ПОТРЕБИТЕЛИ</h1>
+                <form onsubmit="handleUserLogin(event)">
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-size: 0.85rem; letter-spacing: 1px; color: #665c52; margin-bottom: 8px; text-transform: uppercase;">ИМЕЙЛ</label>
+                        <input type="email" id="userEmail" required placeholder="user@example.com" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <label style="display: block; font-size: 0.85rem; letter-spacing: 1px; color: #665c52; margin-bottom: 8px; text-transform: uppercase;">ПАРОЛА</label>
+                        <input type="password" id="userPassword" required placeholder="••••••" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box;">
+                    </div>
+
+                    <button type="submit" style="width: 100%; background-color: #1a1a1a; color: #fff; padding: 15px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;">ВЛИЗАНЕ</button>
+                </form>
+            </div>
+
+            <!-- 2. Администраторски вход -->
+            <div id="adminFormContainer" class="login-form-container">
+                <h1 style="font-size: 1.5rem; font-weight: normal; margin: 0 0 10px 0; text-align: center; letter-spacing: 1px; color: #1a1a1a;">ВХОД ЗА АДМИНИСТРАТОР</h1>
+                <p style="text-align: center; font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">(Данни: admin@architect.bg / admin123)</p>
+                
+                <form onsubmit="handleAdminLogin(event)">
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-size: 0.85rem; letter-spacing: 1px; color: #665c52; margin-bottom: 8px; text-transform: uppercase;">АДМИН ИМЕЙЛ</label>
+                        <input type="email" id="adminEmailInput" required value="admin@architect.bg" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <label style="display: block; font-size: 0.85rem; letter-spacing: 1px; color: #665c52; margin-bottom: 8px; text-transform: uppercase;">АДМИН ПАРОЛА</label>
+                        <input type="password" id="adminPasswordInput" required value="admin123" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box;">
+                    </div>
+
+                    <button type="submit" style="width: 100%; background-color: #1a1a1a; color: #fff; padding: 15px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;">ВЛИЗАНЕ В АДМИН ПАНЕЛ</button>
+                </form>
+            </div>
+
         </div>
     </main>
 
+    <!-- ФУТЪР -->
+    <footer style="padding: 40px 8%; border-top: 1px solid #e6dec9; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #736b5e;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="font-size: 1.2rem;">📐</span>
+            <div>
+                <div style="font-weight: bold; color: #1a1a1a;">Academy Architect Studio</div>
+                <div style="font-size: 0.75rem; letter-spacing: 1px;">АРХИТЕКТУРНО СТУДИО</div>
+            </div>
+        </div>
+        <div>
+            <div style="font-weight: bold; color: #1a1a1a; margin-bottom: 5px; letter-spacing: 1px;">STUDIO</div>
+            <div>Sofia · Plovdiv · Varna</div>
+            <div>info@architectstudio.com</div>
+        </div>
+        <div style="text-align: right;">
+            <div style="margin-bottom: 5px;">© 2026</div>
+            <div>Academy Architect Studio — Всички права запазени.</div>
+        </div>
+    </footer>
+
     <script src="translations.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            initLanguage();
-        });
+        function switchTab(type) {
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
 
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
+            const containers = document.querySelectorAll('.login-form-container');
+            containers.forEach(con => con.classList.remove('active'));
 
-            // 1. ТВОЯТ АДМИНСКИ ИМЕЙЛ (Замени го с твоя личен имейл, с който ще влизаш като админ)
-            const adminEmail = "admin@architect-studio.bg"; 
-
-            if (email === adminEmail) {
-                // Вход като АДМИН
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('isAdmin', 'true');
-                localStorage.setItem('admin', 'true');
-                localStorage.setItem('userEmail', email);
-                window.location.href = 'admin.html';
-                return;
-            }
-
-            // 2. ВХОД ЗА ОБИКНОВЕН ПОТРЕБИТЕЛ (Проверява в списъка с регистрирани потребители)
-            let users = JSON.parse(localStorage.getItem('studioUsers') || '[]');
-            let foundUser = users.find(u => u.email === email && u.password === password);
-
-            if (foundUser) {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userEmail', foundUser.email);
-                localStorage.setItem('userName', foundUser.name);
-                localStorage.removeItem('isAdmin');
-                localStorage.removeItem('admin');
-
-                // Пращаме потребителя директно към страницата за запитване
-                window.location.href = 'booking.html';
+            if (type === 'user') {
+                buttons[0].classList.add('active');
+                document.getElementById('userFormContainer').classList.add('active');
             } else {
-                alert('Грешен имейл или парола, или потребителят не е регистриран!');
+                buttons[1].classList.add('active');
+                document.getElementById('adminFormContainer').classList.add('active');
             }
-        });
+        }
+
+        function handleUserLogin(event) {
+            event.preventDefault();
+            localStorage.setItem('isAdminLoggedIn', 'false');
+            alert('Успешен вход като потребител!');
+            window.location.href = 'catalog.html';
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('adminEmailInput').value;
+            const password = document.getElementById('adminPasswordInput').value;
+
+            const adminCredentials = {
+                email: "admin@architect.bg",
+                password: "admin123"
+            };
+
+            if (email === adminCredentials.email && password === adminCredentials.password) {
+                localStorage.setItem('isAdminLoggedIn', 'true');
+                alert('Успешен вход! Пренасочване към Админ панел...');
+                window.location.href = 'admin.html';
+            } else {
+                alert('Грешен имейл или парола за администратор!');
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => initLanguage());
     </script>
 </body>
 </html>
