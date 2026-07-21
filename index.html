@@ -65,47 +65,13 @@
     </section>
 
     <!-- ==========================================
-         СЕКЦИЯ ИЗБРАНИ ПРОЕКТИ (ПРАЗНА ЗА ТВОИ СНИМКИ)
+         СЕКЦИЯ ИЗБРАНИ ПРОЕКТИ (ДИНАМИЧНО ЗАРЕЖДАНЕ)
          ========================================== -->
     <section class="recent-projects">
         <h2>Избрани проекти</h2>
         
-        <div class="projects-grid">
-            <!-- Проект 1 (Смени пътя на картинката и текста с твоите) -->
-            <a href="#" class="project-card">
-                <div class="project-img-box">
-                    <img src="assets/ТВОЯТА_СНИМКА_1.png" alt="Проект 1" onerror="this.src='https://placehold.co/600x400?text=Сложи+снимка+тук'">
-                </div>
-                <div class="project-info">
-                    <span class="p-title">Име на проект 1</span>
-                    <span class="p-meta">Категория / Тип</span>
-                    <span class="p-area">000 кв.м</span>
-                </div>
-            </a>
-
-            <!-- Проект 2 (Смени пътя на картинката и текста с твоите) -->
-            <a href="#" class="project-card">
-                <div class="project-img-box">
-                    <img src="assets/ТВОЯТА_СНИМКА_2.png" alt="Проект 2" onerror="this.src='https://placehold.co/600x400?text=Сложи+снимка+тук'">
-                </div>
-                <div class="project-info">
-                    <span class="p-title">Име на проект 2</span>
-                    <span class="p-meta">Категория / Тип</span>
-                    <span class="p-area">000 кв.м</span>
-                </div>
-            </a>
-
-            <!-- Проект 3 (Смени пътя на картинката и текста с твоите) -->
-            <a href="#" class="project-card">
-                <div class="project-img-box">
-                    <img src="assets/ТВОЯТА_СНИМКА_3.png" alt="Проект 3" onerror="this.src='https://placehold.co/600x400?text=Сложи+снимка+тук'">
-                </div>
-                <div class="project-info">
-                    <span class="p-title">Име на проект 3</span>
-                    <span class="p-meta">Категория / Тип</span>
-                    <span class="p-area">000 кв.м</span>
-                </div>
-            </a>
+        <div class="projects-grid" id="featuredProjectsContainer">
+            <!-- Тук динамично ще се зареждат проектите от localStorage -->
         </div>
     </section>
 
@@ -146,6 +112,39 @@
             <p>&copy; 2026 Academy Architect Studio.<br>Всички права запазени.</p>
         </div>
     </footer>
+
+    <!-- СКРИПТ ЗА ЗАРЕЖДАНЕ НА ПРОЕКТИТЕ ОТ ПАМЕТТА -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const container = document.getElementById('featuredProjectsContainer');
+            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+
+            if (projects.length > 0) {
+                // Взимаме последните 3 добавени проекта
+                const featured = projects.slice(-3).reverse(); 
+
+                container.innerHTML = featured.map((p, index) => {
+                    const originalIndex = projects.length - 1 - index;
+                    const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+
+                    return `
+                        <a href="project-detail.html?index=${originalIndex}" class="project-card">
+                            <div class="project-img-box">
+                                <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Сложи+снимка+тук'">
+                            </div>
+                            <div class="project-info">
+                                <span class="p-title">${p.title}</span>
+                                <span class="p-meta">${p.style || 'Архитектурен проект'}</span>
+                                <span class="p-area">${p.area ? p.area + ' кв.м' : '-'}</span>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } else {
+                container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem; grid-column: 1 / -1;">Все още няма добавени проекти.</p>`;
+            }
+        });
+    </script>
 
 </body>
 </html>
