@@ -109,12 +109,10 @@ function setLanguage(lang) {
     localStorage.setItem('preferredLang', lang);
     document.documentElement.lang = lang;
     
-    // Активни бутони за език
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
     });
 
-    // Смяна на текстовете по атрибут data-key
     document.querySelectorAll('[data-key]').forEach(el => {
         const key = el.getAttribute('data-key');
         if (translations[lang] && translations[lang][key]) {

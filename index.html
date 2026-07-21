@@ -8,7 +8,6 @@
 </head>
 <body>
 
-    <!-- НАВИГАЦИЯ -->
     <nav class="navbar">
         <a href="index.html" class="logo-area">
             <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
@@ -34,7 +33,6 @@
         </div>
     </nav>
 
-    <!-- HERO СЕКЦИЯ -->
     <section class="hero-section">
         <div class="hero-text-area">
             <span class="eyebrow" data-key="hero-eyebrow">Architectural Studio</span>
@@ -59,22 +57,16 @@
         </div>
     </section>
 
-    <!-- ИЗБРАНИ ПРОЕКТИ -->
     <section class="recent-projects">
         <h2 data-key="section-featured">Featured Projects</h2>
-        
-        <div class="projects-grid" id="featuredProjectsContainer">
-            <!-- Динамично зареждане -->
-        </div>
+        <div class="projects-grid" id="featuredProjectsContainer"></div>
     </section>
 
-    <!-- ЦИТАТ СЕКЦИЯ -->
     <section class="quote-section">
         <h2 data-key="quote-text">"Good architecture doesn't just occupy space, it gives it meaning."</h2>
         <p data-key="quote-sub">We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.</p>
     </section>
 
-    <!-- ФУТЪР -->
     <footer class="main-footer">
         <div class="footer-logo-area">
             <div>
@@ -102,7 +94,6 @@
         </div>
     </footer>
 
-    <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -110,11 +101,10 @@
             
             const container = document.getElementById('featuredProjectsContainer');
             const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            const currentLang = localStorage.getItem('preferredLang') || localStorage.getItem('siteLang') || 'en';
+            const currentLang = localStorage.getItem('preferredLang') || 'bg';
 
             if (projects.length > 0) {
                 const featured = projects.slice(-3).reverse(); 
-
                 container.innerHTML = featured.map((p, index) => {
                     const originalIndex = projects.length - 1 - index;
                     const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
