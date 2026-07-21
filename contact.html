@@ -121,9 +121,9 @@
 
     <!-- НАВИГАЦИЯ -->
     <header class="navbar">
-        <a href="index.html" class="logo-area">
-            <img src="assets/logo.png" alt="Logo" class="logo-icon" onerror="this.src='https://placehold.co/150x50?text=Logo'">
-            <span>Academy Architect <span class="logo-studio">Studio</span></span>
+        <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+            <img src="assets/main-graphic.png" alt="Academy Architect Studio Logo" class="logo-icon" style="height: 38px; width: auto; display: block;" onerror="this.style.display='none'">
+            <span style="font-weight: 500; color: #1a1a1a; font-size: 1.1rem;">Academy Architect <span class="logo-studio" style="font-weight: 700; color: #8c8275;">Studio</span></span>
         </a>
         <nav id="nav-links">
             <a href="index.html" data-key="nav-home">Начало</a>
@@ -137,14 +137,14 @@
                 <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
                 <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
             </div>
-            <a href="login.html" class="btn-login" id="btn-login">Вход</a>
+            <a href="login.html" class="btn-login" id="btn-login" data-key="btn-login">Вход</a>
         </div>
     </header>
 
     <!-- ОСНОВНО СЪДЪРЖАНИЕ -->
     <main class="content-container">
-        <span class="eyebrow" id="page-eyebrow">КОНТАКТИ</span>
-        <h1 id="page-title">Свържете се с нас</h1>
+        <span class="eyebrow" id="page-eyebrow" style="color: #8c8275; font-size: 0.75rem; letter-spacing: 2px; font-weight: 700;">КОНТАКТИ</span>
+        <h1 id="page-title" style="font-size: 2.5rem; font-weight: 400; margin-bottom: 20px;">Свържете се с нас</h1>
         
         <div class="contact-container">
             
@@ -202,19 +202,19 @@
 
     <!-- ФУТЪР -->
     <footer class="main-footer">
-        <div class="footer-logo-area">
-            <img src="assets/logo.png" alt="Logo" class="footer-logo" onerror="this.style.display='none'">
+        <div class="footer-logo-area" style="display: flex; align-items: center; gap: 12px;">
+            <img src="assets/main-graphic.png" alt="Logo" class="footer-logo" style="height: 32px; width: auto;" onerror="this.style.display='none'">
             <div>
-                <span class="footer-brand">Academy Architect <span class="logo-studio">Studio</span></span>
-                <p class="footer-subtext" id="footer-subtext">АРХИТЕКТУРНО СТУДИО</p>
+                <span class="footer-brand" style="font-weight: 600; color: #1a1a1a; font-size: 1rem;">Academy Architect <span class="logo-studio" style="font-weight: 700; color: #8c8275;">Studio</span></span>
+                <p class="footer-subtext" id="footer-subtext" style="font-size: 0.65rem; letter-spacing: 1px; color: #8c8275; margin-top: 2px;">АРХИТЕКТУРНО СТУДИО</p>
             </div>
         </div>
         <div class="footer-col">
-            <h4>STUDIO</h4>
-            <p>Sofia · Plovdiv · Varna</p>
-            <p><a href="mailto:hello@academyarchitectstudios.com">info@architectstudio.com</a></p>
+            <h4 style="font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 10px; color: #1a1a1a;">STUDIO</h4>
+            <p style="font-size: 0.85rem; color: #555; margin: 4px 0;">Sofia · Plovdiv · Varna</p>
+            <p style="font-size: 0.85rem; margin: 4px 0;"><a href="mailto:info@architectstudio.com" style="color: #555; text-decoration: none;">info@architectstudio.com</a></p>
         </div>
-        <div class="footer-col footer-right">
+        <div class="footer-col footer-right" style="text-align: right; color: #8c8275; font-size: 0.85rem;">
             <p>© 2026</p>
             <p id="footer-rights">Academy Architect Studio — Всички права запазени.</p>
         </div>
@@ -224,7 +224,7 @@
     <script>
         const translations = {
             en: {
-                "nav-home": "Home", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
+                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
                 "page-eyebrow": "CONTACT", "page-title": "Get in touch",
                 "lbl-office": "Offices", "lbl-email": "Email Address", "lbl-phone": "Phone", "lbl-hours": "Working Hours", "txt-hours": "Monday - Friday: 09:00 - 18:00",
                 "form-heading": "Write us directly", "lbl-form-name": "Your Name", "lbl-form-email": "Email", "lbl-form-msg": "Message", "btn-submit": "Send Inquiry",
@@ -244,11 +244,6 @@
                 const key = link.getAttribute('data-key');
                 if (translations[lang][key]) link.innerText = translations[lang][key];
             });
-
-            const catalogLink = document.querySelector('#nav-links a[data-key="nav-catalog"]');
-            if (catalogLink) {
-                catalogLink.style.display = (lang === 'en') ? 'none' : 'inline-block';
-            }
 
             const keysToTranslate = [
                 'btn-login', 'page-eyebrow', 'page-title', 'lbl-office', 'lbl-email', 

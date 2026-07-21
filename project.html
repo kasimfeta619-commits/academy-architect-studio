@@ -1,44 +1,197 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Academy Architect Planner</title>
-
-<link rel="stylesheet" href="planner.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детайли за проект | Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .project-detail-container {
+            padding: 60px 10%;
+            background-color: #fbf9f4;
+            min-height: 80vh;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #8c8275;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .back-link:hover {
+            color: #1a1a1a;
+        }
+        .project-header {
+            margin-bottom: 40px;
+        }
+        .project-title {
+            font-size: 2.8rem;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+        .project-style-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #8c8275;
+            font-weight: 700;
+        }
+        .project-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 60px;
+            align-items: start;
+        }
+        .project-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .project-gallery img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #eadecc;
+        }
+        .project-sidebar {
+            background: #f4eee5;
+            padding: 30px;
+            border: 1px solid #eadecc;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: sticky;
+            top: 40px;
+        }
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eadecc;
+            font-size: 0.95rem;
+        }
+        .spec-label {
+            color: #8c8275;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .spec-value {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+        .project-description {
+            margin-top: 25px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #444;
+        }
+        .project-price-box {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-top: 10px;
+        }
+        @media (max-width: 991px) {
+            .project-content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div id="toolbar">
+    <header class="navbar">
+        <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" style="height: 38px; width: auto; display: block;" onerror="this.style.display='none'">
+            <span style="font-weight: 500; color: #1a1a1a; font-size: 1.1rem;">Academy Architect <span class="logo-studio" style="font-weight: 700; color: #8c8275;">Studio</span></span>
+        </a>
+        <nav id="nav-links">
+            <a href="index.html">Начало</a>
+            <a href="catalog.html">Каталог</a>
+            <a href="about.html">За нас</a>
+            <a href="planner.html">ИИ Планер</a>
+            <a href="contact.html">Контакт</a>
+        </nav>
+        <div class="header-actions">
+            <div class="lang-switcher">
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
+            </div>
+            <a href="login.html" class="btn-login">Вход</a>
+        </div>
+    </header>
 
-<button id="toolWall">Wall</button>
+    <main class="project-detail-container">
+        <a href="catalog.html" class="back-link">← Обратно към каталога</a>
+        <div id="projectDetailsArea"></div>
+    </main>
 
-<button id="toolSelect">Select</button>
+    <footer class="main-footer">
+        <div class="footer-logo-area" style="display: flex; align-items: center; gap: 12px;">
+            <img src="assets/main-graphic.png" alt="Logo" class="footer-logo" style="height: 32px; width: auto;" onerror="this.style.display='none'">
+            <div>
+                <span class="footer-brand" style="font-weight: 600; color: #1a1a1a; font-size: 1rem;">Academy Architect <span class="logo-studio" style="font-weight: 700; color: #8c8275;">Studio</span></span>
+                <p class="footer-subtext" style="font-size: 0.65rem; letter-spacing: 1px; color: #8c8275; margin-top: 2px;">АРХИТЕКТУРНО СТУДИО</p>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4 style="font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 10px; color: #1a1a1a;">STUDIO</h4>
+            <p style="font-size: 0.85rem; color: #555; margin: 4px 0;">Sofia · Plovdiv · Varna</p>
+            <p style="font-size: 0.85rem; margin: 4px 0;"><a href="mailto:info@architectstudio.com" style="color: #555; text-decoration: none;">info@architectstudio.com</a></p>
+        </div>
+        <div class="footer-col footer-right" style="text-align: right; color: #8c8275; font-size: 0.85rem;">
+            <p>© 2026</p>
+            <p>Academy Architect Studio — Всички права запазени.</p>
+        </div>
+    </footer>
 
-<button id="toolDelete">Delete</button>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectIndex = urlParams.get('index');
+        const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+        const container = document.getElementById('projectDetailsArea');
 
-</div>
+        if (projectIndex !== null && projects[projectIndex]) {
+            const p = projects[projectIndex];
+            const galleryImages = p.gallery && p.gallery.length > 0 
+                ? p.gallery.map(img => `<img src="${img}" alt="${p.title}">`).join('')
+                : `<p>Няма налични снимки.</p>`;
 
-<div id="workspace">
-
-<div id="leftPanel">
-
-<canvas id="planner2d"></canvas>
-
-</div>
-
-<div id="rightPanel"></div>
-
-</div>
-
-<script src="planner.js"></script>
-
+            container.innerHTML = `
+                <div class="project-header">
+                    <span class="project-style-tag">${p.style || 'Архитектурен проект'}</span>
+                    <h1 class="project-title">${p.title}</h1>
+                </div>
+                <div class="project-content-grid">
+                    <div class="project-gallery">${galleryImages}</div>
+                    <div class="project-sidebar">
+                        <div>
+                            <span class="spec-label">Ориентировъчна цена</span>
+                            <div class="project-price-box">${p.price ? p.price + ' лв.' : 'По запитване'}</div>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <div class="spec-row"><span class="spec-label">Площ</span><span class="spec-value">${p.area ? p.area + ' кв.м' : '-'}</span></div>
+                            <div class="spec-row"><span class="spec-label">Етажи</span><span class="spec-value">${p.floors || '-'}</span></div>
+                            <div class="spec-row"><span class="spec-label">Спални</span><span class="spec-value">${p.beds || '-'}</span></div>
+                            <div class="spec-row"><span class="spec-label">Бани</span><span class="spec-value">${p.baths || '-'}</span></div>
+                            <div class="spec-row"><span class="spec-label">Конструкция / Материал</span><span class="spec-value">${p.material || '-'}</span></div>
+                            <div class="spec-row"><span class="spec-label">Стил</span><span class="spec-value">${p.style || '-'}</span></div>
+                        </div>
+                        <div class="project-description">
+                            <span class="spec-label" style="display: block; margin-bottom: 8px;">Описание</span>
+                            <p>${p.desc || 'Няма добавено описание за този проект.'}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `<h2>Проектът не е намерен или е бил изтрит.</h2><p><a href="catalog.html">Върнете се към каталога</a></p>`;
+        }
+    </script>
 </body>
 </html>
