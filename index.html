@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,94 +8,95 @@
 </head>
 <body>
 
-    <!-- ================= НАВИГАЦИЯ ================= -->
+    <!-- НАВИГАЦИЯ -->
     <nav class="navbar">
         <a href="index.html" class="logo-area">
             <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
-            <span class="logo-studio" data-key="nav-studio">Студио</span>
+            <span class="logo-studio" data-key="nav-studio">Studio</span>
         </a>
         
         <div id="nav-links">
-            <a href="index.html" class="active" data-key="nav-home">Начало</a>
-            <a href="catalog.html" data-key="nav-catalog">Проекти</a>
-            <a href="about.html" data-key="nav-about">За нас</a>
-            <a href="planner.html" data-key="nav-planner">ИИ Планер</a>
-            <a href="contact.html" data-key="nav-contact">Контакти</a>
+            <a href="index.html" class="active" data-key="nav-home">Home</a>
+            <a href="catalog.html" data-key="nav-catalog">Projects</a>
+            <a href="about.html" data-key="nav-about">About Us</a>
+            <a href="planner.html" data-key="nav-planner">AI Planner</a>
+            <a href="contact.html" data-key="nav-contact">Contacts</a>
         </div>
 
         <div class="header-actions">
             <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLanguage('bg')">BG</button>
-                <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
             </div>
-            <a href="login.html" class="btn-login" data-key="nav-login">Вход</a>
+            <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
         </div>
     </nav>
 
-    <!-- ================= HERO СЕКЦИЯ ================= -->
+    <!-- HERO СЕКЦИЯ -->
     <section class="hero-section">
         <div class="hero-text-area">
-            <span class="eyebrow" data-key="hero-eyebrow">Архитектурно Студио</span>
-            <h1 data-key="hero-title">Проектираме бъдещето с внимание към детайла</h1>
-            <p data-key="hero-desc">Създаваме минималистични и функционални пространства, съчетавайки съвременните технологии с изчистената архитектура.</p>
+            <span class="eyebrow" data-key="hero-eyebrow">Architectural Studio</span>
+            <h1 data-key="hero-title">Designing the future with attention to detail</h1>
+            <p data-key="hero-desc">We create minimalist and functional spaces, combining modern technologies with clean architecture.</p>
             
             <div class="hero-buttons">
-                <a href="catalog.html" class="btn-primary" data-key="btn-browse">Разгледай проектите</a>
-                <a href="contact.html" class="btn-secondary" data-key="btn-contact">Свържи се с нас</a>
+                <a href="catalog.html" class="btn-primary" data-key="btn-browse">Browse Projects</a>
+                <a href="contact.html" class="btn-secondary" data-key="btn-contact">Contact Us</a>
             </div>
         </div>
 
         <div class="hero-image-area">
             <div class="hero-main-img">
-                <img src="assets/hero-blueprint.png" alt="Архитектурен Чертеж">
+                <img src="assets/hero-blueprint.png" alt="Architectural Blueprint">
             </div>
             
             <div class="latest-badge">
                 <span class="badge-title" data-key="badge-title">LATEST</span>
-                <span class="badge-sub" data-key="badge-sub">Проект "Минимализъм"</span>
+                <span class="badge-sub" data-key="badge-sub">"Minimalism" Project</span>
             </div>
         </div>
     </section>
 
-    <!-- ================= ИЗБРАНИ ПРОЕКТИ ================= -->
+    <!-- ИЗБРАНИ ПРОЕКТИ -->
     <section class="recent-projects">
-        <h2 data-key="section-featured">Избрани проекти</h2>
+        <h2 data-key="section-featured">Featured Projects</h2>
+        
         <div class="projects-grid" id="featuredProjectsContainer">
             <!-- Динамично зареждане -->
         </div>
     </section>
 
-    <!-- ================= ЦИТАТ ================= -->
+    <!-- ЦИТАТ СЕКЦИЯ -->
     <section class="quote-section">
-        <h2 data-key="quote-text">"Добрата архитектура не просто заема пространство, тя го осмисля."</h2>
-        <p data-key="quote-sub">Вярваме, че всеки детайл има значение при изграждането на перфектния дом или работно пространство, за да създадем среда, която вдъхновява всеки ден.</p>
+        <h2 data-key="quote-text">"Good architecture doesn't just occupy space, it gives it meaning."</h2>
+        <p data-key="quote-sub">We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.</p>
     </section>
 
-    <!-- ================= ФУТЪР ================= -->
+    <!-- ФУТЪР -->
     <footer class="main-footer">
         <div class="footer-logo-area">
             <div>
                 <div class="footer-brand">Academy Architect Studio</div>
-                <div class="footer-subtext" data-key="footer-subtitle">Проектиране и дизайн</div>
+                <div class="footer-subtext" data-key="footer-subtitle">Design & Engineering</div>
             </div>
         </div>
         
         <div class="footer-col">
-            <h4 data-key="footer-contacts">Контакти</h4>
-            <p data-key="footer-address">София, България</p>
+            <h4 data-key="footer-contacts">Contacts</h4>
+            <p data-key="footer-address">Sofia, Bulgaria</p>
             <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
             <p>+359 88 123 4567</p>
         </div>
         
         <div class="footer-col">
-            <h4 data-key="footer-links-title">Линкове</h4>
-            <p><a href="index.html" data-key="nav-home">Начало</a></p>
-            <p><a href="catalog.html" data-key="nav-catalog">Проекти</a></p>
-            <p><a href="about.html" data-key="nav-about">За нас</a></p>
+            <h4 data-key="footer-links-title">Links</h4>
+            <p><a href="index.html" data-key="nav-home">Home</a></p>
+            <p><a href="catalog.html" data-key="nav-catalog">Projects</a></p>
+            <p><a href="about.html" data-key="nav-about">About Us</a></p>
         </div>
         
         <div class="footer-right">
-            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>Всички права запазени.</p>
+            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>All rights reserved.</p>
         </div>
     </footer>
 
@@ -107,10 +108,11 @@
             
             const container = document.getElementById('featuredProjectsContainer');
             const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            const currentLang = localStorage.getItem('siteLang') || 'bg';
+            const currentLang = localStorage.getItem('siteLang') || 'en';
 
             if (projects.length > 0) {
                 const featured = projects.slice(-3).reverse(); 
+
                 container.innerHTML = featured.map((p, index) => {
                     const originalIndex = projects.length - 1 - index;
                     const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
@@ -130,7 +132,7 @@
                     `;
                 }).join('');
             } else {
-                container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem; grid-column: 1 / -1;" data-key="no-projects">Все още няма добавени проекти.</p>`;
+                container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem; grid-column: 1 / -1;" data-key="no-projects">No projects added yet.</p>`;
                 applyTranslations(currentLang);
             }
         });

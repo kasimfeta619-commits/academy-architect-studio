@@ -23,9 +23,7 @@ const translations = {
         "footer-links-title": "Линкове",
         "footer-rights": "&copy; 2026 Academy Architect Studio.<br>Всички права запазени.",
         "no-projects": "Все още няма добавени проекти.",
-        "catalog-title": "Нашите Проекти",
-        "about-title": "За нашето студио",
-        "contact-title": "Свържете се с нас"
+        "catalog-title": "Нашите Проекти"
     },
     en: {
         "nav-studio": "Studio",
@@ -51,16 +49,13 @@ const translations = {
         "footer-links-title": "Links",
         "footer-rights": "&copy; 2026 Academy Architect Studio.<br>All rights reserved.",
         "no-projects": "No projects added yet.",
-        "catalog-title": "Our Projects",
-        "about-title": "About Our Studio",
-        "contact-title": "Get in Touch"
+        "catalog-title": "Our Projects"
     }
 };
 
 function setLanguage(lang) {
     localStorage.setItem('siteLang', lang);
     applyTranslations(lang);
-    // Презареждаме страницата, за да се обновят динамочните карти (проекти) спрямо новия език
     window.location.reload();
 }
 
@@ -83,6 +78,7 @@ function applyTranslations(lang) {
 }
 
 function initLanguage() {
-    const savedLang = localStorage.getItem('siteLang') || 'bg';
+    const savedLang = localStorage.getItem('siteLang') || 'en';
+    document.documentElement.lang = savedLang;
     applyTranslations(savedLang);
 }
