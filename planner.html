@@ -2,37 +2,107 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>ARCHI PLANNER: Pro Features</title>
+    <title>ARCHI PLANNER: Optimized & Multi-Level Edition</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; font-family: sans-serif; overflow: hidden; }
-        .app-container { display: grid; grid-template-rows: 60px 1fr; height: 100vh; }
-        .toolbar { background: #222; color: #fff; display: flex; align-items: center; padding: 0 10px; gap: 5px; flex-wrap: wrap; }
-        .viewport { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
-        #canvas2d { background: #fff; width: 100%; height: 100%; cursor: crosshair; }
-        #canvas3d { background: #2d5a27; width: 100%; height: 100%; }
-        button { padding: 6px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; font-size: 11px; }
-        .tool-btn { background: #444; color: white; }
-        .action-btn { background: #27ae60; color: white; }
-        .undo-btn { background: #f39c12; color: white; }
-        .reset-btn { background: #c0392b; color: white; }
-        .level-btn { background: #3498db; color: white; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Inter', system-ui, sans-serif; overflow: hidden; background: #0b0f19; }
+        .app-container { display: grid; grid-template-columns: 85px 1fr; height: 100vh; transition: all 0.3s ease; }
+        
+        .toolbar { 
+            background: #111827; color: #fff; display: flex; flex-direction: column; align-items: center;
+            padding: 8px 4px; gap: 4px; border-right: 1px solid #1f2937; z-index: 10; overflow-y: auto; 
+        }
+        
+        .section-title { font-size: 7px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-top: 3px; text-align: center; letter-spacing: 0.5px; writing-mode: vertical-rl; transform: rotate(180deg); margin-bottom: 2px; }
+
+        .area-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #38bdf8;
+            border-radius: 8px; padding: 5px; width: 65px; text-align: center; box-shadow: 0 4px 10px rgba(56, 189, 248, 0.15); margin-bottom: 3px;
+        }
+        .area-title { font-size: 7px; font-weight: 700; color: #38bdf8; text-transform: uppercase; }
+        .area-val { font-size: 11px; font-weight: 900; color: #ffffff; margin: 1px 0; }
+        .area-sub { font-size: 7px; color: #94a3b8; }
+
+        .viewport { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; position: relative; width: 100%; height: 100%; }
+        .viewport.max-3d { grid-template-columns: 0fr 1fr !important; }
+        .viewport.max-3d #canvas2d { opacity: 0; pointer-events: none; }
+        
+        #canvas2d { background: #f8fafc; width: 100%; height: 100%; cursor: crosshair; transition: opacity 0.3s; }
+        #canvas3d { background: #87CEEB; width: 100%; height: 100%; border-left: 2px solid #1e293b; position: relative; } 
+        
+        button { 
+            width: 50px; height: 36px; cursor: pointer; border: 1px solid #374151; border-radius: 6px; 
+            transition: all 0.2s ease; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: bold; position: relative; background: #1f2937; color: #f3f4f6; flex-shrink: 0;
+        }
+        button:hover { background: #374151; transform: scale(1.05); }
+        button.active { border-color: #38bdf8; background: #0284c7 !important; color: white; box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); }
+
+        .level-btn { font-size: 12px; font-weight: bold; background: #4f46e5; border-color: #4338ca; }
+        .level-btn.active { background: #6366f1 !important; }
+
+        #hint { position: absolute; bottom: 15px; left: 100px; background: rgba(15, 23, 42, 0.92); color: #f8fafc; padding: 8px 14px; border-radius: 8px; font-size: 12px; pointer-events: none; border-left: 4px solid #10b981; box-shadow: 0 4px 6px rgba(0,0,0,0.3); font-weight: 500; z-index: 100; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="toolbar">
-        <button class="tool-btn" onclick="setTool('wall')">Стена</button>
-        <button class="tool-btn" onclick="setTool('door')">Врата</button>
-        <button class="tool-btn" onclick="setTool('window')">Прозорец</button>
-        <button class="level-btn" onclick="toggleLevel()">2-ри ЕТАЖ</button>
-        <button class="undo-btn" onclick="undo()">ИЗТРИЙ</button>
-        <button class="action-btn" onclick="generateSlab()">ПЛОЧА</button>
-        <button class="reset-btn" onclick="location.reload()">НУЛИРАНЕ</button>
+        <div class="area-card">
+            <div class="area-title">ЗП</div>
+            <div class="area-val" id="currentAreaDisplay">0.0</div>
+            <div class="area-sub">m²</div>
+        </div>
+
+        <button class="level-btn active" id="btn-level" onclick="changeLevel()" title="🏢 Смени Етаж">1</button>
+
+        <div class="section-title">РЕЖИМИ</div>
+        <button class="tool-btn" id="btn-select" onclick="setTool('select')" title="🖱️ Избор и Местене">🖱️</button>
+        <button class="tool-btn" id="btn-eraser" onclick="setTool('eraser')" title="🧽 Гумичка (Изтриване)">🧽</button>
+
+        <div class="section-title">СТЕНИ</div>
+        <button class="tool-btn active" id="btn-outer-wall" onclick="setTool('outer-wall')" title="🧱 Външна стена">🧱в</button>
+        <button class="tool-btn" id="btn-inner-wall" onclick="setTool('inner-wall')" title="🧱 Вътрешна стена">🧱ин</button>
+        <button class="tool-btn" id="btn-railing" onclick="setTool('railing')" title="🛡️ Парапет">🛡️</button>
+        <button class="tool-btn" id="btn-column" onclick="setTool('column')" title="🏛️ Колона (30x30 см)">🏛️</button>
+        
+        <div class="section-title">ВРАТИ</div>
+        <button class="tool-btn" id="btn-ext-door" onclick="setTool('ext-door')" title="🚪 Външна врата (100x200 см)">🚪Вън</button>
+        <button class="tool-btn" id="btn-int-door" onclick="setTool('int-door')" title="🚪 Интериорна врата (90x200 см)">🚪Инт</button>
+        <button class="tool-btn" id="btn-san-door" onclick="setTool('san-door')" title="🚪 Санитарна врата (70x200 см)">🚪Сан</button>
+
+        <div class="section-title">ПРОЗОРЦИ</div>
+        <button class="tool-btn" id="btn-french-window" onclick="setTool('french-window')" title="🪟 Френски прозорец / Витрина (100x220 см)">🪟Фр</button>
+        <button class="tool-btn" id="btn-san-window" onclick="setTool('san-window')" title="🪟 Санитарен прозорец (60x60 см)">🪟60</button>
+        <button class="tool-btn" id="btn-kitchen-window" onclick="setTool('kitchen-window')" title="🪟 Кухненски прозорец (120x120 см)">🪟120</button>
+        <button class="tool-btn" id="btn-std-window" onclick="setTool('std-window')" title="🪟 Стандартен прозорец (150x150 см)">🪟150</button>
+
+        <div class="section-title">СТЪЛБИ</div>
+        <button class="tool-btn" id="btn-stairs" onclick="setTool('stairs')" title="🪜 Стълбище (U-образна)">🪜</button>
+
+        <div class="section-title">МЕБЕЛИ</div>
+        <button class="tool-btn" id="btn-sofa" onclick="setTool('sofa')" title="🛋️ Диван">🛋️</button>
+        <button class="tool-btn" id="btn-bed" onclick="setTool('bed')" title="🛏️ Легло">🛏️</button>
+        <button class="tool-btn" id="btn-table" onclick="setTool('table')" title="🪑 Маса">🪑</button>
+        
+        <div class="section-title">ЕКСТРИ</div>
+        <button class="tool-btn" id="btn-slab" onclick="setTool('slab')" title="⚡ Плоча / Стая">⚡</button>
+        <button class="tool-btn" id="btn-roof" onclick="setTool('roof')" title="🏠 Покрив (със стреха)">🏠</button>
+
+        <div class="section-title">СТИЛ</div>
+        <button style="color:#ec4899" onclick="toggleMaximize3D()" title="📺 3D Пълен екран">📺</button>
+        <button style="color:#a855f7" onclick="cycleTheme()" title="🎨 Смени стил/материал">🎨</button>
+
+        <div class="section-title">ФАЙЛ</div>
+        <button style="color:#38bdf8" onclick="saveProject()" title="💾 Запази">💾</button>
+        <button style="color:#38bdf8" onclick="loadProjectPrompt()" title="📂 Зареди">📂</button>
+        <button style="color:#f97316" onclick="undo()" title="↩️ Отмени">↩️</button>
+        <button style="color:#dc2626" onclick="location.reload()" title="🔄 Рестарт">🔄</button>
     </div>
-    <div class="viewport">
+
+    <div class="viewport" id="viewportGrid">
         <canvas id="canvas2d"></canvas>
         <div id="canvas3d"></div>
+        <div id="hint">Режим: Външна стена. Светла височина: 260 см.</div>
     </div>
 </div>
 
@@ -40,93 +110,701 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
-    let tool = 'wall';
-    let currentLevel = 0; // 0 = приземен, 1 = втори
-    const walls = [], elements = [];
+    const GRID_SIZE = 100;
+    const SNAP_RES = 25;
+    const SCALE = 0.01; 
+    const LEVEL_HEIGHT = 2.60;
+
+    const themes = [
+        { name: "Модерен Бял", wall: 0xffffff, floor: 0xe2e8f0, roof: 0x334155, bg: 0xdbeafe },
+        { name: "Топъл Дървен Уют", wall: 0xfdfbf7, floor: 0xd97706, roof: 0x78350f, bg: 0xfef3c7 },
+        { name: "Индустриален Лофт", wall: 0x94a3b8, floor: 0x334155, roof: 0x0f172a, bg: 0x1e293b }
+    ];
+    let currentThemeIdx = 0;
+
+    const levels = [
+        { walls: [], railings: [], openings: [], columns: [], slabs: [], roofs: [], stairs: [], furniture: [] },
+        { walls: [], railings: [], openings: [], columns: [], slabs: [], roofs: [], stairs: [], furniture: [] },
+        { walls: [], railings: [], openings: [], columns: [], slabs: [], roofs: [], stairs: [], furniture: [] }
+    ];
+    let currentLevel = 0;
+    let tool = 'outer-wall';
     let lastPoint = null;
+    let currentMousePos = null;
+    let polyPoints = [];
+    let draggedItem = null;
+
+    let panX = 0, panY = 0, zoom = 1.0;
+    let isPanning = false, startPanX = 0, startPanY = 0;
+    let isMax3D = false;
+
     const canvas = document.getElementById('canvas2d');
     const ctx = canvas.getContext('2d');
     const container3d = document.getElementById('canvas3d');
-    const SCALE = 0.05;
+    const areaDisplay = document.getElementById('currentAreaDisplay');
+    const hintBox = document.getElementById('hint');
+    const viewportGrid = document.getElementById('viewportGrid');
 
-    // --- 3D ИНИЦИАЛИЗАЦИЯ ---
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x2d5a27);
-    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({antialias: true});
-    container3d.appendChild(renderer.domElement);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    scene.add(new THREE.GridHelper(50, 10, 0xffffff, 0xaaaaaa));
-    camera.position.set(0, 20, 20);
+    scene.background = new THREE.Color(themes[0].bg);
+    scene.fog = new THREE.FogExp2(themes[0].bg, 0.015);
 
-    // --- ФУНКЦИИ ---
-    function draw2D() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // Грид
-        ctx.strokeStyle = "#eee";
-        for(let i=0; i<canvas.width; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i, canvas.height); ctx.stroke(); }
-        for(let i=0; i<canvas.height; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width, i); ctx.stroke(); }
-        
-        // Стени + Размери
-        walls.forEach(w => {
-            ctx.strokeStyle = w.level === 1 ? "#3498db" : "black";
-            ctx.lineWidth = 6; ctx.lineJoin = "round";
-            ctx.beginPath(); ctx.moveTo(w.x1, w.y1); ctx.lineTo(w.x2, w.y2); ctx.stroke();
-            
-            // Размери
-            ctx.fillStyle = "red"; ctx.font = "bold 12px Arial";
-            let midX = (w.x1 + w.x2) / 2;
-            let midY = (w.y1 + w.y2) / 2;
-            ctx.fillText(Math.round(w.len/2) + " см", midX, midY - 10);
-        });
+    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    container3d.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    const sunLight = new THREE.DirectionalLight(0xfffaeb, 1.0);
+    sunLight.position.set(50, 100, 40);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 1024;
+    sunLight.shadow.mapSize.height = 1024;
+    scene.add(sunLight);
+
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.9 }));
+    ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true;
+    scene.add(ground);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    camera.position.set(0, 30, 45);
+    controls.maxPolarAngle = Math.PI / 2 - 0.05;
+    controls.update();
+
+    // Кеширани материали
+    const wallMat = new THREE.MeshStandardMaterial({ color: themes[0].wall, roughness: 0.2 }); 
+    const floorMat = new THREE.MeshStandardMaterial({ color: themes[0].floor, roughness: 0.5 });
+    const roofMat = new THREE.MeshStandardMaterial({ color: themes[0].roof, roughness: 0.4 });
+    const columnMat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.3 });
+    const railingMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.3 });
+
+    function getActive() { return levels[currentLevel]; }
+
+    function getOpeningParams(type) {
+        switch(type) {
+            case 'ext-door': return { width: 100, height: 200, isDoor: true, color: 0x78350f, sill: 0 };
+            case 'int-door': return { width: 90, height: 200, isDoor: true, color: 0xb45309, sill: 0 };
+            case 'san-door': return { width: 70, height: 200, isDoor: true, color: 0xd97706, sill: 0 };
+            case 'french-window': return { width: 100, height: 220, isDoor: false, color: 0x0284c7, sill: 0 };
+            case 'san-window': return { width: 60, height: 60, isDoor: false, color: 0x0ea5e9, sill: 1.1 };
+            case 'kitchen-window': return { width: 120, height: 120, isDoor: false, color: 0x0284c7, sill: 0.9 };
+            case 'std-window': return { width: 150, height: 150, isDoor: false, color: 0x38bdf8, sill: 0.9 };
+            default: return { width: 90, height: 200, isDoor: true, color: 0x78350f, sill: 0 };
+        }
     }
 
-    canvas.addEventListener('mousedown', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        let x = Math.round((e.clientX - rect.left) / 40) * 40;
-        let y = Math.round((e.clientY - rect.top) / 40) * 40;
+    function toggleMaximize3D() {
+        isMax3D = !isMax3D;
+        viewportGrid.classList.toggle('max-3d', isMax3D);
+        setTimeout(resize, 350);
+    }
 
-        if (tool === 'wall') {
-            if (lastPoint) {
-                let dx = Math.abs(x - lastPoint.x);
-                let dy = Math.abs(y - lastPoint.y);
-                if (dx > dy) y = lastPoint.y; else x = lastPoint.x;
-                walls.push({ x1: lastPoint.x, y1: lastPoint.y, x2: x, y2: y, level: currentLevel, len: Math.sqrt((x-lastPoint.x)**2 + (y-lastPoint.y)**2) });
-                lastPoint = { x, y };
+    function cycleTheme() {
+        currentThemeIdx = (currentThemeIdx + 1) % themes.length;
+        let t = themes[currentThemeIdx];
+        scene.background.setHex(t.bg);
+        scene.fog.color.setHex(t.bg);
+        wallMat.color.setHex(t.wall);
+        floorMat.color.setHex(t.floor);
+        roofMat.color.setHex(t.roof);
+        update3D();
+        hintBox.innerText = `Активен стил: ${t.name}`;
+    }
+
+    function screenToWorld(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        let x = (clientX - rect.left - panX) / zoom;
+        let y = (clientY - rect.top - panY) / zoom;
+        return { x, y };
+    }
+
+    function getSnapPoint(rawX, rawY) {
+        let world = screenToWorld(rawX, rawY);
+        let snapX = Math.round(world.x / SNAP_RES) * SNAP_RES;
+        let snapY = Math.round(world.y / SNAP_RES) * SNAP_RES;
+        let isOrthoX = false, isOrthoY = false;
+
+        if (lastPoint && ['outer-wall', 'inner-wall', 'railing'].includes(tool)) {
+            let dx = Math.abs(world.x - lastPoint.x);
+            let dy = Math.abs(world.y - lastPoint.y);
+            if (dx > dy) { snapY = lastPoint.y; isOrthoY = true; } 
+            else { snapX = lastPoint.x; isOrthoX = true; }
+        }
+
+        let active = getActive();
+        let allPoints = [];
+        active.walls.forEach(w => allPoints.push({x: w.x1, y: w.y1}, {x: w.x2, y: w.y2}));
+        active.railings.forEach(r => allPoints.push({x: r.x1, y: r.y1}, {x: r.x2, y: r.y2}));
+        if(polyPoints.length > 0) allPoints.push(polyPoints[0]);
+
+        let bestDist = 20 / zoom; 
+        let snapPt = null;
+
+        for (let pt of allPoints) {
+            let d = Math.hypot(pt.x - world.x, pt.y - world.y);
+            if (d < bestDist) { bestDist = d; snapPt = pt; }
+        }
+
+        if (snapPt) {
+            if (isOrthoY) snapX = snapPt.x;
+            else if (isOrthoX) snapY = snapPt.y;
+            else { snapX = snapPt.x; snapY = snapPt.y; }
+        }
+
+        return { x: snapX, y: snapY };
+    }
+
+    function drawDimLine(x1, y1, x2, y2, color, offset) {
+        let dx = x2 - x1, dy = y2 - y1;
+        let len = Math.round(Math.hypot(dx, dy));
+        if (len < 10) return;
+        
+        let nx = -dy / len, ny = dx / len;
+        let px1 = x1 + nx * offset, py1 = y1 + ny * offset;
+        let px2 = x2 + nx * offset, py2 = y2 + ny * offset;
+        
+        ctx.strokeStyle = color; ctx.lineWidth = (offset === 0 ? 1.5 : 1) / zoom;
+        ctx.beginPath(); ctx.moveTo(px1, py1); ctx.lineTo(px2, py2); ctx.stroke();
+        
+        let ts = 5 / zoom;
+        ctx.beginPath();
+        ctx.moveTo(px1 - nx*ts + ny*ts, py1 - ny*ts - nx*ts); ctx.lineTo(px1 + nx*ts - ny*ts, py1 + ny*ts + nx*ts);
+        ctx.moveTo(px2 - nx*ts + ny*ts, py2 - ny*ts - nx*ts); ctx.lineTo(px2 + nx*ts - ny*ts, py2 + ny*ts + nx*ts);
+        ctx.stroke();
+        
+        ctx.fillStyle = color; ctx.font = `600 ${Math.max(9, 11/zoom)}px Inter`; ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+        
+        ctx.save();
+        ctx.translate((px1+px2)/2, (py1+py2)/2);
+        let angle = Math.atan2(dy, dx);
+        if (angle > Math.PI/2 || angle < -Math.PI/2) angle += Math.PI;
+        ctx.rotate(angle);
+        ctx.fillText(len + " см", 0, -4 / zoom);
+        ctx.restore();
+    }
+
+    function drawOverallDimensions() {
+        let active = getActive();
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        let hasElements = false;
+        
+        active.walls.forEach(w => {
+            minX = Math.min(minX, w.x1, w.x2); maxX = Math.max(maxX, w.x1, w.x2);
+            minY = Math.min(minY, w.y1, w.y2); maxY = Math.max(maxY, w.y1, w.y2);
+            hasElements = true;
+        });
+        active.slabs.forEach(s => {
+            s.pts.forEach(p => {
+                minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
+                minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
+                hasElements = true;
+            });
+        });
+
+        if (!hasElements) return;
+
+        drawDimLine(minX, minY - 60, maxX, minY - 60, "#0284c7", 0);
+        drawDimLine(minX - 60, minY, minX - 60, maxY, "#0284c7", 0);
+    }
+
+    function calculateArea() {
+        let totalArea = 0;
+        getActive().slabs.forEach(slab => {
+            let pts = slab.pts, area = 0;
+            for (let i = 0; i < pts.length; i++) {
+                let j = (i + 1) % pts.length;
+                area += (pts[i].x / GRID_SIZE) * (pts[j].y / GRID_SIZE) - (pts[j].x / GRID_SIZE) * (pts[i].y / GRID_SIZE);
+            }
+            totalArea += Math.abs(area / 2);
+        });
+        areaDisplay.innerText = totalArea > 0 ? totalArea.toFixed(1) : "0.0";
+    }
+
+    function draw2D() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.save();
+        ctx.translate(panX, panY);
+        ctx.scale(zoom, zoom);
+
+        let startX = -panX / zoom;
+        let startY = -panY / zoom;
+        let endX = startX + canvas.width / zoom;
+        let endY = startY + canvas.height / zoom;
+
+        ctx.lineWidth = 1 / zoom;
+        let gridStartRawX = Math.floor(startX / SNAP_RES) * SNAP_RES;
+        let gridEndRawX = Math.ceil(endX / SNAP_RES) * SNAP_RES;
+        let gridStartRawY = Math.floor(startY / SNAP_RES) * SNAP_RES;
+        let gridEndRawY = Math.ceil(endY / SNAP_RES) * SNAP_RES;
+
+        for(let i = gridStartRawX; i <= gridEndRawX; i += SNAP_RES) { 
+            ctx.strokeStyle = i % GRID_SIZE === 0 ? "#cbd5e1" : "#e2e8f0"; 
+            ctx.beginPath(); ctx.moveTo(i, startY); ctx.lineTo(i, endY); ctx.stroke(); 
+        }
+        for(let i = gridStartRawY; i <= gridEndRawY; i += SNAP_RES) { 
+            ctx.strokeStyle = i % GRID_SIZE === 0 ? "#cbd5e1" : "#e2e8f0"; 
+            ctx.beginPath(); ctx.moveTo(startX, i); ctx.lineTo(endX, i); ctx.stroke(); 
+        }
+
+        // Рендиране на долните етажи с прекъснати линии (контури)
+        for (let l = 0; l < currentLevel; l++) {
+            let lowerLevel = levels[l];
+            ctx.strokeStyle = "rgba(100, 116, 139, 0.35)";
+            ctx.lineWidth = 4 / zoom;
+            ctx.setLineDash([6/zoom, 6/zoom]);
+            lowerLevel.walls.forEach(w => {
+                ctx.beginPath(); ctx.moveTo(w.x1, w.y1); ctx.lineTo(w.x2, w.y2); ctx.stroke();
+            });
+            lowerLevel.slabs.forEach(slab => {
+                ctx.beginPath(); slab.pts.forEach((pt, idx) => { if (idx === 0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y); });
+                ctx.closePath(); ctx.stroke();
+            });
+            ctx.setLineDash([]);
+        }
+
+        let active = getActive();
+
+        active.slabs.forEach(slab => {
+            ctx.fillStyle = "rgba(56, 189, 248, 0.15)"; ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2 / zoom;
+            ctx.beginPath(); slab.pts.forEach((pt, idx) => { if (idx === 0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y); });
+            ctx.closePath(); ctx.fill(); ctx.stroke();
+
+            let cx = 0, cy = 0;
+            slab.pts.forEach(p => { cx += p.x; cy += p.y; });
+            cx /= slab.pts.length; cy /= slab.pts.length;
+
+            let area = 0;
+            for (let i = 0; i < slab.pts.length; i++) {
+                let j = (i + 1) % slab.pts.length;
+                area += (slab.pts[i].x / GRID_SIZE) * (slab.pts[j].y / GRID_SIZE) - (slab.pts[j].x / GRID_SIZE) * (slab.pts[i].y / GRID_SIZE);
+            }
+            let roomArea = Math.abs(area / 2).toFixed(1);
+
+            ctx.fillStyle = "#0f172a"; ctx.font = `bold ${11/zoom}px Inter`; ctx.textAlign = "center";
+            ctx.fillText(slab.name || "Стая", cx, cy - 6 / zoom);
+            ctx.fillStyle = "#0284c7"; ctx.font = `600 ${10/zoom}px Inter`;
+            ctx.fillText(roomArea + " m²", cx, cy + 10 / zoom);
+        });
+
+        active.roofs.forEach(roof => {
+            ctx.fillStyle = "rgba(239, 68, 68, 0.15)"; ctx.strokeStyle = "#dc2626"; ctx.lineWidth = 2 / zoom;
+            ctx.beginPath(); roof.pts.forEach((pt, idx) => { if (idx === 0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y); });
+            ctx.closePath(); ctx.fill(); ctx.stroke();
+        });
+
+        active.railings.forEach(r => {
+            ctx.strokeStyle = "#f59e0b"; ctx.lineWidth = 3 / zoom; ctx.setLineDash([4/zoom, 4/zoom]);
+            ctx.beginPath(); ctx.moveTo(r.x1, r.y1); ctx.lineTo(r.x2, r.y2); ctx.stroke(); ctx.setLineDash([]);
+        });
+
+        active.stairs.forEach((st, idx) => {
+            let isSel = (draggedItem && draggedItem.type === 'stairs' && draggedItem.index === idx);
+            ctx.fillStyle = isSel ? "#38bdf8" : "#f1f5f9";
+            ctx.fillRect(st.x - 35, st.y - 50, 70, 100);
+            ctx.strokeStyle = isSel ? "#0284c7" : "#475569"; ctx.lineWidth = (isSel ? 3 : 1.5) / zoom;
+            ctx.strokeRect(st.x - 35, st.y - 50, 70, 100);
+            ctx.fillStyle = "#0f172a"; ctx.font = `bold ${8/zoom}px Inter`; ctx.textAlign = "center";
+            ctx.fillText("СТЪЛБА", st.x, st.y + 60);
+        });
+
+        active.columns.forEach((c, idx) => {
+            let isSel = (draggedItem && draggedItem.type === 'column' && draggedItem.index === idx);
+            ctx.fillStyle = isSel ? "#38bdf8" : "#334155";
+            ctx.fillRect(c.x - 15, c.y - 15, 30, 30);
+            ctx.strokeStyle = isSel ? "#0284c7" : "#0f172a"; ctx.lineWidth = (isSel ? 3 : 1.5) / zoom;
+            ctx.strokeRect(c.x - 15, c.y - 15, 30, 30);
+        });
+
+        active.walls.forEach(w => {
+            ctx.strokeStyle = w.isInner ? "#64748b" : "#1e293b";
+            ctx.lineWidth = (w.isInner ? 5 : 8) / zoom;
+            ctx.lineCap = "square";
+            ctx.beginPath(); ctx.moveTo(w.x1, w.y1); ctx.lineTo(w.x2, w.y2); ctx.stroke();
+            drawDimLine(w.x1, w.y1, w.x2, w.y2, "#475569", 25);
+        });
+
+        active.openings.forEach((op, idx) => {
+            let w = active.walls[op.wallIndex];
+            if (!w) return;
+            let wallLen = Math.hypot(w.x2 - w.x1, w.y2 - w.y1);
+            if (wallLen === 0) return;
+            let dx = (w.x2 - w.x1) / wallLen;
+            let dy = (w.y2 - w.y1) / wallLen;
+            
+            let cx = w.x1 + (w.x2 - w.x1) * op.t;
+            let cy = w.y1 + (w.y2 - w.y1) * op.t;
+            
+            let params = getOpeningParams(op.type);
+            let width = op.width || params.width;
+            let halfW = width / 2;
+            let p1x = cx - dx * halfW, p1y = cy - dy * halfW;
+            let p2x = cx + dx * halfW, p2y = cy + dy * halfW;
+            
+            let isSel = (draggedItem && draggedItem.type === 'opening' && draggedItem.index === idx);
+            ctx.strokeStyle = isSel ? "#ef4444" : (params.isDoor ? "#d97706" : "#0ea5e9");
+            ctx.lineWidth = (isSel ? 6 : 4) / zoom;
+            ctx.beginPath(); ctx.moveTo(p1x, p1y); ctx.lineTo(p2x, p2y); ctx.stroke();
+
+            ctx.fillStyle = "#0f172a"; ctx.font = `600 ${8/zoom}px Inter`; ctx.textAlign = "center";
+            ctx.fillText(width + "см", cx, cy - 8/zoom);
+        });
+
+        active.furniture.forEach((f, idx) => {
+            let isSel = (draggedItem && draggedItem.type === 'furniture' && draggedItem.index === idx);
+            ctx.fillStyle = f.type === 'bed' ? "#818cf8" : (f.type === 'sofa' ? "#fbbf24" : "#a855f7");
+            ctx.fillRect(f.x - 25, f.y - 20, 50, 40);
+            ctx.strokeStyle = isSel ? "#ef4444" : "#1e293b"; ctx.lineWidth = (isSel ? 3 : 1.5) / zoom;
+            ctx.strokeRect(f.x - 25, f.y - 20, 50, 40);
+            ctx.fillStyle = "#ffffff"; ctx.font = `bold ${9/zoom}px Inter`; ctx.textAlign = "center";
+            ctx.fillText(f.type.toUpperCase(), f.x, f.y + 3);
+        });
+
+        drawOverallDimensions();
+
+        if (currentMousePos && tool !== 'select') {
+            let snap = getSnapPoint(currentMousePos.clientX, currentMousePos.clientY);
+            
+            if (['slab', 'roof'].includes(tool) && polyPoints.length > 0) {
+                ctx.fillStyle = tool === 'slab' ? "rgba(56, 189, 248, 0.2)" : "rgba(239, 68, 68, 0.2)";
+                ctx.strokeStyle = tool === 'slab' ? "#0284c7" : "#dc2626";
+                ctx.lineWidth = 2 / zoom;
+                ctx.setLineDash([5/zoom, 5/zoom]);
+                
+                ctx.beginPath();
+                polyPoints.forEach((p, idx) => {
+                    if (idx === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                });
+                ctx.lineTo(snap.x, snap.y);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            ctx.beginPath(); ctx.arc(snap.x, snap.y, 6 / zoom, 0, Math.PI*2);
+            ctx.fillStyle = "#ef4444"; ctx.fill();
+
+            if (['outer-wall', 'inner-wall', 'railing'].includes(tool) && lastPoint) {
+                ctx.lineWidth = 2 / zoom; ctx.strokeStyle = "#10b981"; ctx.setLineDash([5/zoom, 5/zoom]);
+                ctx.beginPath(); ctx.moveTo(lastPoint.x, lastPoint.y); ctx.lineTo(snap.x, snap.y); ctx.stroke(); ctx.setLineDash([]);
+                drawDimLine(lastPoint.x, lastPoint.y, snap.x, snap.y, "#10b981", 20);
+            }
+        }
+        ctx.restore();
+        calculateArea();
+    }
+
+    canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        let zoomFactor = 1.1;
+        if (e.deltaY < 0) zoom *= zoomFactor;
+        else zoom /= zoomFactor;
+        zoom = Math.max(0.3, Math.min(5.0, zoom));
+        draw2D();
+    }, { passive: false });
+
+    canvas.addEventListener('mousedown', (e) => {
+        if (e.button === 1 || e.shiftKey || e.button === 2) {
+            isPanning = true;
+            startPanX = e.clientX - panX;
+            startPanY = e.clientY - panY;
+            return;
+        }
+        if (e.button !== 0) return;
+
+        let world = screenToWorld(e.clientX, e.clientY);
+        let snap = getSnapPoint(e.clientX, e.clientY);
+        let active = getActive();
+
+        if (tool === 'eraser') {
+            let idx = active.furniture.findIndex(f => Math.abs(world.x - f.x) <= 25 && Math.abs(world.y - f.y) <= 20);
+            if (idx !== -1) { active.furniture.splice(idx, 1); update3D(); draw2D(); return; }
+
+            idx = active.stairs.findIndex(st => Math.abs(world.x - st.x) <= 35 && Math.abs(world.y - st.y) <= 50);
+            if (idx !== -1) { active.stairs.splice(idx, 1); update3D(); draw2D(); return; }
+
+            idx = active.columns.findIndex(c => Math.abs(world.x - c.x) <= 15 && Math.abs(world.y - c.y) <= 15);
+            if (idx !== -1) { active.columns.splice(idx, 1); update3D(); draw2D(); return; }
+
+            idx = active.railings.findIndex(r => {
+                let len = Math.hypot(r.x2 - r.x1, r.y2 - r.y1);
+                if (len === 0) return false;
+                let t = ((world.x - r.x1)*(r.x2 - r.x1) + (world.y - r.y1)*(r.y2 - r.y1)) / (len*len);
+                t = Math.max(0, Math.min(1, t));
+                let px = r.x1 + (r.x2 - r.x1)*t, py = r.y1 + (r.y2 - r.y1)*t;
+                return Math.hypot(world.x - px, world.y - py) < 12;
+            });
+            if (idx !== -1) { active.railings.splice(idx, 1); update3D(); draw2D(); return; }
+
+            idx = active.openings.findIndex(op => {
+                let w = active.walls[op.wallIndex];
+                if (!w) return false;
+                let cx = w.x1 + (w.x2 - w.x1)*op.t;
+                let cy = w.y1 + (w.y2 - w.y1)*op.t;
+                return Math.hypot(world.x - cx, world.y - cy) < 20;
+            });
+            if (idx !== -1) { active.openings.splice(idx, 1); update3D(); draw2D(); return; }
+
+            idx = active.walls.findIndex(w => {
+                let len = Math.hypot(w.x2 - w.x1, w.y2 - w.y1);
+                if (len === 0) return false;
+                let t = ((world.x - w.x1)*(w.x2 - w.x1) + (world.y - w.y1)*(w.y2 - w.y1)) / (len*len);
+                t = Math.max(0, Math.min(1, t));
+                let px = w.x1 + (w.x2 - w.x1)*t, py = w.y1 + (w.y2 - w.y1)*t;
+                return Math.hypot(world.x - px, world.y - py) < 12;
+            });
+            if (idx !== -1) {
+                active.walls.splice(idx, 1);
+                active.openings = active.openings.filter(op => op.wallIndex !== idx);
+                update3D(); draw2D(); return;
+            }
+            return;
+        }
+
+        if (tool === 'select') {
+            draggedItem = null;
+            for (let i = active.furniture.length - 1; i >= 0; i--) {
+                let f = active.furniture[i];
+                if (Math.abs(world.x - f.x) <= 25 && Math.abs(world.y - f.y) <= 20) {
+                    draggedItem = { type: 'furniture', index: i };
+                    break;
+                }
+            }
+            if (!draggedItem) {
+                let idx = active.columns.findIndex(c => Math.abs(world.x - c.x) <= 15 && Math.abs(world.y - c.y) <= 15);
+                if (idx !== -1) draggedItem = { type: 'column', index: idx };
+            }
+            if (!draggedItem) {
+                let idx = active.stairs.findIndex(st => Math.abs(world.x - st.x) <= 35 && Math.abs(world.y - st.y) <= 50);
+                if (idx !== -1) draggedItem = { type: 'stairs', index: idx };
+            }
+            draw2D();
+            return;
+        }
+
+        if (['sofa', 'bed', 'table'].includes(tool)) {
+            active.furniture.push({ x: snap.x, y: snap.y, type: tool });
+            update3D();
+        } else if (tool === 'stairs') {
+            active.stairs.push({ x: snap.x, y: snap.y });
+            update3D();
+        } else if (tool === 'column') {
+            active.columns.push({ x: snap.x, y: snap.y });
+            update3D();
+        } else if (['ext-door', 'int-door', 'san-door', 'french-window', 'san-window', 'kitchen-window', 'std-window'].includes(tool)) {
+            let closestWallIdx = -1; let minDist = 20 / zoom; let bestT = 0;
+            active.walls.forEach((w, idx) => {
+                let len = Math.hypot(w.x2 - w.x1, w.y2 - w.y1);
+                if (len === 0) return;
+                let t = ((snap.x - w.x1)*(w.x2 - w.x1) + (snap.y - w.y1)*(w.y2 - w.y1)) / (len*len);
+                t = Math.max(0.1, Math.min(0.9, t));
+                let px = w.x1 + (w.x2 - w.x1)*t, py = w.y1 + (w.y2 - w.y1)*t;
+                let dist = Math.hypot(snap.x - px, snap.y - py);
+                if (dist < minDist) { minDist = dist; closestWallIdx = idx; bestT = t; }
+            });
+            if (closestWallIdx !== -1) {
+                let params = getOpeningParams(tool);
+                active.openings.push({ wallIndex: closestWallIdx, t: bestT, type: tool, width: params.width });
                 update3D();
-            } else { lastPoint = { x, y }; }
-        } else {
-            elements.push({ type: tool, x, y, level: currentLevel });
+            }
+        } else if (['outer-wall', 'inner-wall', 'railing'].includes(tool)) {
+            if (lastPoint) {
+                let len = Math.hypot(snap.x - lastPoint.x, snap.y - lastPoint.y);
+                if (len > 0) {
+                    if (tool === 'railing') active.railings.push({ x1: lastPoint.x, y1: lastPoint.y, x2: snap.x, y2: snap.y });
+                    else active.walls.push({ x1: lastPoint.x, y1: lastPoint.y, x2: snap.x, y2: snap.y, isInner: tool === 'inner-wall' });
+                    lastPoint = { x: snap.x, y: snap.y }; update3D();
+                }
+            } else lastPoint = { x: snap.x, y: snap.y };
+        } else if (['slab', 'roof'].includes(tool)) {
+            polyPoints.push({ x: snap.x, y: snap.y });
+            if (polyPoints.length >= 3 && Math.hypot(snap.x - polyPoints[0].x, snap.y - polyPoints[0].y) < 15/zoom) {
+                let pts = [...polyPoints]; pts.pop();
+                if (tool === 'slab') {
+                    let roomName = prompt("Въведи име на стаята:", "Стая");
+                    active.slabs.push({ pts, name: roomName || "Стая" });
+                } else {
+                    active.roofs.push({ pts });
+                }
+                polyPoints = []; update3D();
+            }
+        }
+        draw2D();
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (isPanning) {
+            panX = e.clientX - startPanX;
+            panY = e.clientY - startPanY;
+            draw2D();
+            return;
+        }
+        currentMousePos = { clientX: e.clientX, clientY: e.clientY };
+
+        if (draggedItem && tool === 'select') {
+            let world = screenToWorld(e.clientX, e.clientY);
+            let snapX = Math.round(world.x / SNAP_RES) * SNAP_RES;
+            let snapY = Math.round(world.y / SNAP_RES) * SNAP_RES;
+            let active = getActive();
+
+            if (draggedItem.type === 'furniture') {
+                active.furniture[draggedItem.index].x = snapX;
+                active.furniture[draggedItem.index].y = snapY;
+            } else if (draggedItem.type === 'column') {
+                active.columns[draggedItem.index].x = snapX;
+                active.columns[draggedItem.index].y = snapY;
+            } else if (draggedItem.type === 'stairs') {
+                active.stairs[draggedItem.index].x = snapX;
+                active.stairs[draggedItem.index].y = snapY;
+            }
             update3D();
         }
         draw2D();
     });
 
+    window.addEventListener('mouseup', () => { isPanning = false; draggedItem = null; draw2D(); });
+    canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); lastPoint = null; polyPoints = []; draggedItem = null; draw2D(); });
+
+    function setTool(t) { 
+        tool = t; lastPoint = null; polyPoints = []; draggedItem = null;
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active')); 
+        if(document.getElementById('btn-' + t)) document.getElementById('btn-' + t).classList.add('active'); 
+        hintBox.innerText = `Режим: ${t}. Размерите отговарят на зададените стандарти.`;
+        draw2D(); 
+    }
+
+    function changeLevel() {
+        currentLevel = (currentLevel + 1) % 3;
+        document.getElementById('btn-level').innerText = currentLevel + 1;
+        lastPoint = null; polyPoints = []; draggedItem = null; draw2D();
+    }
+
+    function undo() { 
+        let active = getActive();
+        if(active.walls.length) active.walls.pop(); 
+        else if(active.railings.length) active.railings.pop();
+        else if(active.columns.length) active.columns.pop();
+        else if(active.stairs.length) active.stairs.pop();
+        else if(active.openings.length) active.openings.pop();
+        else if(active.furniture.length) active.furniture.pop();
+        else if(active.slabs.length) active.slabs.pop();
+        else if(active.roofs.length) active.roofs.pop();
+        update3D(); draw2D(); 
+    }
+
+    function saveProject() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(levels));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr); dlAnchor.setAttribute("download", "archi_project.json");
+        document.body.appendChild(dlAnchor); dlAnchor.click(); dlAnchor.remove();
+    }
+
+    function loadProjectPrompt() {
+        const input = document.createElement('input'); input.type = 'file'; input.accept = '.json';
+        input.onchange = e => {
+            const file = e.target.files[0]; const reader = new FileReader();
+            reader.onload = event => {
+                try {
+                    const loaded = JSON.parse(event.target.result);
+                    for(let i=0; i<3; i++) { if(loaded[i]) levels[i] = loaded[i]; }
+                    update3D(); draw2D();
+                } catch(err) { alert('Грешка при зареждане!'); }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    }
+
     function update3D() {
-        scene.children = scene.children.filter(c => c.type !== 'Mesh');
-        walls.forEach(w => {
-            const h = 3; const yPos = (w.level * 3) + 1.5;
-            const wall = new THREE.Mesh(new THREE.BoxGeometry(0.2, h, w.len * SCALE), new THREE.MeshLambertMaterial({color: w.level === 1 ? 0x3498db : 0xffffff}));
-            wall.position.set(((w.x1+w.x2)/2 - canvas.width/2) * SCALE, yPos, ((w.y1+w.y2)/2 - canvas.height/2) * SCALE);
-            wall.rotation.y = Math.atan2(w.x2-w.x1, w.y2-w.y1);
-            scene.add(wall);
+        scene.children.slice().forEach(c => { if (c.name === "arch_obj") scene.remove(c); });
+
+        levels.forEach((level, index) => {
+            const yOffset = index * LEVEL_HEIGHT;
+
+            level.slabs.forEach(s => {
+                const shape = new THREE.Shape();
+                s.pts.forEach((p, idx) => {
+                    let x = (p.x - canvas.width/2) * SCALE, y = (p.y - canvas.height/2) * SCALE;
+                    if (idx === 0) shape.moveTo(x, y); else shape.lineTo(x, y);
+                });
+                const slabMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth: 0.2, bevelEnabled: false }), floorMat);
+                slabMesh.rotation.x = Math.PI / 2; slabMesh.position.y = yOffset; slabMesh.name = "arch_obj"; scene.add(slabMesh);
+            });
+
+            // Покриви в 3D
+            level.roofs.forEach(r => {
+                const shape = new THREE.Shape();
+                r.pts.forEach((p, idx) => {
+                    let x = (p.x - canvas.width/2) * SCALE, y = (p.y - canvas.height/2) * SCALE;
+                    if (idx === 0) shape.moveTo(x, y); else shape.lineTo(x, y);
+                });
+                const roofMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth: 0.3, bevelEnabled: false }), roofMat);
+                roofMesh.rotation.x = Math.PI / 2; roofMesh.position.y = yOffset + LEVEL_HEIGHT; roofMesh.name = "arch_obj"; scene.add(roofMesh);
+            });
+
+            level.walls.forEach(w => {
+                const len = Math.hypot(w.x2 - w.x1, w.y2 - w.y1);
+                const thick = w.isInner ? 0.15 : 0.3;
+                const mesh = new THREE.Mesh(new THREE.BoxGeometry(thick, LEVEL_HEIGHT, len * SCALE), wallMat);
+                mesh.name = "arch_obj"; mesh.castShadow = true; mesh.receiveShadow = true;
+                mesh.position.set(((w.x1 + w.x2)/2 - canvas.width/2)*SCALE, yOffset + LEVEL_HEIGHT/2, ((w.y1 + w.y2)/2 - canvas.height/2)*SCALE);
+                mesh.rotation.y = Math.atan2(w.x2 - w.x1, w.y2 - w.y1);
+                scene.add(mesh);
+            });
+
+            // Парапети в 3D
+            level.railings.forEach(r => {
+                const len = Math.hypot(r.x2 - r.x1, r.y2 - r.y1);
+                const rHeight = 1.0;
+                const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.08, rHeight, len * SCALE), railingMat);
+                mesh.name = "arch_obj"; mesh.castShadow = true;
+                mesh.position.set(((r.x1 + r.x2)/2 - canvas.width/2)*SCALE, yOffset + rHeight/2, ((r.y1 + r.y2)/2 - canvas.height/2)*SCALE);
+                mesh.rotation.y = Math.atan2(r.x2 - r.x1, r.y2 - r.y1);
+                scene.add(mesh);
+            });
+
+            level.columns.forEach(c => {
+                const colMesh = new THREE.Mesh(new THREE.BoxGeometry(0.3, LEVEL_HEIGHT, 0.3), columnMat);
+                colMesh.name = "arch_obj"; colMesh.castShadow = true;
+                colMesh.position.set((c.x - canvas.width/2)*SCALE, yOffset + LEVEL_HEIGHT/2, (c.y - canvas.height/2)*SCALE);
+                scene.add(colMesh);
+            });
+
+            level.openings.forEach(op => {
+                let w = level.walls[op.wallIndex];
+                if (!w) return;
+                let px = ((w.x1 + (w.x2 - w.x1)*op.t) - canvas.width/2) * SCALE;
+                let pz = ((w.y1 + (w.y2 - w.y1)*op.t) - canvas.height/2) * SCALE;
+                
+                let params = getOpeningParams(op.type);
+                let realWidth = (op.width || params.width) * SCALE;
+                let realHeight = params.height * SCALE;
+                let sill = params.sill !== undefined ? params.sill : 0;
+                let yPos = (params.isDoor || sill === 0) ? (yOffset + realHeight/2) : (yOffset + sill + realHeight/2);
+                
+                let opMesh = new THREE.Mesh(
+                    new THREE.BoxGeometry(w.isInner ? 0.18 : 0.35, realHeight, realWidth),
+                    new THREE.MeshStandardMaterial({ color: params.color, transparent: true, opacity: params.isDoor ? 0.9 : 0.7 })
+                );
+                opMesh.name = "arch_obj";
+                opMesh.position.set(px, yPos, pz);
+                opMesh.rotation.y = Math.atan2(w.x2 - w.x1, w.y2 - w.y1);
+                scene.add(opMesh);
+            });
         });
     }
 
-    function toggleLevel() { currentLevel = currentLevel === 0 ? 1 : 0; alert("Текущ етаж: " + (currentLevel + 1)); }
-    function undo() { walls.pop(); lastPoint = null; update3D(); draw2D(); }
-    function setTool(t) { tool = t; lastPoint = null; }
-    function generateSlab() { alert("Плочата е генерирана"); }
-    
-    function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
-    animate();
-    window.addEventListener('resize', () => { 
-        canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; 
+    function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
+    function resize() {
+        canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
         renderer.setSize(container3d.clientWidth, container3d.clientHeight);
-        draw2D();
-    });
-    draw2D();
+        camera.aspect = container3d.clientWidth / container3d.clientHeight;
+        camera.updateProjectionMatrix(); draw2D();
+    }
+    animate(); window.addEventListener('resize', resize); resize();
 </script>
 </body>
 </html>
