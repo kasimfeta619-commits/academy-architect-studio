@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Price Calculator | Academy Architect Studio</title>
+    <title>Estimator | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -35,40 +35,42 @@
     </nav>
 
     <!-- СЪДЪРЖАНИЕ НА КАЛКУЛАТОРА -->
-    <main style="padding: 60px 8%; max-width: 900px; margin: 0 auto; text-align: center;">
-        <h1 style="font-size: 2.5rem; font-weight: normal; margin-bottom: 10px;" data-key="estimator-title">Price Calculator</h1>
-        <p style="color: #665c52; margin-bottom: 40px;" data-key="estimator-subtitle">Calculate an approximate budget for your project</p>
+    <main style="padding: 80px 8%; display: flex; justify-content: space-between; align-items: flex-start; gap: 60px; min-height: 60vh; max-width: 1200px; margin: 0 auto; flex-wrap: wrap;">
         
-        <div style="background: var(--card-bg, #ffffff); border: 1px solid var(--border-color, #e6dec9); border-radius: 12px; padding: 40px; text-align: left; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+        <div style="flex: 1; min-width: 300px; max-width: 500px;">
+            <span style="font-size: 0.75rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; display: block; margin-bottom: 20px;" data-key="estimator-eyebrow">COST ESTIMATOR</span>
+            <h1 style="font-size: 3rem; font-weight: normal; line-height: 1.2; margin: 0 0 30px 0;" data-key="estimator-title">
+                Calculate the approximate budget for your project.
+            </h1>
+            <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text-color, #4a453e); margin: 0;" data-key="estimator-desc">
+                Use our interactive calculator to get a preliminary cost estimate based on area and project type.
+            </p>
+        </div>
+
+        <div style="flex: 1; min-width: 300px; max-width: 500px; background: var(--card-bg, #ffffff); border: 1px solid var(--border-color, #e6dec9); border-radius: 12px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <form onsubmit="event.preventDefault(); calculateBudget();">
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-type-label">Project Type</label>
+                    <select id="projectType" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
+                        <option value="house" data-key="option-house">House Design</option>
+                        <option value="interior" data-key="option-interior">Interior Design</option>
+                        <option value="renovation" data-key="option-renovation">Renovation</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-area-label">Total Area (sq.m)</label>
+                    <input type="number" id="projectArea" min="10" value="100" required style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
+                </div>
+
+                <button type="submit" style="width: 100%; background-color: #1a1a1a; color: #fff; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: 500; margin-bottom: 20px;" data-key="estimator-btn">Calculate Cost</button>
             
-            <div style="margin-bottom: 25px;">
-                <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-type-label">Project Type</label>
-                <select id="projectType" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;" onchange="calculatePrice()">
-                    <option value="35" data-key="opt-residential">Residential (House / Apartment)</option>
-                    <option value="50" data-key="opt-commercial">Commercial Building</option>
-                    <option value="40" data-key="opt-interior">Interior Design</option>
-                </select>
-            </div>
-
-            <div style="margin-bottom: 25px;">
-                <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-area-label">Area (sq.m)</label>
-                <input type="number" id="projectArea" value="120" min="10" max="10000" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;" oninput="calculatePrice()">
-            </div>
-
-            <div style="margin-bottom: 35px;">
-                <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-package-label">Service Package</label>
-                <select id="servicePackage" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;" onchange="calculatePrice()">
-                    <option value="1" data-key="pkg-basic">Idea Project (Basic)</option>
-                    <option value="1.4" data-key="pkg-standard">Full Technical Project (Standard)</option>
-                    <option value="1.8" data-key="pkg-full">Turnkey with Supervision (Full)</option>
-                </select>
-            </div>
-
-            <div style="background: rgba(230, 222, 201, 0.3); border-radius: 10px; padding: 30px; text-align: center;">
-                <span style="font-size: 0.95rem; color: #665c52; display: block; margin-bottom: 8px;" data-key="estimator-result-label">Estimated price:</span>
-                <span id="priceResult" style="font-size: 2.5rem; font-weight: bold; color: #1a1a1a;">4200 €</span>
-            </div>
-
+                <div id="resultBox" style="margin-top: 20px; padding: 15px; background: var(--bg-secondary, #f9f8f6); border-radius: 8px; text-align: center; display: none;">
+                    <span style="font-size: 0.85rem; color: #8c8275; display: block; margin-bottom: 5px;" data-key="estimator-result-title">Estimated Budget:</span>
+                    <strong id="resultOutput" style="font-size: 1.4rem; color: var(--text-color, #1a1a1a);">0 €</strong>
+                </div>
+            </form>
         </div>
     </main>
 
@@ -103,18 +105,25 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
-        function calculatePrice() {
-            const baseRate = parseFloat(document.getElementById('projectType').value) || 35;
+        function calculateBudget() {
+            const type = document.getElementById('projectType').value;
             const area = parseFloat(document.getElementById('projectArea').value) || 0;
-            const packageMultiplier = parseFloat(document.getElementById('servicePackage').value) || 1;
+            let rate = 40; // цена на кв.м по подразбиране
 
-            const total = Math.round(baseRate * area * packageMultiplier);
-            document.getElementById('priceResult').innerText = total.toLocaleString() + ' €';
+            if (type === 'house') rate = 50;
+            if (type === 'interior') rate = 35;
+            if (type === 'renovation') rate = 45;
+
+            const total = area * rate;
+            const resultBox = document.getElementById('resultBox');
+            const resultOutput = document.getElementById('resultOutput');
+
+            resultOutput.textContent = total.toLocaleString() + ' €';
+            resultBox.style.display = 'block';
         }
 
         document.addEventListener("DOMContentLoaded", function() {
             initLanguage();
-            calculatePrice();
         });
     </script>
 </body>

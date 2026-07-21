@@ -5,6 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .catalog-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 5%;
+        }
+        .catalog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color, #e6dec9);
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 15px;
+        }
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border-color, #e6dec9);
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-color, #1a1a1a);
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--text-color, #1a1a1a);
+            color: var(--bg-color, #fff);
+            border-color: var(--text-color, #1a1a1a);
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 40px;
+        }
+        .project-card {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg, #ffffff);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color, #e6dec9);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+        }
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+        }
+        .project-img-box {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            position: relative;
+            background: #f4f1ea;
+        }
+        .project-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .project-card:hover .project-img-box img {
+            transform: scale(1.06);
+        }
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.85);
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background 0.3s, transform 0.2s;
+            z-index: 2;
+        }
+        .favorite-btn:hover {
+            transform: scale(1.1);
+            background: #fff;
+        }
+        .favorite-btn.active {
+            color: #ff3b30;
+        }
+        .project-info {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .p-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-color, #1a1a1a);
+        }
+        .p-meta {
+            font-size: 0.85rem;
+            color: #8c8275;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .p-area {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-color, #4a453e);
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
 
@@ -33,40 +154,93 @@
         </div>
     </nav>
 
-    <main style="padding: 60px 8%; max-width: 1200px; margin: 0 auto;">
-        <h1 data-key="nav-catalog" style="font-size: 2.5rem; margin-bottom: 30px;">Projects</h1>
+    <main class="catalog-container">
+        <div class="catalog-header">
+            <div>
+                <span style="font-size: 0.75rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; display: block; margin-bottom: 8px;" data-key="catalog-eyebrow">PORTFOLIO</span>
+                <h1 data-key="nav-catalog" style="font-size: 2.8rem; font-weight: normal; margin: 0; line-height: 1.1;">Projects</h1>
+            </div>
+            
+            <div class="filter-tabs">
+                <button class="filter-btn active" onclick="filterProjects('all', this)" data-key="filter-all">All Projects</button>
+                <button class="filter-btn" onclick="filterProjects('favorites', this)" data-key="filter-fav">Favorites ❤️</button>
+            </div>
+        </div>
+
         <div class="projects-grid" id="catalogProjectsContainer"></div>
     </main>
 
     <script src="translations.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            initLanguage();
+        let currentFilter = 'all';
+
+        function renderProjects() {
             const container = document.getElementById('catalogProjectsContainer');
             const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            const currentLang = localStorage.getItem('siteLang') || 'en';
+            const favorites = JSON.parse(localStorage.getItem('myFavorites') || '[]');
+            const currentLang = localStorage.getItem('preferredLang') || 'en';
             const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
 
-            if (projects.length > 0) {
-                container.innerHTML = projects.map((p, index) => {
+            let filteredProjects = projects;
+            if (currentFilter === 'favorites') {
+                filteredProjects = projects.filter((p, index) => favorites.includes(index));
+            }
+
+            if (filteredProjects.length > 0) {
+                container.innerHTML = filteredProjects.map((p) => {
+                    // Намираме истинския индекс на проекта в масива
+                    const realIndex = projects.indexOf(p);
                     const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+                    const isFav = favorites.includes(realIndex);
+
                     return `
-                        <a href="project-detail.html?index=${index}" class="project-card">
-                            <div class="project-img-box">
-                                <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Image'">
-                            </div>
-                            <div class="project-info">
-                                <span class="p-title">${p.title}</span>
-                                <span class="p-meta">${p.style || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
-                                <span class="p-area">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
-                            </div>
-                        </a>
+                        <div class="project-card">
+                            <button class="favorite-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${realIndex})">
+                                ${isFav ? '❤️' : '🤍'}
+                            </button>
+                            <a href="project-detail.html?index=${realIndex}" style="text-decoration: none; color: inherit; display: block;">
+                                <div class="project-img-box">
+                                    <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Image'">
+                                </div>
+                                <div class="project-info">
+                                    <span class="p-title">${p.title}</span>
+                                    <span class="p-meta">${p.style || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
+                                    <span class="p-area">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
+                                </div>
+                            </a>
+                        </div>
                     `;
                 }).join('');
             } else {
-                container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem;" data-key="no-projects">No projects added yet.</p>`;
-                applyTranslations(currentLang);
+                container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem; grid-column: 1 / -1;" data-key="no-projects">No projects found.</p>`;
             }
+        }
+
+        function filterProjects(type, btn) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderProjects();
+        }
+
+        function toggleFavorite(event, index) {
+            event.preventDefault();
+            event.stopPropagation();
+            let favorites = JSON.parse(localStorage.getItem('myFavorites') || '[]');
+            
+            if (favorites.includes(index)) {
+                favorites = favorites.filter(i => i !== index);
+            } else {
+                favorites.push(index);
+            }
+            
+            localStorage.setItem('myFavorites', JSON.stringify(favorites));
+            renderProjects();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            initLanguage();
+            renderProjects();
         });
     </script>
 </body>
