@@ -29,8 +29,11 @@
         .form-group label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #8c8275; font-weight: 700; }
         .form-group input { padding: 12px; border: 1px solid #eadecc; background: #fff; font-size: 1rem; color: #1a1a1a; outline: none; width: 100%; box-sizing: border-box; border-radius: 8px; transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
         
-        .btn-submit { background: #1a1a1a; color: #fff; padding: 15px; border: none; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; font-size: 0.9rem; margin-top: 10px; border-radius: 8px; }
+        .btn-submit { background: #1a1a1a; color: #fff; padding: 15px; border: none; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; font-size: 0.9rem; margin-top: 10px; border-radius: 8px; text-align: center; text-decoration: none; display: block; box-sizing: border-box; }
         .btn-submit:hover { background: #333; }
+
+        .btn-admin-link { background: #8c8275; color: #fff; padding: 15px; border: none; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; font-size: 0.9rem; margin-top: 10px; border-radius: 8px; text-align: center; text-decoration: none; display: block; box-sizing: border-box; }
+        .btn-admin-link:hover { background: #6e655a; }
 
         .btn-logout { background: #c0392b; color: #fff; padding: 15px; border: none; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; font-size: 0.9rem; margin-top: 15px; border-radius: 8px; }
         .btn-logout:hover { background: #a93226; }
@@ -41,60 +44,31 @@
         .back-link { display: block; text-align: center; margin-top: 25px; color: #8c8275; text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; border-top: 1px solid #eadecc; padding-top: 20px; }
         .back-link:hover { color: #1a1a1a; }
 
-        /* Профилен дизайн с икона и нотификация */
+        /* Профилен дизайн със ЗЕЛЕНА ТОЧКА */
         .profile-container { text-align: center; padding: 20px 0; }
         .profile-avatar-wrapper { position: relative; width: 90px; height: 90px; margin: 0 auto 20px auto; }
         .profile-avatar-icon { width: 100%; height: 100%; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #64748b; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
         .profile-avatar-icon svg { width: 50px; height: 50px; fill: currentColor; }
-        .notification-badge { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background-color: #ff8b8b; border: 2px solid #fff; border-radius: 50%; }
+        
+        /* Зелена светеща точка за статус онлайн */
+        .notification-badge { position: absolute; top: 4px; right: 4px; width: 18px; height: 18px; background-color: #2ecc71; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 8px rgba(46, 204, 113, 0.8); }
 
-        .profile-email { font-size: 1.1rem; font-weight: 600; margin-bottom: 5px; color: inherit; }
-        .profile-status { font-size: 0.85rem; color: #8c8275; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; }
+        .profile-email { font-size: 1.1rem; font-weight: 600; margin-bottom: 5px; color: inherit; word-break: break-all; }
+        .profile-status { font-size: 0.85rem; color: #2ecc71; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
         /* Dark Mode Overrides */
-        body.dark-mode {
-            background-color: #121212 !important;
-            color: #ffffff !important;
-        }
-        body.dark-mode .login-card {
-            background: #1e1e1e !important;
-            border-color: #2c2c2c !important;
-        }
-        body.dark-mode .login-tabs {
-            border-bottom-color: #2c2c2c !important;
-        }
-        body.dark-mode .login-tab {
-            color: #888 !important;
-        }
-        body.dark-mode .login-tab.active {
-            color: #fff !important;
-            border-bottom-color: #fff !important;
-        }
-        body.dark-mode .form-group input {
-            background: #121212 !important;
-            border-color: #444 !important;
-            color: #ffffff !important;
-        }
-        body.dark-mode h2, body.dark-mode label {
-            color: #ffffff !important;
-        }
-        body.dark-mode .btn-submit {
-            background-color: #eadecc;
-            color: #1a1a1a;
-        }
-        body.dark-mode .btn-submit:hover {
-            background-color: #d4c8b6;
-        }
-        body.dark-mode .back-link {
-            border-top-color: #2c2c2c !important;
-        }
-        body.dark-mode .profile-avatar-icon {
-            background: #2a2a2a;
-            color: #a0aec0;
-        }
-        body.dark-mode .notification-badge {
-            border-color: #1e1e1e;
-        }
+        body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
+        body.dark-mode .login-card { background: #1e1e1e !important; border-color: #2c2c2c !important; }
+        body.dark-mode .login-tabs { border-bottom-color: #2c2c2c !important; }
+        body.dark-mode .login-tab { color: #888 !important; }
+        body.dark-mode .login-tab.active { color: #fff !important; border-bottom-color: #fff !important; }
+        body.dark-mode .form-group input { background: #121212 !important; border-color: #444 !important; color: #ffffff !important; }
+        body.dark-mode h2, body.dark-mode label { color: #ffffff !important; }
+        body.dark-mode .btn-submit { background-color: #eadecc; color: #1a1a1a; }
+        body.dark-mode .btn-submit:hover { background-color: #d4c8b6; }
+        body.dark-mode .back-link { border-top-color: #2c2c2c !important; }
+        body.dark-mode .profile-avatar-icon { background: #2a2a2a; color: #a0aec0; }
+        body.dark-mode .notification-badge { border-color: #1e1e1e; }
     </style>
 </head>
 <body>
@@ -102,34 +76,36 @@
     <div class="login-wrapper">
         <div class="login-card">
             
-            <!-- Секция за влязъл потребител (скрита по подразбиране) -->
+            <!-- Секция за влязъл потребител (видима само при активна сесия) -->
             <div id="loggedInView" style="display: none;">
                 <div class="profile-container">
                     <div class="profile-avatar-wrapper">
                         <div class="profile-avatar-icon">
-                            <!-- SVG икона за потребител -->
                             <svg viewBox="0 0 24 24">
                                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                             </svg>
                         </div>
-                        <div class="notification-badge"></div>
+                        <div class="notification-badge" title="Онлайн"></div>
                     </div>
-                    <div class="profile-status">Активен профил</div>
+                    <div class="profile-status">● Влязъл в профила</div>
                     <div id="displayUserEmail" class="profile-email">name@example.com</div>
                     
+                    <!-- Бутон за Админ (показва се само при администратор) -->
+                    <a href="admin.html" id="adminPanelBtn" class="btn-admin-link" style="display: none;">⚙️ Към Админ Панела</a>
+
                     <button onclick="handleLogout()" class="btn-logout">Изход от системата</button>
                 </div>
             </div>
 
-            <!-- Секция за вход/регистрация (видима, когато няма влязъл потребител) -->
+            <!-- Секция за вход/регистрация -->
             <div id="loggedOutView">
                 <div class="login-tabs">
                     <button class="login-tab active" onclick="switchLoginTab('userTab', this)">Потребител</button>
                     <button class="login-tab" onclick="switchLoginTab('adminTab', this)">Администратор</button>
                 </div>
 
+                <!-- ПОТРЕБИТЕЛСКИ ТАБ -->
                 <div id="userTab" class="form-section active">
-                    
                     <div id="loginFormContainer">
                         <h2 style="font-weight: 400; font-size: 1.5rem; margin-bottom: 25px; text-align: center;">Вход за клиенти</h2>
                         <form onsubmit="handleUserLogin(event)">
@@ -165,9 +141,9 @@
                         </form>
                         <a class="switch-link" onclick="toggleRegisterMode(false)">Вече имате профил? Вход</a>
                     </div>
-
                 </div>
 
+                <!-- АДМИН ТАБ -->
                 <div id="adminTab" class="form-section">
                     <h2 style="font-weight: 400; font-size: 1.5rem; margin-bottom: 25px; text-align: center;">Вход за администратор</h2>
                     <form onsubmit="handleAdminLogin(event)">
@@ -194,13 +170,21 @@
         });
 
         function checkAuthStatus() {
-            const isUserLoggedIn = localStorage.getItem('isUserLoggedIn') === 'true';
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
             const userEmail = localStorage.getItem('loggedInUserEmail');
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
-            if (isUserLoggedIn && userEmail) {
+            if (isLoggedIn && userEmail) {
                 document.getElementById('loggedOutView').style.display = 'none';
                 document.getElementById('loggedInView').style.display = 'block';
                 document.getElementById('displayUserEmail').textContent = userEmail;
+
+                const adminBtn = document.getElementById('adminPanelBtn');
+                if (isAdmin) {
+                    adminBtn.style.display = 'block';
+                } else {
+                    adminBtn.style.display = 'none';
+                }
             } else {
                 document.getElementById('loggedOutView').style.display = 'block';
                 document.getElementById('loggedInView').style.display = 'none';
@@ -226,37 +210,51 @@
 
         function handleUserLogin(e) {
             e.preventDefault();
-            const email = document.getElementById('userEmail').value;
-            localStorage.setItem('isUserLoggedIn', 'true');
+            const email = document.getElementById('userEmail').value.trim().toLowerCase();
+            
+            localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('loggedInUserEmail', email);
+            localStorage.setItem('isAdmin', 'false');
+
             checkAuthStatus();
         }
 
         function handleUserRegister(e) {
             e.preventDefault();
-            const email = document.getElementById('regEmail').value;
-            localStorage.setItem('isUserLoggedIn', 'true');
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            
+            localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('loggedInUserEmail', email);
-            checkAuthStatus();
-        }
+            localStorage.setItem('isAdmin', 'false');
 
-        function handleLogout() {
-            localStorage.removeItem('isUserLoggedIn');
-            localStorage.removeItem('loggedInUserEmail');
             checkAuthStatus();
         }
 
         function handleAdminLogin(e) {
             e.preventDefault();
-            const email = document.getElementById('adminEmail').value;
+            const email = document.getElementById('adminEmail').value.trim().toLowerCase();
             const pass = document.getElementById('adminPass').value;
 
-            if (email === "admin@architect.bg" && pass === "admin123") {
-                localStorage.setItem('isAdminAuthenticated', 'true');
+            // === ТВОИТЕ СИГУРНИ ДАННИ ЗА ВХОД ===
+            const ADMIN_EMAIL = "admin@architect.bg";
+            const ADMIN_PASS = "Arch#Studio2026!Secured"; // Сложна парола, защитена от случайно нацелване
+
+            if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('loggedInUserEmail', email);
+                localStorage.setItem('isAdmin', 'true');
+                
                 window.location.href = "admin.html";
             } else {
                 alert("Грешен имейл или парола за администратор!");
             }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('loggedInUserEmail');
+            localStorage.removeItem('isAdmin');
+            checkAuthStatus();
         }
     </script>
 </body>
