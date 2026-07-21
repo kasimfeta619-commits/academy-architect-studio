@@ -1,4 +1,6 @@
-/* Base Reset & Variables */
+/* ==========================================
+   BASE RESET & VARIABLES (LIGHT MODE)
+   ========================================== */
 * {
     margin: 0;
     padding: 0;
@@ -363,6 +365,7 @@ body {
     font-size: 0.85rem;
     line-height: 1.5;
 }
+
 
 /* ==========================================
    DARK MODE STYLES
