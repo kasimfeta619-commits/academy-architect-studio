@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo-area">
+            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
+            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
+        </a>
+        
+        <div id="nav-links">
+            <a href="index.html" data-key="nav-home">Home</a>
+            <a href="catalog.html" data-key="nav-catalog">Projects</a>
+            <a href="about.html" data-key="nav-about">About Us</a>
+            <a href="estimator.html" data-key="nav-estimator">Estimator</a>
+            <a href="contact.html" data-key="nav-contact">Contacts</a>
+        </div>
+
+        <div class="header-actions">
+            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
+            </div>
+            <a href="booking.html" class="btn-login" style="margin-left: 10px;" data-key="nav-booking">Booking</a>
+            <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+        </div>
+    </nav>
+
+    <main style="padding: 60px 8%; display: flex; justify-content: center; align-items: center;">
+        <div style="background-color: #fdfbf7; border: 1px solid #e6dec9; padding: 40px; width: 100%; max-width: 450px; box-sizing: border-box;">
+            <h2 style="text-align: center; font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 30px; font-weight: normal; line-height: 1.4; color: #1a1a1a;">
+                РЕГИСТРАЦИЯ НА<br>ПОТРЕБИТЕЛ
+            </h2>
+            
+            <form id="registerForm" style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 1px; color: #665c52;">ИМЕ</label>
+                    <input type="text" id="regName" placeholder="Иван Иванов" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #dcd6c8; background: #fff;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 1px; color: #665c52;">ИМЕЙЛ</label>
+                    <input type="email" id="regEmail" placeholder="e-mail@example.com" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #dcd6c8; background: #fff;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 1px; color: #665c52;">ПАРОЛА</label>
+                    <input type="password" id="regPassword" placeholder="•••••••" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #dcd6c8; background: #fff;">
+                </div>
+                <button type="submit" style="width: 100%; padding: 14px; background-color: #1a1a1a; color: #fff; border: none; font-weight: bold; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; margin-top: 10px;">РЕГИСТРИРАЙ СЕ</button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 25px; font-size: 0.85rem; color: #736b5e;">
+                Вече имате профил? <a href="login.html" style="color: #1a1a1a; text-decoration: underline;">Влезте оттук</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="translations.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            initLanguage();
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            let users = JSON.parse(localStorage.getItem('studioUsers') || '[]');
+            
+            // Проверка дали вече съществува такъв имейл
+            if(users.some(u => u.email === email)) {
+                alert('Този имейл вече е регистриран!');
+                return;
+            }
+
+            users.push({ name, email, password });
+            localStorage.setItem('studioUsers', JSON.stringify(users));
+
+            // Автоматично го влизаме като обикновен потребител
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userName', name);
+            // Премахваме админ правата за сигурност, тъй като е обикновен потребител
+            localStorage.removeItem('isAdmin');
+            localStorage.removeItem('admin');
+
+            alert('Успешна регистрация!');
+            window.location.href = 'booking.html'; // Пращаме го директно към запитване
+        });
+    </script>
+</body>
+</html>

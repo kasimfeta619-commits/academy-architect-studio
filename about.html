@@ -1,48 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us | Academy Architect Studio</title>
+    <title>За нас | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body style="background-color: #fdfbf7; color: #1a1a1a; font-family: sans-serif; margin: 0;">
 
-    <nav class="navbar">
-        <a href="index.html" class="logo-area">
-            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
-            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; border-bottom: 1px solid #e6dec9;">
+        <a href="index.html" class="logo-area" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+            <img src="assets/main-graphic.png" alt="Лого" class="logo-icon" onerror="this.style.display='none'" style="height: 24px;">
+            <span class="logo-studio" style="font-weight: 600; letter-spacing: 0.5px;">Academy Architect Studio</span>
         </a>
         
-        <div id="nav-links">
-            <a href="index.html" data-key="nav-home">Home</a>
-            <a href="catalog.html" data-key="nav-catalog">Projects</a>
-            <a href="about.html" class="active" data-key="nav-about">About Us</a>
-            <a href="estimator.html" data-key="nav-estimator">Estimator</a>
-            <a href="contact.html" data-key="nav-contact">Contacts</a>
+        <div id="nav-links" style="display: flex; gap: 30px;">
+            <a href="index.html" style="text-decoration: none; color: #665c52;">Начало</a>
+            <a href="catalog.html" style="text-decoration: none; color: #665c52;">Каталог</a>
+            <a href="about.html" style="text-decoration: none; color: #1a1a1a; font-weight: bold;">За нас</a>
+            <a href="estimator.html" style="text-decoration: none; color: #665c52;">ИИ Планер</a>
+            <a href="contact.html" style="text-decoration: none; color: #665c52;">Контакт</a>
         </div>
 
-        <div class="header-actions">
-            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
-            <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
+        <div class="header-actions" style="display: flex; align-items: center; gap: 15px;">
+            <div class="lang-switcher" style="display: flex; gap: 5px;">
+                <button class="lang-btn" onclick="setLanguage('en')" style="background: none; border: none; cursor: pointer; color: #888;">EN</button>
+                <button class="lang-btn active" onclick="setLanguage('bg')" style="background: none; border: none; cursor: pointer; font-weight: bold;">BG</button>
             </div>
-            <a href="booking.html" class="btn-login" style="margin-left: 10px;" data-key="nav-booking">Booking</a>
-            <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+            <a href="login.html" class="btn-login" style="background-color: #1a1a1a; color: #fff; padding: 8px 20px; text-decoration: none; border-radius: 20px; font-size: 0.9rem;">Вход</a>
         </div>
     </nav>
 
-    <main style="padding: 60px 8%; max-width: 900px; margin: 0 auto;">
-        <h1 data-key="nav-about" style="font-size: 2.5rem; margin-bottom: 20px;">About Us</h1>
-        <p style="color: #8c8275; line-height: 1.6; font-size: 1.1rem;" data-key="hero-desc">We create minimalist and functional spaces, combining modern technologies with clean architecture.</p>
+    <!-- СЪДЪРЖАНИЕ ОТ СНИМКАТА -->
+    <main style="padding: 80px 8%; display: flex; justify-content: space-between; align-items: flex-start; gap: 60px; min-height: 60vh;">
+        <div style="max-width: 500px;">
+            <span style="font-size: 0.75rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; display: block; margin-bottom: 20px;">ЗА СТУДИОТО</span>
+            <h1 style="font-size: 3rem; font-weight: normal; line-height: 1.2; color: #1a1a1a; margin: 0;">
+                Личен архив на архитектурни проекти.
+            </h1>
+        </div>
+
+        <div style="max-width: 500px; font-size: 1.05rem; line-height: 1.7; color: #4a453e; display: flex; flex-direction: column; gap: 20px;">
+            <p style="margin: 0;">
+                Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.
+            </p>
+            <p style="margin: 0;">
+                Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.
+            </p>
+        </div>
     </main>
 
+    <!-- ФУТЪР -->
+    <footer style="padding: 40px 8%; border-top: 1px solid #e6dec9; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #736b5e;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="font-size: 1.2rem;">📐</span>
+            <div>
+                <div style="font-weight: bold; color: #1a1a1a;">Academy Architect Studio</div>
+                <div style="font-size: 0.75rem; letter-spacing: 1px;">АРХИТЕКТУРНО СТУДИО</div>
+            </div>
+        </div>
+        <div>
+            <div style="font-weight: bold; color: #1a1a1a; margin-bottom: 5px; letter-spacing: 1px;">STUDIO</div>
+            <div>Sofia · Plovdiv · Varna</div>
+            <div>info@architectstudio.com</div>
+        </div>
+        <div style="text-align: right;">
+            <div style="margin-bottom: 5px;">© 2026</div>
+            <div>Academy Architect Studio — Всички права запазени.</div>
+        </div>
+    </footer>
+
     <script src="translations.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            initLanguage();
-        });
-    </script>
+    <script>document.addEventListener("DOMContentLoaded", () => initLanguage());</script>
 </body>
 </html>

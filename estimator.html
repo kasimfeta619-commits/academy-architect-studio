@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estimator | Academy Architect Studio</title>
+    <title>Price Calculator | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- НАВИГАЦИЯ -->
     <nav class="navbar">
         <a href="index.html" class="logo-area">
             <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
@@ -18,6 +19,7 @@
             <a href="index.html" data-key="nav-home">Home</a>
             <a href="catalog.html" data-key="nav-catalog">Projects</a>
             <a href="about.html" data-key="nav-about">About Us</a>
+            <a href="planner.html" data-key="nav-planner">AI Planner</a>
             <a href="estimator.html" class="active" data-key="nav-estimator">Estimator</a>
             <a href="contact.html" data-key="nav-contact">Contacts</a>
         </div>
@@ -28,20 +30,91 @@
                 <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
             </div>
-            <a href="booking.html" class="btn-login" style="margin-left: 10px;" data-key="nav-booking">Booking</a>
             <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
         </div>
     </nav>
 
-    <main style="padding: 60px 8%; max-width: 900px; margin: 0 auto;">
-        <h1 data-key="nav-estimator" style="font-size: 2.5rem; margin-bottom: 20px;">Estimator</h1>
-        <p style="color: #8c8275;">Calculate your project estimate here.</p>
+    <!-- СЪДЪРЖАНИЕ НА КАЛКУЛАТОРА -->
+    <main style="padding: 60px 8%; max-width: 900px; margin: 0 auto; text-align: center;">
+        <h1 style="font-size: 2.5rem; font-weight: normal; margin-bottom: 10px;" data-key="estimator-title">Price Calculator</h1>
+        <p style="color: #665c52; margin-bottom: 40px;" data-key="estimator-subtitle">Calculate an approximate budget for your project</p>
+        
+        <div style="background: var(--card-bg, #ffffff); border: 1px solid var(--border-color, #e6dec9); border-radius: 12px; padding: 40px; text-align: left; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-type-label">Project Type</label>
+                <select id="projectType" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;" onchange="calculatePrice()">
+                    <option value="35" data-key="opt-residential">Residential (House / Apartment)</option>
+                    <option value="50" data-key="opt-commercial">Commercial Building</option>
+                    <option value="40" data-key="opt-interior">Interior Design</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-area-label">Area (sq.m)</label>
+                <input type="number" id="projectArea" value="120" min="10" max="10000" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;" oninput="calculatePrice()">
+            </div>
+
+            <div style="margin-bottom: 35px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-package-label">Service Package</label>
+                <select id="servicePackage" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;" onchange="calculatePrice()">
+                    <option value="1" data-key="pkg-basic">Idea Project (Basic)</option>
+                    <option value="1.4" data-key="pkg-standard">Full Technical Project (Standard)</option>
+                    <option value="1.8" data-key="pkg-full">Turnkey with Supervision (Full)</option>
+                </select>
+            </div>
+
+            <div style="background: rgba(230, 222, 201, 0.3); border-radius: 10px; padding: 30px; text-align: center;">
+                <span style="font-size: 0.95rem; color: #665c52; display: block; margin-bottom: 8px;" data-key="estimator-result-label">Estimated price:</span>
+                <span id="priceResult" style="font-size: 2.5rem; font-weight: bold; color: #1a1a1a;">4200 €</span>
+            </div>
+
+        </div>
     </main>
 
+    <!-- ФУТЪР -->
+    <footer class="main-footer">
+        <div class="footer-logo-area">
+            <div>
+                <div class="footer-brand">Academy Architect Studio</div>
+                <div class="footer-subtext" data-key="footer-subtitle">Design & Engineering</div>
+            </div>
+        </div>
+        
+        <div class="footer-col">
+            <h4 data-key="footer-contacts">Contacts</h4>
+            <p data-key="footer-address">Sofia, Bulgaria</p>
+            <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
+            <p>+359 88 123 4567</p>
+        </div>
+        
+        <div class="footer-col">
+            <h4 data-key="footer-links-title">Links</h4>
+            <p><a href="index.html" data-key="nav-home">Home</a></p>
+            <p><a href="catalog.html" data-key="nav-catalog">Projects</a></p>
+            <p><a href="about.html" data-key="nav-about">About Us</a></p>
+        </div>
+        
+        <div class="footer-right">
+            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
+        function calculatePrice() {
+            const baseRate = parseFloat(document.getElementById('projectType').value) || 35;
+            const area = parseFloat(document.getElementById('projectArea').value) || 0;
+            const packageMultiplier = parseFloat(document.getElementById('servicePackage').value) || 1;
+
+            const total = Math.round(baseRate * area * packageMultiplier);
+            document.getElementById('priceResult').innerText = total.toLocaleString() + ' €';
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
             initLanguage();
+            calculatePrice();
         });
     </script>
 </body>
