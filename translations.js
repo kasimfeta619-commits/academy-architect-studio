@@ -23,7 +23,21 @@ const translations = {
         "footer-links-title": "Линкове",
         "footer-rights": "&copy; 2026 Academy Architect Studio.<br>Всички права запазени.",
         "no-projects": "Все още няма добавени проекти.",
-        "catalog-title": "Нашите Проекти"
+        "catalog-title": "Нашите Проекти",
+        
+        /* За нас (About) преводи */
+        "about-title": "За нашето студио",
+        "about-subtitle": "Иновации и минимализъм в архитектурата",
+        "about-text-1": "Academy Architect Studio е създадено с идеята да превърне съвременните концепции за пространство в реалност. Ние вярваме, че добрата архитектура променя начина, по който хората живеят и работят.",
+        "about-text-2": "Нашият екип от професионалисти съчетава дългогодишен опит с модерни технологии, за да предложи индивидуални решения за всеки клиент.",
+
+        /* Контакти (Contact) преводи */
+        "contact-title": "Свържете се с нас",
+        "contact-subtitle": "Нека обсъдим вашия следващ проект",
+        "form-name": "Вашето име",
+        "form-email": "Вашият имейл",
+        "form-message": "Вашето съобщение",
+        "form-submit": "Изпрати съобщение"
     },
     en: {
         "nav-studio": "Studio",
@@ -49,7 +63,21 @@ const translations = {
         "footer-links-title": "Links",
         "footer-rights": "&copy; 2026 Academy Architect Studio.<br>All rights reserved.",
         "no-projects": "No projects added yet.",
-        "catalog-title": "Our Projects"
+        "catalog-title": "Our Projects",
+        
+        /* About translations */
+        "about-title": "About Our Studio",
+        "about-subtitle": "Innovation and minimalism in architecture",
+        "about-text-1": "Academy Architect Studio was founded with the vision to turn modern space concepts into reality. We believe that good architecture transforms the way people live and work.",
+        "about-text-2": "Our team of professionals combines years of experience with modern technologies to deliver tailored solutions for every client.",
+
+        /* Contact translations */
+        "contact-title": "Get in Touch",
+        "contact-subtitle": "Let's discuss your next project",
+        "form-name": "Your Name",
+        "form-email": "Your Email",
+        "form-message": "Your Message",
+        "form-submit": "Send Message"
     }
 };
 
