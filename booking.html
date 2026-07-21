@@ -1,71 +1,76 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Запитване | Academy Architect Studio</title>
-    <style>
-        body { background-color: #fbf9f4; color: #1a1a1a; font-family: sans-serif; margin: 0; }
-        .booking-container { padding: 40px 8%; max-width: 600px; margin: 0 auto; min-height: 80vh; }
-        .back-home-link { display: inline-block; margin-bottom: 20px; color: #8c8275; text-decoration: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-        .back-home-link:hover { color: #1a1a1a; }
-        
-        .form-card { background: #f4eee5; padding: 40px; border: 1px solid #eadecc; }
-        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
-        .form-group label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #8c8275; font-weight: 700; }
-        .form-group input, .form-group select { padding: 12px; border: 1px solid #eadecc; background: #fff; font-size: 1rem; color: #1a1a1a; outline: none; width: 100%; box-sizing: border-box; }
-        
-        .btn-action { background: #1a1a1a; color: #fff; padding: 15px 30px; border: none; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; font-size: 0.9rem; }
-        .btn-action:hover { background: #333; }
-    </style>
+    <title>Booking | Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header class="navbar" style="padding: 20px 5%; border-bottom: 1px solid #eadecc; display: flex; align-items: center; background: #fbf9f4;">
-        <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-            <span style="font-weight: 500; color: #1a1a1a; font-size: 1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
+    <nav class="navbar">
+        <a href="index.html" class="logo-area">
+            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
+            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
-    </header>
-
-    <main class="booking-container">
-        <a href="index.html" class="back-home-link">← Назад към началната страница</a>
         
-        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #8c8275; font-weight: 700;">КОНСУЛТАЦИЯ И ЧАС</span>
-        <h1 style="font-size: 2.5rem; font-weight: 400; margin-top: 5px; color: #1a1a1a; margin-bottom: 30px;">Направете запитване</h1>
-
-        <div class="form-card">
-            <form id="bookingForm">
-                <div class="form-group">
-                    <label>Вашето име</label>
-                    <input type="text" id="clientName" required placeholder="Иван Иванов">
-                </div>
-                <div class="form-group">
-                    <label>Телефонен номер</label>
-                    <input type="text" id="clientPhone" required placeholder="+359 888 ...">
-                </div>
-                <div class="form-group">
-                    <label>Изберете услуга / консултация</label>
-                    <select id="clientService">
-                        <option value="Архитектурно проектиране">Архитектурно проектиране</option>
-                        <option value="Интериорен дизайн">Интериорен дизайн</option>
-                        <option value="Консултация на живо">Консултация на живо</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Желана дата и час</label>
-                    <input type="datetime-local" id="clientDatetime" required>
-                </div>
-                <button type="submit" class="btn-action" style="margin-top: 10px;">Изпрати запитването</button>
-            </form>
+        <div id="nav-links">
+            <a href="index.html" data-key="nav-home">Home</a>
+            <a href="catalog.html" data-key="nav-catalog">Projects</a>
+            <a href="about.html" data-key="nav-about">About Us</a>
+            <a href="estimator.html" data-key="nav-estimator">Estimator</a>
+            <a href="contact.html" data-key="nav-contact">Contacts</a>
         </div>
+
+        <div class="header-actions">
+            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
+            </div>
+            <a href="booking.html" class="btn-login active" style="margin-left: 10px;" data-key="nav-booking">Booking</a>
+            <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+        </div>
+    </nav>
+
+    <main style="padding: 60px 8%; max-width: 600px; margin: 0 auto;">
+        <h1 data-key="nav-booking" style="font-size: 2.5rem; margin-bottom: 30px;">Booking</h1>
+        
+        <form id="bookingForm" style="display: flex; flex-direction: column; gap: 20px;">
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Име / Name</label>
+                <input type="text" id="clientName" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Телефон / Phone</label>
+                <input type="text" id="clientPhone" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Услуга / Service</label>
+                <select id="clientService" style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="Архитектурно проектиране">Архитектурно проектиране / Architectural Design</option>
+                    <option value="Интериорен дизайн">Интериорен дизайн / Interior Design</option>
+                    <option value="Консултация">Консултация / Consultation</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Желана дата и час / Date & Time</label>
+                <input type="datetime-local" id="clientDatetime" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+            <button type="submit" class="btn-primary" style="padding: 14px; cursor: pointer; border: none; font-weight: bold; text-transform: uppercase;">Изпрати запитване</button>
+        </form>
     </main>
 
+    <script src="translations.js"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            initLanguage();
+        });
+
         document.getElementById('bookingForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            
             const newBooking = {
-                name: document.getElementById('clientName',).value,
+                name: document.getElementById('clientName').value,
                 phone: document.getElementById('clientPhone').value,
                 service: document.getElementById('clientService').value,
                 datetime: document.getElementById('clientDatetime').value
@@ -75,7 +80,7 @@
             bookings.push(newBooking);
             localStorage.setItem('studioBookings', JSON.stringify(bookings));
 
-            alert('Запитването е изпратено успешно! Очаквайте свързване.');
+            alert('Запитването е изпратено успешно!');
             document.getElementById('bookingForm').reset();
             window.location.href = 'index.html';
         });
