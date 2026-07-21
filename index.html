@@ -23,6 +23,9 @@
             <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
         
+        <!-- Хамбургер бутон за мобилни устройства -->
+        <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+
         <div id="nav-links">
             <a href="index.html" class="active" data-key="nav-home">Home</a>
             <a href="catalog.html" data-key="nav-catalog">Projects</a>
@@ -113,6 +116,12 @@
             } else {
                 localStorage.setItem('siteTheme', 'light');
             }
+        }
+
+        // Функция за мобилното меню (хамбургер бутон)
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('mobile-open');
         }
 
         document.addEventListener("DOMContentLoaded", function() {

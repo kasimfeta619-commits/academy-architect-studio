@@ -5,38 +5,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">Детайли за проект | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Скрипт за мигновено зареждане на темата без премигване -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
     <style>
-        body { background-color: #fbf9f4; color: #1a1a1a; font-family: sans-serif; margin: 0; }
-        .container { padding: 40px 8%; max-width: 1000px; margin: 0 auto; min-height: 80vh; }
-        .back-link { display: inline-block; margin-bottom: 20px; color: #8c8275; text-decoration: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-        .back-link:hover { color: #1a1a1a; }
-        .project-title { font-size: 2.5rem; font-weight: 400; margin-top: 5px; color: #1a1a1a; margin-bottom: 15px; }
-        .project-meta-badges { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-        .badge-item { background: #f4eee5; border: 1px solid #eadecc; padding: 6px 14px; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; color: #555; }
-        .main-project-img { width: 100%; max-height: 550px; object-fit: cover; border: 1px solid #eadecc; margin-bottom: 40px; }
-        .project-description { font-size: 1.05rem; line-height: 1.8; color: #444; margin-bottom: 50px; white-space: pre-line; }
-        .section-heading { font-size: 1.5rem; font-weight: 400; border-bottom: 2px solid #eadecc; padding-bottom: 10px; margin-bottom: 25px; color: #1a1a1a; }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .gallery-item { background: #fff; border: 1px solid #eadecc; padding: 10px; }
-        .gallery-item img { width: 100%; height: auto; display: block; border-radius: 4px; }
+        .detail-container { 
+            padding: 50px 8%; 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            min-height: 80vh; 
+        }
+        .back-link { 
+            display: inline-block; 
+            margin-bottom: 20px; 
+            color: #8c8275; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            transition: color 0.2s;
+        }
+        .back-link:hover { 
+            color: #1a1a1a; 
+        }
+        .project-title { 
+            font-size: 2.5rem; 
+            font-weight: 400; 
+            margin-top: 5px; 
+            color: #1a1a1a; 
+            margin-bottom: 15px; 
+            letter-spacing: -0.5px;
+        }
+        .project-meta-badges { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 30px; 
+            flex-wrap: wrap; 
+        }
+        .badge-item { 
+            background: #f4eee5; 
+            border: 1px solid #eadecc; 
+            padding: 6px 14px; 
+            font-size: 0.8rem; 
+            text-transform: uppercase; 
+            font-weight: 600; 
+            color: #555; 
+            border-radius: 4px;
+        }
+        .main-project-img { 
+            width: 100%; 
+            max-height: 550px; 
+            object-fit: cover; 
+            border: 1px solid #eadecc; 
+            border-radius: 8px;
+            margin-bottom: 40px; 
+        }
+        .project-description { 
+            font-size: 1.05rem; 
+            line-height: 1.8; 
+            color: #444; 
+            margin-bottom: 50px; 
+            white-space: pre-line; 
+        }
+        .section-heading { 
+            font-size: 1.5rem; 
+            font-weight: 400; 
+            border-bottom: 2px solid #eadecc; 
+            padding-bottom: 10px; 
+            margin-bottom: 25px; 
+            color: #1a1a1a; 
+            letter-spacing: -0.5px;
+        }
+        .gallery-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+        }
+        .gallery-item { 
+            background: #fff; 
+            border: 1px solid #eadecc; 
+            padding: 10px; 
+            border-radius: 8px;
+        }
+        .gallery-item img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            border-radius: 4px; 
+        }
+        .blueprint-card {
+            background: #f4eee5; 
+            border: 1px solid #eadecc; 
+            padding: 20px; 
+            text-align: center; 
+            border-radius: 8px;
+        }
+
+        /* Dark Mode Overrides за специфичните елементи в детайлите на проекта */
+        body.dark-mode .project-title,
+        body.dark-mode .section-heading {
+            color: #ffffff !important;
+        }
+        body.dark-mode .project-description {
+            color: #b0b0b0 !important;
+        }
+        body.dark-mode .badge-item {
+            background: #1e1e1e !important;
+            border-color: #2c2c2c !important;
+            color: #b0b0b0 !important;
+        }
+        body.dark-mode .main-project-img,
+        body.dark-mode .gallery-item,
+        body.dark-mode .blueprint-card {
+            border-color: #2c2c2c !important;
+            background: #1e1e1e !important;
+        }
+        body.dark-mode .back-link {
+            color: #8c8275 !important;
+        }
+        body.dark-mode .back-link:hover {
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body>
 
-    <header class="navbar" style="padding: 20px 5%; border-bottom: 1px solid #eadecc; display: flex; align-items: center; background: #fbf9f4;">
-        <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" style="height: 34px; width: auto; display: block;" onerror="this.style.display='none'">
-            <span style="font-weight: 500; color: #1a1a1a; font-size: 1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
+    <nav class="navbar">
+        <a href="index.html" class="logo-area">
+            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" onerror="this.style.display='none'">
+            <span class="logo-studio">Academy Architect Studio</span>
         </a>
-    </header>
+        
+        <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
 
-    <main class="container" id="projectDetailContainer">
+        <div id="nav-links">
+            <a href="index.html" data-key="nav-home">Home</a>
+            <a href="catalog.html" class="active" data-key="nav-catalog">Projects</a>
+            <a href="about.html" data-key="nav-about">About Us</a>
+            <a href="planner.html" data-key="nav-planner">AI Planner</a>
+            <a href="estimator.html" data-key="nav-estimator">Estimator</a>
+            <a href="contact.html" data-key="nav-contact">Contacts</a>
+        </div>
+
+        <div class="header-actions">
+            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
+            </div>
+            <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+        </div>
+    </nav>
+
+    <main class="detail-container" id="projectDetailContainer">
         <!-- Динамично зареждане на съдържанието -->
     </main>
 
+    <footer class="main-footer">
+        <div class="footer-logo-area">
+            <div>
+                <div class="footer-brand">Academy Architect Studio</div>
+                <div class="footer-subtext" data-key="footer-subtitle">Design & Engineering</div>
+            </div>
+        </div>
+        
+        <div class="footer-col">
+            <h4 data-key="footer-contacts">Contacts</h4>
+            <p data-key="footer-address">Sofia, Bulgaria</p>
+            <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
+            <p>+359 88 123 4567</p>
+        </div>
+        
+        <div class="footer-col">
+            <h4 data-key="footer-links-title">Links</h4>
+            <p><a href="index.html" data-key="nav-home">Home</a></p>
+            <p><a href="catalog.html" data-key="nav-catalog">Projects</a></p>
+            <p><a href="about.html" data-key="nav-about">About Us</a></p>
+        </div>
+        
+        <div class="footer-right">
+            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="translations.js"></script>
     <script>
-        function initLanguage() {
-            // Помощна функция за поддръжка на езика
+        // Превключване на тъмния режим
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('siteTheme', 'dark');
+            } else {
+                localStorage.setItem('siteTheme', 'light');
+            }
+        }
+
+        // Мобилно меню
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('mobile-open');
         }
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -69,9 +243,9 @@
                         <h2 class="section-heading">${textPlans}</h2>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px;">
                             ${plansArr.map((plan, idx) => `
-                                <div style="background: #f4eee5; border: 1px solid #eadecc; padding: 20px; text-align: center;">
+                                <div class="blueprint-card">
                                     <p style="font-size: 0.85rem; text-transform: uppercase; color: #8c8275; margin-bottom: 10px; font-weight: 600;">${currentLang === 'en' ? 'Floor ' + (idx + 1) : 'Етаж ' + (idx + 1)}</p>
-                                    <img src="${plan}" alt="Floor Plan ${idx + 1}" style="width: 100%; height: auto;" onerror="this.parentElement.style.display='none'">
+                                    <img src="${plan}" alt="Floor Plan ${idx + 1}" style="width: 100%; height: auto; border-radius: 4px;" onerror="this.parentElement.style.display='none'">
                                 </div>
                             `).join('')}
                         </div>
@@ -95,8 +269,8 @@
                 if (p.sectionImage) {
                     sectionHtml = `
                         <h2 class="section-heading">${textSection}</h2>
-                        <div style="background: #f4eee5; border: 1px solid #eadecc; padding: 20px; text-align: center; margin-bottom: 40px;">
-                            <img src="${p.sectionImage}" alt="Architectural Section" style="width: 100%; max-height: 500px; object-fit: contain;" onerror="this.parentElement.style.display='none'">
+                        <div class="blueprint-card" style="margin-bottom: 40px;">
+                            <img src="${p.sectionImage}" alt="Architectural Section" style="width: 100%; max-height: 500px; object-fit: contain; border-radius: 4px;" onerror="this.parentElement.style.display='none'">
                         </div>
                     `;
                 }
@@ -137,7 +311,7 @@
             } else {
                 container.innerHTML = `
                     <a href="catalog.html" class="back-link">${backText}</a>
-                    <h2>Проектът не е намерен.</h2>
+                    <h2 class="project-title">${currentLang === 'en' ? 'Project not found.' : 'Проектът не е намерен.'}</h2>
                 `;
             }
         });

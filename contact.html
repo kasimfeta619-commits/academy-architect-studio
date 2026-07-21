@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacts & Booking | Academy Architect Studio</title>
+    <title id="pageTitle">Contacts & Booking | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Скрипт, който зарежда темата веднага, за да няма премигване -->
+    <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('siteTheme');
@@ -15,7 +15,55 @@
         })();
     </script>
     <style>
-        /* Допълнителни стилове за адаптация на формата за контакти в тъмен режим */
+        .contact-main-container {
+            padding: 80px 8%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            gap: 60px; 
+            min-height: 60vh; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            flex-wrap: wrap;
+        }
+        .contact-card {
+            flex: 1; 
+            min-width: 300px; 
+            max-width: 500px; 
+            background: #ffffff; 
+            border: 1px solid #eadecc; 
+            border-radius: 12px; 
+            padding: 40px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .contact-input {
+            width: 100%; 
+            padding: 12px 15px; 
+            border: 1px solid #eadecc; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            background: transparent; 
+            color: inherit; 
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .contact-submit-btn {
+            width: 100%; 
+            background-color: #1a1a1a; 
+            color: #fff; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .contact-submit-btn:hover {
+            background-color: #333;
+        }
+
+        /* Dark Mode Overrides */
         body.dark-mode .contact-card {
             background: #1e1e1e !important;
             border-color: #2c2c2c !important;
@@ -25,16 +73,30 @@
             background: #121212 !important;
             color: #ffffff !important;
         }
+        body.dark-mode .contact-submit-btn {
+            background-color: #eadecc;
+            color: #1a1a1a;
+        }
+        body.dark-mode .contact-submit-btn:hover {
+            background-color: #d4c8b6;
+        }
+        body.dark-mode h1, 
+        body.dark-mode label {
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body>
 
+    <!-- НАВИГАЦИЯ -->
     <nav class="navbar">
         <a href="index.html" class="logo-area">
-            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
+            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" onerror="this.style.display='none'">
             <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
         
+        <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+
         <div id="nav-links">
             <a href="index.html" data-key="nav-home">Home</a>
             <a href="catalog.html" data-key="nav-catalog">Projects</a>
@@ -54,7 +116,8 @@
         </div>
     </nav>
 
-    <main style="padding: 80px 8%; display: flex; justify-content: space-between; align-items: flex-start; gap: 60px; min-height: 60vh; max-width: 1200px; margin: 0 auto; flex-wrap: wrap;">
+    <!-- СЪДЪРЖАНИЕ -->
+    <main class="contact-main-container">
         <div style="flex: 1; min-width: 300px; max-width: 500px;">
             <span style="font-size: 0.75rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; display: block; margin-bottom: 20px;" data-key="contact-eyebrow">GET IN TOUCH & BOOKING</span>
             <h1 style="font-size: 3rem; font-weight: normal; line-height: 1.2; margin: 0 0 30px 0;" data-key="contact-title">
@@ -67,53 +130,54 @@
             </div>
         </div>
 
-        <div class="contact-card" style="flex: 1; min-width: 300px; max-width: 500px; background: #ffffff; border: 1px solid #e6dec9; border-radius: 12px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: background-color 0.3s, border-color 0.3s;">
+        <div class="contact-card">
             <form onsubmit="event.preventDefault(); alert('Successfully submitted!');">
                 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="inquiry-type-label">Inquiry Type</label>
-                    <select id="inquiryType" onchange="toggleBookingFields()" class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
-                        <option value="message" data-key="option-general" style="background: inherit; color: inherit;">General Message</option>
-                        <option value="booking" data-key="option-booking" style="background: inherit; color: inherit;">Book Consultation / Meeting</option>
+                    <select id="inquiryType" onchange="toggleBookingFields()" class="contact-input">
+                        <option value="message" data-key="option-general">General Message</option>
+                        <option value="booking" data-key="option-booking">Book Consultation / Meeting</option>
                     </select>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-name">Your Name</label>
-                    <input type="text" required class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
+                    <input type="text" required class="contact-input">
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-email">Your Email</label>
-                    <input type="email" required class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
+                    <input type="email" required class="contact-input">
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-phone">Phone Number</label>
-                    <input type="tel" required placeholder="+359..." class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
+                    <input type="tel" required placeholder="+359..." class="contact-input">
                 </div>
 
                 <div id="bookingFields" style="display: none; margin-bottom: 20px;">
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-date">Preferred Date</label>
-                        <input type="date" id="bookDate" class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
+                        <input type="date" id="bookDate" class="contact-input">
                     </div>
                     <div>
                         <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-time">Preferred Time</label>
-                        <input type="time" id="bookTime" class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
+                        <input type="time" id="bookTime" class="contact-input">
                     </div>
                 </div>
 
                 <div style="margin-bottom: 25px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-message">Message / Details</label>
-                    <textarea rows="4" required class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; resize: vertical; transition: background-color 0.3s, border-color 0.3s, color 0.3s;"></textarea>
+                    <textarea rows="4" required class="contact-input" style="resize: vertical;"></textarea>
                 </div>
 
-                <button type="submit" style="width: 100%; background-color: #1a1a1a; color: #fff; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: 500;" data-key="form-submit">Send Request</button>
+                <button type="submit" class="contact-submit-btn" data-key="form-submit">Send Request</button>
             </form>
         </div>
     </main>
 
+    <!-- ФУТЪР -->
     <footer class="main-footer">
         <div class="footer-logo-area">
             <div>
@@ -141,9 +205,10 @@
         </div>
     </footer>
 
+    <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
-        // Функция за превключване на тъмния режим
+        // Превключване на тъмния режим
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
@@ -151,6 +216,12 @@
             } else {
                 localStorage.setItem('siteTheme', 'light');
             }
+        }
+
+        // Мобилно меню
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('mobile-open');
         }
 
         function toggleBookingFields() {

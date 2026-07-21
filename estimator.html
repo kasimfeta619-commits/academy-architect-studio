@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estimator | Academy Architect Studio</title>
+    <title id="pageTitle">Estimator | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Скрипт, който зарежда темата веднага, за да няма премигване -->
+    <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('siteTheme');
@@ -15,7 +15,65 @@
         })();
     </script>
     <style>
-        /* Допълнителни стилове за адаптация на калкулатора в тъмен режим */
+        .estimator-container {
+            padding: 80px 8%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            gap: 60px; 
+            min-height: 60vh; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            flex-wrap: wrap;
+        }
+        .calc-card {
+            flex: 1; 
+            min-width: 300px; 
+            max-width: 500px; 
+            background: #ffffff; 
+            border: 1px solid #eadecc; 
+            border-radius: 12px; 
+            padding: 40px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .calc-input {
+            width: 100%; 
+            padding: 12px 15px; 
+            border: 1px solid #eadecc; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            background: transparent; 
+            color: inherit; 
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .calc-result {
+            margin-top: 20px; 
+            padding: 15px; 
+            background: #f9f8f6; 
+            border-radius: 8px; 
+            text-align: center; 
+            display: none; 
+            transition: background-color 0.3s;
+        }
+        .calc-btn {
+            width: 100%; 
+            background-color: #1a1a1a; 
+            color: #fff; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            font-weight: 500; 
+            margin-bottom: 20px;
+            transition: background-color 0.2s;
+        }
+        .calc-btn:hover {
+            background-color: #333;
+        }
+
+        /* Dark Mode Overrides */
         body.dark-mode .calc-card {
             background: #1e1e1e !important;
             border-color: #2c2c2c !important;
@@ -28,6 +86,17 @@
         body.dark-mode .calc-result {
             background: #121212 !important;
         }
+        body.dark-mode .calc-btn {
+            background-color: #eadecc;
+            color: #1a1a1a;
+        }
+        body.dark-mode .calc-btn:hover {
+            background-color: #d4c8b6;
+        }
+        body.dark-mode h1, 
+        body.dark-mode label {
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body>
@@ -35,10 +104,12 @@
     <!-- НАВИГАЦИЯ -->
     <nav class="navbar">
         <a href="index.html" class="logo-area">
-            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
+            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" onerror="this.style.display='none'">
             <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
         
+        <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+
         <div id="nav-links">
             <a href="index.html" data-key="nav-home">Home</a>
             <a href="catalog.html" data-key="nav-catalog">Projects</a>
@@ -59,8 +130,7 @@
     </nav>
 
     <!-- СЪДЪРЖАНИЕ НА КАЛКУЛАТОРА -->
-    <main style="padding: 80px 8%; display: flex; justify-content: space-between; align-items: flex-start; gap: 60px; min-height: 60vh; max-width: 1200px; margin: 0 auto; flex-wrap: wrap;">
-        
+    <main class="estimator-container">
         <div style="flex: 1; min-width: 300px; max-width: 500px;">
             <span style="font-size: 0.75rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; display: block; margin-bottom: 20px;" data-key="estimator-eyebrow">COST ESTIMATOR</span>
             <h1 style="font-size: 3rem; font-weight: normal; line-height: 1.2; margin: 0 0 30px 0;" data-key="estimator-title">
@@ -71,26 +141,26 @@
             </p>
         </div>
 
-        <div class="calc-card" style="flex: 1; min-width: 300px; max-width: 500px; background: #ffffff; border: 1px solid #e6dec9; border-radius: 12px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: background-color 0.3s, border-color 0.3s;">
+        <div class="calc-card">
             <form onsubmit="event.preventDefault(); calculateBudget();">
                 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-type-label">Project Type</label>
-                    <select id="projectType" class="calc-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
-                        <option value="house" data-key="option-house" style="background: inherit; color: inherit;">House Design</option>
-                        <option value="interior" data-key="option-interior" style="background: inherit; color: inherit;">Interior Design</option>
-                        <option value="renovation" data-key="option-renovation" style="background: inherit; color: inherit;">Renovation</option>
+                    <select id="projectType" class="calc-input">
+                        <option value="house" data-key="option-house">House Design</option>
+                        <option value="interior" data-key="option-interior">Interior Design</option>
+                        <option value="renovation" data-key="option-renovation">Renovation</option>
                     </select>
                 </div>
 
                 <div style="margin-bottom: 25px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-area-label">Total Area (sq.m)</label>
-                    <input type="number" id="projectArea" min="10" value="100" required class="calc-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
+                    <input type="number" id="projectArea" min="10" value="100" required class="calc-input">
                 </div>
 
-                <button type="submit" style="width: 100%; background-color: #1a1a1a; color: #fff; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: 500; margin-bottom: 20px;" data-key="estimator-btn">Calculate Cost</button>
+                <button type="submit" class="calc-btn" data-key="estimator-btn">Calculate Cost</button>
             
-                <div id="resultBox" class="calc-result" style="margin-top: 20px; padding: 15px; background: #f9f8f6; border-radius: 8px; text-align: center; display: none; transition: background-color 0.3s;">
+                <div id="resultBox" class="calc-result">
                     <span style="font-size: 0.85rem; color: #8c8275; display: block; margin-bottom: 5px;" data-key="estimator-result-title">Estimated Budget:</span>
                     <strong id="resultOutput" style="font-size: 1.4rem; color: inherit;">0 €</strong>
                 </div>
@@ -129,7 +199,7 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
-        // Функция за превключване на тъмния режим
+        // Превключване на тъмния режим
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
@@ -137,6 +207,12 @@
             } else {
                 localStorage.setItem('siteTheme', 'light');
             }
+        }
+
+        // Мобилно меню
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('mobile-open');
         }
 
         function calculateBudget() {
