@@ -15,14 +15,27 @@
             }
         })();
 
-        // ЗАЩИТА НА АДМИН ПАНЕЛА
+        // ЗАЩИТА НА АДМИН ПАНЕЛА - ОБНОВЕНА ЛОГИКА
         (function() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const isAdmin = localStorage.getItem('isAdmin');
             
-            if (isLoggedIn !== 'true' || isAdmin !== 'true') {
-                alert('Достъпът е разрешен само за администратори!');
+            // Взимаме имейла на текущо логнатия потребител (предполагаме, че auth.js го запазва така)
+            const userEmail = localStorage.getItem('loggedInUserEmail'); 
+            
+            // Ако потребителят изобщо не е влязъл в профила си
+            if (isLoggedIn !== 'true') {
                 window.location.href = 'login.html';
+                return;
+            }
+
+            // Ако няма флаг за админ И имейлът не е твоят главен
+            if (isAdmin !== 'true' && userEmail !== 'kasim.feta@abv.bg') {
+                alert('Достъпът е разрешен само за администратори!');
+                window.location.href = 'index.html'; // Връщаме го в началото
+            } else if (userEmail === 'kasim.feta@abv.bg' && isAdmin !== 'true') {
+                // Ако си влязъл с твоя имейл, но системата не ти е дала права - даваме ги принудително
+                localStorage.setItem('isAdmin', 'true');
             }
         })();
     </script>
@@ -65,67 +78,26 @@
         .btn-delete { background: #a83232; color: #fff; border: none; padding: 8px 15px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; }
 
         /* Dark Mode Overrides */
-        body.dark-mode {
-            background-color: #121212 !important;
-            color: #ffffff !important;
-        }
-        body.dark-mode header.navbar {
-            background: #1a1a1a !important;
-            border-bottom-color: #2c2c2c !important;
-        }
-        body.dark-mode header.navbar span {
-            color: #ffffff !important;
-        }
-        body.dark-mode .admin-section {
-            background: #1e1e1e !important;
-            border-color: #2c2c2c !important;
-        }
-        body.dark-mode .admin-nav-tabs {
-            border-bottom-color: #2c2c2c !important;
-        }
-        body.dark-mode .tab-btn {
-            background: #252525 !important;
-            border-color: #333 !important;
-            color: #bbb !important;
-        }
-        body.dark-mode .tab-btn:hover {
-            background: #333 !important;
-            color: #fff !important;
-        }
-        body.dark-mode .tab-btn.active {
-            background: #eadecc !important;
-            color: #1a1a1a !important;
-            border-color: #eadecc !important;
-        }
+        body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
+        body.dark-mode header.navbar { background: #1a1a1a !important; border-bottom-color: #2c2c2c !important; }
+        body.dark-mode header.navbar span { color: #ffffff !important; }
+        body.dark-mode .admin-section { background: #1e1e1e !important; border-color: #2c2c2c !important; }
+        body.dark-mode .admin-nav-tabs { border-bottom-color: #2c2c2c !important; }
+        body.dark-mode .tab-btn { background: #252525 !important; border-color: #333 !important; color: #bbb !important; }
+        body.dark-mode .tab-btn:hover { background: #333 !important; color: #fff !important; }
+        body.dark-mode .tab-btn.active { background: #eadecc !important; color: #1a1a1a !important; border-color: #eadecc !important; }
         body.dark-mode .form-group input[type="text"], 
         body.dark-mode .form-group textarea,
-        body.dark-mode .form-group input[type="file"] {
-            background: #121212 !important;
-            border-color: #444 !important;
-            color: #ffffff !important;
-        }
+        body.dark-mode .form-group input[type="file"] { background: #121212 !important; border-color: #444 !important; color: #ffffff !important; }
         body.dark-mode .project-item-admin, 
-        body.dark-mode .booking-item-admin {
-            background: #1e1e1e !important;
-            border-color: #2c2c2c !important;
-        }
-        body.dark-mode .admin-project-no-thumb {
-            background: #252525 !important;
-            border-color: #333 !important;
-        }
+        body.dark-mode .booking-item-admin { background: #1e1e1e !important; border-color: #2c2c2c !important; }
+        body.dark-mode .admin-project-no-thumb { background: #252525 !important; border-color: #333 !important; }
         body.dark-mode h1, 
         body.dark-mode h3, 
         body.dark-mode label,
-        body.dark-mode .checkbox-group label {
-            color: #ffffff !important;
-        }
-        body.dark-mode .btn-action {
-            background-color: #eadecc;
-            color: #1a1a1a;
-        }
-        body.dark-mode .btn-action:hover {
-            background-color: #d4c8b6;
-        }
+        body.dark-mode .checkbox-group label { color: #ffffff !important; }
+        body.dark-mode .btn-action { background-color: #eadecc; color: #1a1a1a; }
+        body.dark-mode .btn-action:hover { background-color: #d4c8b6; }
 
         /* МОБИЛНА ОПТИМИЗАЦИЯ */
         @media (max-width: 768px) {
@@ -145,8 +117,11 @@
 
     <header class="navbar" style="padding: 20px 5%; border-bottom: 1px solid #eadecc; display: flex; align-items: center; justify-content: space-between; background: #fbf9f4;">
         <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" style="height: 34px; width: auto; display: block;" onerror="this.style.display='none'">
-            <span style="font-weight: 500; color: #1a1a1a; font-size: 1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
+            <!-- ВГРАДЕНА SVG ИКОНКА (Замества липсващото изображение) -->
+            <svg style="height: 30px; width: 30px; fill: #8c8275;" viewBox="0 0 24 24">
+                <path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 2.84L17 10.5V18H7v-7.5l5-4.66z"/>
+            </svg>
+            <span style="font-weight: 500; color: var(--text-color, #1a1a1a); font-size: 1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
         </a>
         <button id="darkModeBtn" onclick="toggleDarkMode()" style="background: none; border: 1px solid var(--border-color, #eadecc); padding: 8px 12px; cursor: pointer; border-radius: 4px; color: inherit; font-size: 0.85rem;">🌙 Dark</button>
     </header>
