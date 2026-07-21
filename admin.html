@@ -120,7 +120,8 @@
                 <hr style="border: 0; border-top: 1px solid #eadecc; margin: 25px 0;">
                 
                 <div class="form-group"><label>Главна снимка</label><input type="file" id="mainImg"></div>
-                <div class="form-group"><label>Проект / Разпределение (План)</label><input type="file" id="planImg"></div>
+                <!-- ПРОМЕНЕНО ТУК: Вече приема множество файлове за разпределения (етажи) -->
+                <div class="form-group"><label>Разпределения / Планове (може да изберете няколко етажа)</label><input type="file" id="planImgs" multiple></div>
                 <div class="form-group"><label>Разрез</label><input type="file" id="sectionImg"></div>
                 <div class="form-group"><label>Допълнителни визуализации</label><input type="file" id="galleryImgs" multiple></div>
 
@@ -321,8 +322,12 @@
             const mainFile = document.getElementById('mainImg').files[0];
             const mainImage = mainFile ? await readFileAsDataURL(mainFile) : (existingProject.mainImage || '');
 
-            const planFile = document.getElementById('planImg').files[0];
-            const planImage = planFile ? await readFileAsDataURL(planFile) : (existingProject.planImage || '');
+            // Обработка на множество разпределения (етажи) с поддръжка на стари проекти
+            const planFiles = document.getElementById('planImgs').files;
+            let floorPlans = existingProject.floorPlans || (existingProject.planImage ? [existingProject.planImage] : []);
+            if (planFiles.length > 0) {
+                floorPlans = await Promise.all(Array.from(planFiles).map(file => readFileAsDataURL(file)));
+            }
 
             const sectionFile = document.getElementById('sectionImg').files[0];
             const sectionImage = sectionFile ? await readFileAsDataURL(sectionFile) : (existingProject.sectionImage || '');
@@ -344,7 +349,7 @@
                 style: document.getElementById('style').value,
                 price: document.getElementById('price').value,
                 isFavorite: document.getElementById('isFav').checked,
-                mainImage, planImage, sectionImage, gallery
+                mainImage, floorPlans, sectionImage, gallery
             };
 
             if (editIndex !== "") {
