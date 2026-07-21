@@ -2,56 +2,44 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>ARCHITECT 23 - FINISHED</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy Architect Studio</title>
     <style>
-        body { margin: 0; display: flex; height: 100vh; background: #ddd; font-family: sans-serif; overflow: hidden; }
-        #toolbar { width: 60px; background: #eee; border-right: 2px solid #999; display: flex; flex-direction: column; align-items: center; padding-top: 15px; }
-        .tool { width: 45px; height: 45px; background: #fff; border: 2px solid #333; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-        #canvas { flex: 1; background: #fff; cursor: crosshair; }
-        #view { flex: 1; perspective: 1000px; background: #000; position: relative; overflow: hidden; }
-        .wall-3d { position: absolute; background: #bbb; border: 1px solid #777; height: 120px; transform-origin: left; }
+        body { background-color: #fbf9f4; color: #1a1a1a; font-family: sans-serif; margin: 0; }
+        .navbar { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: #fbf9f4; }
+        .logo-area { font-weight: 500; color: #1a1a1a; font-size: 1rem; text-decoration: none; }
+        .logo-area span { font-weight: 700; color: #8c8275; }
+        .nav-links { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        .nav-links a { color: #1a1a1a; text-decoration: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; font-weight: 600; }
+        .nav-links a:hover { color: #8c8275; }
+        .container { padding: 80px 8%; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .hero h1 { font-size: 3.2rem; font-weight: 400; margin-bottom: 20px; color: #1a1a1a; }
+        .hero p { color: #8c8275; font-size: 1.1rem; max-width: 600px; margin: 0 auto 35px; line-height: 1.6; }
+        .btn { background: #1a1a1a; color: #fff; padding: 15px 30px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; display: inline-block; font-size: 0.85rem; }
+        .btn:hover { background: #333; }
     </style>
 </head>
 <body>
 
-<div id="toolbar">
-    <div class="tool">🧱</div>
-</div>
-<canvas id="canvas"></canvas>
-<div id="view"></div>
+    <header class="navbar">
+        <a href="index.html" class="logo-area">Academy Architect <span>Studio</span></a>
+        <nav class="nav-links">
+            <a href="index.html">Начало</a>
+            <a href="about.html">За нас</a>
+            <a href="catalog.html">Проекти</a>
+            <a href="contact.html">Контакти</a>
+            <a href="admin.html">Админ</a>
+            <a href="booking.html" style="border: 1px solid #1a1a1a; padding: 6px 12px;">Запитване</a>
+        </nav>
+    </header>
 
-<script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    const view = document.getElementById('view');
-    canvas.width = window.innerWidth / 2;
-    canvas.height = window.innerHeight;
+    <main class="container">
+        <section class="hero">
+            <h1>Съвременна архитектура и дизайн</h1>
+            <p>Създаваме функционални, елегантни и устойчиви пространства, съобразени с вашата визия.</p>
+            <a href="catalog.html" class="btn">Разгледайте проектите</a>
+        </section>
+    </main>
 
-    let lastPos = { x: 200, y: 200 };
-
-    canvas.addEventListener('mousedown', e => {
-        const end = { x: e.offsetX, y: e.offsetY };
-        const len = Math.sqrt((end.x - lastPos.x)**2 + (end.y - lastPos.y)**2);
-        const angle = Math.atan2(end.y - lastPos.y, end.x - lastPos.x) * 180 / Math.PI;
-
-        // 2D чертеж
-        ctx.beginPath();
-        ctx.moveTo(lastPos.x, lastPos.y);
-        ctx.lineTo(end.x, end.y);
-        ctx.lineWidth = 6;
-        ctx.stroke();
-
-        // 3D изглед
-        const wall = document.createElement('div');
-        wall.className = 'wall-3d';
-        wall.style.width = len + 'px';
-        wall.style.left = (lastPos.x / 2) + 'px';
-        wall.style.top = (lastPos.y / 2 + 100) + 'px';
-        wall.style.transform = `rotateY(${angle}deg)`;
-        view.appendChild(wall);
-
-        lastPos = end;
-    });
-</script>
 </body>
 </html>

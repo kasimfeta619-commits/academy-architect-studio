@@ -5,42 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .filter-container {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-        .filter-btn {
-            background: transparent;
-            border: 1px solid #eadecc;
-            border-radius: 20px;
-            padding: 8px 18px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            color: #666;
-            transition: all 0.2s;
-        }
-        .filter-btn:hover,
-        .filter-btn.active {
-            background: #1a1a1a;
-            color: #fff;
-            border-color: #1a1a1a;
-        }
-        body.dark-mode .filter-btn {
-            border-color: #2c2c2c;
-            color: #b0b0b0;
-            background: #1e1e1e;
-        }
-        body.dark-mode .filter-btn:hover,
-        body.dark-mode .filter-btn.active {
-            background: #ffffff;
-            color: #121212;
-            border-color: #ffffff;
-        }
-    </style>
 </head>
 <body>
 
@@ -65,77 +29,33 @@
                 <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
             </div>
+            <a href="booking.html" class="btn-login" style="margin-left: 10px;">Запитване</a>
             <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
         </div>
     </nav>
 
-    <!-- КАТАЛОГ СЪДЪРЖАНИЕ -->
-    <main style="padding: 60px 8%; min-height: 70vh;">
-        <h1 data-key="catalog-title" style="font-size: 2rem; font-weight: 400; margin-bottom: 25px;">Our Projects</h1>
-        
-        <div class="filter-container">
-            <button class="filter-btn active" onclick="filterProjects('all', this)" data-key="filter-all">All</button>
-            <button class="filter-btn" onclick="filterProjects('residential', this)" data-key="filter-residential">Residential</button>
-            <button class="filter-btn" onclick="filterProjects('commercial', this)" data-key="filter-commercial">Commercial</button>
-            <button class="filter-btn" onclick="filterProjects('interior', this)" data-key="filter-interior">Interior</button>
-        </div>
-
-        <div id="catalogProjectsGrid" class="projects-grid">
-            <!-- Динамично зареждане -->
+    <!-- СЪДЪРЖАНИЕ НА КАТАЛОГА -->
+    <main style="padding: 60px 8%; max-width: 1200px; margin: 0 auto;">
+        <h1 data-key="nav-catalog" style="font-size: 2.5rem; margin-bottom: 30px;">Projects</h1>
+        <div class="projects-grid" id="catalogProjectsContainer">
+            <!-- Динамично зареждане на всички проекти -->
         </div>
     </main>
 
-    <!-- ФУТЪР -->
-    <footer class="main-footer">
-        <div class="footer-logo-area">
-            <div>
-                <div class="footer-brand">Academy Architect Studio</div>
-                <div class="footer-subtext" data-key="footer-subtitle">Design & Engineering</div>
-            </div>
-        </div>
-        
-        <div class="footer-col">
-            <h4 data-key="footer-contacts">Contacts</h4>
-            <p data-key="footer-address">Sofia, Bulgaria</p>
-            <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
-            <p>+359 88 123 4567</p>
-        </div>
-        
-        <div class="footer-col">
-            <h4 data-key="footer-links-title">Links</h4>
-            <p><a href="index.html" data-key="nav-home">Home</a></p>
-            <p><a href="catalog.html" data-key="nav-catalog">Projects</a></p>
-            <p><a href="about.html" data-key="nav-about">About Us</a></p>
-        </div>
-        
-        <div class="footer-right">
-            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
-        let allProjects = [];
-
         document.addEventListener("DOMContentLoaded", function() {
             initLanguage();
-            allProjects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            renderProjects(allProjects);
-        });
-
-        function renderProjects(projectsToRender) {
-            const container = document.getElementById('catalogProjectsGrid');
+            const container = document.getElementById('catalogProjectsContainer');
+            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
             const currentLang = localStorage.getItem('siteLang') || 'en';
+            const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
 
-            if (projectsToRender.length > 0) {
-                container.innerHTML = projectsToRender.map((p, index) => {
-                    const originalIndex = allProjects.indexOf(p);
+            if (projects.length > 0) {
+                container.innerHTML = projects.map((p, index) => {
                     const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
-                    const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
-
                     return `
-                        <a href="project-detail.html?index=${originalIndex}" class="project-card">
+                        <a href="project-detail.html?index=${index}" class="project-card">
                             <div class="project-img-box">
                                 <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Image'">
                             </div>
@@ -148,22 +68,10 @@
                     `;
                 }).join('');
             } else {
-                container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem; grid-column: 1 / -1;" data-key="no-projects">No projects added yet.</p>`;
+                container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem;" data-key="no-projects">No projects added yet.</p>`;
                 applyTranslations(currentLang);
             }
-        }
-
-        function filterProjects(category, btnElement) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            if (btnElement) btnElement.classList.add('active');
-
-            if (category === 'all') {
-                renderProjects(allProjects);
-            } else {
-                const filtered = allProjects.filter(p => (p.category || 'residential') === category);
-                renderProjects(filtered);
-            }
-        }
+        });
     </script>
 </body>
 </html>
