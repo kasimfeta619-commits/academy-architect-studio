@@ -2,128 +2,92 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>Каталог | Academy Architect Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог с проекти | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px; padding: 40px 10%; }
-        .lang-switcher { display: flex; gap: 10px; margin-right: 20px; }
-        .lang-btn { background: none; border: 1px solid #1a1a1a; cursor: pointer; padding: 5px 10px; border-radius: 20px; }
-        .lang-btn.active { background: #1a1a1a; color: #fff; }
-        
-        .project-card {
-            background: #fff;
-            border: 1px solid #eadecc;
-            border-radius: 4px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-        }
-        .project-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
+        body { background-color: #fbf9f4; color: #1a1a1a; font-family: sans-serif; margin: 0; }
+        .catalog-container { padding: 60px 10%; }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px; margin-top: 40px; }
+        .project-card { background: #fff; border: 1px solid #eadecc; cursor: pointer; transition: transform 0.2s; }
+        .project-card:hover { transform: translateY(-5px); }
+        .project-card img { width: 100%; height: 260px; object-fit: cover; display: block; }
+        .project-info { padding: 25px; }
+        .project-style { font-size: 0.65rem; text-transform: uppercase; color: #8c8275; font-weight: 700; letter-spacing: 1.5px; }
+        .project-title { font-size: 1.25rem; font-weight: 500; margin: 8px 0 15px 0; color: #1a1a1a; }
+        .project-meta { display: flex; justify-content: space-between; border-top: 1px solid #f0ece1; padding-top: 15px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <!-- НАВИГАЦИЯ -->
     <header class="navbar">
         <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
-            <img src="assets/main-graphic.png" alt="Academy Architect Studio Logo" class="logo-icon" style="height: 38px; width: auto; display: block;" onerror="this.style.display='none'">
-            <span style="font-weight: 500; color: #1a1a1a; font-size: 1.1rem;">Academy Architect <span class="logo-studio" style="font-weight: 700; color: #8c8275;">Studio</span></span>
+            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" style="height: 38px; width: auto; display: block;" onerror="this.style.display='none'">
+            <span style="font-weight: 500; color: #1a1a1a; font-size: 1.1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
         </a>
         <nav id="nav-links">
-            <a href="index.html" data-key="nav-home">Начало</a>
-            <a href="catalog.html" class="active" data-key="nav-catalog">Каталог</a>
-            <a href="about.html" data-key="nav-about">За нас</a>
-            <a href="planner.html" data-key="nav-planner" data-key="nav-planner">ИИ Планер</a>
-            <a href="contact.html" data-key="nav-contact">Контакт</a>
+            <a href="index.html">Начало</a>
+            <a href="catalog.html" class="active">Каталог</a>
+            <a href="about.html">За нас</a>
+            <a href="planner.html">ИИ Планер</a>
+            <a href="contact.html">Контакт</a>
         </nav>
         <div class="header-actions">
-            <div class="lang-switcher">
-                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
-                <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
-            </div>
-            <a href="login.html" class="btn-login" data-key="btn-login">Вход</a>
+            <a href="login.html" class="btn-login">Вход</a>
         </div>
     </header>
 
-    <!-- СЪДЪРЖАНИЕ -->
-    <main class="content-container" style="background-color: #fbf9f4; min-height: 70vh;">
-        <span class="eyebrow" style="padding: 40px 10% 0 10%; display:block; color: #8c8275; font-size: 0.75rem; letter-spacing: 2px; font-weight: 700;" data-key="cat-eyebrow">АРХИВ</span>
-        <h1 style="padding: 0 10%; font-size: 2.5rem; font-weight: 400; margin-bottom: 20px;" data-key="cat-title">Каталог с проекти</h1>
-
-        <!-- Динамичен грид за проектите от Админ Панела -->
-        <div class="catalog-grid" id="catalogGrid"></div>
+    <main class="catalog-container">
+        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #8c8275; font-weight: 700;">АРХИВ</span>
+        <h1 style="font-size: 2.5rem; font-weight: 400; margin-top: 5px; color: #1a1a1a;">Каталог с проекти</h1>
+        
+        <div id="catalogGrid" class="catalog-grid"></div>
     </main>
 
-    <!-- ФУТЪР -->
     <footer class="main-footer">
-        <div class="footer-logo-area">
-            <span class="footer-brand" style="font-weight: 600; color: #1a1a1a; font-size: 1rem;">Academy Architect <span class="logo-studio" style="font-weight: 700; color: #8c8275;">Studio</span></span>
-            <p class="footer-subtext" data-key="footer-subtext" style="font-size: 0.65rem; letter-spacing: 1px; color: #8c8275; margin-top: 2px;">АРХИТЕКТУРНО СТУДИО</p>
+        <div class="footer-logo-area" style="display: flex; align-items: center; gap: 12px;">
+            <img src="assets/main-graphic.png" alt="Logo" class="footer-logo" style="height: 32px; width: auto;" onerror="this.style.display='none'">
+            <div>
+                <span class="footer-brand" style="font-weight: 600; color: #1a1a1a; font-size: 1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
+                <p class="footer-subtext" style="font-size: 0.65rem; letter-spacing: 1px; color: #8c8275; margin-top: 2px;">АРХИТЕКТУРНО СТУДИО</p>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4 style="font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 10px; color: #1a1a1a;">STUDIO</h4>
+            <p style="font-size: 0.85rem; color: #555; margin: 4px 0;">Sofia · Plovdiv · Varna</p>
+            <p style="font-size: 0.85rem; margin: 4px 0;"><a href="mailto:info@architectstudio.com" style="color: #555; text-decoration: none;">info@architectstudio.com</a></p>
         </div>
         <div class="footer-col footer-right" style="text-align: right; color: #8c8275; font-size: 0.85rem;">
             <p>© 2026</p>
-            <p data-key="footer-rights">Academy Architect Studio — Всички права запазени.</p>
+            <p>Academy Architect Studio — Всички права запазени.</p>
         </div>
     </footer>
 
     <script>
-        const translations = {
-            en: { 
-                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", 
-                "btn-login": "Login", "cat-eyebrow": "ARCHIVE", "cat-title": "Project Catalog", 
-                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "All rights reserved." 
-            },
-            bg: { 
-                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", 
-                "btn-login": "Вход", "cat-eyebrow": "АРХИВ", "cat-title": "Каталог с проекти", 
-                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Всички права запазени." 
-            }
-        };
+        const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+        const grid = document.getElementById('catalogGrid');
 
-        function changeLanguage(lang) {
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (translations[lang][key]) el.innerText = translations[lang][key];
-            });
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
+        if (projects.length === 0) {
+            grid.innerHTML = `<p style="color: #8c8275; grid-column: 1/-1;">Все още няма качени проекти в каталога.</p>`;
+        } else {
+            grid.innerHTML = projects.map((p, index) => {
+                const cardImage = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
 
-        function renderProjects() {
-            const grid = document.getElementById('catalogGrid');
-            const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-            
-            if (projects.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 60px 0; color: #8c8275;">
-                    <p style="font-size: 1.1rem; margin-bottom: 10px;">Все още няма качени проекти в архива.</p>
-                    <p style="font-size: 0.9rem;">Влезте в административния панел, за да добавите първия си авторски проект.</p>
-                </div>`;
-                return;
-            }
-
-            grid.innerHTML = projects.map((p, index) => `
-                <a href="project.html?id=${index}" class="project-card">
-                    <div class="project-image-wrapper" style="height:260px; overflow:hidden; background-color: #e5e2db;">
-                        <img src="${p.gallery?.[0] || 'https://placehold.co/400x260?text=Project'}" style="width:100%; height:100%; object-fit:cover;">
-                    </div>
-                    <div class="project-info" style="padding:24px; display:flex; flex-direction:column; gap:8px;">
-                        <span style="font-size:0.7rem; color:#8c8275; font-weight:700; letter-spacing:1.5px;">${p.style ? p.style.toUpperCase() : 'АРХИТЕКТУРА'}</span>
-                        <h3 style="font-size:1.15rem; font-weight:500; color:#1a1a1a; margin: 0;">${p.title}</h3>
-                        <p style="font-size:0.85rem; color:#555; line-height:1.5; margin: 0;">${p.description ? p.description.substring(0, 75) + '...' : ''}</p>
-                        
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px solid #f0ece1; font-size:0.85rem;">
-                            <span style="font-weight:600; color:#1a1a1a;">${p.area ? p.area + ' кв.м' : ''}</span>
-                            <span style="color:#8c8275; font-weight:500;">${p.price ? p.price + ' лв.' : ''}</span>
+                return `
+                    <div class="project-card" onclick="window.location.href='project.html?index=${index}'">
+                        <img src="${cardImage}" alt="${p.title}">
+                        <div class="project-info">
+                            <span class="project-style">${p.style || 'Архитектурен проект'}</span>
+                            <h3 class="project-title">${p.title}</h3>
+                            <div class="project-meta">
+                                <span style="color: #555;">${p.area ? p.area + ' кв.м' : '-'}</span>
+                                <span style="font-weight: 600; color: #1a1a1a;">${p.price ? p.price + ' лв.' : 'По запитване'}</span>
+                            </div>
                         </div>
                     </div>
-                </a>`).reverse().join('');
+                `;
+            }).join('');
         }
-        renderProjects();
     </script>
 </body>
 </html>
