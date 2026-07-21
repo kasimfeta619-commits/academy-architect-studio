@@ -110,7 +110,7 @@
             
             const container = document.getElementById('featuredProjectsContainer');
             const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            const currentLang = localStorage.getItem('siteLang') || 'en';
+            const currentLang = localStorage.getItem('preferredLang') || localStorage.getItem('siteLang') || 'en';
 
             if (projects.length > 0) {
                 const featured = projects.slice(-3).reverse(); 
@@ -135,7 +135,9 @@
                 }).join('');
             } else {
                 container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem; grid-column: 1 / -1;" data-key="no-projects">No projects added yet.</p>`;
-                applyTranslations(currentLang);
+                if (typeof applyTranslations === 'function') {
+                    applyTranslations(currentLang);
+                }
             }
         });
     </script>

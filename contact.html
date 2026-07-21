@@ -43,7 +43,7 @@
             </h1>
             <div style="font-size: 1.05rem; line-height: 1.7; color: var(--text-color, #4a453e); display: flex; flex-direction: column; gap: 15px;">
                 <p style="margin: 0;"><strong data-key="footer-address-label">Address:</strong> Sofia, Bulgaria</p>
-                <p style="margin: 0;"><strong>Email:</strong> <a href="mailto:office@architect-studio.bg" style="color: inherit; text-decoration: underline;">office@architect-studio.bg</a></p>
+                <p style="margin: 0;"><strong data-key="email-label">Email:</strong> <a href="mailto:office@architect-studio.bg" style="color: inherit; text-decoration: underline;">office@architect-studio.bg</a></p>
                 <p style="margin: 0;"><strong data-key="contact-phone-label">Phone:</strong> +359 88 123 4567</p>
             </div>
         </div>
@@ -52,10 +52,10 @@
             <form onsubmit="event.preventDefault(); alert('Successfully submitted!');">
                 
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;">Inquiry Type</label>
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="inquiry-type-label">Inquiry Type</label>
                     <select id="inquiryType" onchange="toggleBookingFields()" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
-                        <option value="message">General Message</option>
-                        <option value="booking">Book Consultation / Meeting</option>
+                        <option value="message" data-key="option-general">General Message</option>
+                        <option value="booking" data-key="option-booking">Book Consultation / Meeting</option>
                     </select>
                 </div>
 
@@ -69,20 +69,19 @@
                     <input type="email" required style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
                 </div>
 
-                <!-- Ново поле за телефонен номер -->
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;">Phone Number</label>
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-phone">Phone Number</label>
                     <input type="tel" required placeholder="+359..." style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
                 </div>
 
                 <!-- Поля за резервация (скрити по подразбиране) -->
                 <div id="bookingFields" style="display: none; margin-bottom: 20px;">
                     <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;">Preferred Date</label>
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-date">Preferred Date</label>
                         <input type="date" id="bookDate" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
                     </div>
                     <div>
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;">Preferred Time</label>
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-time">Preferred Time</label>
                         <input type="time" id="bookTime" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
                     </div>
                 </div>
