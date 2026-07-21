@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Скрипт, който зарежда темата веднага, за да няма премигване -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
     <style>
         .tab-btn {
             flex: 1;
@@ -29,9 +38,29 @@
         .login-form-container.active {
             display: block;
         }
+        /* Допълнителни стилове за адаптация в тъмен режим */
+        body.dark-mode .login-card {
+            background: #1e1e1e !important;
+            border-color: #2c2c2c !important;
+        }
+        body.dark-mode .login-input {
+            border-color: #444 !important;
+            background: #121212 !important;
+            color: #ffffff !important;
+        }
+        body.dark-mode .tab-btn {
+            color: #aaa;
+        }
+        body.dark-mode .tab-btn.active {
+            color: #ffffff;
+            border-bottom-color: #ffffff;
+        }
+        body.dark-mode h1, body.dark-mode label {
+            color: #ffffff !important;
+        }
     </style>
 </head>
-<body style="background-color: #fdfbf7; color: #1a1a1a; font-family: sans-serif; margin: 0;">
+<body style="background-color: #fdfbf7; color: #1a1a1a; font-family: sans-serif; margin: 0; transition: background-color 0.3s, color 0.3s;">
 
     <!-- НАВИГАЦИЯ -->
     <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; border-bottom: 1px solid #e6dec9;">
@@ -50,10 +79,10 @@
         </div>
 
         <div class="header-actions" style="display: flex; align-items: center; gap: 15px;">
-            <button id="darkModeBtn" onclick="toggleDarkMode()" style="background: none; border: 1px solid #e6dec9; padding: 6px 12px; border-radius: 20px; cursor: pointer;">🌙 Тъмна</button>
+            <button id="darkModeBtn" onclick="toggleDarkMode()" style="background: none; border: 1px solid #e6dec9; padding: 6px 12px; border-radius: 20px; cursor: pointer; color: inherit;">🌙 Тъмна</button>
             <div class="lang-switcher" style="display: flex; gap: 5px;">
                 <button class="lang-btn" onclick="setLanguage('en')" style="background: none; border: none; cursor: pointer; color: #888;">EN</button>
-                <button class="lang-btn active" onclick="setLanguage('bg')" style="background: none; border: none; cursor: pointer; font-weight: bold;">BG</button>
+                <button class="lang-btn active" onclick="setLanguage('bg')" style="background: none; border: none; cursor: pointer; font-weight: bold; color: inherit;">BG</button>
             </div>
             <a href="booking.html" class="btn-login" style="background-color: #1a1a1a; color: #fff; padding: 8px 20px; text-decoration: none; border-radius: 20px; font-size: 0.9rem;">Booking</a>
             <a href="login.html" class="btn-login active" style="background-color: #1a1a1a; color: #fff; padding: 8px 20px; text-decoration: none; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">Вход</a>
@@ -62,7 +91,7 @@
 
     <!-- СЪДЪРЖАНИЕ -->
     <main style="padding: 80px 8%; display: flex; justify-content: center; align-items: center; min-height: 60vh;">
-        <div style="width: 100%; max-width: 500px; background: #ffffff; border: 1px solid #e6dec9; border-radius: 12px; padding: 40px 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+        <div class="login-card" style="width: 100%; max-width: 500px; background: #ffffff; border: 1px solid #e6dec9; border-radius: 12px; padding: 40px 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: background-color 0.3s, border-color 0.3s;">
             
             <!-- Табове за превключване -->
             <div style="display: flex; border-bottom: 1px solid #e6dec9; margin-bottom: 30px;">
@@ -76,12 +105,12 @@
                 <form onsubmit="handleUserLogin(event)">
                     <div style="margin-bottom: 25px;">
                         <label style="display: block; font-size: 0.85rem; letter-spacing: 1px; color: #665c52; margin-bottom: 8px; text-transform: uppercase;">ИМЕЙЛ</label>
-                        <input type="email" id="userEmail" required placeholder="user@example.com" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box;">
+                        <input type="email" id="userEmail" required placeholder="user@example.com" class="login-input" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
                     </div>
 
                     <div style="margin-bottom: 30px;">
                         <label style="display: block; font-size: 0.85rem; letter-spacing: 1px; color: #665c52; margin-bottom: 8px; text-transform: uppercase;">ПАРОЛА</label>
-                        <input type="password" id="userPassword" required placeholder="••••••" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box;">
+                        <input type="password" id="userPassword" required placeholder="••••••" class="login-input" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
                     </div>
 
                     <button type="submit" style="width: 100%; background-color: #1a1a1a; color: #fff; padding: 15px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;">ВЛИЗАНЕ</button>
@@ -96,12 +125,12 @@
                 <form onsubmit="handleAdminLogin(event)">
                     <div style="margin-bottom: 25px;">
                         <label style="display: block; font-size: 0.85rem; letter-spacing: 1px; color: #665c52; margin-bottom: 8px; text-transform: uppercase;">АДМИН ИМЕЙЛ</label>
-                        <input type="email" id="adminEmailInput" required value="admin@architect.bg" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box;">
+                        <input type="email" id="adminEmailInput" required value="admin@architect.bg" class="login-input" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
                     </div>
 
                     <div style="margin-bottom: 30px;">
                         <label style="display: block; font-size: 0.85rem; letter-spacing: 1px; color: #665c52; margin-bottom: 8px; text-transform: uppercase;">АДМИН ПАРОЛА</label>
-                        <input type="password" id="adminPasswordInput" required value="admin123" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box;">
+                        <input type="password" id="adminPasswordInput" required value="admin123" class="login-input" style="width: 100%; padding: 14px 15px; border: 1px solid #e6dec9; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; box-sizing: border-box; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
                     </div>
 
                     <button type="submit" style="width: 100%; background-color: #1a1a1a; color: #fff; padding: 15px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;">ВЛИЗАНЕ В АДМИН ПАНЕЛ</button>
@@ -116,12 +145,12 @@
         <div style="display: flex; align-items: center; gap: 15px;">
             <span style="font-size: 1.2rem;">📐</span>
             <div>
-                <div style="font-weight: bold; color: #1a1a1a;">Academy Architect Studio</div>
+                <div style="font-weight: bold; color: inherit;">Academy Architect Studio</div>
                 <div style="font-size: 0.75rem; letter-spacing: 1px;">АРХИТЕКТУРНО СТУДИО</div>
             </div>
         </div>
         <div>
-            <div style="font-weight: bold; color: #1a1a1a; margin-bottom: 5px; letter-spacing: 1px;">STUDIO</div>
+            <div style="font-weight: bold; color: inherit; margin-bottom: 5px; letter-spacing: 1px;">STUDIO</div>
             <div>Sofia · Plovdiv · Varna</div>
             <div>info@architectstudio.com</div>
         </div>
@@ -133,6 +162,16 @@
 
     <script src="translations.js"></script>
     <script>
+        // Функция за превключване на тъмния режим
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('siteTheme', 'dark');
+            } else {
+                localStorage.setItem('siteTheme', 'light');
+            }
+        }
+
         function switchTab(type) {
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(btn => btn.classList.remove('active'));

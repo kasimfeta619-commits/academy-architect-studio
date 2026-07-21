@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Добавен е скриптът срещу премигване -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
 </head>
 <body>
 

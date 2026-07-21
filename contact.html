@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacts & Booking | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Скрипт, който зарежда темата веднага, за да няма премигване -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <style>
+        /* Допълнителни стилове за адаптация на формата за контакти в тъмен режим */
+        body.dark-mode .contact-card {
+            background: #1e1e1e !important;
+            border-color: #2c2c2c !important;
+        }
+        body.dark-mode .contact-input {
+            border-color: #444 !important;
+            background: #121212 !important;
+            color: #ffffff !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -46,46 +67,46 @@
             </div>
         </div>
 
-        <div style="flex: 1; min-width: 300px; max-width: 500px; background: var(--card-bg, #ffffff); border: 1px solid var(--border-color, #e6dec9); border-radius: 12px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+        <div class="contact-card" style="flex: 1; min-width: 300px; max-width: 500px; background: #ffffff; border: 1px solid #e6dec9; border-radius: 12px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: background-color 0.3s, border-color 0.3s;">
             <form onsubmit="event.preventDefault(); alert('Successfully submitted!');">
                 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="inquiry-type-label">Inquiry Type</label>
-                    <select id="inquiryType" onchange="toggleBookingFields()" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
-                        <option value="message" data-key="option-general">General Message</option>
-                        <option value="booking" data-key="option-booking">Book Consultation / Meeting</option>
+                    <select id="inquiryType" onchange="toggleBookingFields()" class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
+                        <option value="message" data-key="option-general" style="background: inherit; color: inherit;">General Message</option>
+                        <option value="booking" data-key="option-booking" style="background: inherit; color: inherit;">Book Consultation / Meeting</option>
                     </select>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-name">Your Name</label>
-                    <input type="text" required style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
+                    <input type="text" required class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-email">Your Email</label>
-                    <input type="email" required style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
+                    <input type="email" required class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-phone">Phone Number</label>
-                    <input type="tel" required placeholder="+359..." style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
+                    <input type="tel" required placeholder="+359..." class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
                 </div>
 
                 <div id="bookingFields" style="display: none; margin-bottom: 20px;">
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-date">Preferred Date</label>
-                        <input type="date" id="bookDate" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
+                        <input type="date" id="bookDate" class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
                     </div>
                     <div>
                         <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-time">Preferred Time</label>
-                        <input type="time" id="bookTime" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
+                        <input type="time" id="bookTime" class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
                     </div>
                 </div>
 
                 <div style="margin-bottom: 25px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="form-message">Message / Details</label>
-                    <textarea rows="4" required style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; resize: vertical;"></textarea>
+                    <textarea rows="4" required class="contact-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; resize: vertical; transition: background-color 0.3s, border-color 0.3s, color 0.3s;"></textarea>
                 </div>
 
                 <button type="submit" style="width: 100%; background-color: #1a1a1a; color: #fff; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: 500;" data-key="form-submit">Send Request</button>
@@ -122,6 +143,16 @@
 
     <script src="translations.js"></script>
     <script>
+        // Функция за превключване на тъмния режим
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('siteTheme', 'dark');
+            } else {
+                localStorage.setItem('siteTheme', 'light');
+            }
+        }
+
         function toggleBookingFields() {
             const type = document.getElementById('inquiryType').value;
             const bookingFields = document.getElementById('bookingFields');

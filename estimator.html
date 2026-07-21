@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estimator | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Скрипт, който зарежда темата веднага, за да няма премигване -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <style>
+        /* Допълнителни стилове за адаптация на калкулатора в тъмен режим */
+        body.dark-mode .calc-card {
+            background: #1e1e1e !important;
+            border-color: #2c2c2c !important;
+        }
+        body.dark-mode .calc-input {
+            border-color: #444 !important;
+            background: #121212 !important;
+            color: #ffffff !important;
+        }
+        body.dark-mode .calc-result {
+            background: #121212 !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -42,33 +66,33 @@
             <h1 style="font-size: 3rem; font-weight: normal; line-height: 1.2; margin: 0 0 30px 0;" data-key="estimator-title">
                 Calculate the approximate budget for your project.
             </h1>
-            <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text-color, #4a453e); margin: 0;" data-key="estimator-desc">
+            <p style="font-size: 1.05rem; line-height: 1.7; color: #666; margin: 0;" data-key="estimator-desc">
                 Use our interactive calculator to get a preliminary cost estimate based on area and project type.
             </p>
         </div>
 
-        <div style="flex: 1; min-width: 300px; max-width: 500px; background: var(--card-bg, #ffffff); border: 1px solid var(--border-color, #e6dec9); border-radius: 12px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+        <div class="calc-card" style="flex: 1; min-width: 300px; max-width: 500px; background: #ffffff; border: 1px solid #e6dec9; border-radius: 12px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: background-color 0.3s, border-color 0.3s;">
             <form onsubmit="event.preventDefault(); calculateBudget();">
                 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-type-label">Project Type</label>
-                    <select id="projectType" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
-                        <option value="house" data-key="option-house">House Design</option>
-                        <option value="interior" data-key="option-interior">Interior Design</option>
-                        <option value="renovation" data-key="option-renovation">Renovation</option>
+                    <select id="projectType" class="calc-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
+                        <option value="house" data-key="option-house" style="background: inherit; color: inherit;">House Design</option>
+                        <option value="interior" data-key="option-interior" style="background: inherit; color: inherit;">Interior Design</option>
+                        <option value="renovation" data-key="option-renovation" style="background: inherit; color: inherit;">Renovation</option>
                     </select>
                 </div>
 
                 <div style="margin-bottom: 25px;">
                     <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem;" data-key="estimator-area-label">Total Area (sq.m)</label>
-                    <input type="number" id="projectArea" min="10" value="100" required style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit;">
+                    <input type="number" id="projectArea" min="10" value="100" required class="calc-input" style="width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: transparent; color: inherit; transition: background-color 0.3s, border-color 0.3s, color 0.3s;">
                 </div>
 
                 <button type="submit" style="width: 100%; background-color: #1a1a1a; color: #fff; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: 500; margin-bottom: 20px;" data-key="estimator-btn">Calculate Cost</button>
             
-                <div id="resultBox" style="margin-top: 20px; padding: 15px; background: var(--bg-secondary, #f9f8f6); border-radius: 8px; text-align: center; display: none;">
+                <div id="resultBox" class="calc-result" style="margin-top: 20px; padding: 15px; background: #f9f8f6; border-radius: 8px; text-align: center; display: none; transition: background-color 0.3s;">
                     <span style="font-size: 0.85rem; color: #8c8275; display: block; margin-bottom: 5px;" data-key="estimator-result-title">Estimated Budget:</span>
-                    <strong id="resultOutput" style="font-size: 1.4rem; color: var(--text-color, #1a1a1a);">0 €</strong>
+                    <strong id="resultOutput" style="font-size: 1.4rem; color: inherit;">0 €</strong>
                 </div>
             </form>
         </div>
@@ -105,6 +129,16 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
+        // Функция за превключване на тъмния режим
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('siteTheme', 'dark');
+            } else {
+                localStorage.setItem('siteTheme', 'light');
+            }
+        }
+
         function calculateBudget() {
             const type = document.getElementById('projectType').value;
             const area = parseFloat(document.getElementById('projectArea').value) || 0;

@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Скрипт, който зарежда темата веднага, за да няма премигване -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
 </head>
 <body>
 
@@ -96,6 +105,16 @@
 
     <script src="translations.js"></script>
     <script>
+        // Функция за превключване на тъмния режим
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('siteTheme', 'dark');
+            } else {
+                localStorage.setItem('siteTheme', 'light');
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
             initLanguage();
             
