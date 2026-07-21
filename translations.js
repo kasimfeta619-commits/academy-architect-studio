@@ -28,6 +28,12 @@ const translations = {
         "footer-rights": "&copy; 2026 Academy Architect Studio.<br>Всички права запазени.",
         "no-projects": "Все още няма добавени проекти.",
 
+        // За нас (about.html)
+        "about-eyebrow": "ЗА СТУДИОТО",
+        "about-title": "Личен архив на архитектурни проекти.",
+        "about-desc-1": "Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.",
+        "about-desc-2": "Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.",
+
         // Контакти и Резервации (contact.html)
         "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
         "contact-title": "Обсъдете вашия проект или запазете среща.",
@@ -73,6 +79,12 @@ const translations = {
         "footer-links-title": "Links",
         "footer-rights": "&copy; 2026 Academy Architect Studio.<br>All rights reserved.",
         "no-projects": "No projects added yet.",
+
+        // About Us (about.html)
+        "about-eyebrow": "ABOUT THE STUDIO",
+        "about-title": "Personal archive of architectural projects.",
+        "about-desc-1": "Academy Architect Studio is an original catalog of house designs. Each project is developed with attention to proportions, light, and material — from the initial sketch to the detailed floor plan.",
+        "about-desc-2": "Here I upload my own works. Each project is ready for adaptation to a specific plot, climate, and budget.",
 
         // Contacts & Booking (contact.html)
         "contact-eyebrow": "GET IN TOUCH & BOOKING",
