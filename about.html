@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Добавен е скриптът срещу премигване -->
+    <!-- Скрипт срещу премигване -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('siteTheme');
@@ -89,8 +89,20 @@
 
     <script src="translations.js"></script>
     <script>
+        // Функция за превключване на тъмния режим (гарантира, че бутонът ще работи)
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('siteTheme', 'dark');
+            } else {
+                localStorage.setItem('siteTheme', 'light');
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
-            initLanguage();
+            if (typeof initLanguage === 'function') {
+                initLanguage();
+            }
         });
     </script>
 </body>
