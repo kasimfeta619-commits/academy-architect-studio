@@ -36,7 +36,7 @@
 
     <script>
         function initLanguage() {
-            // Помощна функция за поддръжка на езика, ако има такава в сайта
+            // Помощна функция за поддръжка на езика
         }
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -52,6 +52,7 @@
             
             const textPlans = currentLang === 'en' ? 'Floor Plans' : 'Архитектурни разпределения';
             const textFacades = currentLang === 'en' ? 'Facades' : 'Фасади';
+            const textSection = currentLang === 'en' ? 'Architectural Section' : 'Архитектурен разрез';
             const textGallery = currentLang === 'en' ? 'Gallery & Renders' : 'Галерия и визуализации';
 
             if (projectIndex !== null && projects[projectIndex]) {
@@ -89,7 +90,18 @@
                     `;
                 }
 
-                // 3. Галерия
+                // 3. Разрез (Section)
+                let sectionHtml = '';
+                if (p.sectionImage) {
+                    sectionHtml = `
+                        <h2 class="section-heading">${textSection}</h2>
+                        <div style="background: #f4eee5; border: 1px solid #eadecc; padding: 20px; text-align: center; margin-bottom: 40px;">
+                            <img src="${p.sectionImage}" alt="Architectural Section" style="width: 100%; max-height: 500px; object-fit: contain;" onerror="this.parentElement.style.display='none'">
+                        </div>
+                    `;
+                }
+
+                // 4. Галерия
                 let galleryHtml = '';
                 const galleryArr = p.gallery || p.images || [];
                 if (galleryArr.length > 0) {
@@ -119,6 +131,7 @@
 
                     ${floorPlansHtml}
                     ${facadesHtml}
+                    ${sectionHtml}
                     ${galleryHtml}
                 `;
             } else {
