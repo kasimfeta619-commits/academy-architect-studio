@@ -5,13 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Скрипт за мигновено зареждане на темата без премигване -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
+
+    <style>
+        body { background-color: var(--bg-color, #fbf9f4); color: var(--text-color, #1a1a1a); font-family: sans-serif; margin: 0; transition: background-color 0.3s, color 0.3s; }
+        
+        .navbar { padding: 20px 5%; border-bottom: 1px solid #eadecc; display: flex; align-items: center; justify-content: space-between; background: #fbf9f4; transition: background 0.3s, border-color 0.3s; }
+        .logo-area { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-studio { font-weight: 500; color: #1a1a1a; font-size: 1rem; }
+        .logo-studio span { font-weight: 700; color: #8c8275; }
+        
+        #nav-links { display: flex; gap: 20px; align-items: center; }
+        #nav-links a { text-decoration: none; color: #555; font-size: 0.9rem; font-weight: 600; transition: color 0.2s; }
+        #nav-links a:hover { color: #1a1a1a; }
+
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+        #darkModeBtn { background: none; border: 1px solid #eadecc; padding: 8px 12px; cursor: pointer; border-radius: 4px; color: inherit; font-size: 0.85rem; }
+        
+        .lang-switcher { display: flex; border: 1px solid #eadecc; border-radius: 4px; overflow: hidden; }
+        .lang-btn { background: none; border: none; padding: 6px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #555; }
+        .lang-btn.active { background: #1a1a1a; color: #fff; }
+
+        .btn-login { text-decoration: none; padding: 8px 16px; border: 1px solid #1a1a1a; color: #1a1a1a; font-size: 0.85rem; font-weight: 600; border-radius: 4px; transition: all 0.2s; }
+        .btn-login.active, .btn-login:hover { background: #1a1a1a; color: #fff; }
+
+        .form-container { padding: 60px 8%; max-width: 600px; margin: 0 auto; min-height: 70vh; }
+        .form-box { background: #f4eee5; padding: 40px; border: 1px solid #eadecc; transition: background 0.3s, border-color 0.3s; }
+        
+        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #8c8275; font-weight: 700; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #eadecc; background: #fff; color: #1a1a1a; font-size: 1rem; border-radius: 4px; outline: none; transition: background 0.3s, border-color 0.3s, color 0.3s; }
+        
+        .btn-primary { background: #1a1a1a; color: #fff; padding: 14px; cursor: pointer; border: none; font-weight: bold; text-transform: uppercase; width: 100%; letter-spacing: 1px; transition: background 0.2s; }
+        .btn-primary:hover { background: #333; }
+
+        /* Dark Mode Overrides */
+        body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
+        body.dark-mode .navbar { background: #1a1a1a !important; border-bottom-color: #2c2c2c !important; }
+        body.dark-mode .logo-studio { color: #ffffff !important; }
+        body.dark-mode #nav-links a { color: #bbb !important; }
+        body.dark-mode #nav-links a:hover { color: #fff !important; }
+        body.dark-mode .form-box { background: #1e1e1e !important; border-color: #2c2c2c !important; }
+        body.dark-mode .form-group input, body.dark-mode .form-group select { background: #121212 !important; border-color: #444 !important; color: #ffffff !important; }
+        body.dark-mode h1, body.dark-mode label { color: #ffffff !important; }
+        body.dark-mode .btn-login { border-color: #eadecc; color: #eadecc; }
+        body.dark-mode .btn-login.active, body.dark-mode .btn-login:hover { background: #eadecc; color: #1a1a1a; }
+        body.dark-mode .lang-switcher { border-color: #444; }
+        body.dark-mode .lang-btn { color: #bbb; }
+        body.dark-mode .lang-btn.active { background: #eadecc; color: #1a1a1a; }
+        body.dark-mode .btn-primary { background: #eadecc; color: #1a1a1a; }
+        body.dark-mode .btn-primary:hover { background: #d4c8b6; }
+
+        @media (max-width: 768px) {
+            #nav-links { display: none; }
+            .form-container { padding: 30px 4%; }
+            .form-box { padding: 25px 20px; }
+        }
+    </style>
 </head>
 <body>
 
     <nav class="navbar">
         <a href="index.html" class="logo-area">
-            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
-            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
+            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" style="height: 34px; width: auto; display: block;" onerror="this.style.display='none'">
+            <span class="logo-studio" data-key="nav-studio">Academy Architect <span>Studio</span></span>
         </a>
         
         <div id="nav-links">
@@ -28,43 +94,58 @@
                 <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
             </div>
-            <a href="booking.html" class="btn-login active" style="margin-left: 10px;" data-key="nav-booking">Booking</a>
+            <a href="booking.html" class="btn-login active" style="margin-left: 5px;" data-key="nav-booking">Booking</a>
             <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
         </div>
     </nav>
 
-    <main style="padding: 60px 8%; max-width: 600px; margin: 0 auto;">
-        <h1 data-key="nav-booking" style="font-size: 2.5rem; margin-bottom: 30px;">Booking</h1>
+    <main class="form-container">
+        <h1 data-key="nav-booking" style="font-size: 2.2rem; margin-bottom: 25px; font-weight: 400;">Booking</h1>
         
-        <form id="bookingForm" style="display: flex; flex-direction: column; gap: 20px;">
-            <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Име / Name</label>
-                <input type="text" id="clientName" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
-            </div>
-            <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Телефон / Phone</label>
-                <input type="text" id="clientPhone" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
-            </div>
-            <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Услуга / Service</label>
-                <select id="clientService" style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
-                    <option value="Архитектурно проектиране">Архитектурно проектиране / Architectural Design</option>
-                    <option value="Интериорен дизайн">Интериорен дизайн / Interior Design</option>
-                    <option value="Консултация">Консултация / Consultation</option>
-                </select>
-            </div>
-            <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Желана дата и час / Date & Time</label>
-                <input type="datetime-local" id="clientDatetime" required style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
-            </div>
-            <button type="submit" class="btn-primary" style="padding: 14px; cursor: pointer; border: none; font-weight: bold; text-transform: uppercase;">Изпрати запитване</button>
-        </form>
+        <div class="form-box">
+            <form id="bookingForm" style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="form-group">
+                    <label>Име / Name</label>
+                    <input type="text" id="clientName" required>
+                </div>
+                <div class="form-group">
+                    <label>Телефон / Phone</label>
+                    <input type="text" id="clientPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Услуга / Service</label>
+                    <select id="clientService">
+                        <option value="Архитектурно проектиране">Архитектурно проектиране / Architectural Design</option>
+                        <option value="Интериорен дизайн">Интериорен дизайн / Interior Design</option>
+                        <option value="Консултация">Консултация / Consultation</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Желана дата и час / Date & Time</label>
+                    <input type="datetime-local" id="clientDatetime" required>
+                </div>
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Изпрати запитване</button>
+            </form>
+        </div>
     </main>
 
     <script src="translations.js"></script>
+    <script src="auth.js"></script>
     <script>
+        // Превключване на тъмния режим
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('siteTheme', 'dark');
+            } else {
+                localStorage.setItem('siteTheme', 'light');
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
-            initLanguage();
+            if (typeof initLanguage === 'function') {
+                initLanguage();
+            }
         });
 
         document.getElementById('bookingForm').addEventListener('submit', (e) => {

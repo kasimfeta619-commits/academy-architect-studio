@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ панел | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    
     <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
         (function() {
@@ -13,7 +14,19 @@
                 document.body.classList.add('dark-mode');
             }
         })();
+
+        // ЗАЩИТА НА АДМИН ПАНЕЛА
+        (function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isAdmin = localStorage.getItem('isAdmin');
+            
+            if (isLoggedIn !== 'true' || isAdmin !== 'true') {
+                alert('Достъпът е разрешен само за администратори!');
+                window.location.href = 'login.html';
+            }
+        })();
     </script>
+
     <style>
         body { background-color: var(--bg-color, #fbf9f4); color: var(--text-color, #1a1a1a); font-family: sans-serif; margin: 0; transition: background-color 0.3s, color 0.3s; }
         .admin-container { padding: 40px 8%; max-width: 900px; margin: 0 auto; min-height: 80vh; }
