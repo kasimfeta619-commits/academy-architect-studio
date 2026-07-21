@@ -4,7 +4,7 @@ const translations = {
         "nav-home": "Начало",
         "nav-catalog": "Проекти",
         "nav-about": "За нас",
-        "nav-planner": "ИИ Планер",
+        "nav-estimator": "Калкулатор",
         "nav-contact": "Контакти",
         "nav-login": "Вход",
         "hero-eyebrow": "Архитектурно Студио",
@@ -25,11 +25,31 @@ const translations = {
         "no-projects": "Все още няма добавени проекти.",
         "catalog-title": "Нашите Проекти",
         
+        /* Филтри за каталога */
+        "filter-all": "Всички",
+        "filter-residential": "Жилищни",
+        "filter-commercial": "Обществени",
+        "filter-interior": "Интериор",
+        
         /* За нас (About) */
         "about-title": "За нашето студио",
         "about-subtitle": "Иновации и минимализъм в архитектурата",
         "about-text-1": "Academy Architect Studio е създадено с идеята да превърне съвременните концепции за пространство в реалност. Ние вярваме, че добрата архитектура променя начина, по който хората живеят и работят.",
         "about-text-2": "Нашият екип от професионалисти съчетава дългогодишен опит с модерни технологии, за да предложи индивидуални решения за всеки клиент.",
+
+        /* Калкулатор (Estimator) */
+        "estimator-title": "Калкулатор за цена",
+        "estimator-subtitle": "Изчислете ориентировъчен бюджет за вашия проект",
+        "label-type": "Тип проект",
+        "type-residential": "Жилищен (Къща / Апартамент)",
+        "type-commercial": "Обществен (Офис / Магазин)",
+        "type-interior": "Интериорен дизайн",
+        "label-area": "Квадратура (кв.м)",
+        "label-package": "Пакет услуги",
+        "pkg-basic": "Идеен проект (Базов)",
+        "pkg-full": "Пълен технически проект",
+        "pkg-vip": "VIP (Пълен проект + Авторски надзор)",
+        "result-title": "Ориентировъчна цена:",
 
         /* Контакти (Contact) */
         "contact-title": "Свържете се с нас",
@@ -44,7 +64,7 @@ const translations = {
         "nav-home": "Home",
         "nav-catalog": "Projects",
         "nav-about": "About Us",
-        "nav-planner": "AI Planner",
+        "nav-estimator": "Estimator",
         "nav-contact": "Contacts",
         "nav-login": "Login",
         "hero-eyebrow": "Architectural Studio",
@@ -65,11 +85,31 @@ const translations = {
         "no-projects": "No projects added yet.",
         "catalog-title": "Our Projects",
         
+        /* Catalog filters */
+        "filter-all": "All",
+        "filter-residential": "Residential",
+        "filter-commercial": "Commercial",
+        "filter-interior": "Interior",
+        
         /* About */
         "about-title": "About Our Studio",
         "about-subtitle": "Innovation and minimalism in architecture",
         "about-text-1": "Academy Architect Studio was founded with the vision to turn modern space concepts into reality. We believe that good architecture transforms the way people live and work.",
         "about-text-2": "Our team of professionals combines years of experience with modern technologies to deliver tailored solutions for every client.",
+
+        /* Estimator */
+        "estimator-title": "Cost Estimator",
+        "estimator-subtitle": "Calculate an approximate budget for your project",
+        "label-type": "Project Type",
+        "type-residential": "Residential (House / Apartment)",
+        "type-commercial": "Commercial (Office / Store)",
+        "type-interior": "Interior Design",
+        "label-area": "Area (sq.m)",
+        "label-package": "Service Package",
+        "pkg-basic": "Conceptual Design (Basic)",
+        "pkg-full": "Full Technical Project",
+        "pkg-vip": "VIP (Full + Supervision)",
+        "result-title": "Estimated Cost:",
 
         /* Contact */
         "contact-title": "Get in Touch",
