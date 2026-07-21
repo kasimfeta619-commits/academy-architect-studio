@@ -125,7 +125,10 @@
                 <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
             </div>
-            <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+            <!-- Динамичен контейнер за състоянието на входа -->
+            <div id="navAuthContainer">
+                <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+            </div>
         </div>
     </nav>
 
@@ -232,8 +235,34 @@
             resultBox.style.display = 'block';
         }
 
+        // Динамична проверка на статуса на входа в навигацията
+        function updateNavAuthStatus() {
+            const container = document.getElementById('navAuthContainer');
+            if (!container) return;
+
+            const isUserLoggedIn = localStorage.getItem('isUserLoggedIn') === 'true';
+
+            if (isUserLoggedIn) {
+                container.innerHTML = `
+                    <a href="login.html" title="Профил" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(0,0,0,0.05); border-radius: 50%; color: inherit; text-decoration: none; transition: background 0.2s;">
+                        <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: currentColor;">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        <span style="position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; background-color: #ff8b8b; border: 2px solid var(--bg-color, #fff); border-radius: 50%;"></span>
+                    </a>
+                `;
+            } else {
+                container.innerHTML = `
+                    <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+                `;
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
-            initLanguage();
+            if (typeof initLanguage === 'function') {
+                initLanguage();
+            }
+            updateNavAuthStatus();
         });
     </script>
 </body>
