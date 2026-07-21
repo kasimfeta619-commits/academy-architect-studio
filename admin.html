@@ -2,324 +2,38 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Админ панел | Academy Architect Studio</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Админ Панел | Архитектурно Студио</title>
     <style>
-        body { background-color: #fbf9f4; color: #1a1a1a; font-family: sans-serif; margin: 0; }
-        .admin-container { padding: 40px 8%; max-width: 900px; margin: 0 auto; min-height: 80vh; }
-        .back-home-link { display: inline-block; margin-bottom: 20px; color: #8c8275; text-decoration: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-        .back-home-link:hover { color: #1a1a1a; }
-        
-        /* Навигация с табове */
-        .admin-nav-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #eadecc; padding-bottom: 15px; flex-wrap: wrap; }
-        .tab-btn { background: #f4eee5; border: 1px solid #eadecc; padding: 12px 20px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; color: #555; transition: all 0.2s; flex: 1; text-align: center; min-width: 180px; }
-        .tab-btn:hover { background: #eadecc; color: #1a1a1a; }
-        .tab-btn.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-
-        /* Секции (страници) */
-        .admin-section { display: none; background: #f4eee5; padding: 40px; border: 1px solid #eadecc; margin-bottom: 40px; }
-        .admin-section.active { display: block; }
-
-        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
-        .form-group label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #8c8275; font-weight: 700; }
-        .form-group input[type="text"], .form-group textarea { padding: 12px; border: 1px solid #eadecc; background: #fff; font-size: 1rem; color: #1a1a1a; outline: none; width: 100%; box-sizing: border-box; }
-        .form-group textarea { resize: vertical; height: 120px; }
-        .form-group input[type="file"] { padding: 10px; background: #fff; border: 1px solid #eadecc; width: 100%; box-sizing: border-box; }
-        .checkbox-group { flex-direction: row; align-items: center; gap: 10px; }
-        .checkbox-group input { width: 20px; height: 20px; }
-        
-        .btn-action { background: #1a1a1a; color: #fff; padding: 15px 30px; border: none; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; font-size: 0.9rem; }
-        .btn-action:hover { background: #333; }
-        
-        /* Стил за списъка с проекти и миниатюрите */
-        .project-item-admin { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 20px; border: 1px solid #eadecc; margin-bottom: 12px; gap: 15px; }
-        .project-info-wrapper { display: flex; align-items: center; gap: 15px; }
-        .admin-project-thumb { width: 65px; height: 65px; object-fit: cover; border: 1px solid #eadecc; flex-shrink: 0; }
-        .admin-project-no-thumb { width: 65px; height: 65px; background: #f4eee5; border: 1px solid #eadecc; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #8c8275; text-align: center; flex-shrink: 0; text-transform: uppercase; }
-
-        .admin-btns { display: flex; gap: 10px; flex-shrink: 0; }
-        .btn-edit { background: #8c8275; color: #fff; border: none; padding: 8px 15px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; }
-        .btn-delete { background: #a83232; color: #fff; border: none; padding: 8px 15px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; }
-
-        /* МОБИЛНА ОПТИМИЗАЦИЯ */
-        @media (max-width: 768px) {
-            .admin-container { padding: 20px 4%; }
-            .admin-nav-tabs { flex-direction: column; gap: 8px; }
-            .tab-btn { width: 100%; min-width: 100%; padding: 14px; font-size: 0.8rem; }
-            .admin-section { padding: 20px 15px; }
-            h1 { font-size: 2rem !important; }
-            .project-item-admin { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .project-info-wrapper { width: 100%; }
-            .admin-btns { width: 100%; display: flex; justify-content: flex-end; }
-            .btn-edit, .btn-delete { padding: 10px 18px; font-size: 0.85rem; }
-        }
+        body { font-family: Arial, sans-serif; background: #f1f5f9; margin: 0; padding: 0; }
+        .sidebar { width: 250px; background: #0f172a; color: white; position: fixed; height: 100vh; padding: 20px; }
+        .main-content { margin-left: 250px; padding: 30px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f8fafc; font-weight: bold; }
+        .btn { background: #2563eb; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-danger { background: #dc2626; }
     </style>
 </head>
 <body>
-
-    <header class="navbar" style="padding: 20px 5%; border-bottom: 1px solid #eadecc; display: flex; align-items: center; background: #fbf9f4;">
-        <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" style="height: 34px; width: auto; display: block;" onerror="this.style.display='none'">
-            <span style="font-weight: 500; color: #1a1a1a; font-size: 1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
-        </a>
-    </header>
-
-    <main class="admin-container">
-        <a href="index.html" class="back-home-link">← Назад към началната страница</a>
-        
-        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #8c8275; font-weight: 700;">УПРАВЛЕНИЕ НА САЙТА</span>
-        <h1 style="font-size: 2.5rem; font-weight: 400; margin-top: 5px; color: #1a1a1a; margin-bottom: 20px;">Админ Панел</h1>
-
-        <!-- НАВИГАЦИЯ МЕЖДУ СТРАНИЦИТЕ / ТАБОВЕТЕ -->
-        <div class="admin-nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('aboutTab', this)">📄 Страница "За нас"</button>
-            <button class="tab-btn" onclick="switchTab('contactTab', this)">📞 Страница "Контакти"</button>
-            <button class="tab-btn" onclick="switchTab('uploadTab', this)" id="uploadTabBtn">➕ Нов проект</button>
-            <button class="tab-btn" onclick="switchTab('projectsTab', this)">🗂️ Всички проекти</button>
+    <div class="sidebar">
+        <h2 style="color:white; font-size:18px;">Студио Админ</h2>
+        <ul style="list-style:none; padding:0; margin-top:30px;">
+            <li style="margin:15px 0;"><a href="#" style="color:#38bdf8; text-decoration:none;">Проекти</a></li>
+            <li style="margin:15px 0;"><a href="#" style="color:#94a3b8; text-decoration:none;">Резервации</a></li>
+            <li style="margin:15px 0;"><a href="index.html" style="color:#94a3b8; text-decoration:none;">Изход</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="card">
+            <h3>Управление на Проекти</h3>
+            <button class="btn">+ Добави нов проект</button>
+            <table>
+                <tr><th>Име</th><th>Категория</th><th>Площ</th><th>Действия</th></tr>
+                <tr><td>Модерна Вила Витоша</td><td>Жилищно</td><td>240 кв.м</td><td><button class="btn">Редакция</button> <button class="btn btn-danger">Изтрий</button></td></tr>
+                <tr><td>Офис Пловдив Център</td><td>Обществено</td><td>450 кв.м</td><td><button class="btn">Редакция</button> <button class="btn btn-danger">Изтрий</button></td></tr>
+            </table>
         </div>
-        
-        <!-- СТРАНИЦА 1: РЕДАКЦИЯ "ЗА НАС" -->
-        <div id="aboutTab" class="admin-section active">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Редакция на страница "За нас"</h3>
-            <form id="aboutForm">
-                <div class="form-group"><label>Заглавие</label><input type="text" id="aboutTitle"></div>
-                <div class="form-group"><label>Основен текст / Описание</label><textarea id="aboutDesc" style="height: 150px;"></textarea></div>
-                <button type="submit" class="btn-action">Запази промените "За нас"</button>
-            </form>
-        </div>
-
-        <!-- СТРАНИЦА 2: РЕДАКЦИЯ "КОНТАКТИ" -->
-        <div id="contactTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Редакция на страница "Контакти"</h3>
-            <form id="contactForm">
-                <div class="form-group"><label>Адрес на студиото</label><input type="text" id="contactAddress"></div>
-                <div class="form-group"><label>Имейл адрес</label><input type="text" id="contactEmail"></div>
-                <div class="form-group"><label>Телефонен номер</label><input type="text" id="contactPhone"></div>
-                <button type="submit" class="btn-action">Запази промените "Контакти"</button>
-            </form>
-        </div>
-
-        <!-- СТРАНИЦА 3: КАЧВАНЕ НА НОВ ПРОЕКТ -->
-        <div id="uploadTab" class="admin-section">
-            <h3 id="formTitle" style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Качване на нов проект</h3>
-            <form id="uploadForm">
-                <input type="hidden" id="editIndex" value="">
-
-                <div class="form-group"><label>Име на проекта</label><input type="text" id="title" required></div>
-                <div class="form-group"><label>Описание</label><textarea id="desc"></textarea></div>
-                <div class="form-group"><label>Площ (м²)</label><input type="text" id="area"></div>
-                <div class="form-group"><label>Етажи</label><input type="text" id="floors"></div>
-                <div class="form-group"><label>Спални</label><input type="text" id="beds"></div>
-                <div class="form-group"><label>Бани</label><input type="text" id="baths"></div>
-                <div class="form-group"><label>Материал / Конструкция</label><input type="text" id="material"></div>
-                <div class="form-group"><label>Стил</label><input type="text" id="style"></div>
-                <div class="form-group"><label>Цена (лв.)</label><input type="text" id="price"></div>
-                
-                <hr style="border: 0; border-top: 1px solid #eadecc; margin: 25px 0;">
-                
-                <div class="form-group"><label>Главна снимка</label><input type="file" id="mainImg"></div>
-                <div class="form-group"><label>Проект / Разпределение (План)</label><input type="file" id="planImg"></div>
-                <div class="form-group"><label>Разрез</label><input type="file" id="sectionImg"></div>
-                <div class="form-group"><label>Допълнителни визуализации</label><input type="file" id="galleryImgs" multiple></div>
-
-                <div class="form-group checkbox-group" style="margin-top: 20px;">
-                    <input type="checkbox" id="isFav"> 
-                    <label for="isFav" style="cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #1a1a1a;">Фаворитен проект (на началната страница)</label>
-                </div>
-                
-                <button type="submit" id="submitBtn" class="btn-action" style="margin-top: 20px;">Запази проекта в каталога</button>
-                <button type="button" id="cancelBtn" onclick="resetProjectForm()" class="btn-action" style="margin-top: 10px; background: #8c8275; display: none;">Отказ</button>
-            </form>
-        </div>
-
-        <!-- СТРАНИЦА 4: СЪЩЕСТВУВАЩИ ПРОЕКТИ -->
-        <div id="projectsTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Съществуващи проекти</h3>
-            <div id="adminProjectsList"></div>
-        </div>
-    </main>
-
-    <script>
-        function switchTab(tabId, btnElement) {
-            document.querySelectorAll('.admin-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.getElementById(tabId).classList.add('active');
-            btnElement.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function readFileAsDataURL(file) {
-            return new Promise(resolve => {
-                const reader = new FileReader();
-                reader.onload = e => resolve(e.target.result);
-                reader.readAsDataURL(file);
-            });
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedAbout = JSON.parse(localStorage.getItem('siteAbout') || '{}');
-            document.getElementById('aboutTitle').value = savedAbout.title || 'За нашето архитектурно студио';
-            document.getElementById('aboutDesc').value = savedAbout.desc || 'Ние създаваме съвременни и функционални пространства...';
-
-            const savedContact = JSON.parse(localStorage.getItem('siteContact') || '{}');
-            document.getElementById('contactAddress').value = savedContact.address || 'Sofia · Plovdiv · Varna';
-            document.getElementById('contactEmail').value = savedContact.email || 'info@architectstudio.com';
-            document.getElementById('contactPhone').value = savedContact.phone || '+359 888 000 000';
-
-            renderAdminList();
-        });
-
-        document.getElementById('aboutForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const aboutData = {
-                title: document.getElementById('aboutTitle').value,
-                desc: document.getElementById('aboutDesc').value
-            };
-            localStorage.setItem('siteAbout', JSON.stringify(aboutData));
-            alert('Страницата "За нас" е успешно обновена!');
-        });
-
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const contactData = {
-                address: document.getElementById('contactAddress').value,
-                email: document.getElementById('contactEmail').value,
-                phone: document.getElementById('contactPhone').value
-            };
-            localStorage.setItem('siteContact', JSON.stringify(contactData));
-            alert('Страницата "Контакти" е успешно обновена!');
-        });
-
-        function renderAdminList() {
-            const listContainer = document.getElementById('adminProjectsList');
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            
-            if (projects.length === 0) {
-                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма качени проекти.</p>`;
-                return;
-            }
-
-            listContainer.innerHTML = projects.map((p, index) => {
-                let thumbHtml = p.mainImage 
-                    ? `<img src="${p.mainImage}" alt="${p.title}" class="admin-project-thumb">`
-                    : `<div class="admin-project-no-thumb">Няма снимка</div>`;
-
-                return `
-                    <div class="project-item-admin">
-                        <div class="project-info-wrapper">
-                            ${thumbHtml}
-                            <div>
-                                <strong style="font-size: 1.05rem; color: #1a1a1a; display: block; margin-bottom: 3px;">${p.title}</strong>
-                                <div style="font-size: 0.8rem; color: #8c8275;">Стил: ${p.style || '-'} | Площ: ${p.area ? p.area + ' кв.м' : '-'}</div>
-                            </div>
-                        </div>
-                        <div class="admin-btns">
-                            <button class="btn-edit" onclick="editProject(${index})">Редактирай</button>
-                            <button class="btn-delete" onclick="deleteProject(${index})">Изтрий</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function deleteProject(index) {
-            if (confirm("Сигурни ли сте, че искате да изтриете този проект?")) {
-                let projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-                projects.splice(index, 1);
-                localStorage.setItem('myProjects', JSON.stringify(projects));
-                renderAdminList();
-                resetProjectForm();
-            }
-        }
-
-        function editProject(index) {
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            const p = projects[index];
-
-            document.getElementById('editIndex').value = index;
-            document.getElementById('title').value = p.title || '';
-            document.getElementById('desc').value = p.desc || '';
-            document.getElementById('area').value = p.area || '';
-            document.getElementById('floors').value = p.floors || '';
-            document.getElementById('beds').value = p.beds || '';
-            document.getElementById('baths').value = p.baths || '';
-            document.getElementById('material').value = p.material || '';
-            document.getElementById('style').value = p.style || '';
-            document.getElementById('price').value = p.price || '';
-            document.getElementById('isFav').checked = p.isFavorite || false;
-
-            document.getElementById('formTitle').innerText = "Редактиране на проект: " + p.title;
-            document.getElementById('submitBtn').innerText = "Запази промените";
-            document.getElementById('cancelBtn').style.display = 'block';
-            document.getElementById('uploadTabBtn').innerText = "✏️ Редакция";
-
-            switchTab('uploadTab', document.getElementById('uploadTabBtn'));
-        }
-
-        function resetProjectForm() {
-            document.getElementById('uploadForm').reset();
-            document.getElementById('editIndex').value = '';
-            document.getElementById('formTitle').innerText = "Качване на нов проект";
-            document.getElementById('submitBtn').innerText = "Запази проекта в каталога";
-            document.getElementById('cancelBtn').style.display = 'none';
-            document.getElementById('uploadTabBtn').innerText = "➕ Нов проект";
-        }
-
-        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const editIndex = document.getElementById('editIndex').value;
-            let projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            let existingProject = editIndex !== "" ? projects[editIndex] : {};
-
-            const mainFile = document.getElementById('mainImg').files[0];
-            const mainImage = mainFile ? await readFileAsDataURL(mainFile) : (existingProject.mainImage || '');
-
-            const planFile = document.getElementById('planImg').files[0];
-            const planImage = planFile ? await readFileAsDataURL(planFile) : (existingProject.planImage || '');
-
-            const sectionFile = document.getElementById('sectionImg').files[0];
-            const sectionImage = sectionFile ? await readFileAsDataURL(sectionFile) : (existingProject.sectionImage || '');
-
-            const galleryFiles = document.getElementById('galleryImgs').files;
-            let gallery = existingProject.gallery || [];
-            if (galleryFiles.length > 0) {
-                gallery = await Promise.all(Array.from(galleryFiles).map(file => readFileAsDataURL(file)));
-            }
-
-            const projectData = {
-                title: document.getElementById('title').value,
-                desc: document.getElementById('desc').value,
-                area: document.getElementById('area').value,
-                floors: document.getElementById('floors').value,
-                beds: document.getElementById('beds').value,
-                baths: document.getElementById('baths').value,
-                material: document.getElementById('material').value,
-                style: document.getElementById('style').value,
-                price: document.getElementById('price').value,
-                isFavorite: document.getElementById('isFav').checked,
-                mainImage, planImage, sectionImage, gallery
-            };
-
-            if (editIndex !== "") {
-                projects[editIndex] = projectData;
-                alert("Проектът е успешно обновен!");
-            } else {
-                projects.push(projectData);
-                alert("Проектът е успешно запазен в каталога!");
-            }
-
-            localStorage.setItem('myProjects', JSON.stringify(projects));
-            resetProjectForm();
-            renderAdminList();
-
-            switchTab('projectsTab', document.querySelectorAll('.tab-btn')[3]);
-        });
-    </script>
+    </div>
 </body>
 </html>
