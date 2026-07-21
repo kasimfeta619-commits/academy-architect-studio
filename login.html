@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход / Регистрация | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('siteTheme');
@@ -83,47 +82,43 @@
     <div class="login-wrapper">
         <div class="login-card">
             
-            <!-- Табове за превключване между Клиент и Администратор -->
             <div class="login-tabs">
                 <button class="login-tab active" onclick="switchLoginTab('userTab', this)">Потребител</button>
                 <button class="login-tab" onclick="switchLoginTab('adminTab', this)">Администратор</button>
             </div>
 
-            <!-- ПОТРЕБИТЕЛСКИ ВХОД И РЕГИСТРАЦИЯ -->
             <div id="userTab" class="form-section active">
                 
-                <!-- Форма за Вход -->
                 <div id="loginFormContainer">
                     <h2 style="font-weight: 400; font-size: 1.5rem; margin-bottom: 25px; text-align: center;">Вход за клиенти</h2>
                     <form onsubmit="handleUserLogin(event)">
                         <div class="form-group">
                             <label>Имейл</label>
-                            <input type="email" required placeholder="name@example.com">
+                            <input type="email" id="userEmail" required placeholder="name@example.com">
                         </div>
                         <div class="form-group">
                             <label>Парола</label>
-                            <input type="password" required placeholder="••••••••">
+                            <input type="password" id="userPass" required placeholder="••••••••">
                         </div>
                         <button type="submit" class="btn-submit">Влизане</button>
                     </form>
                     <a class="switch-link" onclick="toggleRegisterMode(true)">Нямате регистрация? Регистрация</a>
                 </div>
 
-                <!-- Форма за Регистрация -->
                 <div id="registerFormContainer" style="display: none;">
                     <h2 style="font-weight: 400; font-size: 1.5rem; margin-bottom: 25px; text-align: center;">Регистрация на нов профил</h2>
                     <form onsubmit="handleUserRegister(event)">
                         <div class="form-group">
                             <label>Име и фамилия</label>
-                            <input type="text" required placeholder="Иван Иванов">
+                            <input type="text" id="regName" required placeholder="Иван Иванов">
                         </div>
                         <div class="form-group">
                             <label>Имейл</label>
-                            <input type="email" required placeholder="name@example.com">
+                            <input type="email" id="regEmail" required placeholder="name@example.com">
                         </div>
                         <div class="form-group">
                             <label>Парола</label>
-                            <input type="password" required placeholder="••••••••">
+                            <input type="password" id="regPass" required placeholder="••••••••">
                         </div>
                         <button type="submit" class="btn-submit">Създай профил</button>
                     </form>
@@ -132,7 +127,6 @@
 
             </div>
 
-            <!-- АДМИНСКИ ВХОД -->
             <div id="adminTab" class="form-section">
                 <h2 style="font-weight: 400; font-size: 1.5rem; margin-bottom: 25px; text-align: center;">Вход за администратор</h2>
                 <form onsubmit="handleAdminLogin(event)">
@@ -172,6 +166,7 @@
 
         function handleUserLogin(e) {
             e.preventDefault();
+            localStorage.setItem('isUserLoggedIn', 'true');
             alert("Успешен вход!");
             window.location.href = "index.html";
         }
