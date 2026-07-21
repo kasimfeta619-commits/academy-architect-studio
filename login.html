@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход | Academy Architect Studio</title>
+    <title>Вход / Регистрация | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
     <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
@@ -33,7 +33,10 @@
         .btn-submit { background: #1a1a1a; color: #fff; padding: 15px; border: none; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; font-size: 0.9rem; margin-top: 10px; }
         .btn-submit:hover { background: #333; }
 
-        .back-link { display: block; text-align: center; margin-top: 20px; color: #8c8275; text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .switch-link { display: block; text-align: center; margin-top: 15px; color: #8c8275; text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; }
+        .switch-link:hover { color: #1a1a1a; }
+
+        .back-link { display: block; text-align: center; margin-top: 25px; color: #8c8275; text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; border-top: 1px solid #eadecc; padding-top: 20px; }
         .back-link:hover { color: #1a1a1a; }
 
         /* Dark Mode Overrides */
@@ -70,6 +73,9 @@
         body.dark-mode .btn-submit:hover {
             background-color: #d4c8b6;
         }
+        body.dark-mode .back-link {
+            border-top-color: #2c2c2c !important;
+        }
     </style>
 </head>
 <body>
@@ -77,26 +83,53 @@
     <div class="login-wrapper">
         <div class="login-card">
             
-            <!-- Табове за превключване -->
+            <!-- Табове за превключване между Клиент и Администратор -->
             <div class="login-tabs">
                 <button class="login-tab active" onclick="switchLoginTab('userTab', this)">Потребител</button>
                 <button class="login-tab" onclick="switchLoginTab('adminTab', this)">Администратор</button>
             </div>
 
-            <!-- ПОТРЕБИТЕЛСКИ ВХОД -->
+            <!-- ПОТРЕБИТЕЛСКИ ВХОД И РЕГИСТРАЦИЯ -->
             <div id="userTab" class="form-section active">
-                <h2 style="font-weight: 400; font-size: 1.5rem; margin-bottom: 25px; text-align: center;">Вход за клиенти</h2>
-                <form onsubmit="handleUserLogin(event)">
-                    <div class="form-group">
-                        <label>Имейл</label>
-                        <input type="email" required placeholder="name@example.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Парола</label>
-                        <input type="password" required placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="btn-submit">Влизане</button>
-                </form>
+                
+                <!-- Форма за Вход -->
+                <div id="loginFormContainer">
+                    <h2 style="font-weight: 400; font-size: 1.5rem; margin-bottom: 25px; text-align: center;">Вход за клиенти</h2>
+                    <form onsubmit="handleUserLogin(event)">
+                        <div class="form-group">
+                            <label>Имейл</label>
+                            <input type="email" required placeholder="name@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Парола</label>
+                            <input type="password" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn-submit">Влизане</button>
+                    </form>
+                    <a class="switch-link" onclick="toggleRegisterMode(true)">Нямате регистрация? Регистрация</a>
+                </div>
+
+                <!-- Форма за Регистрация -->
+                <div id="registerFormContainer" style="display: none;">
+                    <h2 style="font-weight: 400; font-size: 1.5rem; margin-bottom: 25px; text-align: center;">Регистрация на нов профил</h2>
+                    <form onsubmit="handleUserRegister(event)">
+                        <div class="form-group">
+                            <label>Име и фамилия</label>
+                            <input type="text" required placeholder="Иван Иванов">
+                        </div>
+                        <div class="form-group">
+                            <label>Имейл</label>
+                            <input type="email" required placeholder="name@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Парола</label>
+                            <input type="password" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn-submit">Създай профил</button>
+                    </form>
+                    <a class="switch-link" onclick="toggleRegisterMode(false)">Вече имате профил? Вход</a>
+                </div>
+
             </div>
 
             <!-- АДМИНСКИ ВХОД -->
@@ -132,10 +165,21 @@
             btnElement.classList.add('active');
         }
 
+        function toggleRegisterMode(isRegister) {
+            document.getElementById('loginFormContainer').style.display = isRegister ? 'none' : 'block';
+            document.getElementById('registerFormContainer').style.display = isRegister ? 'block' : 'none';
+        }
+
         function handleUserLogin(e) {
             e.preventDefault();
             alert("Успешен вход!");
             window.location.href = "index.html";
+        }
+
+        function handleUserRegister(e) {
+            e.preventDefault();
+            alert("Успешна регистрация! Вече можете да влезете в профила си.");
+            toggleRegisterMode(false);
         }
 
         function handleAdminLogin(e) {
@@ -143,7 +187,6 @@
             const email = document.getElementById('adminEmail').value;
             const pass = document.getElementById('adminPass').value;
 
-            // Тук задаваш реалните данни за вход, които само ти ще знаеш
             if (email === "admin@architect.bg" && pass === "admin123") {
                 localStorage.setItem('isAdminAuthenticated', 'true');
                 window.location.href = "admin.html";
