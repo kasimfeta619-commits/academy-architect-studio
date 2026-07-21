@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 link.textContent = `👤 ${userName}`;
                 link.href = '#';
                 link.style.fontWeight = 'bold';
+                link.removeAttribute('data-key'); // <--- ДОБАВЕТЕ ТОВА: спира translations.js да го презаписва
+                
                 link.onclick = function(e) {
                     e.preventDefault();
                     if (confirm("Желаете ли да излезете от профила си?")) {
