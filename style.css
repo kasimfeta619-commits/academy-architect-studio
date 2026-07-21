@@ -1,337 +1,435 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-/* ГЛОБАЛНИ СТИЛОВЕ */
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-    font-family: 'Inter', sans-serif; 
+/* Base Reset & Variables */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-body { 
-    background-color: #fbf9f4 !important; 
-    color: #1a1a1a; 
-    min-height: 100vh; 
-    display: flex; 
-    flex-direction: column; 
+body {
+    background-color: #fdfbf7;
+    color: #1a1a1a;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* НАВИГАЦИЯ */
-.navbar { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 25px 10%; 
-    background-color: #fbf9f4; 
-    border-bottom: 1px solid #eadecc; 
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background-color: #fdfbf7;
+    border-bottom: 1px solid #f0eae1;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
-.logo-area { 
-    display: flex; 
-    align-items: center; 
-    gap: 12px; 
-    text-decoration: none; 
-    color: #1a1a1a; 
-    font-weight: 500; 
-    font-size: 1.1rem; 
-}
-.logo-icon { height: 38px; width: auto; display: block; }
-.logo-studio { font-weight: 700; color: #8c8275; }
-
-#nav-links { 
+.logo-area {
     display: flex;
     align-items: center;
-}
-#nav-links a { 
-    text-decoration: none; 
-    color: #8c8275; 
-    margin: 0 15px; 
-    font-size: 0.9rem; 
-    font-weight: 400; 
-    transition: color 0.2s; 
-}
-#nav-links a.active, #nav-links a:hover { 
-    color: #1a1a1a; 
-    font-weight: 500; 
+    gap: 12px;
+    text-decoration: none;
 }
 
-/* БУТОНИ В НАВИГАЦИЯТА */
+.logo-icon {
+    height: 32px;
+    width: auto;
+}
+
+.logo-studio {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: #1a1a1a;
+}
+
+#nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+#nav-links a {
+    text-decoration: none;
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+#nav-links a:hover,
+#nav-links a.active {
+    color: #1a1a1a;
+}
+
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
-.lang-switcher { 
-    display: flex; 
-    border: 1px solid #eadecc; 
-    border-radius: 20px; 
-    overflow: hidden; 
-    padding: 2px;
-}
-.lang-btn { 
-    background: transparent; 
-    border: none; 
-    padding: 6px 14px; 
-    font-size: 0.7rem; 
-    cursor: pointer; 
-    font-weight: 600; 
-    color: #8c8275;
+
+.lang-switcher {
+    display: flex;
+    border: 1px solid #eadecc;
     border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
 }
-.lang-btn.active { 
-    background: #1a1a1a; 
-    color: #fff; 
+
+.lang-btn {
+    background: transparent;
+    border: none;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: #8c8275;
+    transition: all 0.2s;
 }
-.btn-login {
+
+.lang-btn.active {
     background: #1a1a1a;
     color: #fff;
-    text-decoration: none;
-    padding: 8px 22px;
-    border-radius: 20px; 
+}
+
+#darkModeBtn {
+    background: transparent;
+    border: 1px solid #eadecc;
+    border-radius: 20px;
+    padding: 6px 14px;
     font-size: 0.75rem;
+    cursor: pointer;
     font-weight: 600;
+    color: #8c8275;
+    transition: all 0.3s;
 }
 
-/* HERO СЕКЦИЯ */
-.hero-section { 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    gap: 80px; 
-    padding: 80px 10%;
+#darkModeBtn:hover {
+    border-color: #1a1a1a;
+    color: #1a1a1a;
 }
-.hero-text-area { max-width: 540px; }
-.hero-text-area p { color: #555; margin-bottom: 35px; line-height: 1.6; font-size: 0.95rem; }
 
-.eyebrow { 
-    font-size: 0.75rem; 
-    letter-spacing: 2px; 
-    color: #8c8275; 
-    font-weight: 700; 
-    display: block; 
-    margin-bottom: 15px; 
+.btn-login {
+    text-decoration: none;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.btn-login:hover {
+    opacity: 0.85;
+}
+
+/* Hero Section */
+.hero-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    padding: 80px 8%;
+    align-items: center;
+    min-height: 75vh;
+}
+
+.hero-text-area .eyebrow {
+    font-size: 0.75rem;
     text-transform: uppercase;
-}
-h1 { 
-    font-size: 3rem; 
-    font-weight: 400; 
-    line-height: 1.15; 
-    margin-bottom: 25px; 
-    letter-spacing: -0.5px;
+    letter-spacing: 2px;
+    color: #8c8275;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 15px;
 }
 
-/* БУТОНИ В HERO */
+.hero-text-area h1 {
+    font-size: 3rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+}
+
+.hero-text-area p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 500px;
+}
+
 .hero-buttons {
     display: flex;
-    align-items: center;
-    gap: 20px;
+    gap: 15px;
 }
-.btn-primary { 
-    display: inline-block; 
-    background: #1a1a1a; 
-    color: #fff; 
-    text-decoration: none; 
-    padding: 14px 30px; 
-    font-size: 0.9rem; 
-    font-weight: 500; 
-}
-.btn-secondary {
-    display: inline-block;
-    color: #1a1a1a;
+
+.btn-primary {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 30px;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
-    border-bottom: 1px solid #1a1a1a;
-    padding-bottom: 2px;
+    transition: opacity 0.2s;
 }
 
-/* ИЗОБРАЖЕНИЕ В HERO */
-.hero-image-area { position: relative; }
-.hero-main-img { width: 100%; max-width: 460px; overflow: hidden; }
-.hero-main-img img { width: 100%; height: auto; display: block; }
-
-.latest-badge { 
-    position: absolute; 
-    bottom: -15px; 
-    left: -20px; 
-    background: #1a1a1a; 
-    color: #fff; 
-    padding: 12px 20px; 
+.btn-secondary {
+    background: transparent;
+    color: #1a1a1a;
+    border: 1px solid #1a1a1a;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
 }
-.badge-title { display: block; font-size: 0.6rem; letter-spacing: 1.5px; color: #8c8275; font-weight: 700; margin-bottom: 2px; }
-.badge-sub { font-size: 0.85rem; font-weight: 400; }
 
-/* СЕКЦИЯ ФАВОРИТНИ ПРОЕКТИ (ГРИД СИСТЕМА) */
+.hero-image-area {
+    position: relative;
+}
+
+.hero-main-img img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+}
+
+.latest-badge {
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.latest-badge .badge-title {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+    color: #aaa;
+    margin-bottom: 4px;
+}
+
+.latest-badge .badge-sub {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Projects Grid */
 .recent-projects {
-    padding: 60px 10%;
+    padding: 80px 8%;
 }
+
 .recent-projects h2 {
     font-size: 2rem;
     font-weight: 400;
     margin-bottom: 40px;
+    letter-spacing: -0.5px;
 }
 
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 40px 30px;
+    gap: 30px;
 }
 
 .project-card {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
     text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.3s;
 }
+
+.project-card:hover {
+    transform: translateY(-5px);
+}
+
 .project-img-box {
     width: 100%;
-    aspect-ratio: 3 / 2;
-    background-color: #e5e2db;
+    height: 240px;
+    background: #f0eae1;
+    border-radius: 8px;
     overflow: hidden;
+    margin-bottom: 15px;
 }
+
 .project-img-box img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
-}
-.project-card:hover .project-img-box img {
-    transform: scale(1.03);
 }
 
-.project-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+.project-info .p-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
 }
-.p-title {
-    font-size: 1rem;
+
+.project-info .p-meta {
+    font-size: 0.85rem;
+    color: #8c8275;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.project-info .p-area {
+    font-size: 0.85rem;
     font-weight: 500;
     color: #1a1a1a;
 }
-.p-meta {
-    font-size: 0.85rem;
-    color: #8c8275;
-}
-.p-area {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-top: 2px;
+
+/* Quote Section */
+.quote-section {
+    padding: 100px 8%;
+    background: #f5efe6;
+    text-align: center;
+    transition: background-color 0.3s;
 }
 
-/* ЦИТАТ СЕКЦИЯ */
-.quote-section {
-    padding: 100px 10%;
-    max-width: 900px;
-}
 .quote-section h2 {
     font-size: 2.2rem;
     font-weight: 400;
-    line-height: 1.3;
-    margin-bottom: 20px;
+    max-width: 800px;
+    margin: 0 auto 20px;
+    line-height: 1.4;
+    letter-spacing: -0.5px;
 }
+
 .quote-section p {
-    color: #555;
     font-size: 1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
     line-height: 1.6;
 }
 
-/* ФУТЪР */
-.main-footer { 
-    background-color: #fbf9f4 !important; 
-    border-top: 1px solid #eadecc; 
-    padding: 60px 10%; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: flex-start; 
-    font-size: 0.85rem; 
-    color: #8c8275; 
-    margin-top: auto;
+/* Footer */
+.main-footer {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding: 80px 8%;
+    background: #fdfbf7;
+    border-top: 1px solid #f0eae1;
+    font-size: 0.9rem;
+    transition: background-color 0.3s, border-color 0.3s;
 }
-.footer-logo-area { display: flex; align-items: center; gap: 12px; }
-.footer-brand { font-weight: 600; color: #1a1a1a; font-size: 1rem; }
-.footer-subtext { font-size: 0.65rem; letter-spacing: 1px; color: #8c8275; margin-top: 2px; }
-.footer-col h4 { margin-bottom: 15px; color: #1a1a1a; font-size: 0.85rem; letter-spacing: 0.5px; }
-.footer-col p { margin-bottom: 6px; }
-.footer-col a { color: #8c8275; text-decoration: none; border-bottom: 1px solid transparent; }
-.footer-col a:hover { color: #1a1a1a; border-bottom: 1px solid #1a1a1a; }
-.footer-right { text-align: right; }
+
+.footer-brand {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.footer-subtext {
+    color: #8c8275;
+    font-size: 0.85rem;
+}
+
+.footer-col h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-col p {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.footer-col a {
+    text-decoration: none;
+    color: #666;
+    transition: color 0.2s;
+}
+
+.footer-col a:hover {
+    color: #1a1a1a;
+}
+
+.footer-right {
+    color: #8c8275;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
 
 /* ==========================================
-   АДАПТИВЕН ДИЗАЙН ЗА МОБИЛНИ УСТРОЙСТВА
+   DARK MODE STYLES
    ========================================== */
-
-/* За таблети и по-малки екрани */
-@media (max-width: 991px) {
-    .navbar {
-        flex-direction: column;
-        gap: 20px;
-        padding: 20px 5%;
-    }
-    #nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    #nav-links a {
-        margin: 5px 10px;
-    }
-    .hero-section { 
-        flex-direction: column; 
-        text-align: center; 
-        gap: 50px; 
-        padding: 40px 5%; 
-    }
-    .hero-buttons { 
-        justify-content: center; 
-    }
-    .hero-main-img {
-        max-width: 100%;
-    }
-    .latest-badge {
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: -20px;
-        white-space: nowrap;
-    }
-    .main-footer { 
-        flex-direction: column; 
-        gap: 30px; 
-        text-align: center; 
-        padding: 40px 5%;
-    }
-    .footer-logo-area { justify-content: center; }
-    .footer-right { text-align: center; }
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
 }
 
-/* За мобилни телефони (под 768px) */
-@media (max-width: 768px) {
-    
-    /* Скрива ИИ Планера от навигацията на телефони */
-    a[data-key="nav-planner"] {
-        display: none !important;
-    }
+body.dark-mode .navbar,
+body.dark-mode .main-footer,
+body.dark-mode .quote-section {
+    background-color: #121212 !important;
+    border-color: #2c2c2c !important;
+}
 
-    h1 {
-        font-size: 2.1rem;
-    }
-    
-    .recent-projects {
-        padding: 40px 5%;
-    }
+body.dark-mode .logo-studio,
+body.dark-mode #nav-links a,
+body.dark-mode .lang-btn,
+body.dark-mode .footer-col a,
+body.dark-mode .footer-subtext,
+body.dark-mode .footer-col,
+body.dark-mode .hero-text-area p,
+body.dark-mode .quote-section p {
+    color: #b0b0b0 !important;
+}
 
-    /* Проектите стават по 1 на ред за добра видимост */
-    .projects-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
+body.dark-mode #nav-links a.active, 
+body.dark-mode #nav-links a:hover,
+body.dark-mode .footer-col h4,
+body.dark-mode .footer-brand,
+body.dark-mode .p-title,
+body.dark-mode .p-area,
+body.dark-mode h1,
+body.dark-mode h2 {
+    color: #ffffff !important;
+}
 
-    .quote-section {
-        padding: 60px 5%;
-    }
-    
-    .quote-section h2 {
-        font-size: 1.6rem;
-    }
+body.dark-mode .lang-switcher,
+body.dark-mode #darkModeBtn {
+    border-color: #2c2c2c !important;
+    background: #1e1e1e !important;
+    color: #b0b0b0 !important;
+}
+
+body.dark-mode #darkModeBtn:hover {
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .lang-btn.active {
+    background: #ffffff !important;
+    color: #121212 !important;
+}
+
+body.dark-mode .btn-primary,
+body.dark-mode .btn-login,
+body.dark-mode .latest-badge {
+    background: #ffffff !important;
+    color: #121212 !important;
+}
+
+body.dark-mode .btn-secondary {
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+}
+
+body.dark-mode .project-img-box {
+    background-color: #1e1e1e !important;
 }

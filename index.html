@@ -12,7 +12,7 @@
     <nav class="navbar">
         <a href="index.html" class="logo-area">
             <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
-            <span class="logo-studio">Academy Architect Studio</span>
+            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
         
         <div id="nav-links">
@@ -24,6 +24,7 @@
         </div>
 
         <div class="header-actions">
+            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
             <div class="lang-switcher">
                 <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="setLanguage('bg')">BG</button>

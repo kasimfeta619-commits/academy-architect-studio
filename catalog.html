@@ -12,7 +12,7 @@
     <nav class="navbar">
         <a href="index.html" class="logo-area">
             <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
-            <span class="logo-studio">Academy Architect Studio</span>
+            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
         
         <div id="nav-links">
@@ -24,6 +24,7 @@
         </div>
 
         <div class="header-actions">
+            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
             <div class="lang-switcher">
                 <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
@@ -34,7 +35,7 @@
 
     <!-- КАТАЛОГ СЪДЪРЖАНИЕ -->
     <main style="padding: 60px 10%; min-height: 70vh;">
-        <h1 data-key="catalog-title" style="font-size: 2rem; font-weight: 400; margin-bottom: 40px; color: #1a1a1a;">Our Projects</h1>
+        <h1 data-key="catalog-title" style="font-size: 2rem; font-weight: 400; margin-bottom: 40px;">Our Projects</h1>
         
         <div id="catalogProjectsGrid" class="projects-grid">
             <!-- Динамично зареждане на всички проекти -->
@@ -85,16 +86,18 @@
                     const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
 
                     return `
-                        <a href="project-detail.html?index=${index}" class="project-card">
-                            <div class="project-img-box">
-                                <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Image'">
-                            </div>
-                            <div class="project-info">
-                                <span class="p-title">${p.title}</span>
-                                <span class="p-meta">${p.style || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
-                                <span class="p-area">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
-                            </div>
-                        </a>
+                        <p class="project-card">
+                            <a href="project-detail.html?index=${index}" style="text-decoration: none; color: inherit; display: block;">
+                                <div class="project-img-box">
+                                    <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Image'">
+                                </div>
+                                <div class="project-info">
+                                    <span class="p-title">${p.title}</span>
+                                    <span class="p-meta">${p.style || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
+                                    <span class="p-area">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
+                                </div>
+                            </a>
+                        </p>
                     `;
                 }).join('');
             } else {

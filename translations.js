@@ -1,6 +1,6 @@
 const translations = {
     bg: {
-        "nav-studio": "Студио",
+        "nav-studio": "Academy Architect Studio",
         "nav-home": "Начало",
         "nav-catalog": "Проекти",
         "nav-about": "За нас",
@@ -25,13 +25,13 @@ const translations = {
         "no-projects": "Все още няма добавени проекти.",
         "catalog-title": "Нашите Проекти",
         
-        /* За нас (About) преводи */
+        /* За нас (About) */
         "about-title": "За нашето студио",
         "about-subtitle": "Иновации и минимализъм в архитектурата",
         "about-text-1": "Academy Architect Studio е създадено с идеята да превърне съвременните концепции за пространство в реалност. Ние вярваме, че добрата архитектура променя начина, по който хората живеят и работят.",
         "about-text-2": "Нашият екип от професионалисти съчетава дългогодишен опит с модерни технологии, за да предложи индивидуални решения за всеки клиент.",
 
-        /* Контакти (Contact) преводи */
+        /* Контакти (Contact) */
         "contact-title": "Свържете се с нас",
         "contact-subtitle": "Нека обсъдим вашия следващ проект",
         "form-name": "Вашето име",
@@ -40,7 +40,7 @@ const translations = {
         "form-submit": "Изпрати съобщение"
     },
     en: {
-        "nav-studio": "Studio",
+        "nav-studio": "Academy Architect Studio",
         "nav-home": "Home",
         "nav-catalog": "Projects",
         "nav-about": "About Us",
@@ -65,13 +65,13 @@ const translations = {
         "no-projects": "No projects added yet.",
         "catalog-title": "Our Projects",
         
-        /* About translations */
+        /* About */
         "about-title": "About Our Studio",
         "about-subtitle": "Innovation and minimalism in architecture",
         "about-text-1": "Academy Architect Studio was founded with the vision to turn modern space concepts into reality. We believe that good architecture transforms the way people live and work.",
         "about-text-2": "Our team of professionals combines years of experience with modern technologies to deliver tailored solutions for every client.",
 
-        /* Contact translations */
+        /* Contact */
         "contact-title": "Get in Touch",
         "contact-subtitle": "Let's discuss your next project",
         "form-name": "Your Name",
@@ -105,8 +105,36 @@ function applyTranslations(lang) {
     });
 }
 
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+    updateDarkModeButtonText(isDark);
+}
+
+function updateDarkModeButtonText(isDark) {
+    const btn = document.getElementById('darkModeBtn');
+    if (btn) {
+        const lang = localStorage.getItem('siteLang') || 'en';
+        if (isDark) {
+            btn.textContent = lang === 'bg' ? '☀️ Светла' : '☀️ Light';
+        } else {
+            btn.textContent = lang === 'bg' ? '🌙 Тъмна' : '🌙 Dark';
+        }
+    }
+}
+
+function initDarkMode() {
+    const isDark = localStorage.getItem('darkMode') === 'enabled';
+    if (isDark) {
+        document.body.classList.add('dark-mode');
+    }
+    updateDarkModeButtonText(isDark);
+}
+
 function initLanguage() {
     const savedLang = localStorage.getItem('siteLang') || 'en';
     document.documentElement.lang = savedLang;
     applyTranslations(savedLang);
+    initDarkMode();
 }

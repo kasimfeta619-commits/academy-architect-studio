@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,112 +9,75 @@
 <body>
 
     <!-- НАВИГАЦИЯ -->
-    <header class="navbar">
-        <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
-            <img src="assets/main-graphic.png" alt="Academy Architect Studio Logo" class="logo-icon" style="height: 38px; width: auto; display: block;" onerror="this.style.display='none'">
-            <span style="font-weight: 500; color: #1a1a1a; font-size: 1.1rem;">Academy Architect <span class="logo-studio" style="font-weight: 700; color: #8c8275;">Studio</span></span>
+    <nav class="navbar">
+        <a href="index.html" class="logo-area">
+            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
+            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
-        <nav id="nav-links">
-            <a href="index.html" data-key="nav-home">Начало</a>
-            <a href="catalog.html" data-key="nav-catalog">Каталог</a>
-            <a href="about.html" class="active" data-key="nav-about">За нас</a>
-            <a href="planner.html" data-key="nav-planner">ИИ Планер</a>
-            <a href="contact.html" data-key="nav-contact">Контакт</a>
-        </nav>
-        <div class="header-actions">
-            <div class="lang-switcher">
-                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
-                <button class="lang-btn active" onclick="changeLanguage('bg')">BG</button>
-            </div>
-            <a href="login.html" class="btn-login" id="btn-login" data-key="btn-login">Вход</a>
-        </div>
-    </header>
-
-    <!-- ОСНОВНО СЪДЪРЖАНИЕ -->
-    <main class="content-container" style="padding: 60px 10% !important; background-color: #fbf9f4 !important; min-height: 70vh !important; display: block !important;">
-        <span class="eyebrow" id="page-eyebrow" style="display: block !important; margin-bottom: 20px !important; color: #8c8275; font-size: 0.75rem; letter-spacing: 2px; font-weight: 700;">ЗА СТУДИОТО</span>
         
-        <!-- ДВЕТЕ КОЛОНИ С ГАРАНТИРАНО РАЗДЕЛЕНИЕ -->
-        <div class="about-intro-grid" style="display: grid !important; grid-template-columns: 1.2fr 1fr !important; gap: 80px !important; margin-top: 40px !important; margin-bottom: 80px !important; align-items: flex-start !important;">
-            
-            <!-- ЛЯВА КОЛОНА: ГОЛЯМОТО ЗАГЛАВИЕ -->
-            <div class="about-story" style="display: block !important;">
-                <h1 id="page-title" style="font-size: 2.8rem !important; font-weight: 400 !important; line-height: 1.2 !important; color: #1a1a1a !important; margin: 0 !important; letter-spacing: -0.5px !important;">
-                    Личен архив на архитектурни проекти.
-                </h1>
+        <div id="nav-links">
+            <a href="index.html" data-key="nav-home">Home</a>
+            <a href="catalog.html" data-key="nav-catalog">Projects</a>
+            <a href="about.html" class="active" data-key="nav-about">About Us</a>
+            <a href="planner.html" data-key="nav-planner">AI Planner</a>
+            <a href="contact.html" data-key="nav-contact">Contacts</a>
+        </div>
+
+        <div class="header-actions">
+            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
             </div>
-            
-            <!-- ДЯСНА КОЛОНА: ТВОЯТ ОРИГИНАЛЕН ТЕКСТ -->
-            <div class="about-details" style="display: flex !important; flex-direction: column !important; gap: 24px !important; margin-top: 10px !important;">
-                <p id="txt-p1" style="font-size: 1.05rem !important; color: #333 !important; line-height: 1.7 !important; margin: 0 !important;">
-                    Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.
-                </p>
-                <p id="txt-p2" style="font-size: 1.05rem !important; color: #333 !important; line-height: 1.7 !important; margin: 0 !important;">
-                    Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.
-                </p>
-            </div>
+            <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+        </div>
+    </nav>
+
+    <!-- ЗА НАС СЪДЪРЖАНИЕ -->
+    <main style="padding: 80px 8%; min-height: 70vh; max-width: 900px; margin: 0 auto;">
+        <h1 data-key="about-title" style="font-size: 2.5rem; font-weight: 400; margin-bottom: 15px; letter-spacing: -1px;">About Our Studio</h1>
+        <p data-key="about-subtitle" style="font-size: 1.1rem; color: #8c8275; margin-bottom: 40px; font-weight: 500;">Innovation and minimalism in architecture</p>
+        
+        <div style="line-height: 1.8; font-size: 1.05rem; color: #555; display: flex; flex-direction: column; gap: 20px;">
+            <p data-key="about-text-1">Academy Architect Studio was founded with the vision to turn modern space concepts into reality. We believe that good architecture transforms the way people live and work.</p>
+            <p data-key="about-text-2">Our team of professionals combines years of experience with modern technologies to deliver tailored solutions for every client.</p>
         </div>
     </main>
 
     <!-- ФУТЪР -->
     <footer class="main-footer">
-        <div class="footer-logo-area" style="display: flex; align-items: center; gap: 12px;">
-            <img src="assets/main-graphic.png" alt="Logo" class="footer-logo" style="height: 32px; width: auto;" onerror="this.style.display='none'">
+        <div class="footer-logo-area">
             <div>
-                <span class="footer-brand" style="font-weight: 600; color: #1a1a1a; font-size: 1rem;">Academy Architect <span class="logo-studio" style="font-weight: 700; color: #8c8275;">Studio</span></span>
-                <p class="footer-subtext" id="footer-subtext" style="font-size: 0.65rem; letter-spacing: 1px; color: #8c8275; margin-top: 2px;">АРХИТЕКТУРНО СТУДИО</p>
+                <div class="footer-brand">Academy Architect Studio</div>
+                <div class="footer-subtext" data-key="footer-subtitle">Design & Engineering</div>
             </div>
         </div>
+        
         <div class="footer-col">
-            <h4 style="font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 10px; color: #1a1a1a;">STUDIO</h4>
-            <p style="font-size: 0.85rem; color: #555; margin: 4px 0;">Sofia · Plovdiv · Varna</p>
-            <p style="font-size: 0.85rem; margin: 4px 0;"><a href="mailto:info@architectstudio.com" style="color: #555; text-decoration: none;">info@architectstudio.com</a></p>
+            <h4 data-key="footer-contacts">Contacts</h4>
+            <p data-key="footer-address">Sofia, Bulgaria</p>
+            <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
+            <p>+359 88 123 4567</p>
         </div>
-        <div class="footer-col footer-right" style="text-align: right; color: #8c8275; font-size: 0.85rem;">
-            <p>© 2026</p>
-            <p id="footer-rights">Academy Architect Studio — Всички права запазени.</p>
+        
+        <div class="footer-col">
+            <h4 data-key="footer-links-title">Links</h4>
+            <p><a href="index.html" data-key="nav-home">Home</a></p>
+            <p><a href="catalog.html" data-key="nav-catalog">Projects</a></p>
+            <p><a href="about.html" data-key="nav-about">About Us</a></p>
+        </div>
+        
+        <div class="footer-right">
+            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- СИСТЕМА ЗА ПРЕВОД -->
+    <!-- СКРИПТОВЕ -->
+    <script src="translations.js"></script>
     <script>
-        const translations = {
-            en: {
-                "nav-home": "Home", "nav-catalog": "Catalog", "nav-about": "About", "nav-planner": "AI Planner", "nav-contact": "Contact", "btn-login": "Login",
-                "page-eyebrow": "ABOUT THE STUDIO", 
-                "page-title": "Personal archive of architectural projects.",
-                "txt-p1": "Academy Architect Studio is an original catalog of house projects. Each project is developed with attention to proportion, light, and material — from the conceptual sketch to the detailed plan of each floor.",
-                "txt-p2": "Here I upload my own work. Every project is ready for adaptation to a specific plot, climate, and budget.",
-                "footer-subtext": "ARCHITECTURAL DESIGN STUDIO", "footer-rights": "Academy Architect Studio — All rights reserved."
-            },
-            bg: {
-                "nav-home": "Начало", "nav-catalog": "Каталог", "nav-about": "За нас", "nav-planner": "ИИ Планер", "nav-contact": "Контакт", "btn-login": "Вход",
-                "page-eyebrow": "ЗА СТУДИОТО", 
-                "page-title": "Личен архив на архитектурни проекти.",
-                "txt-p1": "Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.",
-                "txt-p2": "Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.",
-                "footer-subtext": "АРХИТЕКТУРНО СТУДИО", "footer-rights": "Academy Architect Studio — Всички права запазени."
-            }
-        };
-
-        function changeLanguage(lang) {
-            document.querySelectorAll('#nav-links a').forEach(link => {
-                const key = link.getAttribute('data-key');
-                if (translations[lang][key]) link.innerText = translations[lang][key];
-            });
-
-            const keysToTranslate = [
-                'btn-login', 'page-eyebrow', 'page-title', 'txt-p1', 'txt-p2', 'footer-subtext', 'footer-rights'
-            ];
-            
-            keysToTranslate.forEach(id => {
-                const el = document.getElementById(id);
-                if (el && translations[lang][id]) el.innerText = translations[lang][id];
-            });
-
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            if(event && event.target) event.target.classList.add('active');
-        }
+        document.addEventListener("DOMContentLoaded", function() {
+            initLanguage();
+        });
     </script>
 </body>
 </html>
