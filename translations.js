@@ -33,6 +33,19 @@ const translations = {
         "about-title": "Личен архив на архитектурни проекти.",
         "about-desc-1": "Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.",
         "about-desc-2": "Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.",
+        // Дублираме ги за сигурност, за да работят и ако в HTML са записани като about-text-1/2:
+        "about-text-1": "Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.",
+        "about-text-2": "Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.",
+        
+        "about-badge-subtitle": "ПОСЛЕДЕН",
+        "about-badge-title": "Проект „Минимализъм“",
+
+        "value-1-title": "Иновативен дизайн",
+        "value-1-desc": "Съчетаваме съвременни тенденции в архитектурата с модерен софтуер и AI планиране за максимална прецизност.",
+        "value-2-title": "Устойчивост",
+        "value-2-desc": "Проектираме с грижа за околната среда, използвайки енергоефективни решения и дълготрайни материали.",
+        "value-3-title": "Индивидуален подход",
+        "value-3-desc": "Всяко пространство се ражда от диалога с нашите клиенти, за да отговаря точно на техния начин на живот.",
 
         // Контакти и Резервации (contact.html)
         "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
@@ -81,6 +94,19 @@ const translations = {
         "about-title": "Personal archive of architectural projects.",
         "about-desc-1": "Academy Architect Studio is an original catalog of house designs. Each project is developed with attention to proportions, light, and material — from the initial sketch to the detailed floor plan.",
         "about-desc-2": "Here I upload my own works. Each project is ready for adaptation to a specific plot, climate, and budget.",
+        // Дублираме ги и тук за английски:
+        "about-text-1": "Academy Architect Studio is an original catalog of house designs. Each project is developed with attention to proportions, light, and material — from the initial sketch to the detailed floor plan.",
+        "about-text-2": "Here I upload my own works. Each project is ready for adaptation to a specific plot, climate, and budget.",
+
+        "about-badge-subtitle": "LATEST",
+        "about-badge-title": "Minimalism Project",
+
+        "value-1-title": "Innovative Design",
+        "value-1-desc": "We combine modern trends in architecture with advanced software and AI planning for maximum precision.",
+        "value-2-title": "Sustainability",
+        "value-2-desc": "We design with environmental care, utilizing energy-efficient solutions and durable materials.",
+        "value-3-title": "Individual Approach",
+        "value-3-desc": "Every space is born from dialogue with our clients to perfectly match their lifestyle.",
 
         // Contacts & Booking (contact.html)
         "contact-eyebrow": "GET IN TOUCH & BOOKING",
@@ -98,7 +124,7 @@ const translations = {
 };
 
 function setLanguage(lang) {
-    localStorage.setItem('siteLang', lang); // Уеднаквено ключе с останалите скриптове
+    localStorage.setItem('siteLang', lang);
     document.documentElement.lang = lang;
     
     document.querySelectorAll('.lang-btn').forEach(btn => {

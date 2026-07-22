@@ -105,367 +105,7 @@
             background: #333;
         }
 
-        /* Стил за админ линка в първия вариант */
-        .btn-admin-nav {
-            color: inherit;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            padding: 5px 8px;
-            transition: color 0.2s;
-        }
-        .btn-admin-nav:hover {
-            color: #e67e22;
-        }
-
-        /* Dark Mode Overrides */
-        body.dark-mode .contact-card-form {
-            background: #1e1e1e !important;
-            border-color: #2c2c2c !important;
-        }
-        body.dark-mode .form-group input,
-        body.dark-mode .form-group select,
-        body.dark-mode .form-group textarea {
-            background: #2b2b2b !important;
-            border-color: #444 !important;
-            color: #fff !important;
-        }
-        body.dark-mode .btn-submit {
-            background: #eadecc;
-            color: #1a1a1a;
-        }
-        body.dark-mode .btn-submit:hover {
-            background: #d8ca3c;
-        }
-
-        @media (max-width: 850px) {
-            .contact-container {
-                grid-template-columns: 1fr;
-                margin: 40px auto;
-                gap: 40px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- НАВИГАЦИЯ -->
-    <nav class="navbar">
-        <a href="index.html" class="logo-area">
-            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
-            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
-        </a>
-        
-        <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
-
-        <div id="nav-links">
-            <a href="index.html" data-key="nav-home">Home</a>
-            <a href="catalog.html" data-key="nav-catalog">Projects</a>
-            <a href="about.html" data-key="nav-about">About Us</a>
-            <a href="planner.html" data-key="nav-planner">AI Planner</a>
-            <a href="estimator.html" data-key="nav-estimator">Estimator</a>
-            <a href="contact.html" class="active" data-key="nav-contact">Contacts</a>
-        </div>
-
-        <div class="header-actions">
-            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
-            <div class="lang-switcher">
-                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn active" id="btn-bg" onclick="setLanguage('bg')">BG</button>
-            </div>
-            <!-- Динамичен контейнер за състоянието на входа -->
-            <div id="navAuthContainer" style="display: flex; align-items: center; gap: 10px;">
-                <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- СЪДЪРЖАНИЕ КОНТАКТИ -->
-    <main class="contact-container">
-        <div>
-            <span class="contact-eyebrow" data-key="contact-eyebrow">ВРЪЗКА И РЕЗЕРВАЦИЯ</span>
-            <h1 class="contact-title" data-key="contact-title">Обсъдете вашия проект или запазете среща.</h1>
-            
-            <div class="contact-details">
-                <p><strong>Адрес:</strong> <span id="pageAddress">Sofia · Plovdiv · Varna · Gotce Delchev</span></p>
-                <p><strong>Имейл:</strong> <a href="mailto:info@architectstudio.com" id="pageEmailLink"><span id="pageEmail">info@architectstudio.com</span></a></p>
-                <p><strong>Телефон:</strong> <span id="pagePhone">+359 812 345 678</span></p>
-            </div>
-        </div>
-
-        <div class="contact-card-form">
-            <form id="contactForm" onsubmit="handleContactSubmit(event)">
-                <div class="form-group">
-                    <label data-key="contact-type-label">Тип запитване</label>
-                    <select id="inquiryType">
-                        <option value="general">Общо съобщение</option>
-                        <option value="consultation">Консултация за проект</option>
-                        <option value="quote">Запитване за оферта</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label data-key="contact-name-label">Вашето име</label>
-                    <input type="text" id="senderName" required placeholder="">
-                </div>
-
-                <div class="form-group">
-                    <label data-key="contact-email-label">Вашият имейл</label>
-                    <input type="email" id="senderEmail" required placeholder="">
-                </div>
-
-                <div class="form-group">
-                    <label data-key="contact-phone-label">Телефонен номер</label>
-                    <input type="tel" id="senderPhone" placeholder="+359...">
-                </div>
-
-                <div class="form-group">
-                    <label data-key="contact-msg-label">Съобщение / Детайли</label>
-                    <textarea id="senderMessage" rows="4" required></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit" data-key="contact-btn-send">Изпрати запитване</button>
-            </form>
-        </div>
-    </main>
-
-    <!-- ФУТЪР -->
-    <footer class="main-footer">
-        <div class="footer-logo-area">
-            <div>
-                <div class="footer-brand">Academy Architect Studio</div>
-                <div class="footer-subtext" data-key="footer-subtitle">Design & Engineering</div>
-            </div>
-        </div>
-        
-        <div class="footer-col">
-            <h4 data-key="footer-contacts">Contacts</h4>
-            <p><span id="footAddress">Sofia, Bulgaria</span></p>
-            <p><a href="mailto:office@architect-studio.bg" id="footEmailLink"><span id="footEmail">office@architect-studio.bg</span></a></p>
-            <p><span id="footPhone">+359 88 123 4567</span></p>
-        </div>
-        
-        <div class="footer-col">
-            <h4 data-key="footer-links-title">Links</h4>
-            <p><a href="index.html" data-key="nav-home">Home</a></p>
-            <p><a href="catalog.html" data-key="nav-catalog">Projects</a></p>
-            <p><a href="about.html" data-key="nav-about">About Us</a></p>
-        </div>
-        
-        <div class="footer-right">
-            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- СКРИПТОВЕ -->
-    <script src="translations.js"></script>
-    <script>
-        // Превключване на тъмния режим
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('siteTheme', 'dark');
-            } else {
-                localStorage.setItem('siteTheme', 'light');
-            }
-        }
-
-        // Мобилно меню
-        function toggleMobileMenu() {
-            const navLinks = document.getElementById('nav-links');
-            navLinks.classList.toggle('mobile-open');
-        }
-
-        // Динамична проверка на статуса на входа за навигацията
-        function updateNavAuthStatus() {
-            const container = document.getElementById('navAuthContainer');
-            if (!container) return;
-
-            const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('isUserLoggedIn') === 'true';
-            const isAdmin = localStorage.getItem('isAdmin') === 'true' || 
-                            localStorage.getItem('userRole') === 'admin' || 
-                            localStorage.getItem('role') === 'admin';
-
-            if (isUserLoggedIn) {
-                let html = '';
-                
-                // Икона на профила отляво
-                html += `
-                    <a href="login.html" title="Профил" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(0,0,0,0.05); border-radius: 50%; color: inherit; text-decoration: none; transition: background 0.2s;">
-                        <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: currentColor;">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
-                        <span style="position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; background-color: #2ecc71; border: 2px solid var(--bg-color, #fff); border-radius: 50%;"></span>
-                    </a>
-                `;
-
-                // Админ линк отдясно
-                if (isAdmin) {
-                    html += `<a href="admin.html" class="btn-admin-nav">Админ</a>`;
-                }
-
-                container.innerHTML = html;
-            } else {
-                container.innerHTML = `
-                    <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
-                `;
-            }
-        }
-
-        // Изпращане на формата
-        function handleContactSubmit(e) {
-            e.preventDefault();
-            alert('Благодарим ви! Вашето запитване беше изпратено успешно.');
-            document.getElementById('contactForm').reset();
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            if (typeof initLanguage === 'function') {
-                initLanguage();
-            } else if (typeof setLanguage === 'function') {
-                const savedLang = localStorage.getItem('siteLang') || 'bg';
-                setLanguage(savedLang);
-            }
-            
-            updateNavAuthStatus();
-
-            // Автоматично зареждане на контактите от админ панела за страницата и футъра
-            const savedContact = localStorage.getItem('siteContact');
-            if (savedContact) {
-                try {
-                    const data = JSON.parse(savedContact);
-                    
-                    // Зареждане на самата страница
-                    if (data.address && document.getElementById('pageAddress')) {
-                        document.getElementById('pageAddress').textContent = data.address;
-                    }
-                    if (data.email) {
-                        if (document.getElementById('pageEmail')) document.getElementById('pageEmail').textContent = data.email;
-                        if (document.getElementById('pageEmailLink')) document.getElementById('pageEmailLink').href = 'mailto:' + data.email;
-                    }
-                    if (data.phone && document.getElementById('pagePhone')) {<!DOCTYPE html>
-<html lang="bg">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle" data-key="nav-contact">Contacts | Academy Architect Studio</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Скрипт за мигновено зареждане на темата без премигване -->
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('siteTheme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-            }
-        })();
-    </script>
-    <style>
-        .contact-container {
-            max-width: 1200px;
-            margin: 60px auto;
-            padding: 0 5%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: start;
-        }
-        .contact-eyebrow {
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            color: #8c8275;
-            text-transform: uppercase;
-            display: block;
-            margin-bottom: 12px;
-        }
-        .contact-title {
-            font-size: 2.8rem;
-            font-weight: 400;
-            line-height: 1.2;
-            margin: 0 0 30px 0;
-        }
-        .contact-details {
-            font-size: 1.05rem;
-            line-height: 2;
-            color: var(--text-color, #1a1a1a);
-            margin-bottom: 30px;
-        }
-        .contact-details p {
-            margin: 10px 0;
-        }
-        .contact-details a {
-            color: inherit;
-            text-decoration: underline;
-        }
-        .contact-card-form {
-            background: var(--card-bg, #ffffff);
-            border: 1px solid var(--border-color, #e6dec9);
-            border-radius: 12px;
-            padding: 35px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-        }
-        .form-group {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .form-group label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-color, #1a1a1a);
-        }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border-color, #e6dec9);
-            border-radius: 8px;
-            background: var(--bg-color, #fff);
-            color: var(--text-color, #1a1a1a);
-            font-family: inherit;
-            font-size: 0.95rem;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #1a1a1a;
-        }
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            background: #1a1a1a;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-        }
-        .btn-submit:hover {
-            background: #333;
-        }
-
-        /* Стил за админ линка и профила */
-        .btn-admin-nav {
-            background: #1a1a1a;
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            padding: 8px 14px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: background 0.2s;
-        }
-        .btn-admin-nav:hover {
-            background: #333;
-        }
+        /* Стил за профилния елемент в навигацията */
         .user-profile-nav {
             display: flex;
             align-items: center;
@@ -666,31 +306,27 @@
             if (!container) return;
 
             const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('isUserLoggedIn') === 'true';
-            const isAdmin = localStorage.getItem('isAdmin') === 'true' || 
-                            localStorage.getItem('userRole') === 'admin' || 
-                            localStorage.getItem('role') === 'admin';
 
             if (isUserLoggedIn) {
-                let html = '';
-                
-                // Профилна икона с надпис "Профил"
-                html += `
-                    <a href="login.html" class="user-profile-nav" title="Профил">
+                const userRole = localStorage.getItem('userRole') || localStorage.getItem('role') || 'user';
+                const rawName = localStorage.getItem('userName') || localStorage.getItem('username') || localStorage.getItem('currentUser') || '';
+                const isAdmin = userRole === 'admin' || rawName.toLowerCase() === 'admin';
+
+                // Ако е админ изписва "Админ", ако е обикновен потребител изписва директно "Профил"
+                const displayLabel = isAdmin ? 'Админ' : 'Профил';
+                const targetLink = isAdmin ? 'admin.html' : 'profile.html';
+
+                container.innerHTML = `
+                    <a href="${targetLink}" class="user-profile-nav" title="${displayLabel}">
                         <div class="user-avatar-badge">
                             <svg width="20" height="20" viewBox="0 0 24 24">
                                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                             </svg>
                             <span class="online-status-dot"></span>
                         </div>
-                        <span class="profile-label-text">Профил</span>
+                        <span class="profile-label-text">${displayLabel}</span>
                     </a>
                 `;
-
-                if (isAdmin) {
-                    html += `<a href="admin.html" class="btn-admin-nav">Админ</a>`;
-                }
-
-                container.innerHTML = html;
             } else {
                 container.innerHTML = `
                     <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
@@ -698,7 +334,6 @@
             }
         }
 
-        // Записване на формата в localStorage за админ панела (секция Резервации/Запитвания)
         function handleContactSubmit(e) {
             e.preventDefault();
             
@@ -753,28 +388,6 @@
                     }
 
                     // Футър
-                    if (data.address && document.getElementById('footAddress')) {
-                        document.getElementById('footAddress').textContent = data.address;
-                    }
-                    if (data.email) {
-                        if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
-                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
-                    }
-                    if (data.phone && document.getElementById('footPhone')) {
-                        document.getElementById('footPhone').textContent = data.phone;
-                    }
-                } catch (e) {
-                    console.error('Грешка при зареждане на контактите', e);
-                }
-            }
-        });
-    </script>
-</body>
-</html>
-                        document.getElementById('pagePhone').textContent = data.phone;
-                    }
-
-                    // Зареждане във футъра
                     if (data.address && document.getElementById('footAddress')) {
                         document.getElementById('footAddress').textContent = data.address;
                     }
