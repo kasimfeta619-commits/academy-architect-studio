@@ -90,9 +90,11 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script src="auth.js"></script>
-    <script>
+    <script type="module">
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
         // Функция за превключване на тъмния режим (без промяна на текста на бутона)
-        function toggleDarkMode() {
+        window.toggleDarkMode = function() {
             const isDark = document.documentElement.classList.toggle('dark-mode');
             document.body.classList.toggle('dark-mode', isDark);
             
@@ -101,15 +103,15 @@
             } else {
                 localStorage.setItem('siteTheme', 'light');
             }
-        }
+        };
 
         // Функция за мобилното меню (хамбургер бутон)
-        function toggleMobileMenu() {
+        window.toggleMobileMenu = function() {
             const navLinks = document.getElementById('nav-links');
             navLinks.classList.toggle('mobile-open');
-        }
+        };
 
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", async function() {
             // Синхронизиране на темата при пълно зареждане
             const savedTheme = localStorage.getItem('siteTheme');
             if (savedTheme === 'dark') {
@@ -124,37 +126,55 @@
                 setLanguage(savedLang);
             }
 
-            // Зареждане на ВСИЧКИ проекти от LocalStorage за каталога
+            // Зареждане на ВСИЧКИ проекти от Firebase Firestore за каталога
             const container = document.getElementById('catalogProjectsContainer');
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
             const currentLang = localStorage.getItem('siteLang') || localStorage.getItem('preferredLang') || 'bg';
 
             if (container) {
-                if (projects.length > 0) {
-                    const allProjects = projects.slice().reverse();
-                    container.innerHTML = allProjects.map((p, index) => {
-                        const originalIndex = projects.length - 1 - index;
-                        const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
-                        const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
-
-                        return `
-                            <a href="project-detail.html?index=${originalIndex}" class="project-card">
-                                <div class="project-img-box">
-                                    <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Image'">
-                                </div>
-                                <div class="project-info">
-                                    <span class="p-title">${p.title}</span>
-                                    <span class="p-meta">${p.style || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
-                                    <span class="p-area">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
-                                </div>
-                            </a>
-                        `;
-                    }).join('');
-                } else {
-                    container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem; grid-column: 1 / -1;" data-key="no-projects">No projects added yet.</p>`;
-                    if (typeof applyTranslations === 'function') {
-                        applyTranslations(currentLang);
+                try {
+                    // Използваме глобалната база данни 'db', инициализирана в auth.js или друг основен скрипт
+                    const dbInstance = window.db || (window.firebase && window.firebase.firestore ? window.firebase.firestore() : null);
+                    
+                    let projects = [];
+                    if (dbInstance) {
+                        const querySnapshot = await getDocs(collection(dbInstance, "projects"));
+                        querySnapshot.forEach((doc) => {
+                            projects.push({ id: doc.id, ...doc.data() });
+                        });
+                    } else {
+                        // Резервен вариант (fallback) към localStorage, ако Firebase не е достъпен директно тук
+                        projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
                     }
+
+                    if (projects.length > 0) {
+                        const allProjects = projects.slice().reverse();
+                        container.innerHTML = allProjects.map((p, index) => {
+                            const projectId = p.id || index;
+                            const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+                            const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
+
+                            return `
+                                <a href="project-detail.html?id=${projectId}" class="project-card">
+                                    <div class="project-img-box">
+                                        <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Image'">
+                                    </div>
+                                    <div class="project-info">
+                                        <span class="p-title">${p.title}</span>
+                                        <span class="p-meta">${p.style || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
+                                        <span class="p-area">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
+                                    </div>
+                                </a>
+                            `;
+                        }).join('');
+                    } else {
+                        container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem; grid-column: 1 / -1;" data-key="no-projects">No projects added yet.</p>`;
+                        if (typeof applyTranslations === 'function') {
+                            applyTranslations(currentLang);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Грешка при зареждане на проектите от Firebase:", error);
+                    container.innerHTML = `<p style="color: #ff6b6b; font-size: 0.95rem; grid-column: 1 / -1;">Грешка при зареждане на проектите.</p>`;
                 }
             }
 
