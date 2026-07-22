@@ -160,7 +160,10 @@
                 <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
             </div>
-            <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+            <!-- Динамичен контейнер за състоянието на входа -->
+            <div id="navAuthContainer">
+                <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+            </div>
         </div>
     </nav>
 
@@ -178,9 +181,9 @@
         
         <div class="footer-col">
             <h4 data-key="footer-contacts">Contacts</h4>
-            <p data-key="footer-address">Sofia, Bulgaria</p>
-            <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
-            <p>+359 88 123 4567</p>
+            <p><span id="footAddress">Sofia, Bulgaria</span></p>
+            <p><a href="mailto:office@architect-studio.bg" id="footEmailLink"><span id="footEmail">office@architect-studio.bg</span></a></p>
+            <p><span id="footPhone">+359 88 123 4567</span></p>
         </div>
         
         <div class="footer-col">
@@ -196,31 +199,56 @@
     </footer>
 
     <script src="translations.js"></script>
-    <script>
+    <script src="auth.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
+            authDomain: "architect-studio-1810c.firebaseapp.com",
+            projectId: "architect-studio-1810c",
+            storageBucket: "architect-studio-1810c.firebasestorage.app",
+            messagingSenderId: "1053914253758",
+            appId: "1:1053914253758:web:97d9bc28ac5465730311ef",
+            measurementId: "G-NN7GYSF55G"
+        };
+
+        let app;
+        try {
+            app = initializeApp(firebaseConfig);
+        } catch (e) {
+            // Вече е инициализирано
+        }
+
         // Превключване на тъмния режим
-        function toggleDarkMode() {
+        window.toggleDarkMode = function() {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
                 localStorage.setItem('siteTheme', 'dark');
             } else {
                 localStorage.setItem('siteTheme', 'light');
             }
-        }
+        };
 
         // Мобилно меню
-        function toggleMobileMenu() {
+        window.toggleMobileMenu = function() {
             const navLinks = document.getElementById('nav-links');
             navLinks.classList.toggle('mobile-open');
-        }
+        };
 
-        document.addEventListener("DOMContentLoaded", function() {
-            initLanguage();
+        document.addEventListener("DOMContentLoaded", async function() {
+            if (typeof initLanguage === 'function') {
+                initLanguage();
+            } else if (typeof setLanguage === 'function') {
+                const savedLang = localStorage.getItem('siteLang') || 'bg';
+                setLanguage(savedLang);
+            }
             
             const urlParams = new URLSearchParams(window.location.search);
-            const projectIndex = urlParams.get('index');
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+            const projectId = urlParams.get('id');
             const container = document.getElementById('projectDetailContainer');
-            const currentLang = localStorage.getItem('preferredLang') || 'bg';
+            const currentLang = localStorage.getItem('siteLang') || localStorage.getItem('preferredLang') || 'bg';
             const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
             const backText = currentLang === 'en' ? '← Back to Catalog' : '← Обратно към каталога';
             
@@ -229,90 +257,132 @@
             const textSection = currentLang === 'en' ? 'Architectural Section' : 'Архитектурен разрез';
             const textGallery = currentLang === 'en' ? 'Gallery & Renders' : 'Галерия и визуализации';
 
-            if (projectIndex !== null && projects[projectIndex]) {
-                const p = projects[projectIndex];
-                const mainImg = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
-                
-                document.getElementById('pageTitle').textContent = `${p.title} | Academy Architect Studio`;
+            if (projectId) {
+                try {
+                    const dbInstance = window.db || getFirestore(app);
+                    const docRef = doc(dbInstance, "projects", projectId);
+                    const docSnap = await getDoc(docRef);
 
-                // 1. Разпределения
-                let floorPlansHtml = '';
-                const plansArr = p.floorPlans || (p.planImage ? [p.planImage] : []);
-                if (plansArr.length > 0) {
-                    floorPlansHtml = `
-                        <h2 class="section-heading">${textPlans}</h2>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px;">
-                            ${plansArr.map((plan, idx) => `
-                                <div class="blueprint-card">
-                                    <p style="font-size: 0.85rem; text-transform: uppercase; color: #8c8275; margin-bottom: 10px; font-weight: 600;">${currentLang === 'en' ? 'Floor ' + (idx + 1) : 'Етаж ' + (idx + 1)}</p>
-                                    <img src="${plan}" alt="Floor Plan ${idx + 1}" style="width: 100%; height: auto; border-radius: 4px;" onerror="this.parentElement.style.display='none'">
+                    if (docSnap.exists()) {
+                        const p = docSnap.data();
+                        const mainImg = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+                        
+                        document.getElementById('pageTitle').textContent = `${p.title} | Academy Architect Studio`;
+
+                        // 1. Разпределения
+                        let floorPlansHtml = '';
+                        const plansArr = p.floorPlans || (p.planImage ? [p.planImage] : []);
+                        if (plansArr.length > 0) {
+                            floorPlansHtml = `
+                                <h2 class="section-heading">${textPlans}</h2>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                                    ${plansArr.map((plan, idx) => `
+                                        <div class="blueprint-card">
+                                            <p style="font-size: 0.85rem; text-transform: uppercase; color: #8c8275; margin-bottom: 10px; font-weight: 600;">${currentLang === 'en' ? 'Floor ' + (idx + 1) : 'Етаж ' + (idx + 1)}</p>
+                                            <img src="${plan}" alt="Floor Plan ${idx + 1}" style="width: 100%; height: auto; border-radius: 4px;" onerror="this.parentElement.style.display='none'">
+                                        </div>
+                                    `).join('')}
                                 </div>
-                            `).join('')}
-                        </div>
+                            `;
+                        }
+
+                        // 2. Фасади
+                        let facadesHtml = '';
+                        const facadesArr = p.facadeImages || [];
+                        if (facadesArr.length > 0) {
+                            facadesHtml = `
+                                <h2 class="section-heading">${textFacades}</h2>
+                                <div class="gallery-grid" style="margin-bottom: 40px;">
+                                    ${facadesArr.map((fac, idx) => `<div class="gallery-item"><img src="${fac}" alt="Facade ${idx + 1}"></div>`).join('')}
+                                </div>
+                            `;
+                        }
+
+                        // 3. Разрез (Section)
+                        let sectionHtml = '';
+                        if (p.sectionImage) {
+                            sectionHtml = `
+                                <h2 class="section-heading">${textSection}</h2>
+                                <div class="blueprint-card" style="margin-bottom: 40px;">
+                                    <img src="${p.sectionImage}" alt="Architectural Section" style="width: 100%; max-height: 500px; object-fit: contain; border-radius: 4px;" onerror="this.parentElement.style.display='none'">
+                                </div>
+                            `;
+                        }
+
+                        // 4. Галерия
+                        let galleryHtml = '';
+                        const galleryArr = p.gallery || p.images || [];
+                        if (galleryArr.length > 0) {
+                            galleryHtml = `
+                                <h2 class="section-heading">${textGallery}</h2>
+                                <div class="gallery-grid">
+                                    ${galleryArr.map(img => `<div class="gallery-item"><img src="${img}" alt="Gallery image"></div>`).join('')}
+                                </div>
+                            `;
+                        }
+
+                        container.innerHTML = `
+                            <a href="catalog.html" class="back-link">${backText}</a>
+                            
+                            <h1 class="project-title">${p.title}</h1>
+                            <div class="project-meta-badges">
+                                ${p.style ? `<span class="badge-item">${p.style}</span>` : ''}
+                                ${p.area ? `<span class="badge-item">${p.area} ${areaUnit}</span>` : ''}
+                                ${p.floors ? `<span class="badge-item">${p.floors} ${currentLang === 'en' ? 'Floors' : 'етажа'}</span>` : ''}
+                            </div>
+
+                            <img src="${mainImg}" alt="${p.title}" class="main-project-img" onerror="this.src='https://placehold.co/1000x600?text=Image'">
+
+                            <div class="project-description">
+                                <p>${p.desc || p.description || ''}</p>
+                            </div>
+
+                            ${floorPlansHtml}
+                            ${facadesHtml}
+                            ${sectionHtml}
+                            ${galleryHtml}
+                        `;
+                    } else {
+                        container.innerHTML = `
+                            <a href="catalog.html" class="back-link">${backText}</a>
+                            <h2 class="project-title">${currentLang === 'en' ? 'Project not found.' : 'Проектът не е намерен.'}</h2>
+                        `;
+                    }
+                } catch (err) {
+                    console.error("Грешка при зареждане на проекта от Firebase:", err);
+                    container.innerHTML = `
+                        <a href="catalog.html" class="back-link">${backText}</a>
+                        <h2 class="project-title">${currentLang === 'en' ? 'Error loading project.' : 'Грешка при зареждане на проекта.'}</h2>
                     `;
                 }
-
-                // 2. Фасади
-                let facadesHtml = '';
-                const facadesArr = p.facadeImages || [];
-                if (facadesArr.length > 0) {
-                    facadesHtml = `
-                        <h2 class="section-heading">${textFacades}</h2>
-                        <div class="gallery-grid" style="margin-bottom: 40px;">
-                            ${facadesArr.map((fac, idx) => `<div class="gallery-item"><img src="${fac}" alt="Facade ${idx + 1}"></div>`).join('')}
-                        </div>
-                    `;
-                }
-
-                // 3. Разрез (Section)
-                let sectionHtml = '';
-                if (p.sectionImage) {
-                    sectionHtml = `
-                        <h2 class="section-heading">${textSection}</h2>
-                        <div class="blueprint-card" style="margin-bottom: 40px;">
-                            <img src="${p.sectionImage}" alt="Architectural Section" style="width: 100%; max-height: 500px; object-fit: contain; border-radius: 4px;" onerror="this.parentElement.style.display='none'">
-                        </div>
-                    `;
-                }
-
-                // 4. Галерия
-                let galleryHtml = '';
-                const galleryArr = p.gallery || p.images || [];
-                if (galleryArr.length > 0) {
-                    galleryHtml = `
-                        <h2 class="section-heading">${textGallery}</h2>
-                        <div class="gallery-grid">
-                            ${galleryArr.map(img => `<div class="gallery-item"><img src="${img}" alt="Gallery image"></div>`).join('')}
-                        </div>
-                    `;
-                }
-
-                container.innerHTML = `
-                    <a href="catalog.html" class="back-link">${backText}</a>
-                    
-                    <h1 class="project-title">${p.title}</h1>
-                    <div class="project-meta-badges">
-                        ${p.style ? `<span class="badge-item">${p.style}</span>` : ''}
-                        ${p.area ? `<span class="badge-item">${p.area} ${areaUnit}</span>` : ''}
-                        ${p.floors ? `<span class="badge-item">${p.floors} ${currentLang === 'en' ? 'Floors' : 'етажа'}</span>` : ''}
-                    </div>
-
-                    <img src="${mainImg}" alt="${p.title}" class="main-project-img" onerror="this.src='https://placehold.co/1000x600?text=Image'">
-
-                    <div class="project-description">
-                        <p>${p.desc || p.description || ''}</p>
-                    </div>
-
-                    ${floorPlansHtml}
-                    ${facadesHtml}
-                    ${sectionHtml}
-                    ${galleryHtml}
-                `;
             } else {
                 container.innerHTML = `
                     <a href="catalog.html" class="back-link">${backText}</a>
-                    <h2 class="project-title">${currentLang === 'en' ? 'Project not found.' : 'Проектът не е намерен.'}</h2>
+                    <h2 class="project-title">${currentLang === 'en' ? 'Project not specified.' : 'Не е посочен проект.'}</h2>
                 `;
+            }
+
+            // Зареждане на контактите за футъра от Firebase
+            try {
+                const dbInstance = window.db || getFirestore(app);
+                const contactDocRef = doc(dbInstance, "siteSettings", "contact");
+                const contactSnap = await getDoc(contactDocRef);
+
+                if (contactSnap.exists()) {
+                    const data = contactSnap.data();
+                    if (data.address && document.getElementById('footAddress')) {
+                        document.getElementById('footAddress').textContent = data.address;
+                    }
+                    if (data.email) {
+                        if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
+                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
+                    }
+                    if (data.phone && document.getElementById('footPhone')) {
+                        document.getElementById('footPhone').textContent = data.phone;
+                    }
+                }
+            } catch (e) {
+                console.error('Грешка при зареждане на контактите от Firebase', e);
             }
         });
     </script>
