@@ -305,26 +305,51 @@
             const container = document.getElementById('navAuthContainer');
             if (!container) return;
 
-            const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('isUserLoggedIn') === 'true';
+            const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || 
+                                   localStorage.getItem('isUserLoggedIn') === 'true' || 
+                                   localStorage.getItem('currentUser') !== null;
 
             if (isUserLoggedIn) {
-                const userRole = localStorage.getItem('userRole') || localStorage.getItem('role') || 'user';
-                const rawName = localStorage.getItem('userName') || localStorage.getItem('username') || localStorage.getItem('currentUser') || '';
-                const isAdmin = userRole === 'admin' || rawName.toLowerCase() === 'admin';
+                const userRole = (localStorage.getItem('userRole') || localStorage.getItem('role') || '').toLowerCase();
+                const rawName = (localStorage.getItem('userName') || localStorage.getItem('username') || localStorage.getItem('currentUser') || '').toLowerCase();
+                
+                let parsedRole = '';
+                let parsedName = '';
+                try {
+                    const storedUser = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('loggedUser') || '{}');
+                    if (storedUser && typeof storedUser === 'object') {
+                        parsedRole = (storedUser.role || storedUser.userRole || '').toLowerCase();
+                        parsedName = (storedUser.username || storedUser.name || storedUser.email || '').toLowerCase();
+                    }
+                } catch (e) {}
 
-                // Ако е админ изписва "Админ", ако е обикновен потребител изписва директно "Профил"
-                const displayLabel = isAdmin ? 'Админ' : 'Профил';
+                const isAdmin = userRole === 'admin' || 
+                                parsedRole === 'admin' || 
+                                rawName === 'admin' || 
+                                parsedName === 'admin' || 
+                                rawName.includes('admin@') || 
+                                parsedName.includes('admin@') || 
+                                localStorage.getItem('isAdmin') === 'true';
+
+                const labelKey = isAdmin ? 'nav-admin' : 'nav-profile';
                 const targetLink = isAdmin ? 'admin.html' : 'profile.html';
 
+                const currentLang = localStorage.getItem('siteLang') || 'bg';
+                let displayText = isAdmin ? 'Админ' : 'Профил';
+
+                if (typeof translations !== 'undefined' && translations[currentLang] && translations[currentLang][labelKey]) {
+                    displayText = translations[currentLang][labelKey];
+                }
+
                 container.innerHTML = `
-                    <a href="${targetLink}" class="user-profile-nav" title="${displayLabel}">
+                    <a href="${targetLink}" class="user-profile-nav" title="${displayText}">
                         <div class="user-avatar-badge">
                             <svg width="20" height="20" viewBox="0 0 24 24">
                                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                             </svg>
                             <span class="online-status-dot"></span>
                         </div>
-                        <span class="profile-label-text">${displayLabel}</span>
+                        <span class="profile-label-text" data-key="${labelKey}">${displayText}</span>
                     </a>
                 `;
             } else {

@@ -319,14 +319,33 @@
             const container = document.getElementById('navAuthContainer');
             if (!container) return;
 
-            const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('isUserLoggedIn') === 'true';
+            const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || 
+                                   localStorage.getItem('isUserLoggedIn') === 'true' || 
+                                   localStorage.getItem('currentUser') !== null;
 
             if (isUserLoggedIn) {
-                const userRole = localStorage.getItem('userRole') || localStorage.getItem('role') || 'user';
-                const rawName = localStorage.getItem('userName') || localStorage.getItem('username') || localStorage.getItem('currentUser') || '';
+                const userRole = (localStorage.getItem('userRole') || localStorage.getItem('role') || '').toLowerCase();
+                const rawName = (localStorage.getItem('userName') || localStorage.getItem('username') || localStorage.getItem('currentUser') || '').toLowerCase();
                 
-                // Проверява дали ролята или името отговарят на админ (без значение от главни/малки букви)
-                const isAdmin = userRole.toLowerCase() === 'admin' || rawName.toLowerCase() === 'admin';
+                // Проверяваме и евентуален JSON обект в localStorage
+                let parsedRole = '';
+                let parsedName = '';
+                try {
+                    const storedUser = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('loggedUser') || '{}');
+                    if (storedUser && typeof storedUser === 'object') {
+                        parsedRole = (storedUser.role || storedUser.userRole || '').toLowerCase();
+                        parsedName = (storedUser.username || storedUser.name || storedUser.email || '').toLowerCase();
+                    }
+                } catch (e) {}
+
+                // Разширена сигурна проверка за администратор
+                const isAdmin = userRole === 'admin' || 
+                                parsedRole === 'admin' || 
+                                rawName === 'admin' || 
+                                parsedName === 'admin' || 
+                                rawName.includes('admin@') || 
+                                parsedName.includes('admin@') || 
+                                localStorage.getItem('isAdmin') === 'true';
 
                 const labelKey = isAdmin ? 'nav-admin' : 'nav-profile';
                 const targetLink = isAdmin ? 'admin.html' : 'profile.html';
