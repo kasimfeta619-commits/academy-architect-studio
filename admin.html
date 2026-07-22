@@ -2,458 +2,699 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>Админ Панел</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ панел | Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <!-- Скрипт за мигновено зареждане на темата без премигване -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+
+        // ЗАЩИТА НА АДМИН ПАНЕЛА
+        (function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isAdmin = localStorage.getItem('isAdmin');
+            
+            const userEmail = (
+                localStorage.getItem('loggedInUserEmail') || 
+                localStorage.getItem('userEmail') || 
+                localStorage.getItem('email') || 
+                ''
+            ).trim().toLowerCase(); 
+
+            const myAdminEmail = 'admin@architect.bg';
+
+            if (userEmail === myAdminEmail || isAdmin === 'true') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('isAdmin', 'true');
+                return;
+            }
+
+            if (isLoggedIn !== 'true') {
+                alert('Моля, влезте в профила си, за да достъпите админ панела.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            alert('Достъпът е разрешен само за администратори!');
+            window.location.href = 'index.html';
+        })();
+    </script>
+
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; color: #333; }
-        .admin-container { max-width: 900px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px; flex-wrap: wrap; }
-        .tab-btn { padding: 10px 15px; background: #eee; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; }
-        .tab-btn.active { background: #333; color: #fff; }
-        .admin-section { display: none; }
+        body { background-color: var(--bg-color, #fbf9f4); color: var(--text-color, #1a1a1a); font-family: sans-serif; margin: 0; transition: background-color 0.3s, color 0.3s; }
+        .admin-container { padding: 40px 8%; max-width: 950px; margin: 0 auto; min-height: 80vh; }
+        .back-home-link { display: inline-block; margin-bottom: 20px; color: #8c8275; text-decoration: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .back-home-link:hover { color: var(--text-color, #1a1a1a); }
+
+        /* Стилове за профилната икона (Аватар с Онлайн статус) */
+        .user-avatar-badge {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            background-color: #ebebeb;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .user-avatar-badge svg {
+            fill: #1a1a1a;
+            transition: fill 0.3s;
+        }
+        .online-status-dot {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            width: 11px;
+            height: 11px;
+            background-color: #2ecc71;
+            border: 2px solid #fbf9f4;
+            border-radius: 50%;
+            transition: border-color 0.3s;
+        }
+        
+        /* Навигация с табове */
+        .admin-nav-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid var(--border-color, #eadecc); padding-bottom: 15px; flex-wrap: wrap; }
+        .tab-btn { background: #f4eee5; border: 1px solid #eadecc; padding: 12px 15px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; color: #555; transition: all 0.2s; flex: 1; text-align: center; min-width: 140px; }
+        .tab-btn:hover { background: #eadecc; color: #1a1a1a; }
+        .tab-btn.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+
+        /* Секции (страници) */
+        .admin-section { display: none; background: #f4eee5; padding: 40px; border: 1px solid #eadecc; margin-bottom: 40px; transition: background-color 0.3s, border-color 0.3s; }
         .admin-section.active { display: block; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input[type="text"], .form-group textarea, .form-group select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        .btn-action { background: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; width: 100%; }
-        .project-item-admin, .booking-item-admin { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; margin-bottom: 10px; }
-        .admin-project-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; margin-right: 15px; }
-        .project-info-wrapper { display: flex; align-items: center; }
-        .admin-btns button { padding: 5px 10px; margin-left: 5px; border: none; border-radius: 4px; cursor: pointer; }
-        .btn-view { background: #17a2b8; color: white; }
-        .btn-edit { background: #ffc107; color: black; }
-        .btn-delete { background: #dc3545; color: white; }
-        .preview-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-        .preview-grid img { width: 100px; height: 100px; object-fit: cover; border-radius: 4px; }
-        #previewModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: white; padding: 20px; width: 600px; max-height: 80vh; overflow-y: auto; border-radius: 8px; position: relative; }
+
+        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #8c8275; font-weight: 700; }
+        .form-group input[type="text"], 
+        .form-group select, 
+        .form-group textarea { padding: 12px; border: 1px solid #eadecc; background: #fff; font-size: 1rem; color: #1a1a1a; outline: none; width: 100%; box-sizing: border-box; transition: background-color 0.3s, border-color 0.3s, color 0.3s; font-family: inherit; }
+        .form-group textarea { resize: vertical; height: 120px; }
+        .form-group input[type="file"] { padding: 10px; background: #fff; border: 1px solid #eadecc; width: 100%; box-sizing: border-box; color: inherit; }
+        .checkbox-group { flex-direction: row; align-items: center; gap: 10px; }
+        .checkbox-group input { width: 20px; height: 20px; }
+        
+        .btn-action { background: #1a1a1a; color: #fff; padding: 15px 30px; border: none; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; font-size: 0.9rem; }
+        .btn-action:hover { background: #333; }
+        
+        /* Списък с проекти и резервации */
+        .project-item-admin, .booking-item-admin { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 20px; border: 1px solid #eadecc; margin-bottom: 12px; gap: 15px; transition: background-color 0.3s, border-color 0.3s; }
+        .project-info-wrapper { display: flex; align-items: center; gap: 15px; }
+        .admin-project-thumb { width: 65px; height: 65px; object-fit: cover; border: 1px solid #eadecc; flex-shrink: 0; }
+        .admin-project-no-thumb { width: 65px; height: 65px; background: #f4eee5; border: 1px solid #eadecc; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #8c8275; text-align: center; flex-shrink: 0; text-transform: uppercase; }
+
+        .admin-btns { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
+        .btn-view { background: #1a1a1a; color: #fff; text-decoration: none; padding: 8px 12px; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; transition: background 0.2s; border: none; cursor: pointer; }
+        .btn-view:hover { background: #333; }
+        .btn-edit { background: #8c8275; color: #fff; border: none; padding: 8px 12px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; border-radius: 3px; }
+        .btn-edit:hover { background: #736a5e; }
+        .btn-delete { background: #a83232; color: #fff; border: none; padding: 8px 12px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; border-radius: 3px; }
+        .btn-delete:hover { background: #872828; }
+
+        /* Изход бутон стил */
+        .btn-exit { background: #a83232; color: #fff; border: none; padding: 8px 14px; cursor: pointer; font-size: 0.85rem; border-radius: 4px; font-weight: 600; text-transform: uppercase; transition: background 0.2s; display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
+        .btn-exit:hover { background: #872828; }
+
+        /* СТИЛОВЕ ЗА МОДАЛНИЯ ПРОЗОРЕЦ ЗА ПРЕГЛЕД */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: #fbf9f4; color: #1a1a1a; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 30px; border-radius: 4px; position: relative; border: 1px solid #eadecc; }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; font-weight: bold; color: #8c8275; }
+        .modal-close:hover { color: #1a1a1a; }
+        .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
+        .preview-grid img { width: 100%; height: 100px; object-fit: cover; border: 1px solid #eadecc; }
+
+        /* Dark Mode поддръжка */
+        body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
+        body.dark-mode header.navbar { background: #1a1a1a !important; border-bottom-color: #2c2c2c !important; }
+        body.dark-mode header.navbar span { color: #ffffff !important; }
+        body.dark-mode .user-avatar-badge { background-color: #2d2d2d !important; }
+        body.dark-mode .user-avatar-badge svg { fill: #ffffff !important; }
+        body.dark-mode .online-status-dot { border-color: #1a1a1a !important; }
+        body.dark-mode .admin-section { background: #1e1e1e !important; border-color: #2c2c2c !important; }
+        body.dark-mode .admin-nav-tabs { border-bottom-color: #2c2c2c !important; }
+        body.dark-mode .tab-btn { background: #252525 !important; border-color: #333 !important; color: #bbb !important; }
+        body.dark-mode .tab-btn:hover { background: #333 !important; color: #fff !important; }
+        body.dark-mode .tab-btn.active { background: #eadecc !important; color: #1a1a1a !important; border-color: #eadecc !important; }
+        body.dark-mode .form-group input[type="text"], 
+        body.dark-mode .form-group select, 
+        body.dark-mode .form-group textarea,
+        body.dark-mode .form-group input[type="file"] { background: #121212 !important; border-color: #444 !important; color: #ffffff !important; }
+        body.dark-mode .project-item-admin, 
+        body.dark-mode .booking-item-admin { background: #1e1e1e !important; border-color: #2c2c2c !important; }
+        body.dark-mode .admin-project-no-thumb { background: #252525 !important; border-color: #333 !important; }
+        body.dark-mode h1, 
+        body.dark-mode h3, 
+        body.dark-mode label,
+        body.dark-mode .checkbox-group label { color: #ffffff !important; }
+        body.dark-mode .btn-action { background-color: #eadecc; color: #1a1a1a; }
+        body.dark-mode .btn-action:hover { background-color: #d4c8b6; }
+        body.dark-mode .btn-view { background: #eadecc; color: #1a1a1a; }
+        body.dark-mode .btn-view:hover { background: #d4c8b6; }
+        body.dark-mode .modal-content { background: #1e1e1e; color: #fff; border-color: #333; }
+
+        /* Мобилна оптимизация */
+        @media (max-width: 768px) {
+            .admin-container { padding: 20px 4%; }
+            .admin-nav-tabs { flex-direction: column; gap: 8px; }
+            .tab-btn { width: 100%; min-width: 100%; padding: 14px; font-size: 0.8rem; }
+            .admin-section { padding: 20px 15px; }
+            h1 { font-size: 2rem !important; }
+            .project-item-admin, .booking-item-admin { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .project-info-wrapper { width: 100%; }
+            .admin-btns { width: 100%; display: flex; justify-content: flex-start; flex-wrap: wrap; }
+            .btn-view, .btn-edit, .btn-delete { padding: 10px 14px; font-size: 0.85rem; flex: 1; text-align: center; }
+        }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <h1>Административен панел</h1>
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('uploadTab', this)" id="uploadTabBtn">➕ Нов проект</button>
-        <button class="tab-btn" onclick="switchTab('projectsTab', this)">📁 Проекти</button>
-        <button class="tab-btn" onclick="switchTab('settingsTab', this)">⚙️ Настройки</button>
-        <button class="tab-btn" onclick="switchTab('bookingsTab', this)">📅 Резервации</button>
-        <button class="tab-btn" style="background:#dc3545; color:white; margin-left:auto;" onclick="handleExit()">Изход</button>
-    </div>
+    <header class="navbar" style="padding: 15px 5%; border-bottom: 1px solid #eadecc; display: flex; align-items: center; justify-content: space-between; background: #fbf9f4;">
+        <!-- Лого -->
+        <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+            <svg style="height: 30px; width: 30px; fill: #8c8275;" viewBox="0 0 24 24">
+                <path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 2.84L17 10.5V18H7v-7.5l5-4.66z"/>
+            </svg>
+            <span style="font-weight: 500; color: var(--text-color, #1a1a1a); font-size: 1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
+        </a>
 
-    <!-- 1. НОВ ПРОЕКТ / РЕДАКЦИЯ -->
-    <div id="uploadTab" class="admin-section active">
-        <h2 id="formTitle">Качване на нов проект</h2>
-        <form id="uploadForm">
-            <input type="hidden" id="editIndex" value="">
-
-            <div class="form-group"><label>Име на проекта *</label><input type="text" id="title" required></div>
-            
-            <div class="form-group">
-                <label>Главна категория *</label>
-                <select id="mainCategory" required>
-                    <option value="residential">🏠 Жилищна и многофамилна сграда</option>
-                    <option value="commercial">🏢 Търговски обект и промишлена сграда</option>
-                    <option value="interior">🛋️ Интериорен дизайн и обзавеждане</option>
-                </select>
+        <!-- Дясна част: Аватар + Dark Mode + Изход (Exit) -->
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="user-avatar-badge" title="Влезли сте като Администратор (Онлайн)">
+                <svg width="22" height="22" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span class="online-status-dot"></span>
             </div>
 
-            <div class="form-group">
-                <label>Подкатегория (Тип разработка) *</label>
-                <select id="subCategory" required>
-                    <option value="architecture">📐 Архитектурен проект</option>
-                    <option value="3d">🖼️ 3D сграда / Визуализация</option>
-                </select>
-            </div>
-
-            <div class="form-group"><label>Описание</label><textarea id="desc"></textarea></div>
-            <div class="form-group"><label>Площ (м²)</label><input type="text" id="area"></div>
-            <div class="form-group"><label>Етажи</label><input type="text" id="floors"></div>
-            <div class="form-group"><label>Спални</label><input type="text" id="beds"></div>
-            <div class="form-group"><label>Бани</label><input type="text" id="baths"></div>
-            <div class="form-group"><label>Материал / Конструкция</label><input type="text" id="material"></div>
-            <div class="form-group"><label>Стил</label><input type="text" id="style"></div>
-            <div class="form-group"><label>Цена (лв.)</label><input type="text" id="price"></div>
+            <button id="darkModeBtn" onclick="toggleDarkMode()" style="background: none; border: 1px solid var(--border-color, #eadecc); padding: 8px 12px; cursor: pointer; border-radius: 4px; color: inherit; font-size: 0.85rem;">🌙 Dark</button>
             
-            <hr style="border: 0; border-top: 1px solid #ccc; margin: 25px 0;">
-            
-            <div class="form-group"><label>Главна снимка</label><input type="file" id="mainImg" accept="image/*"></div>
-            <div class="form-group"><label>Планове / Разпределения (може няколко)</label><input type="file" id="planImgs" accept="image/*" multiple></div>
-            <div class="form-group"><label>Фасади (може няколко)</label><input type="file" id="facadeImgs" accept="image/*" multiple></div>
-            <div class="form-group"><label>Разрез</label><input type="file" id="sectionImg" accept="image/*"></div>
-            <div class="form-group"><label>Допълнителна галерия (може няколко)</label><input type="file" id="galleryImgs" accept="image/*" multiple></div>
+            <button onclick="handleExit()" class="btn-exit" title="Изход от системата">⎋ Изход</button>
+        </div>
+    </header>
 
-            <div class="form-group checkbox-group" style="margin-top: 20px;">
-                <input type="checkbox" id="isFav"> 
-                <label for="isFav" style="display:inline; cursor: pointer;">Фаворитен проект (на началната страница)</label>
-            </div>
-            
-            <button type="submit" id="submitBtn" class="btn-action" style="margin-top: 20px;">Запази проекта в каталога</button>
-            <button type="button" id="cancelBtn" onclick="resetProjectForm()" class="btn-action" style="margin-top: 10px; background: #6c757d; display: none;">Отказ</button>
-        </form>
-    </div>
-
-    <!-- 2. СПИСЪК С ПРОЕКТИ -->
-    <div id="projectsTab" class="admin-section">
-        <h2>Управление на проекти</h2>
-        <div id="adminProjectsList"></div>
-    </div>
-
-    <!-- 3. НАСТРОЙКИ -->
-    <div id="settingsTab" class="admin-section">
-        <h2>Настройки на сайта</h2>
-        <form id="aboutForm" style="margin-bottom: 20px;">
-            <h3>За нас</h3>
-            <div class="form-group"><label>Заглавие</label><input type="text" id="aboutTitle"></div>
-            <div class="form-group"><label>Описание</label><textarea id="aboutDesc"></textarea></div>
-            <button type="submit" class="btn-action" style="background:#007bff;">Запази "За нас"</button>
-        </form>
-        <form id="contactForm">
-            <h3>Контакти</h3>
-            <div class="form-group"><label>Адрес</label><input type="text" id="contactAddress"></div>
-            <div class="form-group"><label>Имейл</label><input type="text" id="contactEmail"></div>
-            <div class="form-group"><label>Телефон</label><input type="text" id="contactPhone"></div>
-            <button type="submit" class="btn-action" style="background:#007bff;">Запази "Контакти"</button>
-        </form>
-    </div>
-
-    <!-- 4. РЕЗЕРВАЦИИ -->
-    <div id="bookingsTab" class="admin-section">
-        <h2>Резервации от студиото</h2>
-        <div id="adminBookingsList"></div>
-    </div>
-</div>
-
-<!-- МОДАЛЕН ПРОЗОРЕЦ ЗА ПРЕГЛЕД -->
-<div id="previewModal" onclick="closePreviewModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <button onclick="closePreviewModal(true)" style="float: right; background: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;">X</button>
-        <div id="modalBody"></div>
-    </div>
-</div>
-
-<!-- СКРИПТОВЕ И FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script>
-    const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT_ID.appspot.com",
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-        appId: "YOUR_APP_ID"
-    };
-
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.firestore();
-
-    function compressImage(file, maxWidth = 900, quality = 0.7) {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (event) => {
-                const img = new Image();
-                img.src = event.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > maxWidth) {
-                        height = Math.round((height * maxWidth) / width);
-                        width = maxWidth;
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    resolve(canvas.toDataURL('image/jpeg', quality));
-                };
-            };
-        });
-    }
-
-    function handleExit() {
-        if (confirm("Сигурни ли сте, че искате да излезете?")) {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('isAdmin');
-            window.location.href = 'index.html';
-        }
-    }
-
-    function switchTab(tabId, btnElement) {
-        document.querySelectorAll('.admin-section').forEach(section => section.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        if(btnElement) btnElement.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    window.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const aboutDoc = await db.collection('siteSettings').doc('about').get();
-            if (aboutDoc.exists) {
-                const data = aboutDoc.data();
-                document.getElementById('aboutTitle').value = data.title || '';
-                document.getElementById('aboutDesc').value = data.desc || '';
-            } else {
-                const savedAbout = JSON.parse(localStorage.getItem('siteAbout') || '{}');
-                document.getElementById('aboutTitle').value = savedAbout.title || '';
-                document.getElementById('aboutDesc').value = savedAbout.desc || '';
-            }
-        } catch (err) {}
-
-        renderAdminList();
-        renderAdminBookings();
-    });
-
-    document.getElementById('aboutForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const aboutData = {
-            title: document.getElementById('aboutTitle').value,
-            desc: document.getElementById('aboutDesc').value
-        };
-        localStorage.setItem('siteAbout', JSON.stringify(aboutData));
-        try { await db.collection('siteSettings').doc('about').set(aboutData); } catch (err) {}
-        alert('Записано!');
-    });
-
-    document.getElementById('contactForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const contactData = {
-            address: document.getElementById('contactAddress').value,
-            email: document.getElementById('contactEmail').value,
-            phone: document.getElementById('contactPhone').value
-        };
-        localStorage.setItem('siteContact', JSON.stringify(contactData));
-        try { await db.collection('siteSettings').doc('contact').set(contactData); } catch (err) {}
-        alert('Записано!');
-    });
-
-    async function renderAdminList() {
-        const listContainer = document.getElementById('adminProjectsList');
-        let projects = [];
-        try {
-            const snapshot = await db.collection('projects').get();
-            projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        } catch (err) {
-            projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-        }
+    <main class="admin-container">
+        <a href="index.html" class="back-home-link">← Назад към началната страница</a>
         
-        if (projects.length === 0) {
-            listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма качени проекти.</p>`;
-            return;
+        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #8c8275; font-weight: 700;">УПРАВЛЕНИЕ НА САЙТА</span>
+        <h1 style="font-size: 2.5rem; font-weight: 400; margin-top: 5px; color: #1a1a1a; margin-bottom: 20px;">Админ Панел</h1>
+
+        <!-- НАВИГАЦИЯ МЕЖДУ СТРАНИЦИТЕ / ТАБОВЕТЕ -->
+        <div class="admin-nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('aboutTab', this)">📄 За нас</button>
+            <button class="tab-btn" onclick="switchTab('contactTab', this)">📞 Контакти</button>
+            <button class="tab-btn" onclick="switchTab('uploadTab', this)" id="uploadTabBtn">➕ Нов проект</button>
+            <button class="tab-btn" onclick="switchTab('projectsTab', this)">🗂️ Проекти</button>
+            <button class="tab-btn" onclick="switchTab('bookingsTab', this)">📅 Резервации</button>
+        </div>
+        
+        <!-- СТРАНИЦА 1: РЕДАКЦИЯ "ЗА НАС" -->
+        <div id="aboutTab" class="admin-section active">
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Редакция на страница "За нас"</h3>
+            <form id="aboutForm">
+                <div class="form-group"><label>Заглавие</label><input type="text" id="aboutTitle"></div>
+                <div class="form-group"><label>Основен текст / Описание</label><textarea id="aboutDesc" style="height: 150px;"></textarea></div>
+                <button type="submit" class="btn-action">Запази промените "За нас"</button>
+            </form>
+        </div>
+
+        <!-- СТРАНИЦА 2: РЕДАКЦИЯ "КОНТАКТИ" -->
+        <div id="contactTab" class="admin-section">
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Редакция на страница "Контакти"</h3>
+            <form id="contactForm">
+                <div class="form-group"><label>Адрес на студиото</label><input type="text" id="contactAddress"></div>
+                <div class="form-group"><label>Имейл адрес</label><input type="text" id="contactEmail"></div>
+                <div class="form-group"><label>Телефонен номер</label><input type="text" id="contactPhone"></div>
+                <button type="submit" class="btn-action">Запази промените "Контакти"</button>
+            </form>
+        </div>
+
+        <!-- СТРАНИЦА 3: КАЧВАНЕ НА НОВ ПРОЕКТ -->
+        <div id="uploadTab" class="admin-section">
+            <h3 id="formTitle" style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Качване на нов проект</h3>
+            <form id="uploadForm">
+                <input type="hidden" id="editIndex" value="">
+
+                <div class="form-group"><label>Име на проекта *</label><input type="text" id="title" required></div>
+                
+                <div class="form-group">
+                    <label>Главна категория *</label>
+                    <select id="mainCategory" required>
+                        <option value="residential">🏠 Жилищна и многофамилна сграда</option>
+                        <option value="commercial">🏢 Търговски обект и промишлена сграда</option>
+                        <option value="interior">🛋️ Интериорен дизайн и обзавеждане</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Подкатегория (Тип разработка) *</label>
+                    <select id="subCategory" required>
+                        <option value="architecture">📐 Архитектурен проект</option>
+                        <option value="3d">🖼️ 3D сграда / Визуализация</option>
+                    </select>
+                </div>
+
+                <div class="form-group"><label>Описание</label><textarea id="desc"></textarea></div>
+                <div class="form-group"><label>Площ (м²)</label><input type="text" id="area"></div>
+                <div class="form-group"><label>Етажи</label><input type="text" id="floors"></div>
+                <div class="form-group"><label>Спални</label><input type="text" id="beds"></div>
+                <div class="form-group"><label>Бани</label><input type="text" id="baths"></div>
+                <div class="form-group"><label>Материал / Конструкция</label><input type="text" id="material"></div>
+                <div class="form-group"><label>Стил</label><input type="text" id="style"></div>
+                <div class="form-group"><label>Цена (лв.)</label><input type="text" id="price"></div>
+                
+                <hr style="border: 0; border-top: 1px solid #eadecc; margin: 25px 0;">
+                
+                <div class="form-group"><label>Главна снимка</label><input type="file" id="mainImg"></div>
+                <div class="form-group"><label>Разпределения / Планове (множество етажи)</label><input type="file" id="planImgs" multiple></div>
+                <div class="form-group"><label>Фасади (може да изберете няколко)</label><input type="file" id="facadeImgs" multiple></div>
+                <div class="form-group"><label>Разрез</label><input type="file" id="sectionImg"></div>
+                <div class="form-group"><label>Допълнителни визуализации</label><input type="file" id="galleryImgs" multiple></div>
+
+                <div class="form-group checkbox-group" style="margin-top: 20px;">
+                    <input type="checkbox" id="isFav"> 
+                    <label for="isFav" style="cursor: pointer; font-size: 0.85rem; font-weight: 600;">Фаворитен проект (на началната страница)</label>
+                </div>
+                
+                <button type="submit" id="submitBtn" class="btn-action" style="margin-top: 20px;">Запази проекта в каталога</button>
+                <button type="button" id="cancelBtn" onclick="resetProjectForm()" class="btn-action" style="margin-top: 10px; background: #8c8275; display: none;">Отказ</button>
+            </form>
+        </div>
+
+        <!-- СТРАНИЦА 4: СЪЩЕСТВУВАЩИ ПРОЕКТИ -->
+        <div id="projectsTab" class="admin-section">
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Съществуващи проекти</h3>
+            <div id="adminProjectsList"></div>
+        </div>
+
+        <!-- СТРАНИЦА 5: РЕЗЕРВАЦИИ -->
+        <div id="bookingsTab" class="admin-section">
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Запазени консултации</h3>
+            <div id="adminBookingsList"></div>
+        </div>
+    </main>
+
+    <!-- МОДАЛЕН ПРОЗОРЕЦ ЗА ПРЕГЛЕД НА ПРОЕКТ -->
+    <div id="previewModal" class="modal-overlay" onclick="closePreviewModal(event)">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closePreviewModal(true)">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- СКРИПТОВЕ И FIREBASE ИНТЕГРАЦИЯ -->
+    <script src="auth.js"></script>
+    <script>
+        // Инициализация на Firebase (Замени с твоите конфигурационни данни)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // Функция за Изход (Exit / Logout)
+        function handleExit() {
+            if (confirm("Сигурни ли сте, че искате да излезете от админ панела?")) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('isAdmin');
+                localStorage.removeItem('loggedInUserEmail');
+                
+                if (typeof firebase.auth === 'function') {
+                    firebase.auth().signOut().catch(() => {});
+                }
+                
+                window.location.href = 'index.html';
+            }
         }
 
-        listContainer.innerHTML = projects.map((p, index) => {
-            let thumbHtml = p.mainImage 
-                ? `<img src="${p.mainImage}" alt="${p.title}" class="admin-project-thumb">`
-                : `<div class="admin-project-thumb" style="background:#ddd;display:flex;align-items:center;justify-content:center;font-size:10px;">Няма</div>`;
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('siteTheme', 'dark');
+            } else {
+                localStorage.setItem('siteTheme', 'light');
+            }
+        }
 
-            return `
-                <div class="project-item-admin">
-                    <div class="project-info-wrapper">
-                        ${thumbHtml}
-                        <div>
-                            <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${p.title}</strong>
-                            <div style="font-size: 0.8rem; color: #8c8275;">Стил: ${p.style || '-'} | Площ: ${p.area ? p.area + ' кв.м' : '-'}</div>
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.admin-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Зареждане на данни от Firebase Firestore (с fallback към localStorage)
+            try {
+                const aboutDoc = await db.collection('siteSettings').doc('about').get();
+                if (aboutDoc.exists) {
+                    const data = aboutDoc.data();
+                    document.getElementById('aboutTitle').value = data.title || 'За нашето архитектурно студио';
+                    document.getElementById('aboutDesc').value = data.desc || 'Ние създаваме съвременни и функционални пространства...';
+                } else {
+                    const savedAbout = JSON.parse(localStorage.getItem('siteAbout') || '{}');
+                    document.getElementById('aboutTitle').value = savedAbout.title || 'За нашето архитектурно студио';
+                    document.getElementById('aboutDesc').value = savedAbout.desc || 'Ние създаваме съвременни и функционални пространства...';
+                }
+
+                const contactDoc = await db.collection('siteSettings').doc('contact').get();
+                if (contactDoc.exists) {
+                    const data = contactDoc.data();
+                    document.getElementById('contactAddress').value = data.address || 'Sofia · Plovdiv · Varna';
+                    document.getElementById('contactEmail').value = data.email || 'info@architectstudio.com';
+                    document.getElementById('contactPhone').value = data.phone || '+359 888 000 000';
+                } else {
+                    const savedContact = JSON.parse(localStorage.getItem('siteContact') || '{}');
+                    document.getElementById('contactAddress').value = savedContact.address || 'Sofia · Plovdiv · Varna';
+                    document.getElementById('contactEmail').value = savedContact.email || 'info@architectstudio.com';
+                    document.getElementById('contactPhone').value = savedContact.phone || '+359 888 000 000';
+                }
+            } catch (err) {
+                console.log("Firebase offline, using localStorage fallback", err);
+            }
+
+            renderAdminList();
+            renderAdminBookings();
+        });
+
+        document.getElementById('aboutForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const aboutData = {
+                title: document.getElementById('aboutTitle').value,
+                desc: document.getElementById('aboutDesc').value
+            };
+            localStorage.setItem('siteAbout', JSON.stringify(aboutData));
+            try {
+                await db.collection('siteSettings').doc('about').set(aboutData);
+            } catch (err) { console.error(err); }
+            alert('Страницата "За нас" е успешно обновена в облака!');
+        });
+
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const contactData = {
+                address: document.getElementById('contactAddress').value,
+                email: document.getElementById('contactEmail').value,
+                phone: document.getElementById('contactPhone').value
+            };
+            localStorage.setItem('siteContact', JSON.stringify(contactData));
+            try {
+                await db.collection('siteSettings').doc('contact').set(contactData);
+            } catch (err) { console.error(err); }
+            alert('Страницата "Контакти" е успешно обновена в облака!');
+        });
+
+        async function renderAdminList() {
+            const listContainer = document.getElementById('adminProjectsList');
+            let projects = [];
+            
+            try {
+                const snapshot = await db.collection('projects').get();
+                projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (err) {
+                projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+            }
+            
+            if (projects.length === 0) {
+                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма качени проекти.</p>`;
+                return;
+            }
+
+            const mainCatNames = {
+                'residential': 'Жилищна',
+                'commercial': 'Търговска/Промишлена',
+                'interior': 'Интериор'
+            };
+
+            const subCatNames = {
+                'architecture': 'Архитектура',
+                '3d': '3D сграда'
+            };
+
+            listContainer.innerHTML = projects.map((p, index) => {
+                let thumbHtml = p.mainImage 
+                    ? `<img src="${p.mainImage}" alt="${p.title}" class="admin-project-thumb">`
+                    : `<div class="admin-project-no-thumb">Няма снимка</div>`;
+
+                const mainCatLabel = mainCatNames[p.mainCategory] || 'Жилищна';
+                const subCatLabel = subCatNames[p.subCategory] || 'Архитектура';
+
+                return `
+                    <div class="project-item-admin">
+                        <div class="project-info-wrapper">
+                            ${thumbHtml}
+                            <div>
+                                <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${p.title}</strong>
+                                <div style="font-size: 0.8rem; color: #8c8275;">
+                                    📁 ${mainCatLabel} (${subCatLabel}) | Стил: ${p.style || '-'} | Площ: ${p.area ? p.area + ' кв.м' : '-'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="admin-btns">
+                            <button class="btn-view" onclick="openPreviewModal('${p.id || index}')">👁️ Преглед</button>
+                            <button class="btn-edit" onclick="editProject('${p.id || index}')">Редактирай</button>
+                            <button class="btn-delete" onclick="deleteProject('${p.id || index}')">Изтрий</button>
                         </div>
                     </div>
-                    <div class="admin-btns">
-                        <button class="btn-view" onclick="openPreviewModal('${p.id || index}')">👁️</button>
-                        <button class="btn-edit" onclick="editProject('${p.id || index}')">Редакция</button>
-                        <button class="btn-delete" onclick="deleteProject('${p.id || index}')">Изтрий</button>
-                    </div>
-                </div>
+                `;
+            }).join('');
+        }
+
+        async function openPreviewModal(identifier) {
+            let p = null;
+            try {
+                const doc = await db.collection('projects').doc(identifier).get();
+                if (doc.exists) p = doc.data();
+            } catch (err) {}
+
+            if (!p) {
+                const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+                p = projects[identifier];
+            }
+            if (!p) return;
+
+            const modalBody = document.getElementById('modalBody');
+            
+            let floorPlansHtml = p.floorPlans && p.floorPlans.length ? p.floorPlans.map(img => `<img src="${img}">`).join('') : '';
+            let facadeHtml = p.facadeImages && p.facadeImages.length ? p.facadeImages.map(img => `<img src="${img}">`).join('') : '';
+            let galleryHtml = p.gallery && p.gallery.length ? p.gallery.map(img => `<img src="${img}">`).join('') : '';
+
+            modalBody.innerHTML = `
+                <h2 style="margin-top:0;">${p.title}</h2>
+                ${p.mainImage ? `<img src="${p.mainImage}" style="width:100%; max-height: 350px; object-fit: cover; border-radius: 4px; margin-bottom: 15px;">` : ''}
+                <p><strong>Описание:</strong> ${p.desc || 'Няма описание'}</p>
+                <p><strong>Детайли:</strong> Площ: ${p.area || '-'} м² | Етажи: ${p.floors || '-'} | Спални: ${p.beds || '-'} | Бани: ${p.baths || '-'} | Стил: ${p.style || '-'}</p>
+                <p><strong>Цена:</strong> ${p.price ? p.price + ' лв.' : '-'}</p>
+                
+                ${floorPlansHtml ? `<h4>Планове / Разпределения</h4><div class="preview-grid">${floorPlansHtml}</div>` : ''}
+                ${facadeHtml ? `<h4>Фасади</h4><div class="preview-grid">${facadeHtml}</div>` : ''}
+                ${p.sectionImage ? `<h4>Разрез</h4><img src="${p.sectionImage}" style="width:100%; max-height:200px; object-fit:cover;">` : ''}
+                ${galleryHtml ? `<h4>Галерия</h4><div class="preview-grid">${galleryHtml}</div>` : ''}
             `;
-        }).join('');
-    }
 
-    async function openPreviewModal(identifier) {
-        let p = null;
-        try {
-            const doc = await db.collection('projects').doc(identifier).get();
-            if (doc.exists) p = doc.data();
-        } catch (err) {}
-        if (!p) {
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            p = projects[identifier];
+            document.getElementById('previewModal').style.display = 'flex';
         }
-        if (!p) return;
 
-        const modalBody = document.getElementById('modalBody');
-        let floorPlansHtml = p.floorPlans && p.floorPlans.length ? p.floorPlans.map(img => `<img src="${img}">`).join('') : '';
-        let facadeHtml = p.facadeImages && p.facadeImages.length ? p.facadeImages.map(img => `<img src="${img}">`).join('') : '';
-        let galleryHtml = p.gallery && p.gallery.length ? p.gallery.map(img => `<img src="${img}">`).join('') : '';
-
-        modalBody.innerHTML = `
-            <h2 style="margin-top:0;">${p.title}</h2>
-            ${p.mainImage ? `<img src="${p.mainImage}" style="width:100%; max-height: 250px; object-fit: cover; border-radius: 4px; margin-bottom: 15px;">` : ''}
-            <p><strong>Описание:</strong> ${p.desc || 'Няма'}</p>
-            <p><strong>Площ:</strong> ${p.area || '-'} м² | <strong>Етажи:</strong> ${p.floors || '-'} | <strong>Спални:</strong> ${p.beds || '-'}</p>
-            ${floorPlansHtml ? `<h4>Планове</h4><div class="preview-grid">${floorPlansHtml}</div>` : ''}
-            ${facadeHtml ? `<h4>Фасади</h4><div class="preview-grid">${facadeHtml}</div>` : ''}
-            ${p.sectionImage ? `<h4>Разрез</h4><img src="${p.sectionImage}" style="width:100%; max-height:150px; object-fit:cover;">` : ''}
-            ${galleryHtml ? `<h4>Галерия</h4><div class="preview-grid">${galleryHtml}</div>` : ''}
-        `;
-        document.getElementById('previewModal').style.display = 'flex';
-    }
-
-    function closePreviewModal(e) {
-        if (e === true || e.target.id === 'previewModal') {
-            document.getElementById('previewModal').style.display = 'none';
-        }
-    }
-
-    async function renderAdminBookings() {
-        const listContainer = document.getElementById('adminBookingsList');
-        let bookings = [];
-        try {
-            const snapshot = await db.collection('studioBookings').get();
-            bookings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        } catch (err) {
-            bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
-        }
-        if (bookings.length === 0) {
-            listContainer.innerHTML = `<p style="color: #8c8275;">Няма резервации.</p>`;
-            return;
-        }
-        listContainer.innerHTML = bookings.map((b, index) => `
-            <div class="booking-item-admin">
-                <div><strong>${b.name} (${b.phone})</strong><br><small>${b.service} | ${b.datetime}</small></div>
-                <button class="btn-delete" onclick="deleteBooking('${b.id || index}')">Изтрий</button>
-            </div>
-        `).join('');
-    }
-
-    async function deleteBooking(identifier) {
-        if (confirm("Изтриване?")) {
-            try { await db.collection('studioBookings').doc(identifier).delete(); } catch (err) {
-                let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
-                bookings.splice(identifier, 1);
-                localStorage.setItem('studioBookings', JSON.stringify(bookings));
+        function closePreviewModal(e) {
+            if (e === true || e.target.id === 'previewModal') {
+                document.getElementById('previewModal').style.display = 'none';
             }
-            renderAdminBookings();
         }
-    }
 
-    async function deleteProject(identifier) {
-        if (confirm("Сигурни ли сте?")) {
-            try { await db.collection('projects').doc(identifier).delete(); } catch (err) {
+        async function renderAdminBookings() {
+            const listContainer = document.getElementById('adminBookingsList');
+            let bookings = [];
+            
+            try {
+                const snapshot = await db.collection('studioBookings').get();
+                bookings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (err) {
+                bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
+            }
+            
+            if (bookings.length === 0) {
+                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма запазени резервации.</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = bookings.map((b, index) => {
+                return `
+                    <div class="booking-item-admin">
+                        <div>
+                            <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${b.name} (${b.phone})</strong>
+                            <div style="font-size: 0.8rem; color: #8c8275;">Услуга: ${b.service} | Дата и час: ${b.datetime}</div>
+                        </div>
+                        <div class="admin-btns">
+                            <button class="btn-delete" onclick="deleteBooking('${b.id || index}')">Изтрий</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function deleteBooking(identifier) {
+            if (confirm("Сигурни ли сте, че искате да изтриете тази резервация?")) {
+                try {
+                    await db.collection('studioBookings').doc(identifier).delete();
+                } catch (err) {
+                    let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
+                    bookings.splice(identifier, 1);
+                    localStorage.setItem('studioBookings', JSON.stringify(bookings));
+                }
+                renderAdminBookings();
+            }
+        }
+
+        async function deleteProject(identifier) {
+            if (confirm("Сигурни ли сте, че искате да изтриете този проект?")) {
+                try {
+                    await db.collection('projects').doc(identifier).delete();
+                } catch (err) {
+                    let projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+                    projects.splice(identifier, 1);
+                    localStorage.setItem('myProjects', JSON.stringify(projects));
+                }
+                renderAdminList();
+                resetProjectForm();
+            }
+        }
+
+        async function editProject(identifier) {
+            let p = null;
+            try {
+                const doc = await db.collection('projects').doc(identifier).get();
+                if (doc.exists) p = { id: doc.id, ...doc.data() };
+            } catch (err) {}
+
+            if (!p) {
+                const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+                p = projects[identifier];
+            }
+            if (!p) return;
+
+            document.getElementById('editIndex').value = identifier;
+            document.getElementById('title').value = p.title || '';
+            document.getElementById('mainCategory').value = p.mainCategory || 'residential';
+            document.getElementById('subCategory').value = p.subCategory || 'architecture';
+            document.getElementById('desc').value = p.desc || '';
+            document.getElementById('area').value = p.area || '';
+            document.getElementById('floors').value = p.floors || '';
+            document.getElementById('beds').value = p.beds || '';
+            document.getElementById('baths').value = p.baths || '';
+            document.getElementById('material').value = p.material || '';
+            document.getElementById('style').value = p.style || '';
+            document.getElementById('price').value = p.price || '';
+            document.getElementById('isFav').checked = p.isFavorite || false;
+
+            document.getElementById('formTitle').innerText = "Редактиране на проект: " + p.title;
+            document.getElementById('submitBtn').innerText = "Запази промените";
+            document.getElementById('cancelBtn').style.display = 'block';
+            document.getElementById('uploadTabBtn').innerText = "✏️ Редакция";
+
+            switchTab('uploadTab', document.getElementById('uploadTabBtn'));
+        }
+
+        function resetProjectForm() {
+            document.getElementById('uploadForm').reset();
+            document.getElementById('editIndex').value = '';
+            document.getElementById('formTitle').innerText = "Качване на нов проект";
+            document.getElementById('submitBtn').innerText = "Запази проекта в каталога";
+            document.getElementById('cancelBtn').style.display = 'none';
+            document.getElementById('uploadTabBtn').innerText = "➕ Нов проект";
+        }
+
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('editIndex').value;
+
+            const mainFile = document.getElementById('mainImg').files[0];
+            const mainImage = mainFile ? await readFileAsDataURL(mainFile) : '';
+
+            const planFiles = document.getElementById('planImgs').files;
+            let floorPlans = planFiles.length > 0 ? await Promise.all(Array.from(planFiles).map(file => readFileAsDataURL(file))) : [];
+
+            const facadeFiles = document.getElementById('facadeImgs').files;
+            let facadeImages = facadeFiles.length > 0 ? await Promise.all(Array.from(facadeFiles).map(file => readFileAsDataURL(file))) : [];
+
+            const sectionFile = document.getElementById('sectionImg').files[0];
+            const sectionImage = sectionFile ? await readFileAsDataURL(sectionFile) : '';
+
+            const galleryFiles = document.getElementById('galleryImgs').files;
+            let gallery = galleryFiles.length > 0 ? await Promise.all(Array.from(galleryFiles).map(file => readFileAsDataURL(file))) : [];
+
+            const projectData = {
+                title: document.getElementById('title').value,
+                mainCategory: document.getElementById('mainCategory').value,
+                subCategory: document.getElementById('subCategory').value,
+                desc: document.getElementById('desc').value,
+                area: document.getElementById('area').value,
+                floors: document.getElementById('floors').value,
+                beds: document.getElementById('beds').value,
+                baths: document.getElementById('baths').value,
+                material: document.getElementById('material').value,
+                style: document.getElementById('style').value,
+                price: document.getElementById('price').value,
+                isFavorite: document.getElementById('isFav').checked,
+                mainImage, floorPlans, facadeImages, sectionImage, gallery
+            };
+
+            try {
+                if (editId !== "") {
+                    await db.collection('projects').doc(editId).update(projectData);
+                    alert("Проектът е успешно обновен във Firebase!");
+                } else {
+                    await db.collection('projects').add(projectData);
+                    alert("Проектът е успешно запазен във Firebase каталога!");
+                }
+            } catch (err) {
+                // Fallback към localStorage ако Firebase не е напълно достъпен
                 let projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-                projects.splice(identifier, 1);
+                if (editId !== "") {
+                    projects[editId] = projectData;
+                } else {
+                    projects.push(projectData);
+                }
                 localStorage.setItem('myProjects', JSON.stringify(projects));
+                alert("Проектът е записан локално!");
             }
+
+            resetProjectForm();
             renderAdminList();
-        }
-    }
-
-    async function editProject(identifier) {
-        let p = null;
-        try {
-            const doc = await db.collection('projects').doc(identifier).get();
-            if (doc.exists) p = { id: doc.id, ...doc.data() };
-        } catch (err) {}
-        if (!p) {
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            p = projects[identifier];
-        }
-        if (!p) return;
-
-        document.getElementById('editIndex').value = identifier;
-        document.getElementById('title').value = p.title || '';
-        document.getElementById('mainCategory').value = p.mainCategory || 'residential';
-        document.getElementById('subCategory').value = p.subCategory || 'architecture';
-        document.getElementById('desc').value = p.desc || '';
-        document.getElementById('area').value = p.area || '';
-        document.getElementById('floors').value = p.floors || '';
-        document.getElementById('beds').value = p.beds || '';
-        document.getElementById('baths').value = p.baths || '';
-        document.getElementById('material').value = p.material || '';
-        document.getElementById('style').value = p.style || '';
-        document.getElementById('price').value = p.price || '';
-        document.getElementById('isFav').checked = p.isFavorite || false;
-
-        document.getElementById('formTitle').innerText = "Редактиране: " + p.title;
-        document.getElementById('submitBtn').innerText = "Запази промените";
-        document.getElementById('cancelBtn').style.display = 'block';
-        document.getElementById('uploadTabBtn').innerText = "✏️ Редакция";
-        switchTab('uploadTab', document.getElementById('uploadTabBtn'));
-    }
-
-    function resetProjectForm() {
-        document.getElementById('uploadForm').reset();
-        document.getElementById('editIndex').value = '';
-        document.getElementById('formTitle').innerText = "Качване на нов проект";
-        document.getElementById('submitBtn').innerText = "Запази проекта в каталога";
-        document.getElementById('cancelBtn').style.display = 'none';
-        document.getElementById('uploadTabBtn').innerText = "➕ Нов проект";
-    }
-
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const editId = document.getElementById('editIndex').value;
-
-        const mainFile = document.getElementById('mainImg').files[0];
-        const mainImage = mainFile ? await compressImage(mainFile, 900, 0.7) : '';
-
-        const planFiles = document.getElementById('planImgs').files;
-        let floorPlans = [];
-        for (let file of planFiles) { floorPlans.push(await compressImage(file, 900, 0.7)); }
-
-        const facadeFiles = document.getElementById('facadeImgs').files;
-        let facadeImages = [];
-        for (let file of facadeFiles) { facadeImages.push(await compressImage(file, 900, 0.7)); }
-
-        const sectionFile = document.getElementById('sectionImg').files[0];
-        const sectionImage = sectionFile ? await compressImage(sectionFile, 900, 0.7) : '';
-
-        const galleryFiles = document.getElementById('galleryImgs').files;
-        let gallery = [];
-        for (let file of galleryFiles) { gallery.push(await compressImage(file, 900, 0.7)); }
-
-        const projectData = {
-            title: document.getElementById('title').value,
-            mainCategory: document.getElementById('mainCategory').value,
-            subCategory: document.getElementById('subCategory').value,
-            desc: document.getElementById('desc').value,
-            area: document.getElementById('area').value,
-            floors: document.getElementById('floors').value,
-            beds: document.getElementById('beds').value,
-            baths: document.getElementById('baths').value,
-            material: document.getElementById('material').value,
-            style: document.getElementById('style').value,
-            price: document.getElementById('price').value,
-            isFavorite: document.getElementById('isFav').checked,
-            mainImage, floorPlans, facadeImages, sectionImage, gallery
-        };
-
-        try {
-            if (editId !== "") {
-                await db.collection('projects').doc(editId).update(projectData);
-            } else {
-                await db.collection('projects').add(projectData);
-            }
-            alert("Успешно запазено във Firebase!");
-        } catch (err) {
-            let projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            if (editId !== "") {
-                projects[editId] = projectData;
-            } else {
-                projects.push(projectData);
-            }
-            localStorage.setItem('myProjects', JSON.stringify(projects));
-            alert("Запазено успешно в локалната памет!");
-        }
-
-        resetProjectForm();
-        renderAdminList();
-        switchTab('projectsTab', document.querySelectorAll('.tab-btn')[1]);
-    });
-</script>
+            switchTab('projectsTab', document.querySelectorAll('.tab-btn')[3]);
+        });
+    </script>
 </body>
 </html>
