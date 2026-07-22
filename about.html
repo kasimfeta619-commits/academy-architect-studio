@@ -3,210 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle" data-key="nav-about">About Us | Academy Architect Studio</title>
+    <title id="pageTitle" data-key="about-eyebrow">About Us - Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
     <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('siteTheme');
             if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
+                document.documentElement.classList.add('dark-mode');
             }
         })();
     </script>
-    <style>
-        .about-container {
-            max-width: 1200px;
-            margin: 60px auto;
-            padding: 0 5%;
-        }
-        .about-hero {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-            margin-bottom: 80px;
-        }
-        .about-eyebrow {
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            color: #8c8275;
-            text-transform: uppercase;
-            display: block;
-            margin-bottom: 12px;
-        }
-        .about-title {
-            font-size: 2.8rem;
-            font-weight: 400;
-            line-height: 1.2;
-            margin: 0 0 25px 0;
-        }
-        .about-text {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: var(--text-color, #1a1a1a);
-            margin-bottom: 20px;
-        }
-        
-        /* Стил за лявия контейнер с графиката и етикета */
-        .about-image-wrapper {
-            position: relative;
-            width: 100%;
-        }
-        .about-image-box {
-            width: 100%;
-            height: 440px;
-            background-color: var(--card-bg, #ffffff);
-            border: 1px solid var(--border-color, #e6dec9);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-            box-sizing: border-box;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        .about-logo-graphic {
-            max-width: 85%;
-            max-height: 85%;
-            object-fit: contain;
-            opacity: 0.95;
-        }
-        
-        /* Плаващ етикет за проекта */
-        .project-badge-overlay {
-            position: absolute;
-            bottom: -20px;
-            left: 20px;
-            background: #1a1a1a;
-            color: #fff;
-            padding: 16px 22px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            z-index: 2;
-            max-width: 260px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .badge-subtitle {
-            display: block;
-            font-size: 0.65rem;
-            letter-spacing: 2px;
-            color: #8c8275;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-        .badge-title {
-            display: block;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #fff;
-        }
-
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 60px;
-        }
-        .value-card {
-            background: var(--card-bg, #ffffff);
-            border: 1px solid var(--border-color, #e6dec9);
-            border-radius: 12px;
-            padding: 35px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-        }
-        .value-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-        .value-card p {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-color, #555);
-            margin: 0;
-        }
-
-        /* Стил за профилния елемент в навигацията */
-        .user-profile-nav {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            color: inherit;
-        }
-        .user-avatar-badge {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
-            background-color: rgba(0,0,0,0.06);
-            border-radius: 50%;
-            transition: background-color 0.3s;
-        }
-        body.dark-mode .user-avatar-badge {
-            background-color: #2d2d2d;
-        }
-        .user-avatar-badge svg {
-            fill: currentColor;
-        }
-        .online-status-dot {
-            position: absolute;
-            top: 1px;
-            right: 1px;
-            width: 10px;
-            height: 10px;
-            background-color: #2ecc71;
-            border: 2px solid var(--bg-color, #fbf9f4);
-            border-radius: 50%;
-        }
-        .profile-label-text {
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-
-        /* Dark Mode Overrides */
-        body.dark-mode .value-card,
-        body.dark-mode .about-image-box {
-            background: #1e1e1e !important;
-            border-color: #2c2c2c !important;
-            color: #b5aba1;
-        }
-        body.dark-mode .about-logo-graphic {
-            filter: invert(1) brightness(0.9);
-        }
-        body.dark-mode .project-badge-overlay {
-            background: #252525;
-            border-color: #333;
-        }
-
-        @media (max-width: 900px) {
-            .about-hero {
-                grid-template-columns: 1fr;
-                gap: 50px;
-            }
-            .values-grid {
-                grid-template-columns: 1fr;
-            }
-            .project-badge-overlay {
-                left: 10px;
-                bottom: -15px;
-            }
-        }
-    </style>
 </head>
 <body>
 
-    <!-- НАВИГАЦИЯ -->
     <nav class="navbar">
         <a href="index.html" class="logo-area">
             <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
             <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
         
+        <!-- Хамбургер бутон за мобилни устройства -->
         <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
 
         <div id="nav-links">
@@ -225,52 +42,55 @@
                 <button class="lang-btn active" id="btn-bg" onclick="setLanguage('bg')">BG</button>
             </div>
             <!-- Динамичен контейнер за състоянието на входа -->
-            <div id="navAuthContainer" style="display: flex; align-items: center; gap: 12px;">
+            <div id="navAuthContainer">
                 <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
             </div>
         </div>
     </nav>
 
-    <!-- СЪДЪРЖАНИЕ ЗА НАС -->
-    <main class="about-container">
-        <section class="about-hero">
-            <!-- ЛЯВА СТРАНА: Архитектурната графика с плаващия етикет -->
-            <div class="about-image-wrapper">
-                <div class="about-image-box">
-                    <img src="assets/main-graphic.png" alt="Academy Architect Studio Graphic" class="about-logo-graphic" onerror="this.style.display='none'">
-                </div>
-                <div class="project-badge-overlay">
-                    <span class="badge-subtitle" data-key="about-badge-subtitle">ПОСЛЕДЕН</span>
-                    <span class="badge-title" data-key="about-badge-title">Проект „Минимализъм“</span>
+    <!-- Секция "За нас" -->
+    <main class="about-page" style="padding: 60px 20px; max-width: 1200px; margin: 0 auto;">
+        <div class="about-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-bottom: 60px;">
+            
+            <!-- Лява част - Изображение / Лого / Статус -->
+            <div class="about-visual-box" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 40px; border-radius: 12px; text-align: center; position: relative;">
+                <img src="assets/main-graphic.png" alt="Academy Architect Studio" style="max-width: 280px; height: auto;" onerror="this.src='https://placehold.co/400x400?text=Studio'">
+                
+                <!-- Банер за последен проект / акцент -->
+                <div style="position: absolute; bottom: 20px; left: 20px; background: #1a1a1a; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 0.85rem; text-align: left;">
+                    <div style="color: #8c8275; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;" data-key="admin-proj-fav">ПОСЛЕДЕН</div>
+                    <div style="font-weight: bold;">Проект „Минимализъм“</div>
                 </div>
             </div>
 
-            <!-- ДЯСНА СТРАНА: Заглавие и текстове -->
-            <div>
-                <span class="about-eyebrow" data-key="about-eyebrow">КОИ СМЕ НИЕ</span>
-                <h1 class="about-title" data-key="about-title">Създаваме пространства със смисъл, естетика и дълготрайна стойност.</h1>
-                <p class="about-text" data-key="about-text-1">Academy Architect Studio обединява съвременния архитектурен дизайн с интелигентно инженерно мислене. Нашата цел е да превърнем всяка визия в реалност, съчетавайки функционалност, устойчивост и изчистен стил.</p>
-                <p class="about-text" data-key="about-text-2">Работим по разнообразни жилищни, обществени и корпоративни проекти, подхождайки индивидуално към всяка идея и клиентско изискване.</p>
+            <!-- Дясна част - Заглавия и описания -->
+            <div class="about-content">
+                <span style="font-size: 0.8rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; font-weight: bold;" data-key="about-eyebrow">КОИ СМЕ НИЕ</span>
+                <h1 data-key="about-title" style="font-size: 2.2rem; margin: 15px 0 25px 0; line-height: 1.2;">Създаваме пространства със смисъл, естетика и дълготрайна стойност.</h1>
+                <p data-key="about-desc1" style="color: #555; line-height: 1.6; margin-bottom: 20px;">Academy Architect Studio обединява съвременния архитектурен дизайн с интелигентно инженерно мислене. Нашата цел е да превърнем всяка визия в реалност, съчетавайки функционалност, устойчивост и изчистен стил.</p>
+                <p data-key="about-desc2" style="color: #555; line-height: 1.6;">Работим по разнообразни жилищни, обществени и корпоративни проекти, подхождайки индивидуално към всяка идея и клиентско изискване.</p>
             </div>
-        </section>
+        </div>
 
-        <section class="values-grid">
-            <div class="value-card">
-                <h3 data-key="value-1-title">Иновативен дизайн</h3>
-                <p data-key="value-1-desc">Съчетаваме съвременни тенденции в архитектурата с модерен софтуер и AI планиране за максимална прецизност.</p>
+        <!-- Карти с ценности / предимства -->
+        <div class="about-cards-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+            <div class="about-card" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 30px; border-radius: 12px;">
+                <h3 data-key="about-card1-title" style="font-size: 1.2rem; margin-bottom: 15px;">Иновативен дизайн</h3>
+                <p data-key="about-card1-desc" style="color: #666; font-size: 0.95rem; line-height: 1.5;">Съчетаваме съвременни тенденции в архитектурата с модерен софтуер и AI планиране за максимална прецизност.</p>
             </div>
-            <div class="value-card">
-                <h3 data-key="value-2-title">Устойчивост</h3>
-                <p data-key="value-2-desc">Проектираме с грижа за околната среда, използвайки енергоефективни решения и дълготрайни материали.</p>
+
+            <div class="about-card" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 30px; border-radius: 12px;">
+                <h3 data-key="about-card2-title" style="font-size: 1.2rem; margin-bottom: 15px;">Устойчивост</h3>
+                <p data-key="about-card2-desc" style="color: #666; font-size: 0.95rem; line-height: 1.5;">Проектираме с грижа за околната среда, използвайки енергоефективни решения и дълготрайни материали.</p>
             </div>
-            <div class="value-card">
-                <h3 data-key="value-3-title">Индивидуален подход</h3>
-                <p data-key="value-3-desc">Всяко пространство се ражда от диалога с нашите клиенти, за да отговаря точно на техния начин на живот.</p>
+
+            <div class="about-card" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 30px; border-radius: 12px;">
+                <h3 data-key="about-card3-title" style="font-size: 1.2rem; margin-bottom: 15px;">Индивидуален подход</h3>
+                <p data-key="about-card3-desc" style="color: #666; font-size: 0.95rem; line-height: 1.5;">Всяко пространство се ражда от диалога с нашите клиенти, за да отговаря точно на техния начин на живот.</p>
             </div>
-        </section>
+        </div>
     </main>
 
-    <!-- ФУТЪР -->
     <footer class="main-footer">
         <div class="footer-logo-area">
             <div>
@@ -300,92 +120,41 @@
 
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
+    <script src="auth.js"></script>
     <script>
+        // Функция за превключване на тъмния режим
         function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
+            const isDark = document.documentElement.classList.toggle('dark-mode');
+            document.body.classList.toggle('dark-mode', isDark);
+            
+            if (isDark) {
                 localStorage.setItem('siteTheme', 'dark');
             } else {
                 localStorage.setItem('siteTheme', 'light');
             }
         }
 
+        // Функция за мобилното меню
         function toggleMobileMenu() {
             const navLinks = document.getElementById('nav-links');
             navLinks.classList.toggle('mobile-open');
         }
 
-        function updateNavAuthStatus() {
-            const container = document.getElementById('navAuthContainer');
-            if (!container) return;
-
-            const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || 
-                                   localStorage.getItem('isUserLoggedIn') === 'true' || 
-                                   localStorage.getItem('currentUser') !== null;
-
-            if (isUserLoggedIn) {
-                const userRole = (localStorage.getItem('userRole') || localStorage.getItem('role') || '').toLowerCase();
-                const rawName = (localStorage.getItem('userName') || localStorage.getItem('username') || localStorage.getItem('currentUser') || '').toLowerCase();
-                
-                // Проверяваме и евентуален JSON обект в localStorage
-                let parsedRole = '';
-                let parsedName = '';
-                try {
-                    const storedUser = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('loggedUser') || '{}');
-                    if (storedUser && typeof storedUser === 'object') {
-                        parsedRole = (storedUser.role || storedUser.userRole || '').toLowerCase();
-                        parsedName = (storedUser.username || storedUser.name || storedUser.email || '').toLowerCase();
-                    }
-                } catch (e) {}
-
-                // Разширена сигурна проверка за администратор
-                const isAdmin = userRole === 'admin' || 
-                                parsedRole === 'admin' || 
-                                rawName === 'admin' || 
-                                parsedName === 'admin' || 
-                                rawName.includes('admin@') || 
-                                parsedName.includes('admin@') || 
-                                localStorage.getItem('isAdmin') === 'true';
-
-                const labelKey = isAdmin ? 'nav-admin' : 'nav-profile';
-                const targetLink = isAdmin ? 'admin.html' : 'profile.html';
-
-                const currentLang = localStorage.getItem('siteLang') || 'bg';
-                let displayText = isAdmin ? 'Админ' : 'Профил';
-
-                if (typeof translations !== 'undefined' && translations[currentLang] && translations[currentLang][labelKey]) {
-                    displayText = translations[currentLang][labelKey];
-                }
-
-                container.innerHTML = `
-                    <a href="${targetLink}" class="user-profile-nav" title="${displayText}">
-                        <div class="user-avatar-badge">
-                            <svg width="20" height="20" viewBox="0 0 24 24">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                            <span class="online-status-dot"></span>
-                        </div>
-                        <span class="profile-label-text" data-key="${labelKey}">${displayText}</span>
-                    </a>
-                `;
-            } else {
-                container.innerHTML = `
-                    <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
-                `;
-            }
-        }
-
         document.addEventListener("DOMContentLoaded", function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+                document.body.classList.add('dark-mode');
+            }
+
             if (typeof initLanguage === 'function') {
                 initLanguage();
             } else if (typeof setLanguage === 'function') {
                 const savedLang = localStorage.getItem('siteLang') || 'bg';
                 setLanguage(savedLang);
             }
-            
-            updateNavAuthStatus();
 
-            // Зареждане на актуалните контакти във футъра от админ панела (siteContact)
+            // Зареждане на контактите за футъра
             const savedContact = localStorage.getItem('siteContact');
             if (savedContact) {
                 try {
@@ -401,7 +170,7 @@
                         document.getElementById('footPhone').textContent = data.phone;
                     }
                 } catch (e) {
-                    console.error('Грешка при зареждане на контактите във футъра', e);
+                    console.error('Грешка при зареждане на контактите', e);
                 }
             }
         });
