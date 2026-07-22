@@ -15,12 +15,11 @@
             }
         })();
 
-        // КОРИГИРАНА И НАДЕЖДНА ЗАЩИТА НА АДМИН ПАНЕЛА
+        // ЗАЩИТА НА АДМИН ПАНЕЛА
         (function() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const isAdmin = localStorage.getItem('isAdmin');
             
-            // Проверяваме за имейл във всички възможни ключове на localStorage
             const userEmail = (
                 localStorage.getItem('loggedInUserEmail') || 
                 localStorage.getItem('userEmail') || 
@@ -28,29 +27,20 @@
                 ''
             ).trim().toLowerCase(); 
 
-            // Нов админ имейл
             const myAdminEmail = 'admin@architect.bg';
 
-            // 1. ПРИОРИТЕТ: Ако това е администраторският имейл, даваме пълен достъп ВЕДНАГА
-            if (userEmail === myAdminEmail) {
+            if (userEmail === myAdminEmail || isAdmin === 'true') {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('isAdmin', 'true');
-                return; // Влизаш директно!
+                return;
             }
 
-            // 2. Ако флагът за админ вече е активен
-            if (isAdmin === 'true') {
-                return; // Влизаш директно!
-            }
-
-            // 3. Ако изобщо не си логнат
             if (isLoggedIn !== 'true') {
                 alert('Моля, влезте в профила си, за да достъпите админ панела.');
                 window.location.href = 'login.html';
                 return;
             }
 
-            // 4. Ако си логнат с друг потребител, който не е админ
             alert('Достъпът е разрешен само за администратори!');
             window.location.href = 'index.html';
         })();
@@ -233,14 +223,14 @@
                     <label for="isFav" style="cursor: pointer; font-size: 0.85rem; font-weight: 600;">Фаворитен проект (на началната страница)</label>
                 </div>
                 
-                <button type="submit" id="submitBtn" class="btn-action" style="margin-top: 20px;">Запази проекта в каталога</button>
+                <button type="submit" id="submitBtn" class="btn-action" style="margin-top: 20px;">Запази проекта в облака</button>
                 <button type="button" id="cancelBtn" onclick="resetProjectForm()" class="btn-action" style="margin-top: 10px; background: #8c8275; display: none;">Отказ</button>
             </form>
         </div>
 
         <!-- СТРАНИЦА 4: СЪЩЕСТВУВАЩИ ПРОЕКТИ -->
         <div id="projectsTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Съществуващи проекти</h3>
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Съществуващи проекти във Firebase</h3>
             <div id="adminProjectsList"></div>
         </div>
 
@@ -251,19 +241,23 @@
         </div>
     </main>
 
-    <!-- СКРИПТОВЕ -->
+    <!-- СКРИПТОВЕ С FIREBASE СВЪРЗАНОСТ -->
     <script src="auth.js"></script>
-    <script>
-        function toggleDarkMode() {
+    <script type="module">
+        import { db, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from './firebase-config.js';
+
+        let globalProjects = [];
+
+        window.toggleDarkMode = function() {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
                 localStorage.setItem('siteTheme', 'dark');
             } else {
                 localStorage.setItem('siteTheme', 'light');
             }
-        }
+        };
 
-        function switchTab(tabId, btnElement) {
+        window.switchTab = function(tabId, btnElement) {
             document.querySelectorAll('.admin-section').forEach(section => {
                 section.classList.remove('active');
             });
@@ -272,9 +266,9 @@
             });
             
             document.getElementById(tabId).classList.add('active');
-            btnElement.classList.add('active');
+            if (btnElement) btnElement.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        };
 
         function readFileAsDataURL(file) {
             return new Promise(resolve => {
@@ -319,56 +313,69 @@
             alert('Страницата "Контакти" е успешно обновена!');
         });
 
-        function renderAdminList() {
+        // Зареждане на проектите от FIREBASE
+        async function renderAdminList() {
             const listContainer = document.getElementById('adminProjectsList');
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            
-            if (projects.length === 0) {
-                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма качени проекти.</p>`;
-                return;
-            }
+            listContainer.innerHTML = '<p style="color: #8c8275;">Зареждане на проекти от облака...</p>';
 
-            const mainCatNames = {
-                'residential': 'Жилищна',
-                'commercial': 'Търговска/Промишлена',
-                'interior': 'Интериор'
-            };
+            try {
+                const querySnapshot = await getDocs(collection(db, "projects"));
+                globalProjects = [];
+                
+                querySnapshot.forEach((docSnap) => {
+                    globalProjects.push({ id: docSnap.id, ...docSnap.data() });
+                });
 
-            const subCatNames = {
-                'architecture': 'Архитектура',
-                '3d': '3D сграда'
-            };
+                if (globalProjects.length === 0) {
+                    listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма качени проекти във Firebase.</p>`;
+                    return;
+                }
 
-            listContainer.innerHTML = projects.map((p, index) => {
-                let thumbHtml = p.mainImage 
-                    ? `<img src="${p.mainImage}" alt="${p.title}" class="admin-project-thumb">`
-                    : `<div class="admin-project-no-thumb">Няма снимка</div>`;
+                const mainCatNames = {
+                    'residential': 'Жилищна',
+                    'commercial': 'Търговска/Промишлена',
+                    'interior': 'Интериор'
+                };
 
-                const mainCatLabel = mainCatNames[p.mainCategory] || 'Жилищна';
-                const subCatLabel = subCatNames[p.subCategory] || 'Архитектура';
+                const subCatNames = {
+                    'architecture': 'Архитектура',
+                    '3d': '3D сграда'
+                };
 
-                return `
-                    <div class="project-item-admin">
-                        <div class="project-info-wrapper">
-                            ${thumbHtml}
-                            <div>
-                                <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${p.title}</strong>
-                                <div style="font-size: 0.8rem; color: #8c8275;">
-                                    📁 ${mainCatLabel} (${subCatLabel}) | Стил: ${p.style || '-'} | Площ: ${p.area ? p.area + ' кв.м' : '-'}
+                listContainer.innerHTML = globalProjects.map((p) => {
+                    let thumbHtml = p.mainImage 
+                        ? `<img src="${p.mainImage}" alt="${p.title}" class="admin-project-thumb">`
+                        : `<div class="admin-project-no-thumb">Няма снимка</div>`;
+
+                    const mainCatLabel = mainCatNames[p.mainCategory] || 'Жилищна';
+                    const subCatLabel = subCatNames[p.subCategory] || 'Архитектура';
+
+                    return `
+                        <div class="project-item-admin">
+                            <div class="project-info-wrapper">
+                                ${thumbHtml}
+                                <div>
+                                    <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${p.title}</strong>
+                                    <div style="font-size: 0.8rem; color: #8c8275;">
+                                        📁 ${mainCatLabel} (${subCatLabel}) | Стил: ${p.style || '-'} | Площ: ${p.area ? p.area + ' кв.м' : '-'}
+                                    </div>
                                 </div>
                             </div>
+                            <div class="admin-btns">
+                                <a href="project-details.html?id=${p.id}" target="_blank" class="btn-view">👁️ Преглед</a>
+                                <button class="btn-edit" onclick="editProject('${p.id}')">Редактирай</button>
+                                <button class="btn-delete" onclick="deleteProject('${p.id}')">Изтрий</button>
+                            </div>
                         </div>
-                        <div class="admin-btns">
-                            <a href="project-details.html?index=${index}" target="_blank" class="btn-view">👁️ Преглед</a>
-                            <button class="btn-edit" onclick="editProject(${index})">Редактирай</button>
-                            <button class="btn-delete" onclick="deleteProject(${index})">Изтрий</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error("Грешка при извличане от Firebase: ", err);
+                listContainer.innerHTML = `<p style="color: #a83232;">Грешка при зареждане на проектите от Firebase.</p>`;
+            }
         }
 
-        function renderAdminBookings() {
+        window.renderAdminBookings = function() {
             const listContainer = document.getElementById('adminBookingsList');
             const bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
             
@@ -390,32 +397,38 @@
                     </div>
                 `;
             }).join('');
-        }
+        };
 
-        function deleteBooking(index) {
+        window.deleteBooking = function(index) {
             if (confirm("Сигурни ли сте, че искате да изтриете тази резервация?")) {
                 let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
                 bookings.splice(index, 1);
                 localStorage.setItem('studioBookings', JSON.stringify(bookings));
                 renderAdminBookings();
             }
-        }
+        };
 
-        function deleteProject(index) {
-            if (confirm("Сигурни ли сте, че искате да изтриете този проект?")) {
-                let projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-                projects.splice(index, 1);
-                localStorage.setItem('myProjects', JSON.stringify(projects));
-                renderAdminList();
-                resetProjectForm();
+        // Изтриване от FIREBASE
+        window.deleteProject = async function(docId) {
+            if (confirm("Сигурни ли сте, че искате да изтриете този проект от Firebase облака?")) {
+                try {
+                    await deleteDoc(doc(db, "projects", docId));
+                    alert("Проектът беше изтрит от Firebase!");
+                    renderAdminList();
+                    resetProjectForm();
+                } catch (err) {
+                    console.error("Грешка при изтриване: ", err);
+                    alert("Грешка при изтриване на проекта.");
+                }
             }
-        }
+        };
 
-        function editProject(index) {
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            const p = projects[index];
+        // Редактиране
+        window.editProject = function(docId) {
+            const p = globalProjects.find(item => item.id === docId);
+            if (!p) return;
 
-            document.getElementById('editIndex').value = index;
+            document.getElementById('editIndex').value = docId;
             document.getElementById('title').value = p.title || '';
             document.getElementById('mainCategory').value = p.mainCategory || 'residential';
             document.getElementById('subCategory').value = p.subCategory || 'architecture';
@@ -434,77 +447,88 @@
             document.getElementById('cancelBtn').style.display = 'block';
             document.getElementById('uploadTabBtn').innerText = "✏️ Редакция";
 
-            switchTab('uploadTab', document.getElementById('uploadTabBtn'));
-        }
+            window.switchTab('uploadTab', document.getElementById('uploadTabBtn'));
+        };
 
-        function resetProjectForm() {
+        window.resetProjectForm = function() {
             document.getElementById('uploadForm').reset();
             document.getElementById('editIndex').value = '';
             document.getElementById('formTitle').innerText = "Качване на нов проект";
-            document.getElementById('submitBtn').innerText = "Запази проекта в каталога";
+            document.getElementById('submitBtn').innerText = "Запази проекта в облака";
             document.getElementById('cancelBtn').style.display = 'none';
             document.getElementById('uploadTabBtn').innerText = "➕ Нов проект";
-        }
+        };
 
+        // Запис във FIREBASE
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const editIndex = document.getElementById('editIndex').value;
-            let projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            let existingProject = editIndex !== "" ? projects[editIndex] : {};
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Записване във Firebase...";
 
-            const mainFile = document.getElementById('mainImg').files[0];
-            const mainImage = mainFile ? await readFileAsDataURL(mainFile) : (existingProject.mainImage || '');
+            try {
+                const editId = document.getElementById('editIndex').value;
+                let existingProject = editId !== "" ? (globalProjects.find(item => item.id === editId) || {}) : {};
 
-            const planFiles = document.getElementById('planImgs').files;
-            let floorPlans = existingProject.floorPlans || (existingProject.planImage ? [existingProject.planImage] : []);
-            if (planFiles.length > 0) {
-                floorPlans = await Promise.all(Array.from(planFiles).map(file => readFileAsDataURL(file)));
+                const mainFile = document.getElementById('mainImg').files[0];
+                const mainImage = mainFile ? await readFileAsDataURL(mainFile) : (existingProject.mainImage || '');
+
+                const planFiles = document.getElementById('planImgs').files;
+                let floorPlans = existingProject.floorPlans || (existingProject.planImage ? [existingProject.planImage] : []);
+                if (planFiles.length > 0) {
+                    floorPlans = await Promise.all(Array.from(planFiles).map(file => readFileAsDataURL(file)));
+                }
+
+                const facadeFiles = document.getElementById('facadeImgs').files;
+                let facadeImages = existingProject.facadeImages || [];
+                if (facadeFiles.length > 0) {
+                    facadeImages = await Promise.all(Array.from(facadeFiles).map(file => readFileAsDataURL(file)));
+                }
+
+                const sectionFile = document.getElementById('sectionImg').files[0];
+                const sectionImage = sectionFile ? await readFileAsDataURL(sectionFile) : (existingProject.sectionImage || '');
+
+                const galleryFiles = document.getElementById('galleryImgs').files;
+                let gallery = existingProject.gallery || [];
+                if (galleryFiles.length > 0) {
+                    gallery = await Promise.all(Array.from(galleryFiles).map(file => readFileAsDataURL(file)));
+                }
+
+                const projectData = {
+                    title: document.getElementById('title').value,
+                    mainCategory: document.getElementById('mainCategory').value,
+                    subCategory: document.getElementById('subCategory').value,
+                    desc: document.getElementById('desc').value,
+                    area: document.getElementById('area').value,
+                    floors: document.getElementById('floors').value,
+                    beds: document.getElementById('beds').value,
+                    baths: document.getElementById('baths').value,
+                    material: document.getElementById('material').value,
+                    style: document.getElementById('style').value,
+                    price: document.getElementById('price').value,
+                    isFavorite: document.getElementById('isFav').checked,
+                    mainImage, floorPlans, facadeImages, sectionImage, gallery,
+                    updatedAt: new Date()
+                };
+
+                if (editId !== "") {
+                    await updateDoc(doc(db, "projects", editId), projectData);
+                    alert("Проектът е успешно обновен във Firebase!");
+                } else {
+                    await addDoc(collection(db, "projects"), projectData);
+                    alert("Проектът е успешно качен в облака Firebase!");
+                }
+
+                window.resetProjectForm();
+                await renderAdminList();
+                window.switchTab('projectsTab', document.querySelectorAll('.tab-btn')[3]);
+
+            } catch (err) {
+                console.error("Грешка при запис във Firebase: ", err);
+                alert("Възникна грешка при качването във Firebase.");
+            } finally {
+                submitBtn.disabled = false;
             }
-
-            const facadeFiles = document.getElementById('facadeImgs').files;
-            let facadeImages = existingProject.facadeImages || [];
-            if (facadeFiles.length > 0) {
-                facadeImages = await Promise.all(Array.from(facadeFiles).map(file => readFileAsDataURL(file)));
-            }
-
-            const sectionFile = document.getElementById('sectionImg').files[0];
-            const sectionImage = sectionFile ? await readFileAsDataURL(sectionFile) : (existingProject.sectionImage || '');
-
-            const galleryFiles = document.getElementById('galleryImgs').files;
-            let gallery = existingProject.gallery || [];
-            if (galleryFiles.length > 0) {
-                gallery = await Promise.all(Array.from(galleryFiles).map(file => readFileAsDataURL(file)));
-            }
-
-            const projectData = {
-                title: document.getElementById('title').value,
-                mainCategory: document.getElementById('mainCategory').value,
-                subCategory: document.getElementById('subCategory').value,
-                desc: document.getElementById('desc').value,
-                area: document.getElementById('area').value,
-                floors: document.getElementById('floors').value,
-                beds: document.getElementById('beds').value,
-                baths: document.getElementById('baths').value,
-                material: document.getElementById('material').value,
-                style: document.getElementById('style').value,
-                price: document.getElementById('price').value,
-                isFavorite: document.getElementById('isFav').checked,
-                mainImage, floorPlans, facadeImages, sectionImage, gallery
-            };
-
-            if (editIndex !== "") {
-                projects[editIndex] = projectData;
-                alert("Проектът е успешно обновен!");
-            } else {
-                projects.push(projectData);
-                alert("Проектът е успешно запазен в каталога!");
-            }
-
-            localStorage.setItem('myProjects', JSON.stringify(projects));
-            resetProjectForm();
-            renderAdminList();
-
-            switchTab('projectsTab', document.querySelectorAll('.tab-btn')[3]);
         });
     </script>
 </body>

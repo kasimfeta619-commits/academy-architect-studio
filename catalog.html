@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Каталог с проекти | Academy Architect Studio</title>
+    <title id="pageTitle" data-key="page-title-catalog">Projects - Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
-    
     <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
         (function() {
@@ -15,395 +14,16 @@
             }
         })();
     </script>
-
-    <style>
-        .catalog-container {
-            padding: 40px 8%;
-            max-width: 1280px;
-            margin: 0 auto;
-            min-height: 80vh;
-        }
-
-        .catalog-header {
-            margin-bottom: 30px;
-        }
-
-        .catalog-title {
-            font-size: 2.5rem;
-            font-weight: 400;
-            color: #1a1a1a;
-            margin: 0 0 10px 0;
-            letter-spacing: -0.5px;
-        }
-
-        .catalog-subtitle {
-            color: #8c8275;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0;
-        }
-
-        /* ИНТЕРАКТИВЕН ПАНЕЛ С ФИЛТРИ (Вдъхновен от снимката) */
-        .filter-panel {
-            background: #f4eee5;
-            border: 1px solid #eadecc;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 35px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .filter-row {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .filter-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #8c8275;
-        }
-
-        /* Бутони за бърз избор (Pills / Tags) */
-        .pill-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .pill-btn {
-            background: #fff;
-            border: 1px solid #eadecc;
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            border-radius: 20px;
-            cursor: pointer;
-            color: #555;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-
-        .pill-btn:hover {
-            border-color: #8c8275;
-            color: #1a1a1a;
-        }
-
-        .pill-btn.active {
-            background: #1a1a1a;
-            color: #fff;
-            border-color: #1a1a1a;
-        }
-
-        /* Търсачка и полета за цени */
-        .search-box input, .price-box input, .select-box select {
-            padding: 10px 15px;
-            border: 1px solid #eadecc;
-            border-radius: 6px;
-            background: #fff;
-            font-size: 0.9rem;
-            color: #1a1a1a;
-            outline: none;
-        }
-
-        .search-box input {
-            min-width: 250px;
-            flex: 1;
-        }
-
-        .price-inputs {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .price-inputs input {
-            width: 100px;
-        }
-
-        .btn-reset-filters {
-            background: transparent;
-            border: 1px solid #a83232;
-            color: #a83232;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-left: auto;
-        }
-
-        .btn-reset-filters:hover {
-            background: #a83232;
-            color: #fff;
-        }
-
-        /* ЛЕНТА ЗА РЕЗУЛТАТИ И СОРТИРАНЕ */
-        .results-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eadecc;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .results-count {
-            font-size: 0.95rem;
-            color: #555;
-        }
-
-        .fav-filter-btn {
-            background: none;
-            border: 1px solid #eadecc;
-            padding: 6px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: #1a1a1a;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .fav-filter-btn.active {
-            background: #ffe6e6;
-            border-color: #e60000;
-            color: #e60000;
-        }
-
-        /* МРЕЖА С ПРОЕКТИ (Grid Cards) */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .project-card {
-            background: #fff;
-            border: 1px solid #eadecc;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .project-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
-        }
-
-        .card-img-wrapper {
-            position: relative;
-            width: 100%;
-            height: 220px;
-            background: #f4eee5;
-            overflow: hidden;
-        }
-
-        .card-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-
-        .project-card:hover .card-img-wrapper img {
-            transform: scale(1.04);
-        }
-
-        .fav-heart-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(255,255,255,0.85);
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: transform 0.2s;
-            backdrop-filter: blur(4px);
-        }
-
-        .fav-heart-btn:hover {
-            transform: scale(1.15);
-        }
-
-        .category-badge {
-            position: absolute;
-            bottom: 12px;
-            left: 12px;
-            background: rgba(26,26,26,0.8);
-            color: #fff;
-            padding: 4px 10px;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 4px;
-        }
-
-        .card-content {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 500;
-            margin: 0 0 10px 0;
-            color: #1a1a1a;
-        }
-
-        .card-specs {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #f4eee5;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: #555;
-        }
-
-        .card-price {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #8c8275;
-            margin-bottom: 15px;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: auto;
-        }
-
-        .btn-card {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-primary {
-            background: #1a1a1a;
-            color: #fff;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background: #333;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid #eadecc;
-            color: #1a1a1a;
-        }
-
-        .btn-secondary:hover {
-            background: #f4eee5;
-        }
-
-        /* МОДАЛЕН ПРОЗОРЕЦ ЗА БЪРЗ ПРЕГЛЕД (Quick View) */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-            backdrop-filter: blur(3px);
-        }
-
-        .modal-card {
-            background: #fff;
-            max-width: 750px;
-            width: 100%;
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 15px; right: 15px;
-            background: #1a1a1a;
-            color: #fff;
-            border: none;
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            z-index: 10;
-        }
-
-        /* DARK MODE СТИЛОВЕ */
-        body.dark-mode .catalog-title { color: #fff !important; }
-        body.dark-mode .filter-panel { background: #1e1e1e !important; border-color: #2c2c2c !important; }
-        body.dark-mode .pill-btn { background: #252525 !important; border-color: #333 !important; color: #aaa !important; }
-        body.dark-mode .pill-btn.active { background: #eadecc !important; color: #1a1a1a !important; }
-        body.dark-mode .search-box input, body.dark-mode .price-box input, body.dark-mode .select-box select { background: #121212 !important; border-color: #444 !important; color: #fff !important; }
-        body.dark-mode .project-card { background: #1e1e1e !important; border-color: #2c2c2c !important; }
-        body.dark-mode .card-title { color: #fff !important; }
-        body.dark-mode .card-specs { background: #252525 !important; color: #aaa !important; }
-        body.dark-mode .btn-secondary { border-color: #444 !important; color: #fff !important; }
-        body.dark-mode .modal-card { background: #1e1e1e !important; color: #fff !important; }
-
-        @media (max-width: 768px) {
-            .catalog-container { padding: 20px 4%; }
-            .filter-row { flex-direction: column; align-items: stretch; }
-            .btn-reset-filters { margin-left: 0; width: 100%; text-align: center; }
-            .search-box input { min-width: 100%; }
-        }
-    </style>
 </head>
 <body>
 
-    <!-- НАВИГАЦИЯ -->
     <nav class="navbar">
         <a href="index.html" class="logo-area">
-            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" onerror="this.style.display='none'">
-            <span class="logo-studio">Academy Architect Studio</span>
+            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
+            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
         
+        <!-- Хамбургер бутон за мобилни устройства -->
         <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
 
         <div id="nav-links">
@@ -418,110 +38,28 @@
         <div class="header-actions">
             <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
             <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="setLanguage('bg')">BG</button>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn active" id="btn-bg" onclick="setLanguage('bg')">BG</button>
             </div>
-            <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+            <!-- Динамичен контейнер за състоянието на входа (Управлява се от auth.js) -->
+            <div id="navAuthContainer">
+                <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+            </div>
         </div>
     </nav>
 
-    <!-- ОСНОВНО СЪДЪРЖАНИЕ НА КАТАЛОГА -->
-    <main class="catalog-container">
-        <div class="catalog-header">
-            <p class="catalog-subtitle" id="subtitleText">Архитектурен каталог</p>
-            <h1 class="catalog-title" id="titleText">Нашите Проекти</h1>
-        </div>
-
-        <!-- ИНТЕРАКТИВЕН ПАНЕЛ С ФИЛТРИ -->
-        <section class="filter-panel">
-            <!-- Ред 1: Търсачка и Категория -->
-            <div class="filter-row">
-                <div class="filter-group search-box">
-                    <span class="filter-label" id="lblSearch">Търсене</span>
-                    <input type="text" id="searchInput" placeholder="Въведете име, стил или номер..." oninput="applyFilters()">
-                </div>
-
-                <div class="filter-group select-box">
-                    <span class="filter-label" id="lblCategory">Категория</span>
-                    <select id="categorySelect" onchange="applyFilters()">
-                        <option value="all">Всички категории</option>
-                        <option value="residential">🏠 Жилищни сгради</option>
-                        <option value="commercial">🏢 Търговски / Промишлени</option>
-                        <option value="interior">🛋️ Интериор</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Ред 2: Филтър за Площ (кв.м) - Бутони Pills -->
-            <div class="filter-group">
-                <span class="filter-label" id="lblArea">Площ (м²)</span>
-                <div class="pill-group" id="areaPillGroup">
-                    <button class="pill-btn active" data-area="all" onclick="selectPill('areaPillGroup', this)">Всички</button>
-                    <button class="pill-btn" data-area="0-100" onclick="selectPill('areaPillGroup', this)">&lt; 100</button>
-                    <button class="pill-btn" data-area="100-125" onclick="selectPill('areaPillGroup', this)">100 - 125</button>
-                    <button class="pill-btn" data-area="125-150" onclick="selectPill('areaPillGroup', this)">125 - 150</button>
-                    <button class="pill-btn" data-area="150-200" onclick="selectPill('areaPillGroup', this)">150 - 200</button>
-                    <button class="pill-btn" data-area="200+" onclick="selectPill('areaPillGroup', this)">&gt; 200</button>
-                </div>
-            </div>
-
-            <!-- Ред 3: Филтър за Брой Етажи - Бутони Pills -->
-            <div class="filter-group">
-                <span class="filter-label" id="lblFloors">Брой етажи</span>
-                <div class="pill-group" id="floorPillGroup">
-                    <button class="pill-btn active" data-floors="all" onclick="selectPill('floorPillGroup', this)">Всички</button>
-                    <button class="pill-btn" data-floors="1" onclick="selectPill('floorPillGroup', this)">1 Етаж</button>
-                    <button class="pill-btn" data-floors="2" onclick="selectPill('floorPillGroup', this)">2 Етажа</button>
-                    <button class="pill-btn" data-floors="3+" onclick="selectPill('floorPillGroup', this)">3+ Етажа / Мансарда</button>
-                </div>
-            </div>
-
-            <!-- Ред 4: Цена и Нулиране -->
-            <div class="filter-row" style="margin-top: 5px;">
-                <div class="filter-group price-box">
-                    <span class="filter-label" id="lblPrice">Максимална цена (лв.)</span>
-                    <div class="price-inputs">
-                        <input type="number" id="maxPriceInput" placeholder="напр. 250000" oninput="applyFilters()">
-                    </div>
-                </div>
-
-                <button class="btn-reset-filters" onclick="resetAllFilters()" id="btnReset">Изчисти филтрите</button>
-            </div>
+    <!-- Секция на каталога -->
+    <main class="catalog-page" style="padding: 40px 20px; max-width: 1200px; margin: 0 auto;">
+        <section class="catalog-header" style="margin-bottom: 30px;">
+            <h1 data-key="catalog-title" style="font-size: 2rem; margin-bottom: 10px;">Our Projects</h1>
+            <p data-key="catalog-desc" style="color: #666;">Explore our full portfolio of architectural designs and innovative solutions.</p>
         </section>
 
-        <!-- ЛЕНТА ЗА СОРТИРАНЕ И РЕЗУЛТАТИ -->
-        <div class="results-bar">
-            <div class="results-count" id="resultsCountText">Зареждане на проекти...</div>
-            
-            <div style="display: flex; gap: 15px; align-items: center;">
-                <button class="fav-filter-btn" id="favFilterBtn" onclick="toggleFavFilter()">
-                    ❤️ <span id="favFilterText">Само любими (0)</span>
-                </button>
-
-                <div class="select-box">
-                    <select id="sortSelect" onchange="applyFilters()">
-                        <option value="default">Сортирай по: Подразбиране</option>
-                        <option value="price-asc">Цена: Ниска към Висока</option>
-                        <option value="price-desc">Цена: Висока към Ниска</option>
-                        <option value="area-desc">Площ: Най-големи</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- МРЕЖА С КАРТИЧКИ НА ПРОЕКТИТЕ -->
-        <div class="projects-grid" id="projectsGrid"></div>
+        <section class="catalog-section">
+            <div class="projects-grid" id="catalogProjectsContainer"></div>
+        </section>
     </main>
 
-    <!-- МОДАЛЕН ПРОЗОРЕЦ ЗА БЪРЗ ПРЕГЛЕД (Quick View) -->
-    <div class="modal-overlay" id="quickViewModal">
-        <div class="modal-card">
-            <button class="modal-close" onclick="closeQuickView()">✕</button>
-            <div id="modalBody" style="padding: 25px;"></div>
-        </div>
-    </div>
-
-    <!-- ФУТЪР -->
     <footer class="main-footer">
         <div class="footer-logo-area">
             <div>
@@ -532,9 +70,9 @@
         
         <div class="footer-col">
             <h4 data-key="footer-contacts">Contacts</h4>
-            <p data-key="footer-address">Sofia, Bulgaria</p>
-            <p><a href="mailto:office@architect-studio.bg">office@architect-studio.bg</a></p>
-            <p>+359 88 123 4567</p>
+            <p><span id="footAddress">Sofia, Bulgaria</span></p>
+            <p><a href="mailto:office@architect-studio.bg" id="footEmailLink"><span id="footEmail">office@architect-studio.bg</span></a></p>
+            <p><span id="footPhone">+359 88 123 4567</span></p>
         </div>
         
         <div class="footer-col">
@@ -549,283 +87,89 @@
         </div>
     </footer>
 
+    <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
+    <script src="auth.js"></script>
     <script>
+        // Функция за превключване на тъмния режим
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
-            localStorage.setItem('siteTheme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('siteTheme', 'dark');
+            } else {
+                localStorage.setItem('siteTheme', 'light');
+            }
         }
 
+        // Функция за мобилното меню (хамбургер бутон)
         function toggleMobileMenu() {
-            document.getElementById('nav-links').classList.toggle('mobile-open');
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('mobile-open');
         }
 
-        // Глобално състояние
-        let allProjects = [];
-        let favoriteIds = JSON.parse(localStorage.getItem('myFavorites') || '[]');
-        let showOnlyFavs = false;
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof initLanguage === 'function') {
+                initLanguage();
+            } else if (typeof setLanguage === 'function') {
+                const savedLang = localStorage.getItem('siteLang') || 'bg';
+                setLanguage(savedLang);
+            }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initLanguage();
-            loadProjectsData();
-            applyFilters();
-        });
+            // Зареждане на ВСИЧКИ проекти от LocalStorage за каталога
+            const container = document.getElementById('catalogProjectsContainer');
+            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+            const currentLang = localStorage.getItem('siteLang') || localStorage.getItem('preferredLang') || 'bg';
 
-        // Зареждане на данни от localStorage или тестови бази
-        function loadProjectsData() {
-            const stored = localStorage.getItem('myProjects');
-            if (stored) {
-                allProjects = JSON.parse(stored);
-            } else {
-                // Примерни данни, ако все още няма качени през админа
-                allProjects = [
-                    {
-                        title: "Модерна Къща 'Алфа'",
-                        mainCategory: "residential",
-                        style: "Минимализъм",
-                        area: "145",
-                        floors: "2",
-                        price: "185000",
-                        desc: "Съвременна двуетажна къща с големи витрини и плосък покрив.",
-                        mainImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
-                    },
-                    {
-                        title: "Резиденция 'Витоша'",
-                        mainCategory: "residential",
-                        style: "Модерен",
-                        area: "230",
-                        floors: "2",
-                        price: "290000",
-                        desc: "Просторен семеен дом с двоен гараж и веранда.",
-                        mainImage: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
-                    },
-                    {
-                        title: "Едноетажна вила 'Хармония'",
-                        mainCategory: "residential",
-                        style: "Скандинавски",
-                        area: "95",
-                        floors: "1",
-                        price: "120000",
-                        desc: "Уютна дървена и каменна конструкция, подходяща за извънградска вила.",
-                        mainImage: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
+            if (container) {
+                if (projects.length > 0) {
+                    // Показваме всички проекти в обратен ред (най-новите първи)
+                    const allProjects = projects.slice().reverse();
+                    container.innerHTML = allProjects.map((p, index) => {
+                        const originalIndex = projects.length - 1 - index;
+                        const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+                        const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
+
+                        return `
+                            <a href="project-detail.html?index=${originalIndex}" class="project-card">
+                                <div class="project-img-box">
+                                    <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Image'">
+                                </div>
+                                <div class="project-info">
+                                    <span class="p-title">${p.title}</span>
+                                    <span class="p-meta">${p.style || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
+                                    <span class="p-area">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem; grid-column: 1 / -1;" data-key="no-projects">No projects added yet.</p>`;
+                    if (typeof applyTranslations === 'function') {
+                        applyTranslations(currentLang);
                     }
-                ];
-            }
-        }
-
-        // Логика за Pills бутони
-        function selectPill(groupId, clickedBtn) {
-            const container = document.getElementById(groupId);
-            container.querySelectorAll('.pill-btn').forEach(btn => btn.classList.remove('active'));
-            clickedBtn.classList.add('active');
-            applyFilters();
-        }
-
-        // Прилагане на всички филтри
-        function applyFilters() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
-            const category = document.getElementById('categorySelect').value;
-            const maxPrice = parseFloat(document.getElementById('maxPriceInput').value) || Infinity;
-            const sortBy = document.getElementById('sortSelect').value;
-
-            // Активни Pills
-            const activeAreaPill = document.querySelector('#areaPillGroup .pill-btn.active').getAttribute('data-area');
-            const activeFloorPill = document.querySelector('#floorPillGroup .pill-btn.active').getAttribute('data-floors');
-
-            let filtered = allProjects.map((proj, originalIndex) => ({ ...proj, originalIndex })).filter(p => {
-                // Търсене
-                if (searchQuery) {
-                    const matchTitle = (p.title || '').toLowerCase().includes(searchQuery);
-                    const matchStyle = (p.style || '').toLowerCase().includes(searchQuery);
-                    if (!matchTitle && !matchStyle) return false;
                 }
-
-                // Категория
-                if (category !== 'all' && p.mainCategory !== category) return false;
-
-                // Любими
-                if (showOnlyFavs && !favoriteIds.includes(p.originalIndex)) return false;
-
-                // Площ
-                const areaNum = parseFloat(p.area) || 0;
-                if (activeAreaPill === '0-100' && areaNum >= 100) return false;
-                if (activeAreaPill === '100-125' && (areaNum < 100 || areaNum > 125)) return false;
-                if (activeAreaPill === '125-150' && (areaNum < 125 || areaNum > 150)) return false;
-                if (activeAreaPill === '150-200' && (areaNum < 150 || areaNum > 200)) return false;
-                if (activeAreaPill === '200+' && areaNum <= 200) return false;
-
-                // Етажи
-                const floorNum = parseInt(p.floors) || 1;
-                if (activeFloorPill === '1' && floorNum !== 1) return false;
-                if (activeFloorPill === '2' && floorNum !== 2) return false;
-                if (activeFloorPill === '3+' && floorNum < 3) return false;
-
-                // Максимална цена
-                const priceNum = parseFloat(p.price) || 0;
-                if (priceNum > maxPrice) return false;
-
-                return true;
-            });
-
-            // Сортиране
-            if (sortBy === 'price-asc') {
-                filtered.sort((a, b) => (parseFloat(a.price) || 0) - (parseFloat(b.price) || 0));
-            } else if (sortBy === 'price-desc') {
-                filtered.sort((a, b) => (parseFloat(b.price) || 0) - (parseFloat(a.price) || 0));
-            } else if (sortBy === 'area-desc') {
-                filtered.sort((a, b) => (parseFloat(b.area) || 0) - (parseFloat(a.area) || 0));
             }
 
-            renderProjectsGrid(filtered);
-            updateFavBtnUI();
-        }
-
-        // Рендериране на картичките
-        function renderProjectsGrid(projectsList) {
-            const grid = document.getElementById('projectsGrid');
-            const countText = document.getElementById('resultsCountText');
-            
-            countText.innerText = `Намерени: ${projectsList.length} ${projectsList.length === 1 ? 'проект' : 'проекта'}`;
-
-            if (projectsList.length === 0) {
-                grid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; color: #8c8275;">
-                        <h3>Няма намерени проекти според избраните филтри.</h3>
-                        <p>Опитайте да промените параметрите или да изчистите филтрите.</p>
-                    </div>
-                `;
-                return;
+            // Автоматично зареждане на контактите за футъра от админ панела
+            const savedContact = localStorage.getItem('siteContact');
+            if (savedContact) {
+                try {
+                    const data = JSON.parse(savedContact);
+                    if (data.address && document.getElementById('footAddress')) {
+                        document.getElementById('footAddress').textContent = data.address;
+                    }
+                    if (data.email) {
+                        if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
+                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
+                    }
+                    if (data.phone && document.getElementById('footPhone')) {
+                        document.getElementById('footPhone').textContent = data.phone;
+                    }
+                } catch (e) {
+                    console.error('Грешка при зареждане на контактите', e);
+                }
             }
-
-            const currentLang = localStorage.getItem('preferredLang') || 'bg';
-            const areaUnit = currentLang === 'en' ? 'sq.m' : 'м²';
-
-            grid.innerHTML = projectsList.map(p => {
-                const isFav = favoriteIds.includes(p.originalIndex);
-                const imgUrl = p.mainImage || (p.gallery && p.gallery[0]) || 'https://placehold.co/600x400?text=No+Image';
-
-                return `
-                    <div class="project-card">
-                        <div class="card-img-wrapper">
-                            <img src="${imgUrl}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=No+Image'">
-                            <button class="fav-heart-btn" onclick="toggleFavorite(${p.originalIndex})">
-                                ${isFav ? '❤️' : '🤍'}
-                            </button>
-                            <span class="category-badge">${p.style || 'Проект'}</span>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">${p.title}</h3>
-                            <div class="card-specs">
-                                <div>📏 Площ: <strong>${p.area ? p.area + ' ' + areaUnit : '-'}</strong></div>
-                                <div>🏢 Етажи: <strong>${p.floors || '-'}</strong></div>
-                            </div>
-                            <div class="card-price">
-                                ${p.price ? parseFloat(p.price).toLocaleString() + ' лв.' : 'Запитване за цена'}
-                            </div>
-                            <div class="card-actions">
-                                <button class="btn-card btn-secondary" onclick="openQuickView(${p.originalIndex})">👁️ Преглед</button>
-                                <a href="project-details.html?index=${p.originalIndex}" class="btn-card btn-primary">Детайли →</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Любими проекти (Wishlist)
-        function toggleFavorite(index) {
-            const idxPos = favoriteIds.indexOf(index);
-            if (idxPos > -1) {
-                favoriteIds.splice(idxPos, 1);
-            } else {
-                favoriteIds.push(index);
-            }
-            localStorage.setItem('myFavorites', JSON.stringify(favoriteIds));
-            applyFilters();
-        }
-
-        function toggleFavFilter() {
-            showOnlyFavs = !showOnlyFavs;
-            applyFilters();
-        }
-
-        function updateFavBtnUI() {
-            const btn = document.getElementById('favFilterBtn');
-            const text = document.getElementById('favFilterText');
-            text.innerText = `Само любими (${favoriteIds.length})`;
-            if (showOnlyFavs) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        }
-
-        // Нулиране на филтри
-        function resetAllFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('categorySelect').value = 'all';
-            document.getElementById('maxPriceInput').value = '';
-            document.getElementById('sortSelect').value = 'default';
-
-            document.querySelectorAll('.pill-group').forEach(group => {
-                group.querySelectorAll('.pill-btn').forEach((btn, idx) => {
-                    if (idx === 0) btn.classList.add('active');
-                    else btn.classList.remove('active');
-                });
-            });
-
-            showOnlyFavs = false;
-            applyFilters();
-        }
-
-        // Бърз преглед (Quick View Modal)
-        function openQuickView(originalIndex) {
-            const p = allProjects[originalIndex];
-            if (!p) return;
-
-            const modal = document.getElementById('quickViewModal');
-            const body = document.getElementById('modalBody');
-            const imgUrl = p.mainImage || 'https://placehold.co/600x400?text=No+Image';
-
-            body.innerHTML = `
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; align-items: start;">
-                    <img src="${imgUrl}" alt="${p.title}" style="width: 100%; border-radius: 6px; border: 1px solid #eadecc;">
-                    <div>
-                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #8c8275; font-weight: 700;">${p.style || 'Проект'}</span>
-                        <h2 style="margin: 5px 0 15px 0; font-size: 1.8rem; font-weight: 400;">${p.title}</h2>
-                        
-                        <div style="background: #f4eee5; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem;">
-                            <div>📏 <strong>Площ:</strong> ${p.area ? p.area + ' кв.м' : 'N/A'}</div>
-                            <div>🏢 <strong>Етажи:</strong> ${p.floors || 'N/A'}</div>
-                            <div>💰 <strong>Ориентировъчна цена:</strong> ${p.price ? parseFloat(p.price).toLocaleString() + ' лв.' : 'При запитване'}</div>
-                        </div>
-
-                        <p style="font-size: 0.95rem; line-height: 1.6; color: #555; margin-bottom: 20px;">
-                            ${p.desc || p.description || 'Няма допълнително описание.'}
-                        </p>
-
-                        <div style="display: flex; gap: 10px;">
-                            <a href="project-details.html?index=${originalIndex}" class="btn-card btn-primary" style="display: inline-block;">Пълни детайли →</a>
-                            <a href="contact.html?project=${encodeURIComponent(p.title)}" class="btn-card btn-secondary" style="display: inline-block;">Запитване</a>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            modal.style.display = 'flex';
-        }
-
-        function closeQuickView() {
-            document.getElementById('quickViewModal').style.display = 'none';
-        }
-
-        // Затваряне на модала при клик извън него
-        window.onclick = function(e) {
-            const modal = document.getElementById('quickViewModal');
-            if (e.target === modal) {
-                closeQuickView();
-            }
-        }
+        });
     </script>
 </body>
 </html>
