@@ -324,7 +324,9 @@
             if (isUserLoggedIn) {
                 const userRole = localStorage.getItem('userRole') || localStorage.getItem('role') || 'user';
                 const rawName = localStorage.getItem('userName') || localStorage.getItem('username') || localStorage.getItem('currentUser') || '';
-                const isAdmin = userRole === 'admin' || rawName.toLowerCase() === 'admin';
+                
+                // Проверява дали ролята или името отговарят на админ (без значение от главни/малки букви)
+                const isAdmin = userRole.toLowerCase() === 'admin' || rawName.toLowerCase() === 'admin';
 
                 const labelKey = isAdmin ? 'nav-admin' : 'nav-profile';
                 const targetLink = isAdmin ? 'admin.html' : 'profile.html';
