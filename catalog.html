@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle" data-key="page-title-catalog">Projects - Academy Architect Studio</title>
+    <title id="pageTitle" data-key="page-title-catalog">Проекти - Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('siteTheme');
@@ -14,6 +13,211 @@
             }
         })();
     </script>
+    <style>
+        .catalog-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+        
+        /* Заглавна част в редакционен стил */
+        .catalog-top-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            padding-bottom: 25px;
+        }
+        .catalog-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+        .catalog-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Префинирана търсачка */
+        .search-box {
+            position: relative;
+            width: 320px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        .search-box input:focus {
+            border-color: #111;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: var(--card-bg, #fff);
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.5;
+        }
+
+        /* Филтри без тежки кутии - леки и ефирни */
+        .filters-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .filter-label {
+            font-size: 0.75rem;
+            color: #888;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            width: 110px;
+        }
+        .filter-btn {
+            background: transparent;
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #555;
+            font-weight: 400;
+        }
+        .filter-btn:hover {
+            border-color: #111;
+            color: #111;
+        }
+        .filter-btn.active {
+            background: #111;
+            color: #fff;
+            border-color: #111;
+            font-weight: 500;
+        }
+        
+        /* Бутон за изчистване */
+        .reset-link {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+            transition: color 0.2s;
+        }
+        .reset-link:hover {
+            color: #ff4d4d;
+        }
+
+        /* Мрежа за проектите */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px 30px;
+        }
+        .project-card {
+            background: transparent;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+        .project-img-box {
+            position: relative;
+            width: 100%;
+            height: 260px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f0f0f0;
+            margin-bottom: 15px;
+        }
+        .project-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .project-card:hover .project-img-box img {
+            transform: scale(1.03);
+        }
+        .project-code-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .project-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .p-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-color, #111);
+            letter-spacing: -0.3px;
+        }
+        .p-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        /* Тъмен режим */
+        .dark-mode .catalog-top-flex {
+            border-bottom-color: rgba(255,255,255,0.1);
+        }
+        .dark-mode .search-box input {
+            border-color: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+        .dark-mode .filter-btn {
+            border-color: rgba(255,255,255,0.15);
+            color: #bbb;
+        }
+        .dark-mode .filter-btn:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+        .dark-mode .filter-btn.active {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+        .dark-mode .project-img-box {
+            background: #1a1a1a;
+        }
+    </style>
 </head>
 <body>
 
@@ -23,17 +227,16 @@
             <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
         
-        <!-- Хамбургер бутон за мобилни устройства -->
         <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
 
         <div id="nav-links">
-            <a href="index.html" data-key="nav-home">Home</a>
-            <a href="catalog.html" class="active" data-key="nav-catalog">Projects</a>
-            <a href="services.html" data-key="nav-services">Services</a>
-            <a href="about.html" data-key="nav-about">About Us</a>
+            <a href="index.html" data-key="nav-home">Начало</a>
+            <a href="catalog.html" class="active" data-key="nav-catalog">Проекти</a>
+            <a href="services.html" data-key="nav-services">Услуги</a>
+            <a href="about.html" data-key="nav-about">За нас</a>
             <a href="planner.html" data-key="nav-planner">AI Planner</a>
-            <a href="estimator.html" data-key="nav-estimator">Estimator</a>
-            <a href="contact.html" data-key="nav-contact">Contacts</a>
+            <a href="estimator.html" data-key="nav-estimator">Калкулатор</a>
+            <a href="contact.html" data-key="nav-contact">Контакти</a>
         </div>
 
         <div class="header-actions">
@@ -42,19 +245,53 @@
                 <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn active" id="btn-bg" onclick="setLanguage('bg')">BG</button>
             </div>
-            <!-- Динамичен контейнер за състоянието на входа (Управлява се от auth.js) -->
             <div id="navAuthContainer">
-                <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+                <a href="login.html" class="btn-login" data-key="nav-login">Вход</a>
             </div>
         </div>
     </nav>
 
-    <!-- Секция на каталога -->
-    <main class="catalog-page" style="padding: 40px 20px; max-width: 1200px; margin: 0 auto;">
-        <section class="catalog-header" style="margin-bottom: 30px;">
-            <h1 data-key="catalog-title" style="font-size: 2rem; margin-bottom: 10px;">Our Projects</h1>
-            <p data-key="catalog-desc" style="color: #666;">Explore our full portfolio of architectural designs and innovative solutions.</p>
-        </section>
+    <main class="catalog-container">
+        <!-- Заглавна секция и търсачка -->
+        <div class="catalog-top-flex">
+            <div class="catalog-header">
+                <h1 data-key="catalog-main-title">Проекти и Услуги</h1>
+                <p data-key="catalog-main-desc">Пълно инженерно проектиране, архитектура, интериор и строителни решения от А до Я.</p>
+            </div>
+            <div class="search-box">
+                <input type="text" id="projectSearchInput" placeholder="Търсене по номер или име..." oninput="filterProjects()">
+            </div>
+        </div>
+
+        <!-- Разширени и подредени филтри -->
+        <div class="filters-bar">
+            <!-- Ред 1: Основни категории -->
+            <div class="filter-row">
+                <span class="filter-label" data-key="filter-cat-label">Категория:</span>
+                <button class="filter-btn cat-btn active" onclick="setCategoryFilter('all', this)" data-key="cat-all">Всички</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('houses', this)" data-key="cat-houses">🏡 Къщи</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('interior', this)" data-key="cat-interior">🛋️ Интериорен дизайн</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('public', this)" data-key="cat-public">🏢 Обществени & Промишлени</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('reconstruction', this)" data-key="cat-reconstruction">🛠️ Реконструкции & Надстройки</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('engineering', this)" data-key="cat-engineering">📐 Заснемане & КПИИ</button>
+            </div>
+            
+            <!-- Ред 2: Специфични материали / площ / стил -->
+            <div class="filter-row">
+                <span class="filter-label" data-key="filter-sub-label">Материал / Тип:</span>
+                <button class="filter-btn sub-btn active" onclick="setSubFilter('all', this)" data-key="sub-all">Всички видове</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('wood', this)" data-key="sub-wood">Дървени</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('stone', this)" data-key="sub-stone">Каменни</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('concrete', this)" data-key="sub-concrete">Бетонни / Масивни</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('prefabricated', this)" data-key="sub-prefab">Сглобяеми</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('modern', this)" data-key="sub-modern">Модерни</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('bulgarian', this)" data-key="sub-bulgarian">Български стил</button>
+                
+                <div style="margin-left: auto;">
+                    <button class="reset-link" onclick="resetFilters()" data-key="reset-filters">Изчисти филтрите</button>
+                </div>
+            </div>
+        </div>
 
         <section class="catalog-section">
             <div class="projects-grid" id="catalogProjectsContainer"></div>
@@ -65,31 +302,30 @@
         <div class="footer-logo-area">
             <div>
                 <div class="footer-brand">Academy Architect Studio</div>
-                <div class="footer-subtext" data-key="footer-subtitle">Design & Engineering</div>
+                <div class="footer-subtext">Design & Engineering</div>
             </div>
         </div>
         
         <div class="footer-col">
-            <h4 data-key="footer-contacts">Contacts</h4>
-            <p><span id="footAddress">Sofia, Bulgaria</span></p>
+            <h4 data-key="footer-contacts">Контакти</h4>
+            <p><span id="footAddress">София, България</span></p>
             <p><a href="mailto:office@architect-studio.bg" id="footEmailLink"><span id="footEmail">office@architect-studio.bg</span></a></p>
             <p><span id="footPhone">+359 88 123 4567</span></p>
         </div>
         
         <div class="footer-col">
-            <h4 data-key="footer-links-title">Links</h4>
-            <p><a href="index.html" data-key="nav-home">Home</a></p>
-            <p><a href="catalog.html" data-key="nav-catalog">Projects</a></p>
-            <p><a href="services.html" data-key="nav-services">Services</a></p>
-            <p><a href="about.html" data-key="nav-about">About Us</a></p>
+            <h4 data-key="footer-links-title">Връзки</h4>
+            <p><a href="index.html" data-key="nav-home">Начало</a></p>
+            <p><a href="catalog.html" data-key="nav-catalog">Проекти</a></p>
+            <p><a href="services.html" data-key="nav-services">Услуги</a></p>
+            <p><a href="about.html" data-key="nav-about">За нас</a></p>
         </div>
         
         <div class="footer-right">
-            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>All rights reserved.</p>
+            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>Всички права запазени.</p>
         </div>
     </footer>
 
-    <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script src="auth.js"></script>
     <script type="module">
@@ -106,34 +342,117 @@
             measurementId: "G-NN7GYSF55G"
         };
 
-        // Инициализиране на Firebase ако не е направенo
         let app;
         try {
             app = initializeApp(firebaseConfig);
-        } catch (e) {
-            // Вече е инициализирано
-        }
+        } catch (e) {}
 
-        // Функция за превключване на тъмния режим
+        let allProjectsGlobal = [];
+        let activeCategory = 'all';
+        let activeSubFilter = 'all';
+
         window.toggleDarkMode = function() {
             const isDark = document.documentElement.classList.toggle('dark-mode');
             document.body.classList.toggle('dark-mode', isDark);
-            
-            if (isDark) {
-                localStorage.setItem('siteTheme', 'dark');
-            } else {
-                localStorage.setItem('siteTheme', 'light');
-            }
+            localStorage.setItem('siteTheme', isDark ? 'dark' : 'light');
         };
 
-        // Функция за мобилното меню (хамбургер бутон)
         window.toggleMobileMenu = function() {
-            const navLinks = document.getElementById('nav-links');
-            navLinks.classList.toggle('mobile-open');
+            document.getElementById('nav-links').classList.toggle('mobile-open');
         };
+
+        window.setCategoryFilter = function(category, btnElement) {
+            activeCategory = category;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+            filterProjects();
+        };
+
+        window.setSubFilter = function(sub, btnElement) {
+            activeSubFilter = sub;
+            document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+            filterProjects();
+        };
+
+        window.resetFilters = function() {
+            document.getElementById('projectSearchInput').value = '';
+            activeCategory = 'all';
+            activeSubFilter = 'all';
+            
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+            
+            const firstCat = document.querySelector('.cat-btn');
+            if(firstCat) firstCat.classList.add('active');
+            const firstSub = document.querySelector('.sub-btn');
+            if(firstSub) firstSub.classList.add('active');
+
+            renderProjectsList(allProjectsGlobal);
+        };
+
+        window.filterProjects = function() {
+            const searchText = document.getElementById('projectSearchInput').value.toLowerCase().trim();
+            
+            const filtered = allProjectsGlobal.filter(p => {
+                const title = (p.title || '').toLowerCase();
+                const idStr = String(p.id || '').toLowerCase();
+                const catStr = (p.category || '').toLowerCase();
+                const materialStr = (p.material || '').toLowerCase();
+                const styleStr = (p.style || '').toLowerCase();
+                
+                const matchesSearch = !searchText || title.includes(searchText) || idStr.includes(searchText) || styleStr.includes(searchText);
+
+                let matchesCat = true;
+                if (activeCategory !== 'all') {
+                    matchesCat = catStr.includes(activeCategory);
+                }
+
+                let matchesSub = true;
+                if (activeSubFilter !== 'all') {
+                    matchesSub = materialStr.includes(activeSubFilter) || styleStr.includes(activeSubFilter);
+                }
+
+                return matchesSearch && matchesCat && matchesSub;
+            });
+
+            renderProjectsList(filtered);
+        };
+
+        function renderProjectsList(projectsList) {
+            const container = document.getElementById('catalogProjectsContainer');
+            const areaUnit = 'кв.м';
+
+            if (!container) return;
+
+            if (projectsList.length > 0) {
+                container.innerHTML = projectsList.map((p, index) => {
+                    const projectId = p.id || index;
+                    const displayCode = p.code || `#${String(index + 1).padStart(3, '0')}`;
+                    const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+
+                    return `
+                        <a href="project-detail.html?id=${projectId}" class="project-card">
+                            <div class="project-img-box">
+                                <span class="project-code-badge">${displayCode}</span>
+                                <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Image'">
+                            </div>
+                            <div class="project-info">
+                                <span class="p-title">${p.title}</span>
+                                <div class="p-meta-row">
+                                    <span>${p.style || p.category || 'Архитектурен проект'}</span>
+                                    <span style="font-weight: 500; color: var(--text-color, #111);">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } else {
+                container.innerHTML = `<p style="color: #888; font-size: 0.95rem; grid-column: 1 / -1; padding: 20px 0;">Няма намерени обекти, отговарящи на зададените критерии.</p>`;
+            }
+        }
 
         document.addEventListener("DOMContentLoaded", async function() {
-            // Синхронизиране на темата при пълно зареждане
             const savedTheme = localStorage.getItem('siteTheme');
             if (savedTheme === 'dark') {
                 document.documentElement.classList.add('dark-mode');
@@ -143,18 +462,14 @@
             if (typeof initLanguage === 'function') {
                 initLanguage();
             } else if (typeof setLanguage === 'function') {
-                const savedLang = localStorage.getItem('siteLang') || 'bg';
-                setLanguage(savedLang);
+                setLanguage(localStorage.getItem('siteLang') || 'bg');
             }
 
-            // Зареждане на ВСИЧКИ проекти от Firebase Firestore за каталога
             const container = document.getElementById('catalogProjectsContainer');
-            const currentLang = localStorage.getItem('siteLang') || localStorage.getItem('preferredLang') || 'bg';
 
             if (container) {
                 try {
                     const dbInstance = window.db || getFirestore(app);
-                    
                     let projects = [];
                     if (dbInstance) {
                         const querySnapshot = await getDocs(collection(dbInstance, "projects"));
@@ -165,60 +480,28 @@
                         projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
                     }
 
-                    if (projects.length > 0) {
-                        const allProjects = projects.slice().reverse();
-                        container.innerHTML = allProjects.map((p, index) => {
-                            const projectId = p.id || index;
-                            const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
-                            const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
+                    allProjectsGlobal = projects.slice().reverse();
+                    renderProjectsList(allProjectsGlobal);
 
-                            return `
-                                <a href="project-detail.html?id=${projectId}" class="project-card">
-                                    <div class="project-img-box">
-                                        <img src="${imgSrc}" alt="${p.title}" onerror="this.src='https://placehold.co/600x400?text=Image'">
-                                    </div>
-                                    <div class="project-info">
-                                        <span class="p-title">${p.title}</span>
-                                        <span class="p-meta">${p.style || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
-                                        <span class="p-area">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
-                                    </div>
-                                </a>
-                            `;
-                        }).join('');
-                    } else {
-                        container.innerHTML = `<p style="color: #8c8275; font-size: 0.95rem; grid-column: 1 / -1;" data-key="no-projects">No projects added yet.</p>`;
-                        if (typeof applyTranslations === 'function') {
-                            applyTranslations(currentLang);
-                        }
-                    }
                 } catch (error) {
-                    console.error("Грешка при зареждане на проектите от Firebase:", error);
-                    container.innerHTML = `<p style="color: #ff6b6b; font-size: 0.95rem; grid-column: 1 / -1;">Грешка при зареждане на проектите.</p>`;
+                    console.error("Грешка при зареждане:", error);
+                    container.innerHTML = `<p style="color: #ff6b6b; font-size: 0.95rem; grid-column: 1 / -1;">Грешка при зареждане на каталога.</p>`;
                 }
             }
 
-            // Зареждане на контактите за футъра от Firebase Firestore
             try {
                 const dbInstance = window.db || getFirestore(app);
-                const contactDocRef = doc(dbInstance, "siteSettings", "contact");
-                const contactSnap = await getDoc(contactDocRef);
-
+                const contactSnap = await getDoc(doc(dbInstance, "siteSettings", "contact"));
                 if (contactSnap.exists()) {
                     const data = contactSnap.data();
-                    if (data.address && document.getElementById('footAddress')) {
-                        document.getElementById('footAddress').textContent = data.address;
-                    }
+                    if (data.address && document.getElementById('footAddress')) document.getElementById('footAddress').textContent = data.address;
                     if (data.email) {
                         if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
                         if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
                     }
-                    if (data.phone && document.getElementById('footPhone')) {
-                        document.getElementById('footPhone').textContent = data.phone;
-                    }
+                    if (data.phone && document.getElementById('footPhone')) document.getElementById('footPhone').textContent = data.phone;
                 }
-            } catch (e) {
-                console.error('Грешка при зареждане на контактите от Firebase', e);
-            }
+            } catch (e) {}
         });
     </script>
 </body>

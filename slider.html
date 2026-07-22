@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Реконструкция - Преди и След</title>
+    <style>
+        body {
+            background: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            color: #fff;
+        }
+        .img-container {
+            position: relative;
+            width: 750px;
+            height: 480px;
+            overflow: hidden;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .img-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+        /* Новата/модерна сграда е отдолу */
+        .img-after {
+            width: 50%; /* Тук задаваме началната позиция на плъзгача */
+            z-index: 2;
+            border-right: 2px solid #fff;
+        }
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: #fff;
+            z-index: 3;
+            cursor: ew-resize;
+        }
+        .slider-handle::after {
+            content: "↔";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            color: #000;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .label {
+            position: absolute;
+            bottom: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 6px 12px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            z-index: 4;
+        }
+        .label-old { left: 15px; }
+        .label-new { right: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="img-container" id="comparator">
+        <!-- Снимка "Нова сграда / След" -->
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800" alt="Нова сграда">
+        <span class="label label-new">След (Проект)</span>
+        
+        <!-- Снимка "Стара сграда / Преди" -->
+        <img class="img-after" id="afterImg" src="https://images.unsplash.com/photo-1541888946425-d0fbb18f248e?w=800" alt="Стара сграда">
+        <span class="label label-old" style="left: auto; right: 50%; margin-right: 15px;">Преди (Реконструкция)</span>
+        
+        <div class="slider-handle" id="handle"></div>
+    </div>
+
+    <script>
+        const container = document.getElementById('comparator');
+        const afterImg = document.getElementById('afterImg');
+        const handle = document.getElementById('handle');
+
+        function trackLocation(e) {
+            let rect = container.getBoundingClientRect();
+            let position = e.clientX - rect.left;
+            
+            if (position < 0) position = 0;
+            if (position > rect.width) position = rect.width;
+
+            let percentage = (position / rect.width) * 100;
+            
+            afterImg.style.width = percentage + '%';
+            handle.style.left = percentage + '%';
+        }
+
+        container.addEventListener('mousemove', trackLocation);
+        
+        container.addEventListener('touchmove', (e) => {
+            let rect = container.getBoundingClientRect();
+            let position = e.touches[0].clientX - rect.left;
+            let percentage = (position / rect.width) * 100;
+            if (percentage >= 0 && percentage <= 100) {
+                afterImg.style.width = percentage + '%';
+                handle.style.left = percentage + '%';
+            }
+        });
+    </script>
+
+</body>
+</html>
