@@ -34,7 +34,7 @@ const translations = {
 
         // Страница "За нас" (about.html)
         "about-eyebrow": "КОИ СМЕ НИЕ",
-        "about-title": "Създаваме пространства със смисъл, естетика и дълготрайна стойност.",
+        "about-title": "Создаваме пространства със смисъл, естетика и дълготрайна стойност.",
         "about-desc1": "Academy Architect Studio обединява съвременния архитектурен дизайн с интелигентно инженерно мислене. Нашата цел е да превърнем всяка визия в реалност, съчетавайки функционалност, устойчивост и изчистен стил.",
         "about-desc2": "Работим по разнообразни жилищни, обществени и корпоративни проекти, подхождайки индивидуално към всяка идея и клиентско изискване.",
         "about-card1-title": "Иновативен дизайн",
@@ -116,6 +116,23 @@ const translations = {
         "services-stage2-tag": "ЕТАП 2",
         "services-stage2-title": "Инвестиционно проектиране",
         "services-stage2-desc": "Започва задължително с виза за проектиране, издадена от Общината. След уточняване на идейния проект и 3D визиите спрямо вашите изисквания, се пристъпва директно към техническата фаза за проектиране по всички специалности.",
+        
+        // Новодобавени ключове за "Необходими документи"
+        "services-req-docs-title": "Необходими документи за започване на проектирането",
+        "services-req-concept-title": "/ За започване на Идеен проект /",
+        "services-doc-concept-1-title": "Нотариален акт:",
+        "services-doc-concept-1-desc": " Документ за собственост на имота.",
+        "services-doc-concept-2-title": "Виза за проектиране:",
+        "services-doc-concept-2-desc": " Най-важният документ за започване на проектирането и получаване на изходни данни от ЕРП, ВиК и др. Представлява копие от комбинирана скица с нанесени линии на застрояване. Подава се молба в общината, като се носи скица и/или мотивирано предложение от архитект. Отнема от 3 до 14 дни.",
+        "services-doc-concept-3-title": "Геодезическо заснемане (тахиметрична снимка):",
+        "services-doc-concept-3-desc": " Служи за основа на проектирането. Извършва се от геодезист на място. Обработката отнема до една седмица.",
+        "services-doc-concept-3-note": "💡 В екипа си имаме геодезист, чиито услуги можем да ви предложим.",
+        "services-req-tech-title": "/ За започване на Технически проект /",
+        "services-doc-tech-1-title": "Становище от Електроразпределително дружество:",
+        "services-doc-tech-1-desc": " Подава се молба към ЕРП за издаване на становище за присъединяване към мрежата. За еднофамилни жилищни сгради се иска мощност 10-15 kW (най-добре 15 kW).",
+        "services-doc-tech-2-title": "Изходни данни от ВиК дружество:",
+        "services-doc-tech-2-desc": " Подава се искане до местното ВиК дружество за изходни данни, необходими за изготвяне на ВиК проекта. След изготвянето му, той се съгласува обратно при тях за издаване на становище.",
+
         "services-specs-title": "Проекти по специалности",
         "services-req-title": "Задължителни проекти за разрешение за строеж (малки жилищни сгради):",
         "services-spec-1": "Част „Архитектурна“",
@@ -262,6 +279,23 @@ const translations = {
         "services-stage2-tag": "STAGE 2",
         "services-stage2-title": "Investment Design",
         "services-stage2-desc": "Starts with a design visa issued by the Municipality. After refining the conceptual design and 3D visualizations based on your preferences, we proceed directly to the technical design phase across all engineering disciplines.",
+        
+        // Новодобавени ключове на английски за "Необходими документи"
+        "services-req-docs-title": "Required Documents to Start Design",
+        "services-req-concept-title": "/ To Start a Conceptual Design /",
+        "services-doc-concept-1-title": "Title Deed:",
+        "services-doc-concept-1-desc": " Property ownership document.",
+        "services-doc-concept-2-title": "Design Visa:",
+        "services-doc-concept-2-desc": " The most important document to start the design and obtain initial data from utility companies. It is a copy of a combined sketch with marked building lines. An application is submitted to the municipality along with a sketch and/or a motivated proposal from an architect. Takes from 3 to 14 days.",
+        "services-doc-concept-3-title": "Geodetic Survey (Tachymetric Survey):",
+        "services-doc-concept-3-desc": " Serves as the basis for the design. Performed by a surveyor on site. Processing takes up to one week.",
+        "services-doc-concept-3-note": "💡 Our team includes a surveyor whose services we can offer you.",
+        "services-req-tech-title": "/ To Start a Technical Design /",
+        "services-doc-tech-1-title": "Opinion from Power Distribution Company:",
+        "services-doc-tech-1-desc": " An application is submitted to the power company to issue a grid connection opinion. For single-family residential buildings, 10-15 kW of power is requested (preferably 15 kW).",
+        "services-doc-tech-2-title": "Initial Data from Water Supply Company:",
+        "services-doc-tech-2-desc": " A request is submitted to the local water company for initial data required for the water supply project preparation. Once prepared, it is coordinated back with them to issue an opinion.",
+
         "services-specs-title": "Specialized Projects",
         "services-req-title": "Mandatory Building Permit Projects (Small Residential Buildings):",
         "services-spec-1": "Architectural Part",
