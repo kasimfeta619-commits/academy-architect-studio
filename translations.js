@@ -37,19 +37,15 @@ const translations = {
         // Контакти и Резервации (contact.html)
         "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
         "contact-title": "Обсъдете вашия проект или запазете среща.",
-        "footer-address-label": "Адрес:",
-        "email-label": "Имейл:",
-        "contact-phone-label": "Телефон:",
-        "inquiry-type-label": "Тип запитване",
+        "contact-type-label": "Тип запитване",
         "option-general": "Общо съобщение",
-        "option-booking": "Резервирай консултация / среща",
-        "form-name": "Вашето име",
-        "form-email": "Вашият имейл",
-        "form-phone": "Телефонен номер",
-        "form-date": "Желана дата",
-        "form-time": "Желан час",
-        "form-message": "Съобщение / Детайли",
-        "form-submit": "Изпрати запитване"
+        "option-consultation": "Консултация за проект",
+        "option-quote": "Запитване за оферта",
+        "contact-name-label": "Вашето име",
+        "contact-email-label": "Вашият имейл",
+        "contact-phone-label": "Телефонен номер",
+        "contact-msg-label": "Съобщение / Детайли",
+        "contact-btn-send": "Изпрати запитване"
     },
     en: {
         // Navigation
@@ -89,24 +85,20 @@ const translations = {
         // Contacts & Booking (contact.html)
         "contact-eyebrow": "GET IN TOUCH & BOOKING",
         "contact-title": "Let's discuss your project or book a meeting.",
-        "footer-address-label": "Address:",
-        "email-label": "Email:",
-        "contact-phone-label": "Phone:",
-        "inquiry-type-label": "Inquiry Type",
+        "contact-type-label": "Inquiry Type",
         "option-general": "General Message",
-        "option-booking": "Book Consultation / Meeting",
-        "form-name": "Your Name",
-        "form-email": "Your Email",
-        "form-phone": "Phone Number",
-        "form-date": "Preferred Date",
-        "form-time": "Preferred Time",
-        "form-message": "Message / Details",
-        "form-submit": "Send Request"
+        "option-consultation": "Project Consultation",
+        "option-quote": "Quote Request",
+        "contact-name-label": "Your Name",
+        "contact-email-label": "Your Email",
+        "contact-phone-label": "Phone Number",
+        "contact-msg-label": "Message / Details",
+        "contact-btn-send": "Send Request"
     }
 };
 
 function setLanguage(lang) {
-    localStorage.setItem('preferredLang', lang);
+    localStorage.setItem('siteLang', lang); // Уеднаквено ключе с останалите скриптове
     document.documentElement.lang = lang;
     
     document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -126,6 +118,6 @@ function setLanguage(lang) {
 }
 
 function initLanguage() {
-    const savedLang = localStorage.getItem('preferredLang') || 'bg';
+    const savedLang = localStorage.getItem('siteLang') || 'bg';
     setLanguage(savedLang);
 }

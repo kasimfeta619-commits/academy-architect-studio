@@ -44,6 +44,61 @@
             color: var(--text-color, #4a453e);
             margin-bottom: 20px;
         }
+        /* Стил за админ линка */
+        .btn-admin-nav {
+            background: #1a1a1a;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 8px 14px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.2s;
+        }
+        .btn-admin-nav:hover {
+            background: #333;
+        }
+        /* Профилен контейнер в навигацията */
+        .user-profile-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .user-avatar-badge {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background-color: rgba(0,0,0,0.06);
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        body.dark-mode .user-avatar-badge {
+            background-color: #2d2d2d;
+        }
+        .user-avatar-badge svg {
+            fill: currentColor;
+        }
+        .online-status-dot {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            width: 10px;
+            height: 10px;
+            background-color: #2ecc71;
+            border: 2px solid var(--bg-color, #fbf9f4);
+            border-radius: 50%;
+        }
+        .profile-label-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
         @media (max-width: 768px) {
             .about-container {
                 grid-template-columns: 1fr;
@@ -79,8 +134,8 @@
                 <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
                 <button class="lang-btn active" id="btn-bg" onclick="setLanguage('bg')">BG</button>
             </div>
-            <!-- Динамичен контейнер за състоянието на входа -->
-            <div id="navAuthContainer">
+            <!-- Динамичен контейнер за входа и админ панела -->
+            <div id="navAuthContainer" style="display: flex; align-items: center; gap: 12px;">
                 <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
             </div>
         </div>
@@ -90,11 +145,11 @@
     <main class="about-container">
         <div>
             <span class="about-eyebrow" data-key="about-eyebrow">ЗА СТУДИОТО</span>
-            <h1 class="about-title" data-key="about-title">Личен архив на архитектурни проекти.</h1>
+            <h1 class="about-title" id="aboutTitleText">Личен архив на архитектурни проекти.</h1>
         </div>
-        <div class="about-text">
-            <p data-key="about-desc1">Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.</p>
-            <p data-key="about-desc2">Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.</p>
+        <div class="about-text" id="aboutDescText">
+            <p>Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.</p>
+            <p>Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.</p>
         </div>
     </main>
 
@@ -129,7 +184,6 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
-        // Превключване на тъмния режим
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
@@ -139,28 +193,42 @@
             }
         }
 
-        // Мобилно меню
         function toggleMobileMenu() {
             const navLinks = document.getElementById('nav-links');
             navLinks.classList.toggle('mobile-open');
         }
 
-        // Динамична проверка на статуса на входа за навигацията
         function updateNavAuthStatus() {
             const container = document.getElementById('navAuthContainer');
             if (!container) return;
 
             const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('isUserLoggedIn') === 'true';
+            const isAdmin = localStorage.getItem('isAdmin') === 'true' || 
+                            localStorage.getItem('userRole') === 'admin' || 
+                            localStorage.getItem('role') === 'admin';
 
             if (isUserLoggedIn) {
-                container.innerHTML = `
-                    <a href="login.html" title="Профил" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(0,0,0,0.05); border-radius: 50%; color: inherit; text-decoration: none; transition: background 0.2s;">
-                        <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: currentColor;">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
-                        <span style="position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; background-color: #2ecc71; border: 2px solid var(--bg-color, #fff); border-radius: 50%;"></span>
+                let html = '';
+                
+                // Профилна икона и текст "Профил"
+                html += `
+                    <a href="login.html" class="user-profile-nav" title="Профил">
+                        <div class="user-avatar-badge">
+                            <svg width="20" height="20" viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                            <span class="online-status-dot"></span>
+                        </div>
+                        <span class="profile-label-text">Профил</span>
                     </a>
                 `;
+
+                // Админ бутон при нужда
+                if (isAdmin) {
+                    html += `<a href="admin.html" class="btn-admin-nav">Админ</a>`;
+                }
+
+                container.innerHTML = html;
             } else {
                 container.innerHTML = `
                     <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
@@ -178,7 +246,26 @@
             
             updateNavAuthStatus();
 
-            // Автоматично зареждане на контактите за футъра от админ панела
+            // Зареждане на редакцията "За нас" от админ панела
+            const savedAbout = localStorage.getItem('siteAbout');
+            if (savedAbout) {
+                try {
+                    const data = JSON.parse(savedAbout);
+                    if (data.title && document.getElementById('aboutTitleText')) {
+                        document.getElementById('aboutTitleText').textContent = data.title;
+                    }
+                    if (data.desc && document.getElementById('aboutDescText')) {
+                        const paragraphs = data.desc.split('\n').filter(p => p.trim() !== '');
+                        if (paragraphs.length > 0) {
+                            document.getElementById('aboutDescText').innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
+                        }
+                    }
+                } catch (e) {
+                    console.error('Грешка при зареждане на "За нас"', e);
+                }
+            }
+
+            // Зареждане на контактите във футъра от админ панела
             const savedContact = localStorage.getItem('siteContact');
             if (savedContact) {
                 try {
