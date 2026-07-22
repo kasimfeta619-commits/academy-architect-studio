@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle" data-key="nav-services">Services - Academy Architect Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo-area">
+            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
+            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
+        </a>
+        
+        <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+
+        <div id="nav-links">
+            <a href="index.html" data-key="nav-home">Home</a>
+            <a href="catalog.html" data-key="nav-catalog">Projects</a>
+            <a href="services.html" class="active" data-key="nav-services">Services</a>
+            <a href="about.html" data-key="nav-about">About Us</a>
+            <a href="planner.html" data-key="nav-planner">AI Planner</a>
+            <a href="estimator.html" data-key="nav-estimator">Estimator</a>
+            <a href="contact.html" data-key="nav-contact">Contacts</a>
+        </div>
+
+        <div class="header-actions">
+            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
+            <div class="lang-switcher">
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn active" id="btn-bg" onclick="setLanguage('bg')">BG</button>
+            </div>
+            <div id="navAuthContainer">
+                <a href="login.html" class="btn-login" data-key="nav-login">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Секция "Услуги" -->
+    <main class="services-page" style="padding: 60px 20px; max-width: 1200px; margin: 0 auto;">
+        
+        <div style="text-align: center; margin-bottom: 50px;">
+            <span style="font-size: 0.8rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; font-weight: bold;" data-key="services-eyebrow">НАШИТЕ УСЛУГИ</span>
+            <h1 style="font-size: 2.3rem; margin: 15px 0 15px 0; line-height: 1.2;" data-key="services-main-title">Цялостно проектиране за получаване на разрешение за строеж</h1>
+            <p style="color: #555; max-width: 800px; margin: 0 auto; line-height: 1.6;" data-key="services-main-desc">
+                Проектно студио с водещ екип предлага пълна гама от услуги – от първоначални консултации и предпроектни проучвания, през инвестиционно проектиране, до авторски надзор.
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 50px;">
+            
+            <div style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 35px; border-radius: 12px;">
+                <span style="font-size: 0.75rem; letter-spacing: 1px; color: #8c8275; font-weight: bold; text-transform: uppercase;" data-key="services-stage1-tag">ЕТАП 1</span>
+                <h3 style="font-size: 1.3rem; margin: 10px 0 15px 0;" data-key="services-stage1-title">Консултации и предпроектни проучвания</h3>
+                <p style="color: #666; font-size: 0.95rem; line-height: 1.6;" data-key="services-stage1-desc">
+                    Разглеждаме наличната документация и необходимостта от изходни данни. Коментираме фактора терен – наклон, географски посоки и разположение. Изследваме параметрите за застрояване – плътност, височина, максимално РЗП, озеленяване и отстояния от границите.
+                </p>
+            </div>
+
+            <div style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 35px; border-radius: 12px;">
+                <span style="font-size: 0.75rem; letter-spacing: 1px; color: #8c8275; font-weight: bold; text-transform: uppercase;" data-key="services-stage2-tag">ЕТАП 2</span>
+                <h3 style="font-size: 1.3rem; margin: 10px 0 15px 0;" data-key="services-stage2-title">Инвестиционно проектиране</h3>
+                <p style="color: #666; font-size: 0.95rem; line-height: 1.6;" data-key="services-stage2-desc">
+                    Започва задължително с виза за проектиране, издадена от Общината. След уточняване на идейния проект и 3D визиите спрямо вашите изисквания, се пристъпва директно към техническата фаза за проектиране по всички специалности.
+                </p>
+            </div>
+
+        </div>
+
+        <div style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 40px; border-radius: 12px; margin-bottom: 50px;">
+            <h2 style="font-size: 1.5rem; margin-bottom: 25px; border-bottom: 2px solid #e6dfd5; padding-bottom: 15px;" data-key="services-specs-title">Проекти по специалности</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                <div>
+                    <h4 style="color: #1a1a1a; margin-bottom: 15px; font-size: 1.1rem;" data-key="services-req-title">Задължителни проекти за разрешение за строеж (малки жилищни сгради):</h4>
+                    <ul style="color: #555; line-height: 1.8; padding-left: 20px; font-size: 0.95rem;">
+                        <li data-key="services-spec-1">Част „Архитектурна“</li>
+                        <li data-key="services-spec-2">Част „Конструктивна“ + Оценка за съответствие (технически контрол)</li>
+                        <li data-key="services-spec-3">Част „В и К“ – водопровод и канализация</li>
+                        <li data-key="services-spec-4">Част „Електро“</li>
+                        <li data-key="services-spec-5">Част „Енергийна ефективност“</li>
+                        <li data-key="services-spec-6">Част „Оценка за съответствие на част Енергийна ефективност“</li>
+                        <li data-key="services-spec-7">Част „Геодезическа“ (трасировъчен план и вертикална планировка)</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="color: #1a1a1a; margin-bottom: 15px; font-size: 1.1rem;" data-key="services-opt-title">Допълнителни проекти (при нужда / изискване):</h4>
+                    <ul style="color: #555; line-height: 1.8; padding-left: 20px; font-size: 0.95rem;">
+                        <li data-key="services-opt-1">Част „ОВИК“ – отопление, вентилация и климатизация</li>
+                        <li data-key="services-opt-2">Част „ПБЗ“ – План за безопасност и здраве</li>
+                        <li data-key="services-opt-3">Част „Паркоустройство и благоустройство“ (при многофамилни сгради)</li>
+                        <li data-key="services-opt-4">Част „Пожарна безопасност“ (за сгради над 200кв.м)</li>
+                        <li data-key="services-opt-5">Част „ПУСО“ – Отпадъци (за сгради над 300кв.м)</li>
+                        <li data-key="services-opt-6">Част „Технологична“ (при промишлени сгради и заведения)</li>
+                    </ul>
+                    <p style="margin-top: 15px; font-size: 0.85rem; color: #777; font-style: italic;" data-key="services-note">
+                        * Забележка: В проектите е включена задължителна сметна документация. В цената за проектиране са включени първите 6 задължителни части.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            
+            <div style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 35px; border-radius: 12px;">
+                <h3 style="font-size: 1.2rem; margin-bottom: 20px;" data-key="services-docs-title">Необходими документи за вкарване в Община</h3>
+                <ul style="color: #555; line-height: 1.8; padding-left: 20px; font-size: 0.95rem;">
+                    <li data-key="services-doc-1">Копие от нотариален акт</li>
+                    <li data-key="services-doc-2">Проектната документация</li>
+                    <li data-key="services-doc-3">Предварителни договори с Електро и ВиК дружествата</li>
+                    <li data-key="services-doc-4">Виза за проектиране – оригинал</li>
+                </ul>
+            </div>
+
+            <div style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 35px; border-radius: 12px;">
+                <h3 style="font-size: 1.2rem; margin-bottom: 20px;" data-key="services-extra-title">Допълнителни услуги</h3>
+                <ul style="color: #555; line-height: 1.8; padding-left: 20px; font-size: 0.95rem;">
+                    <li data-key="services-extra-1">Архитектурно заснемане на съществуващи сгради</li>
+                    <li data-key="services-extra-2">Проекти за надстройки</li>
+                    <li data-key="services-extra-3">Проекти за основен ремонт на покрив</li>
+                    <li data-key="services-extra-4">Реконструкции</li>
+                    <li data-key="services-extra-5">Преустройства</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-logo-area">
+            <div>
+                <div class="footer-brand">Academy Architect Studio</div>
+                <div class="footer-subtext" data-key="footer-subtitle">Design & Engineering</div>
+            </div>
+        </div>
+        
+        <div class="footer-col">
+            <h4 data-key="footer-contacts">Contacts</h4>
+            <p><span id="footAddress">Sofia, Bulgaria</span></p>
+            <p><a href="mailto:office@architect-studio.bg" id="footEmailLink"><span id="footEmail">office@architect-studio.bg</span></a></p>
+            <p><span id="footPhone">+359 88 123 4567</span></p>
+        </div>
+        
+        <div class="footer-col">
+            <h4 data-key="footer-links-title">Links</h4>
+            <p><a href="index.html" data-key="nav-home">Home</a></p>
+            <p><a href="catalog.html" data-key="nav-catalog">Projects</a></p>
+            <p><a href="services.html" data-key="nav-services">Services</a></p>
+            <p><a href="about.html" data-key="nav-about">About Us</a></p>
+        </div>
+        
+        <div class="footer-right">
+            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="translations.js"></script>
+    <script src="auth.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
+            authDomain: "architect-studio-1810c.firebaseapp.com",
+            projectId: "architect-studio-1810c",
+            storageBucket: "architect-studio-1810c.firebasestorage.app",
+            messagingSenderId: "1053914253758",
+            appId: "1:1053914253758:web:97d9bc28ac5465730311ef",
+            measurementId: "G-NN7GYSF55G"
+        };
+
+        let app;
+        try {
+            app = initializeApp(firebaseConfig);
+        } catch (e) {}
+
+        window.toggleDarkMode = function() {
+            const isDark = document.documentElement.classList.toggle('dark-mode');
+            document.body.classList.toggle('dark-mode', isDark);
+            localStorage.setItem('siteTheme', isDark ? 'dark' : 'light');
+        };
+
+        window.toggleMobileMenu = function() {
+            document.getElementById('nav-links').classList.toggle('mobile-open');
+        };
+
+        document.addEventListener("DOMContentLoaded", async function() {
+            if (localStorage.getItem('siteTheme') === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+                document.body.classList.add('dark-mode');
+            }
+
+            if (typeof initLanguage === 'function') {
+                initLanguage();
+            } else if (typeof setLanguage === 'function') {
+                setLanguage(localStorage.getItem('siteLang') || 'bg');
+            }
+
+            try {
+                const dbInstance = window.db || getFirestore(app);
+                const contactSnap = await getDoc(doc(dbInstance, "siteSettings", "contact"));
+                if (contactSnap.exists()) {
+                    const data = contactSnap.data();
+                    if (data.address && document.getElementById('footAddress')) document.getElementById('footAddress').textContent = data.address;
+                    if (data.email) {
+                        if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
+                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
+                    }
+                    if (data.phone && document.getElementById('footPhone')) document.getElementById('footPhone').textContent = data.phone;
+                }
+            } catch (e) {
+                console.error('Грешка при зареждане на контактите', e);
+            }
+        });
+    </script>
+</body>
+</html>

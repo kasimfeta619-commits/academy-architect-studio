@@ -29,6 +29,7 @@
         <div id="nav-links">
             <a href="index.html" data-key="nav-home">Home</a>
             <a href="catalog.html" data-key="nav-catalog">Projects</a>
+            <a href="services.html" data-key="nav-services">Services</a>
             <a href="about.html" class="active" data-key="nav-about">About Us</a>
             <a href="planner.html" data-key="nav-planner">AI Planner</a>
             <a href="estimator.html" data-key="nav-estimator">Estimator</a>
@@ -110,6 +111,7 @@
             <h4 data-key="footer-links-title">Links</h4>
             <p><a href="index.html" data-key="nav-home">Home</a></p>
             <p><a href="catalog.html" data-key="nav-catalog">Projects</a></p>
+            <p><a href="services.html" data-key="nav-services">Services</a></p>
             <p><a href="about.html" data-key="nav-about">About Us</a></p>
         </div>
         
@@ -121,9 +123,29 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script src="auth.js"></script>
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
+            authDomain: "architect-studio-1810c.firebaseapp.com",
+            projectId: "architect-studio-1810c",
+            storageBucket: "architect-studio-1810c.firebasestorage.app",
+            messagingSenderId: "1053914253758",
+            appId: "1:1053914253758:web:97d9bc28ac5465730311ef",
+            measurementId: "G-NN7GYSF55G"
+        };
+
+        let app;
+        try {
+            app = initializeApp(firebaseConfig);
+        } catch (e) {
+            // Вече е инициализирано
+        }
+
         // Функция за превключване на тъмния режим
-        function toggleDarkMode() {
+        window.toggleDarkMode = function() {
             const isDark = document.documentElement.classList.toggle('dark-mode');
             document.body.classList.toggle('dark-mode', isDark);
             
@@ -132,15 +154,15 @@
             } else {
                 localStorage.setItem('siteTheme', 'light');
             }
-        }
+        };
 
         // Функция за мобилното меню
-        function toggleMobileMenu() {
+        window.toggleMobileMenu = function() {
             const navLinks = document.getElementById('nav-links');
             navLinks.classList.toggle('mobile-open');
-        }
+        };
 
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", async function() {
             const savedTheme = localStorage.getItem('siteTheme');
             if (savedTheme === 'dark') {
                 document.documentElement.classList.add('dark-mode');
@@ -154,11 +176,14 @@
                 setLanguage(savedLang);
             }
 
-            // Зареждане на контактите за футъра
-            const savedContact = localStorage.getItem('siteContact');
-            if (savedContact) {
-                try {
-                    const data = JSON.parse(savedContact);
+            // Зареждане на контактите за футъра от Firebase Firestore
+            try {
+                const dbInstance = window.db || getFirestore(app);
+                const contactDocRef = doc(dbInstance, "siteSettings", "contact");
+                const contactSnap = await getDoc(contactDocRef);
+
+                if (contactSnap.exists()) {
+                    const data = contactSnap.data();
                     if (data.address && document.getElementById('footAddress')) {
                         document.getElementById('footAddress').textContent = data.address;
                     }
@@ -169,9 +194,9 @@
                     if (data.phone && document.getElementById('footPhone')) {
                         document.getElementById('footPhone').textContent = data.phone;
                     }
-                } catch (e) {
-                    console.error('Грешка при зареждане на контактите', e);
                 }
+            } catch (e) {
+                console.error('Грешка при зареждане на контактите от Firebase', e);
             }
         });
     </script>
