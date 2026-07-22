@@ -5,14 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Детайли за проект | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
+
     <style>
-        body { background-color: #fbf9f4; color: #1a1a1a; font-family: sans-serif; margin: 0; }
+        body { background-color: #fbf9f4; color: #1a1a1a; font-family: sans-serif; margin: 0; transition: background-color 0.3s, color 0.3s; }
         .project-detail-container { padding: 40px 6%; min-height: 80vh; max-width: 1400px; margin: 0 auto; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #8c8275; text-decoration: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         .back-link:hover { color: #1a1a1a; }
         
         .project-header { margin-bottom: 25px; }
-        .project-title { font-size: 2.3rem; font-weight: 400; color: #1a1a1a; margin: 5px 0 0 0; }
+        .project-title { font-size: 2.3rem; font-weight: 400; color: inherit; margin: 5px 0 0 0; }
         .project-style-tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #8c8275; font-weight: 700; }
 
         /* Триколонен грид за горната част */
@@ -24,7 +34,7 @@
             margin-bottom: 30px; 
         }
 
-        .hero-image-box { width: 100%; height: 320px; border: 1px solid #eadecc; overflow: hidden; background: #fff; }
+        .hero-image-box { width: 100%; height: 340px; border: 1px solid #eadecc; overflow: hidden; background: #fff; }
         .hero-image-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         .description-card { background: #fff; padding: 25px; border: 1px solid #eadecc; height: 100%; box-sizing: border-box; }
@@ -33,22 +43,31 @@
         
         .spec-row { display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid #eadecc; font-size: 0.9rem; }
         .spec-label { color: #8c8275; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; }
-        .spec-value { color: #1a1a1a; font-weight: 600; }
-        .project-price-box { font-size: 1.5rem; font-weight: 600; color: #1a1a1a; margin-top: 5px; }
+        .spec-value { color: inherit; font-weight: 600; }
+        .project-price-box { font-size: 1.5rem; font-weight: 600; color: inherit; margin-top: 5px; }
 
-        /* Техническа документация – подравнена точно с горната ширина */
+        /* Техническа документация */
         .technical-drawings-section { margin-bottom: 30px; background: #f4eee5; padding: 30px; border: 1px solid #eadecc; }
-        .tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 15px; }
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 15px; }
         .tech-card img { width: 100%; height: 260px; object-fit: contain; background: #fff; border: 1px solid #eadecc; display: block; }
         
-        /* Галерия – точно 3 колони, подравнена с горния блок */
+        /* Галерия */
         .gallery-section { margin-bottom: 30px; background: #f4eee5; padding: 30px; border: 1px solid #eadecc; }
         .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 15px; }
         .gallery-grid img { width: 100%; height: 220px; object-fit: cover; border: 1px solid #eadecc; display: block; }
 
+        /* Dark Mode Overrides */
+        body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
+        body.dark-mode .description-card, 
+        body.dark-mode .hero-image-box, 
+        body.dark-mode .tech-card img { background: #1e1e1e !important; border-color: #2c2c2c !important; }
+        body.dark-mode .project-sidebar, 
+        body.dark-mode .technical-drawings-section, 
+        body.dark-mode .gallery-section { background: #1a1a1a !important; border-color: #2c2c2c !important; }
+        body.dark-mode .spec-row { border-bottom-color: #2c2c2c !important; }
+
         @media (max-width: 1100px) {
             .top-section-grid { grid-template-columns: 1fr; }
-            .tech-grid { grid-template-columns: 1fr; }
             .gallery-grid { grid-template-columns: 1fr; }
             .hero-image-box { height: 260px; }
         }
@@ -59,14 +78,14 @@
     <header class="navbar">
         <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
             <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" style="height: 38px; width: auto; display: block;" onerror="this.style.display='none'">
-            <span style="font-weight: 500; color: #1a1a1a; font-size: 1.1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
+            <span style="font-weight: 500; color: inherit; font-size: 1.1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
         </a>
         <nav id="nav-links">
             <a href="index.html">Начало</a>
-            <a href="catalog.html">Каталог</a>
+            <a href="projects.html">Проекти</a>
             <a href="about.html">За нас</a>
             <a href="planner.html">ИИ Планер</a>
-            <a href="contact.html">Контакт</a>
+            <a href="contact.html">Контакти</a>
         </nav>
         <div class="header-actions">
             <a href="login.html" class="btn-login">Вход</a>
@@ -74,20 +93,22 @@
     </header>
 
     <main class="project-detail-container">
-        <a href="catalog.html" class="back-link">← Обратно към каталога</a>
-        <div id="projectDetailsArea"></div>
+        <a href="projects.html" class="back-link">← Обратно към проектите</a>
+        <div id="projectDetailsArea">
+            <p style="color: #8c8275;">Зареждане на детайлите за проекта...</p>
+        </div>
     </main>
 
     <footer class="main-footer">
         <div class="footer-logo-area" style="display: flex; align-items: center; gap: 12px;">
             <img src="assets/main-graphic.png" alt="Logo" class="footer-logo" style="height: 32px; width: auto;" onerror="this.style.display='none'">
             <div>
-                <span class="footer-brand" style="font-weight: 600; color: #1a1a1a; font-size: 1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
+                <span class="footer-brand" style="font-weight: 600; color: inherit; font-size: 1rem;">Academy Architect <span style="font-weight: 700; color: #8c8275;">Studio</span></span>
                 <p class="footer-subtext" style="font-size: 0.65rem; letter-spacing: 1px; color: #8c8275; margin-top: 2px;">АРХИТЕКТУРНО СТУДИО</p>
             </div>
         </div>
         <div class="footer-col">
-            <h4 style="font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 10px; color: #1a1a1a;">STUDIO</h4>
+            <h4 style="font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 10px; color: inherit;">STUDIO</h4>
             <p style="font-size: 0.85rem; color: #555; margin: 4px 0;">Sofia · Plovdiv · Varna</p>
             <p style="font-size: 0.85rem; margin: 4px 0;"><a href="mailto:info@architectstudio.com" style="color: #555; text-decoration: none;">info@architectstudio.com</a></p>
         </div>
@@ -97,82 +118,119 @@
         </div>
     </footer>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const projectIndex = urlParams.get('index');
-        const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-        const container = document.getElementById('projectDetailsArea');
+    <!-- СВЪРЗВАНЕ С FIREBASE -->
+    <script type="module">
+        import { db, doc, getDoc } from './firebase-config.js';
 
-        if (projectIndex !== null && projects[projectIndex]) {
-            const p = projects[projectIndex];
-            const mainImgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+        async function loadProjectDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id') || urlParams.get('index'); 
+            const container = document.getElementById('projectDetailsArea');
 
-            let techSectionHTML = '';
-            if (p.planImage || p.sectionImage) {
-                techSectionHTML = `
-                    <div class="technical-drawings-section">
-                        <span class="spec-label">Техническа документация</span>
-                        <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Проект и Разрез</h3>
-                        <div class="tech-grid">
-                            ${p.planImage ? `<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Разпределение / План</span><img src="${p.planImage}" alt="План"></div>` : ''}
-                            ${p.sectionImage ? `<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Разрез</span><img src="${p.sectionImage}" alt="Разрез"></div>` : ''}
-                        </div>
-                    </div>
-                `;
+            if (!projectId) {
+                container.innerHTML = `<h2>Проектът не е намерен.</h2><p><a href="projects.html" class="back-link">Върнете се към проектите</a></p>`;
+                return;
             }
 
-            let galleryHTML = '';
-            if (p.gallery && p.gallery.length > 0) {
-                galleryHTML = `
-                    <div class="gallery-section">
-                        <span class="spec-label">Галерия</span>
-                        <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Визуализации</h3>
-                        <div class="gallery-grid">
-                            ${p.gallery.map(img => `<img src="${img}" alt="Визуализация">`).join('')}
+            try {
+                const docRef = doc(db, "projects", projectId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const p = docSnap.data();
+                    const mainImgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+
+                    // Подготовка на техническите чертежи (планове, фасади, разрези)
+                    let techCards = [];
+                    if (p.floorPlans && p.floorPlans.length > 0) {
+                        p.floorPlans.forEach((plan, i) => {
+                            techCards.push(`<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Разпределение / План ${p.floorPlans.length > 1 ? (i + 1) : ''}</span><img src="${plan}" alt="План"></div>`);
+                        });
+                    }
+                    if (p.facadeImages && p.facadeImages.length > 0) {
+                        p.facadeImages.forEach((facade, i) => {
+                            techCards.push(`<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Фасада ${p.facadeImages.length > 1 ? (i + 1) : ''}</span><img src="${facade}" alt="Фасада"></div>`);
+                        });
+                    }
+                    if (p.sectionImage) {
+                        techCards.push(`<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Разрез</span><img src="${p.sectionImage}" alt="Разрез"></div>`);
+                    }
+
+                    let techSectionHTML = '';
+                    if (techCards.length > 0) {
+                        techSectionHTML = `
+                            <div class="technical-drawings-section">
+                                <span class="spec-label">Техническа документация</span>
+                                <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Чертежи и Разрези</h3>
+                                <div class="tech-grid">
+                                    ${techCards.join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // Подготовка на галерията
+                    let galleryHTML = '';
+                    if (p.gallery && p.gallery.length > 0) {
+                        galleryHTML = `
+                            <div class="gallery-section">
+                                <span class="spec-label">Галерия</span>
+                                <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Визуализации</h3>
+                                <div class="gallery-grid">
+                                    ${p.gallery.map(img => `<img src="${img}" alt="Визуализация">`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // Рендериране на всичко
+                    container.innerHTML = `
+                        <div class="project-header">
+                            <span class="project-style-tag">${p.style || 'Архитектурен проект'}</span>
+                            <h1 class="project-title">${p.title}</h1>
                         </div>
-                    </div>
-                `;
+
+                        <div class="top-section-grid">
+                            <div class="hero-image-box">
+                                <img src="${mainImgSrc}" alt="${p.title}">
+                            </div>
+
+                            <div class="description-card">
+                                <span class="spec-label" style="display: block; margin-bottom: 10px;">За проекта</span>
+                                <p style="font-size: 0.95rem; line-height: 1.6; color: inherit; margin: 0;">${p.desc || 'Няма добавено описание за този проект.'}</p>
+                            </div>
+
+                            <div class="project-sidebar">
+                                <div>
+                                    <span class="spec-label">Ориентировъчна цена</span>
+                                    <div class="project-price-box">${p.price ? p.price + ' лв.' : 'По запитване'}</div>
+                                </div>
+
+                                <div style="margin-top: 5px;">
+                                    <div class="spec-row"><span class="spec-label">Площ</span><span class="spec-value">${p.area ? p.area + ' кв.м' : '-'}</span></div>
+                                    <div class="spec-row"><span class="spec-label">Етажи</span><span class="spec-value">${p.floors || '-'}</span></div>
+                                    <div class="spec-row"><span class="spec-label">Спални</span><span class="spec-value">${p.beds || '-'}</span></div>
+                                    <div class="spec-row"><span class="spec-label">Бани</span><span class="spec-value">${p.baths || '-'}</span></div>
+                                    <div class="spec-row"><span class="spec-label">Конструкция</span><span class="spec-value">${p.material || '-'}</span></div>
+                                    <div class="spec-row"><span class="spec-label">Стил</span><span class="spec-value">${p.style || '-'}</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${techSectionHTML}
+                        ${galleryHTML}
+                    `;
+
+                } else {
+                    container.innerHTML = `<h2>Проектът не е намерен или е бил изтрит.</h2><p><a href="projects.html" class="back-link">Върнете се към проектите</a></p>`;
+                }
+            } catch (err) {
+                console.error("Грешка при зареждане на проекта:", err);
+                container.innerHTML = `<h2>Грешка при зареждане на проекта.</h2><p><a href="projects.html" class="back-link">Върнете се към проектите</a></p>`;
             }
-
-            container.innerHTML = `
-                <div class="project-header">
-                    <span class="project-style-tag">${p.style || 'Архитектурен проект'}</span>
-                    <h1 class="project-title">${p.title}</h1>
-                </div>
-
-                <div class="top-section-grid">
-                    <div class="hero-image-box">
-                        <img src="${mainImgSrc}" alt="${p.title}">
-                    </div>
-
-                    <div class="description-card">
-                        <span class="spec-label" style="display: block; margin-bottom: 10px;">За проекта</span>
-                        <p style="font-size: 0.95rem; line-height: 1.6; color: #444; margin: 0;">${p.desc || 'Няма добавено описание за този проект.'}</p>
-                    </div>
-
-                    <div class="project-sidebar">
-                        <div>
-                            <span class="spec-label">Ориентировъчна цена</span>
-                            <div class="project-price-box">${p.price ? p.price + ' €' : 'По запитване'}</div>
-                        </div>
-
-                        <div style="margin-top: 5px;">
-                            <div class="spec-row"><span class="spec-label">Площ</span><span class="spec-value">${p.area ? p.area + ' кв.м' : '-'}</span></div>
-                            <div class="spec-row"><span class="spec-label">Етажи</span><span class="spec-value">${p.floors || '-'}</span></div>
-                            <div class="spec-row"><span class="spec-label">Спални</span><span class="spec-value">${p.beds || '-'}</span></div>
-                            <div class="spec-row"><span class="spec-label">Бани</span><span class="spec-value">${p.baths || '-'}</span></div>
-                            <div class="spec-row"><span class="spec-label">Конструкция</span><span class="spec-value">${p.material || '-'}</span></div>
-                            <div class="spec-row"><span class="spec-label">Стил</span><span class="spec-value">${p.style || '-'}</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                ${techSectionHTML}
-                ${galleryHTML}
-            `;
-        } else {
-            container.innerHTML = `<h2>Проектът не е намерен или е бил изтрит.</h2><p><a href="catalog.html">Върнете се към каталога</a></p>`;
         }
+
+        window.addEventListener('DOMContentLoaded', loadProjectDetails);
     </script>
 </body>
 </html>
