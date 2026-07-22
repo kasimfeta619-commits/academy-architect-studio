@@ -1,18 +1,50 @@
 const translations = {
     "bg": {
-        // Съществуващи преводи...
+        // Навигация и общи
+        "nav-studio": "Academy Architect Studio",
         "nav-home": "Начало",
         "nav-catalog": "Проекти",
         "nav-about": "За нас",
         "nav-planner": "AI Планиране",
-        "nav-estimator": "Клкулатор",
+        "nav-estimator": "Калкулатор",
         "nav-contact": "Контакти",
         "nav-login": "Вход",
+        
+        // Футър
+        "footer-subtitle": "Дизайн и инженеринг",
+        "footer-contacts": "Контакти",
+        "footer-links-title": "Линкове",
+        "footer-rights": "&copy; 2026 Academy Architect Studio.<br>Всички права запазени.",
+
+        // Каталог
         "catalog-title": "Нашите проекти",
         "catalog-desc": "Разгледайте пълното ни портфолио от архитектурни проекти и иновативни решения.",
         "no-projects": "Все още няма добавени проекти.",
-        
-        // Новите административни ключове за 'bg':
+
+        // Начална страница (Hero & Quote)
+        "hero-eyebrow": "АРХИТЕКТУРНО СТУДИО",
+        "hero-title": "Проектираме бъдещето с внимание към детайла",
+        "hero-desc": "Създаваме минималистични и функционални пространства, съчетавайки модерни технологии с изчистена архитектура.",
+        "hero-btn-browse": "Разгледай проектите",
+        "hero-btn-contact": "Свържете се с нас",
+        "featured-title": "Избрани проекти",
+        "quote-text": "\"Добрата архитектура не просто заема пространство, тя му дава смисъл.\"",
+        "quote-sub": "Вярваме, че всеки детайл е от значение при изграждането на перфектния дом или работно пространство, създавайки среда, която вдъхновява всеки ден.",
+
+        // Страница Контакти и Форма
+        "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
+        "contact-title": "Обсъдете вашия проект или запазете среща.",
+        "label-address": "Адрес:",
+        "label-email": "Имейл:",
+        "label-phone": "Телефон:",
+        "form-type-label": "Тип запитване",
+        "form-name-label": "Вашето име",
+        "form-email-label": "Вашият имейл",
+        "form-phone-label": "Телефонен номер",
+        "form-msg-label": "Съобщение / Детайли",
+        "form-btn-submit": "Изпрати запитване",
+
+        // Административен панел
         "admin-page-title": "Админ панел | Academy Architect Studio",
         "admin-logout": "🚪 Изход",
         "admin-back-home": "← Назад към началната страница",
@@ -56,7 +88,8 @@ const translations = {
         "admin-existing-bookings": "Запазени консултации"
     },
     "en": {
-        // Съществуващи преводи...
+        // Navigation & General
+        "nav-studio": "Academy Architect Studio",
         "nav-home": "Home",
         "nav-catalog": "Projects",
         "nav-about": "About Us",
@@ -64,11 +97,42 @@ const translations = {
         "nav-estimator": "Estimator",
         "nav-contact": "Contacts",
         "nav-login": "Login",
+        
+        // Footer
+        "footer-subtitle": "Design & Engineering",
+        "footer-contacts": "Contacts",
+        "footer-links-title": "Links",
+        "footer-rights": "&copy; 2026 Academy Architect Studio.<br>All rights reserved.",
+
+        // Catalog
         "catalog-title": "Our Projects",
         "catalog-desc": "Explore our full portfolio of architectural designs and innovative solutions.",
         "no-projects": "No projects added yet.",
 
-        // Новите административни ключове за 'en':
+        // Home Page (Hero & Quote)
+        "hero-eyebrow": "ARCHITECTURAL STUDIO",
+        "hero-title": "Designing the future with attention to detail",
+        "hero-desc": "We create minimalist and functional spaces, combining modern technologies with clean architecture.",
+        "hero-btn-browse": "Browse Projects",
+        "hero-btn-contact": "Contact Us",
+        "featured-title": "Featured Projects",
+        "quote-text": "\"Good architecture doesn't just occupy space, it gives it meaning.\"",
+        "quote-sub": "We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.",
+
+        // Contact Page & Form
+        "contact-eyebrow": "CONTACT & BOOKING",
+        "contact-title": "Discuss your project or book a meeting.",
+        "label-address": "Address:",
+        "label-email": "Email:",
+        "label-phone": "Phone:",
+        "form-type-label": "Inquiry Type",
+        "form-name-label": "Your Name",
+        "form-email-label": "Your Email",
+        "form-phone-label": "Phone Number",
+        "form-msg-label": "Message / Details",
+        "form-btn-submit": "Send Inquiry",
+
+        // Admin Panel
         "admin-page-title": "Admin Panel | Academy Architect Studio",
         "admin-logout": "🚪 Logout",
         "admin-back-home": "← Back to Home",
@@ -113,17 +177,15 @@ const translations = {
     }
 };
 
-// Функция за смяна на езика (ако липсва във вашия файл)
 function setLanguage(lang) {
     localStorage.setItem('siteLang', lang);
     document.querySelectorAll('[data-key]').forEach(element => {
         const key = element.getAttribute('data-key');
         if (translations[lang] && translations[lang][key]) {
-            element.textContent = translations[lang][key];
+            element.innerHTML = translations[lang][key];
         }
     });
 
-    // Актуализиране на активните бутони за език
     document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
     if (lang === 'en' && document.getElementById('btn-en')) document.getElementById('btn-en').classList.add('active');
     if (lang === 'bg' && document.getElementById('btn-bg')) document.getElementById('btn-bg').classList.add('active');
