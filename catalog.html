@@ -259,7 +259,7 @@
                 <p data-key="catalog-main-desc">Пълно инженерно проектиране, архитектура, интериор и строителни решения от А до Я.</p>
             </div>
             <div class="search-box">
-                <input type="text" id="projectSearchInput" placeholder="Търсене по номер или име..." oninput="filterProjects()">
+                <input type="text" id="projectSearchInput" data-placeholder-key="search-placeholder" placeholder="Търсене по номер или име..." oninput="filterProjects()">
             </div>
         </div>
 
@@ -421,7 +421,8 @@
 
         function renderProjectsList(projectsList) {
             const container = document.getElementById('catalogProjectsContainer');
-            const areaUnit = 'кв.м';
+            const currentLang = localStorage.getItem('siteLang') || 'bg';
+            const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
 
             if (!container) return;
 
@@ -440,7 +441,7 @@
                             <div class="project-info">
                                 <span class="p-title">${p.title}</span>
                                 <div class="p-meta-row">
-                                    <span>${p.style || p.category || 'Архитектурен проект'}</span>
+                                    <span>${p.style || p.category || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
                                     <span style="font-weight: 500; color: var(--text-color, #111);">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
                                 </div>
                             </div>
@@ -448,7 +449,8 @@
                     `;
                 }).join('');
             } else {
-                container.innerHTML = `<p style="color: #888; font-size: 0.95rem; grid-column: 1 / -1; padding: 20px 0;">Няма намерени обекти, отговарящи на зададените критерии.</p>`;
+                const noMsg = currentLang === 'en' ? 'No matching projects found.' : 'Няма намерени обекти, отговарящи на зададените критерии.';
+                container.innerHTML = `<p style="color: #888; font-size: 0.95rem; grid-column: 1 / -1; padding: 20px 0;">${noMsg}</p>`;
             }
         }
 
@@ -485,7 +487,9 @@
 
                 } catch (error) {
                     console.error("Грешка при зареждане:", error);
-                    container.innerHTML = `<p style="color: #ff6b6b; font-size: 0.95rem; grid-column: 1 / -1;">Грешка при зареждане на каталога.</p>`;
+                    const currentLang = localStorage.getItem('siteLang') || 'bg';
+                    const errText = currentLang === 'en' ? 'Error loading catalog.' : 'Грешка при зареждане на каталога.';
+                    container.innerHTML = `<p style="color: #ff6b6b; font-size: 0.95rem; grid-column: 1 / -1;">${errText}</p>`;
                 }
             }
 

@@ -21,6 +21,28 @@ const translations = {
         "catalog-title": "Нашите проекти",
         "catalog-desc": "Разгледайте пълното ни портфолио от архитектурни проекти и иновативни решения.",
         "no-projects": "Все още няма добавени проекти.",
+        "page-title-catalog": "Проекти - Academy Architect Studio",
+        "catalog-main-title": "Проекти и Услуги",
+        "catalog-main-desc": "Пълно инженерно проектиране, архитектура, интериор и строителни решения от А до Я.",
+        "search-placeholder": "Търсене по номер или име...",
+        
+        // Филтри в каталог
+        "filter-cat-label": "Категория:",
+        "cat-all": "Всички",
+        "cat-houses": "🏡 Къщи",
+        "cat-interior": "🛋️ Интериорен дизайн",
+        "cat-public": "🏢 Обществени & Промишлени",
+        "cat-reconstruction": "🛠️ Реконструкции & Надстройки",
+        "cat-engineering": "📐 Заснемане & КПИИ",
+        "filter-sub-label": "Материал / Тип:",
+        "sub-all": "Всички видове",
+        "sub-wood": "Дървени",
+        "sub-stone": "Каменни",
+        "sub-concrete": "Бетонни / Масивни",
+        "sub-prefab": "Сглобяеми",
+        "sub-modern": "Модерни",
+        "sub-bulgarian": "Български стил",
+        "reset-filters": "Изчисти филтрите",
 
         // Начална страница (Hero & Quote)
         "hero-eyebrow": "АРХИТЕКТУРНО СТУДИО",
@@ -117,7 +139,6 @@ const translations = {
         "services-stage2-title": "Инвестиционно проектиране",
         "services-stage2-desc": "Започва задължително с виза за проектиране, издадена от Общината. След уточняване на идейния проект и 3D визиите спрямо вашите изисквания, се пристъпва директно към техническата фаза за проектиране по всички специалности.",
         
-        // Новодобавени ключове за "Необходими документи"
         "services-req-docs-title": "Необходими документи за започване на проектирането",
         "services-req-concept-title": "/ За започване на Идеен проект /",
         "services-doc-concept-1-title": "Нотариален акт:",
@@ -184,6 +205,28 @@ const translations = {
         "catalog-title": "Our Projects",
         "catalog-desc": "Explore our full portfolio of architectural designs and innovative solutions.",
         "no-projects": "No projects added yet.",
+        "page-title-catalog": "Projects - Academy Architect Studio",
+        "catalog-main-title": "Projects & Services",
+        "catalog-main-desc": "Complete engineering design, architecture, interior, and construction solutions from A to Z.",
+        "search-placeholder": "Search by number or name...",
+        
+        // Филтри в каталог (English)
+        "filter-cat-label": "Category:",
+        "cat-all": "All",
+        "cat-houses": "🏡 Houses",
+        "cat-interior": "🛋️ Interior Design",
+        "cat-public": "🏢 Public & Industrial",
+        "cat-reconstruction": "🛠️ Reconstructions & Extensions",
+        "cat-engineering": "📐 Survey & Engineering",
+        "filter-sub-label": "Material / Type:",
+        "sub-all": "All types",
+        "sub-wood": "Wood",
+        "sub-stone": "Stone",
+        "sub-concrete": "Concrete / Solid",
+        "sub-prefab": "Prefabricated",
+        "sub-modern": "Modern",
+        "sub-bulgarian": "Bulgarian Style",
+        "reset-filters": "Reset Filters",
 
         // Home Page (Hero & Quote)
         "hero-eyebrow": "ARCHITECTURAL STUDIO",
@@ -280,7 +323,6 @@ const translations = {
         "services-stage2-title": "Investment Design",
         "services-stage2-desc": "Starts with a design visa issued by the Municipality. After refining the conceptual design and 3D visualizations based on your preferences, we proceed directly to the technical design phase across all engineering disciplines.",
         
-        // Новодобавени ключове на английски за "Необходими документи"
         "services-req-docs-title": "Required Documents to Start Design",
         "services-req-concept-title": "/ To Start a Conceptual Design /",
         "services-doc-concept-1-title": "Title Deed:",
@@ -329,6 +371,7 @@ const translations = {
 
 function setLanguage(lang) {
     localStorage.setItem('siteLang', lang);
+    
     document.querySelectorAll('[data-key]').forEach(element => {
         const key = element.getAttribute('data-key');
         if (translations[lang] && translations[lang][key]) {
@@ -336,9 +379,20 @@ function setLanguage(lang) {
         }
     });
 
+    document.querySelectorAll('[data-placeholder-key]').forEach(element => {
+        const key = element.getAttribute('data-placeholder-key');
+        if (translations[lang] && translations[lang][key]) {
+            element.placeholder = translations[lang][key];
+        }
+    });
+
     document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
     if (lang === 'en' && document.getElementById('btn-en')) document.getElementById('btn-en').classList.add('active');
     if (lang === 'bg' && document.getElementById('btn-bg')) document.getElementById('btn-bg').classList.add('active');
+
+    if (typeof filterProjects === 'function') {
+        filterProjects();
+    }
 }
 
 function initLanguage() {
