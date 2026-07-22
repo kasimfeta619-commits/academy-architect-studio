@@ -1,149 +1,85 @@
-const translations = {
-    bg: {
-        // Навигация
-        "nav-studio": "Academy Architect Studio",
-        "nav-home": "Начало",
-        "nav-catalog": "Проекти",
-        "nav-about": "За нас",
-        "nav-planner": "ИИ Планер",
-        "nav-estimator": "Калкулатор",
-        "nav-contact": "Контакти",
-        "nav-login": "Вход",
-        
-        // Начална страница (index.html)
-        "hero-eyebrow": "Архитектурно студио",
-        "hero-title": "Проектираме бъдещето с внимание към детайла",
-        "hero-desc": "Създаваме минималистични и функционални пространства, съчетаващи съвременни технологии с изчистена архитектура.",
-        "btn-browse": "Разгледайте проектите",
-        "btn-contact": "Свържете се с нас",
-        "badge-title": "ПОСЛЕДЕН",
-        "badge-sub": "Проект „Минимализъм“",
-        "section-featured": "Избрани проекти",
-        "quote-text": "„Добрата архитектура не просто заема пространство, тя му дава смисъл.“",
-        "quote-sub": "Вярваме, че всеки детайл има значение при изграждането на перфектния дом или работно пространство, създавайки среда, която вдъхновява всеки ден.",
-        "footer-subtitle": "Дизайн и инженеринг",
-        "footer-contacts": "Контакти",
-        "footer-address": "София, България",
-        "footer-links-title": "Линкове",
-        "footer-rights": "&copy; 2026 Academy Architect Studio.<br>Всички права запазени.",
-        "no-projects": "Все още няма добавени проекти.",
+// В секцията за 'bg' добавете (ако липсват):
+"admin-page-title": "Админ панел | Academy Architect Studio",
+"admin-logout": "🚪 Изход",
+"admin-back-home": "← Назад към началната страница",
+"admin-eyebrow": "УПРАВЛЕНИЕ НА САЙТА",
+"admin-title": "Админ Панел",
+"admin-tab-about": "📄 За нас",
+"admin-tab-contact": "📞 Контакти",
+"admin-tab-new": "➕ Нов проект",
+"admin-tab-projects": "🗂️ Проекти",
+"admin-tab-bookings": "📅 Резервации",
+"admin-about-heading": "Редакция на страница \"За нас\"",
+"admin-label-title": "Заглавие",
+"admin-label-desc": "Основен текст / Описание",
+"admin-btn-save-about": "Запази промените \"За нас\"",
+"admin-contact-heading": "Редакция на страница \"Контакти\"",
+"admin-label-address": "Адрес на студиото",
+"admin-label-email": "Имейл адрес",
+"admin-label-phone": "Телефонен номер",
+"admin-btn-save-contact": "Запази промените \"Контакти\"",
+"admin-upload-heading": "Качване на нов проект",
+"admin-proj-title": "Име на проекта *",
+"admin-proj-maincat": "Главна категория *",
+"admin-proj-subcat": "Подкатегория (Тип разработка) *",
+"admin-proj-desc": "Описание",
+"admin-proj-area": "Площ (м²)",
+"admin-proj-floors": "Етажи",
+"admin-proj-beds": "Спални",
+"admin-proj-baths": "Бани",
+"admin-proj-material": "Материал / Конструкция",
+"admin-proj-style": "Стил",
+"admin-proj-price": "Цена (лв.)",
+"admin-proj-mainimg": "Главна снимка",
+"admin-proj-plans": "Разпределения / Планове (множество етажи)",
+"admin-proj-facades": "Фасади (може да изберете няколко)",
+"admin-proj-section": "Разрез",
+"admin-proj-gallery": "Допълнителни визуализации",
+"admin-proj-fav": "Фаворитен проект (на началната страница)",
+"admin-btn-save-proj": "Запази проекта в каталога",
+"admin-btn-cancel": "Отказ",
+"admin-existing-projects": "Съществуващи проекти",
+"admin-existing-bookings": "Запазени консултации"
 
-        // За нас (about.html)
-        "about-eyebrow": "ЗА СТУДИОТО",
-        "about-title": "Личен архив на архитектурни проекти.",
-        "about-desc-1": "Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.",
-        "about-desc-2": "Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.",
-        // Дублираме ги за сигурност, за да работят и ако в HTML са записани като about-text-1/2:
-        "about-text-1": "Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.",
-        "about-text-2": "Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.",
-        
-        "about-badge-subtitle": "ПОСЛЕДЕН",
-        "about-badge-title": "Проект „Минимализъм“",
-
-        "value-1-title": "Иновативен дизайн",
-        "value-1-desc": "Съчетаваме съвременни тенденции в архитектурата с модерен софтуер и AI планиране за максимална прецизност.",
-        "value-2-title": "Устойчивост",
-        "value-2-desc": "Проектираме с грижа за околната среда, използвайки енергоефективни решения и дълготрайни материали.",
-        "value-3-title": "Индивидуален подход",
-        "value-3-desc": "Всяко пространство се ражда от диалога с нашите клиенти, за да отговаря точно на техния начин на живот.",
-
-        // Контакти и Резервации (contact.html)
-        "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
-        "contact-title": "Обсъдете вашия проект или запазете среща.",
-        "contact-type-label": "Тип запитване",
-        "option-general": "Общо съобщение",
-        "option-consultation": "Консултация за проект",
-        "option-quote": "Запитване за оферта",
-        "contact-name-label": "Вашето име",
-        "contact-email-label": "Вашият имейл",
-        "contact-phone-label": "Телефонен номер",
-        "contact-msg-label": "Съобщение / Детайли",
-        "contact-btn-send": "Изпрати запитване"
-    },
-    en: {
-        // Navigation
-        "nav-studio": "Academy Architect Studio",
-        "nav-home": "Home",
-        "nav-catalog": "Projects",
-        "nav-about": "About Us",
-        "nav-planner": "AI Planner",
-        "nav-estimator": "Estimator",
-        "nav-contact": "Contacts",
-        "nav-login": "Login",
-        
-        // Home page (index.html)
-        "hero-eyebrow": "Architectural Studio",
-        "hero-title": "Designing the future with attention to detail",
-        "hero-desc": "We create minimalist and functional spaces, combining modern technologies with clean architecture.",
-        "btn-browse": "Browse Projects",
-        "btn-contact": "Contact Us",
-        "badge-title": "LATEST",
-        "badge-sub": "\"Minimalism\" Project",
-        "section-featured": "Featured Projects",
-        "quote-text": "\"Good architecture doesn't just occupy space, it gives it meaning.\"",
-        "quote-sub": "We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.",
-        "footer-subtitle": "Design & Engineering",
-        "footer-contacts": "Contacts",
-        "footer-address": "Sofia, Bulgaria",
-        "footer-links-title": "Links",
-        "footer-rights": "&copy; 2026 Academy Architect Studio.<br>All rights reserved.",
-        "no-projects": "No projects added yet.",
-
-        // About Us (about.html)
-        "about-eyebrow": "ABOUT THE STUDIO",
-        "about-title": "Personal archive of architectural projects.",
-        "about-desc-1": "Academy Architect Studio is an original catalog of house designs. Each project is developed with attention to proportions, light, and material — from the initial sketch to the detailed floor plan.",
-        "about-desc-2": "Here I upload my own works. Each project is ready for adaptation to a specific plot, climate, and budget.",
-        // Дублираме ги и тук за английски:
-        "about-text-1": "Academy Architect Studio is an original catalog of house designs. Each project is developed with attention to proportions, light, and material — from the initial sketch to the detailed floor plan.",
-        "about-text-2": "Here I upload my own works. Each project is ready for adaptation to a specific plot, climate, and budget.",
-
-        "about-badge-subtitle": "LATEST",
-        "about-badge-title": "Minimalism Project",
-
-        "value-1-title": "Innovative Design",
-        "value-1-desc": "We combine modern trends in architecture with advanced software and AI planning for maximum precision.",
-        "value-2-title": "Sustainability",
-        "value-2-desc": "We design with environmental care, utilizing energy-efficient solutions and durable materials.",
-        "value-3-title": "Individual Approach",
-        "value-3-desc": "Every space is born from dialogue with our clients to perfectly match their lifestyle.",
-
-        // Contacts & Booking (contact.html)
-        "contact-eyebrow": "GET IN TOUCH & BOOKING",
-        "contact-title": "Let's discuss your project or book a meeting.",
-        "contact-type-label": "Inquiry Type",
-        "option-general": "General Message",
-        "option-consultation": "Project Consultation",
-        "option-quote": "Quote Request",
-        "contact-name-label": "Your Name",
-        "contact-email-label": "Your Email",
-        "contact-phone-label": "Phone Number",
-        "contact-msg-label": "Message / Details",
-        "contact-btn-send": "Send Request"
-    }
-};
-
-function setLanguage(lang) {
-    localStorage.setItem('siteLang', lang);
-    document.documentElement.lang = lang;
-    
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
-    });
-
-    document.querySelectorAll('[data-key]').forEach(el => {
-        const key = el.getAttribute('data-key');
-        if (translations[lang] && translations[lang][key]) {
-            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                el.placeholder = translations[lang][key];
-            } else {
-                el.innerHTML = translations[lang][key];
-            }
-        }
-    });
-}
-
-function initLanguage() {
-    const savedLang = localStorage.getItem('siteLang') || 'bg';
-    setLanguage(savedLang);
-}
+// В секцията за 'en' добавете съответните английски преводи:
+"admin-page-title": "Admin Panel | Academy Architect Studio",
+"admin-logout": "🚪 Logout",
+"admin-back-home": "← Back to Home",
+"admin-eyebrow": "SITE MANAGEMENT",
+"admin-title": "Admin Panel",
+"admin-tab-about": "📄 About Us",
+"admin-tab-contact": "📞 Contacts",
+"admin-tab-new": "➕ New Project",
+"admin-tab-projects": "🗂️ Projects",
+"admin-tab-bookings": "📅 Bookings",
+"admin-about-heading": "Edit \"About Us\" Page",
+"admin-label-title": "Title",
+"admin-label-desc": "Main Text / Description",
+"admin-btn-save-about": "Save \"About Us\" Changes",
+"admin-contact-heading": "Edit \"Contacts\" Page",
+"admin-label-address": "Studio Address",
+"admin-label-email": "Email Address",
+"admin-label-phone": "Phone Number",
+"admin-btn-save-contact": "Save \"Contacts\" Changes",
+"admin-upload-heading": "Upload New Project",
+"admin-proj-title": "Project Name *",
+"admin-proj-maincat": "Main Category *",
+"admin-proj-subcat": "Subcategory (Type) *",
+"admin-proj-desc": "Description",
+"admin-proj-area": "Area (m²)",
+"admin-proj-floors": "Floors",
+"admin-proj-beds": "Bedrooms",
+"admin-proj-baths": "Bathrooms",
+"admin-proj-material": "Material / Structure",
+"admin-proj-style": "Style",
+"admin-proj-price": "Price (BGN)",
+"admin-proj-mainimg": "Main Image",
+"admin-proj-plans": "Floor Plans / Layouts (multiple floors)",
+"admin-proj-facades": "Facades (multiple selection)",
+"admin-proj-section": "Section",
+"admin-proj-gallery": "Additional Visualizations",
+"admin-proj-fav": "Favorite Project (on Home page)",
+"admin-btn-save-proj": "Save Project to Catalog",
+"admin-btn-cancel": "Cancel",
+"admin-existing-projects": "Existing Projects",
+"admin-existing-bookings": "Saved Consultations"
