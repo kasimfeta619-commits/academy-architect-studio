@@ -9,14 +9,15 @@ import {
     deleteDoc 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// ТВОИТЕ ДАННИ ОТ FIREBASE CONSOLE (Замести ги, ако са различни)
+// Твоите реални данни от Firebase Console
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
+    authDomain: "architect-studio-1810c.firebaseapp.com",
+    projectId: "architect-studio-1810c",
+    storageBucket: "architect-studio-1810c.firebasestorage.app",
+    messagingSenderId: "1053914253758",
+    appId: "1:1053914253758:web:97d9bc28ac5465730311ef",
+    measurementId: "G-NN7GYSF55G"
 };
 
 const app = initializeApp(firebaseConfig);
