@@ -55,8 +55,8 @@
             <p data-key="hero-desc">We create minimalist and functional spaces, combining modern technologies with clean architecture.</p>
             
             <div class="hero-buttons">
-                <a href="catalog.html" class="btn-primary" data-key="btn-browse">Browse Projects</a>
-                <a href="contact.html" class="btn-secondary" data-key="btn-contact">Contact Us</a>
+                <a href="catalog.html" class="btn-primary" data-key="hero-btn-browse">Browse Projects</a>
+                <a href="contact.html" class="btn-secondary" data-key="hero-btn-contact">Contact Us</a>
             </div>
         </div>
 
@@ -73,7 +73,7 @@
     </section>
 
     <section class="recent-projects">
-        <h2 data-key="section-featured">Featured Projects</h2>
+        <h2 data-key="featured-title">Featured Projects</h2>
         <div class="projects-grid" id="featuredProjectsContainer"></div>
     </section>
 
@@ -136,7 +136,6 @@
             const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
             if (isUserLoggedIn) {
-                // При клик върху профила влиза директно в админ панела (или профила)
                 const targetPage = isAdmin ? 'admin.html' : 'login.html';
                 container.innerHTML = `
                     <a href="${targetPage}" title="Админ панел / Профил" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;">
@@ -164,7 +163,6 @@
                 setLanguage(savedLang);
             }
             
-            // Извикваме функцията за профила на всяка страница
             updateNavAuthStatus();
 
             // Зареждане на последните 3 проекта
