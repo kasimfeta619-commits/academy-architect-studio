@@ -31,12 +31,24 @@ const translations = {
         "quote-text": "\"Добрата архитектура не просто заема пространство, тя му дава смисъл.\"",
         "quote-sub": "Вярваме, че всеки детайл е от значение при изграждането на перфектния дом или работно пространство, създавайки среда, която вдъхновява всеки ден.",
 
-        // Страница Контакти и Форма
+        // Страница "За нас" (about.html)
+        "about-eyebrow": "КОИ СМЕ НИЕ",
+        "about-title": "Създаваме пространства със смисъл, естетика и дълготрайна стойност.",
+        "about-desc1": "Academy Architect Studio обединява съвременния архитектурен дизайн с интелигентно инженерно мислене. Нашата цел е да превърнем всяка визия в реалност, съчетавайки функционалност, устойчивост и изчистен стил.",
+        "about-desc2": "Работим по разнообразни жилищни, обществени и корпоративни проекти, подхождайки индивидуално към всяка идея и клиентско изискване.",
+        "about-card1-title": "Иновативен дизайн",
+        "about-card1-desc": "Съчетаваме съвременни тенденции в архитектурата с модерен софтуер и AI планиране за максимална прецизност.",
+        "about-card2-title": "Устойчивост",
+        "about-card2-desc": "Проектираме с грижа за околната среда, използвайки енергоефективни решения и дълготрайни материали.",
+        "about-card3-title": "Индивидуален подход",
+        "about-card3-desc": "Всяко пространство се ражда от диалога с нашите клиенти, за да отговаря точно на техния начин на живот.",
+
+        // Страница "Контакти" (contact.html)
         "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
         "contact-title": "Обсъдете вашия проект или запазете среща.",
-        "label-address": "Адрес:",
-        "label-email": "Имейл:",
-        "label-phone": "Телефон:",
+        "contact-address-label": "Адрес:",
+        "contact-email-label": "Имейл:",
+        "contact-phone-label": "Телефон:",
         "form-type-label": "Тип запитване",
         "form-name-label": "Вашето име",
         "form-email-label": "Вашият имейл",
@@ -119,12 +131,24 @@ const translations = {
         "quote-text": "\"Good architecture doesn't just occupy space, it gives it meaning.\"",
         "quote-sub": "We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.",
 
-        // Contact Page & Form
+        // About Page (about.html)
+        "about-eyebrow": "WHO WE ARE",
+        "about-title": "Creating spaces with meaning, aesthetics, and lasting value.",
+        "about-desc1": "Academy Architect Studio combines modern architectural design with intelligent engineering thinking. Our goal is to turn every vision into reality, combining functionality, sustainability, and clean style.",
+        "about-desc2": "We work on diverse residential, public, and corporate projects, taking an individual approach to every idea and client requirement.",
+        "about-card1-title": "Innovative Design",
+        "about-card1-desc": "We combine modern architectural trends with advanced software and AI planning for maximum precision.",
+        "about-card2-title": "Sustainability",
+        "about-card2-desc": "We design with environmental care, using energy-efficient solutions and durable materials.",
+        "about-card3-title": "Individual Approach",
+        "about-card3-desc": "Every space is born from dialogue with our clients to match their exact lifestyle.",
+
+        // Contact Page (contact.html)
         "contact-eyebrow": "CONTACT & BOOKING",
         "contact-title": "Discuss your project or book a meeting.",
-        "label-address": "Address:",
-        "label-email": "Email:",
-        "label-phone": "Phone:",
+        "contact-address-label": "Address:",
+        "contact-email-label": "Email:",
+        "contact-phone-label": "Phone:",
         "form-type-label": "Inquiry Type",
         "form-name-label": "Your Name",
         "form-email-label": "Your Email",
