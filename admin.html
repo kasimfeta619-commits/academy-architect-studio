@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ панел | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-    <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('siteTheme');
@@ -15,7 +19,6 @@
             }
         })();
 
-        // ЗАЩИТА НА АДМИН ПАНЕЛА
         (function() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const isAdmin = localStorage.getItem('isAdmin');
@@ -121,7 +124,6 @@
         .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
         .preview-grid img { width: 100%; height: 100px; object-fit: cover; border: 1px solid #eadecc; }
 
-        /* Dark Mode поддръжка */
         body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
         body.dark-mode header.navbar { background: #1a1a1a !important; border-bottom-color: #2c2c2c !important; }
         body.dark-mode header.navbar span { color: #ffffff !important; }
@@ -286,7 +288,21 @@
     </div>
 
     <script>
-        // Функция за автоматично компресиране на снимките, за да не задръстват паметта
+        // ТУК ПОСТАВИ ТВОИТЕ ДАННИ ОТ FIREBASE КОНСОЛАТА
+        const firebaseConfig = {
+            apiKey: "ТУК_ПОСТАВИ_API_KEY",
+            authDomain: "architect-studio.firebaseapp.com",
+            projectId: "architect-studio",
+            storageBucket: "architect-studio.appspot.com",
+            messagingSenderId: "ТУК_ПОСТАВИ_SENDER_ID",
+            appId: "ТУК_ПОСТАВИ_APP_ID"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
         function compressImage(file, maxWidth = 800, quality = 0.6) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -346,47 +362,72 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedAbout = JSON.parse(localStorage.getItem('siteAbout') || '{}');
-            document.getElementById('aboutTitle').value = savedAbout.title || 'За нашето архитектурно студио';
-            document.getElementById('aboutDesc').value = savedAbout.desc || 'Ние създаваме съвременни и функционални пространства...';
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const aboutDoc = await db.collection('siteSettings').doc('about').get();
+                if (aboutDoc.exists) {
+                    const data = aboutDoc.data();
+                    document.getElementById('aboutTitle').value = data.title || '';
+                    document.getElementById('aboutDesc').value = data.desc || '';
+                }
 
-            const savedContact = JSON.parse(localStorage.getItem('siteContact') || '{}');
-            document.getElementById('contactAddress').value = savedContact.address || 'Sofia · Plovdiv · Varna';
-            document.getElementById('contactEmail').value = savedContact.email || 'info@architectstudio.com';
-            document.getElementById('contactPhone').value = savedContact.phone || '+359 888 000 000';
+                const contactDoc = await db.collection('siteSettings').doc('contact').get();
+                if (contactDoc.exists) {
+                    const data = contactDoc.data();
+                    document.getElementById('contactAddress').value = data.address || '';
+                    document.getElementById('contactEmail').value = data.email || '';
+                    document.getElementById('contactPhone').value = data.phone || '';
+                }
+            } catch (err) {
+                console.log("Firebase sync note:", err);
+            }
 
             renderAdminList();
             renderAdminBookings();
         });
 
-        document.getElementById('aboutForm').addEventListener('submit', (e) => {
+        document.getElementById('aboutForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const aboutData = {
                 title: document.getElementById('aboutTitle').value,
                 desc: document.getElementById('aboutDesc').value
             };
-            localStorage.setItem('siteAbout', JSON.stringify(aboutData));
-            alert('Страницата "За нас" е успешно обновена!');
+            try {
+                await db.collection('siteSettings').doc('about').set(aboutData);
+                alert('Страницата "За нас" е успешно обновена в облака!');
+            } catch (err) {
+                alert('Грешка при запис: ' + err.message);
+            }
         });
 
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const contactData = {
                 address: document.getElementById('contactAddress').value,
                 email: document.getElementById('contactEmail').value,
                 phone: document.getElementById('contactPhone').value
             };
-            localStorage.setItem('siteContact', JSON.stringify(contactData));
-            alert('Страницата "Контакти" е успешно обновена!');
+            try {
+                await db.collection('siteSettings').doc('contact').set(contactData);
+                alert('Страницата "Контакти" е успешно обновена в облака!');
+            } catch (err) {
+                alert('Грешка при запис: ' + err.message);
+            }
         });
 
-        function renderAdminList() {
+        async function renderAdminList() {
             const listContainer = document.getElementById('adminProjectsList');
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
+            let projects = [];
+            
+            try {
+                const snapshot = await db.collection('projects').get();
+                projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (err) {
+                console.error(err);
+            }
             
             if (projects.length === 0) {
-                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма качени проекти.</p>`;
+                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма качени проекти в базата данни.</p>`;
                 return;
             }
 
@@ -401,7 +442,7 @@
                 '3d': '3D сграда'
             };
 
-            listContainer.innerHTML = projects.map((p, index) => {
+            listContainer.innerHTML = projects.map((p) => {
                 let thumbHtml = p.mainImage 
                     ? `<img src="${p.mainImage}" alt="${p.title}" class="admin-project-thumb">`
                     : `<div class="admin-project-no-thumb">Няма снимка</div>`;
@@ -421,18 +462,22 @@
                             </div>
                         </div>
                         <div class="admin-btns">
-                            <button class="btn-view" onclick="openPreviewModal(${index})">👁️ Преглед</button>
-                            <button class="btn-edit" onclick="editProject(${index})">Редактирай</button>
-                            <button class="btn-delete" onclick="deleteProject(${index})">Изтрий</button>
+                            <button class="btn-view" onclick="openPreviewModal('${p.id}')">👁️ Преглед</button>
+                            <button class="btn-edit" onclick="editProject('${p.id}')">Редактирай</button>
+                            <button class="btn-delete" onclick="deleteProject('${p.id}')">Изтрий</button>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        function openPreviewModal(index) {
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            const p = projects[index];
+        async function openPreviewModal(id) {
+            let p = null;
+            try {
+                const doc = await db.collection('projects').doc(id).get();
+                if (doc.exists) p = doc.data();
+            } catch (err) {}
+
             if (!p) return;
 
             const modalBody = document.getElementById('modalBody');
@@ -463,16 +508,21 @@
             }
         }
 
-        function renderAdminBookings() {
+        async function renderAdminBookings() {
             const listContainer = document.getElementById('adminBookingsList');
-            const bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
+            let bookings = [];
+            
+            try {
+                const snapshot = await db.collection('studioBookings').get();
+                bookings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (err) {}
             
             if (bookings.length === 0) {
                 listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма запазени резервации.</p>`;
                 return;
             }
 
-            listContainer.innerHTML = bookings.map((b, index) => {
+            listContainer.innerHTML = bookings.map((b) => {
                 return `
                     <div class="booking-item-admin">
                         <div>
@@ -480,38 +530,46 @@
                             <div style="font-size: 0.8rem; color: #8c8275;">Услуга: ${b.service} | Дата и час: ${b.datetime}</div>
                         </div>
                         <div class="admin-btns">
-                            <button class="btn-delete" onclick="deleteBooking(${index})">Изтрий</button>
+                            <button class="btn-delete" onclick="deleteBooking('${b.id}')">Изтрий</button>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        function deleteBooking(index) {
+        async function deleteBooking(id) {
             if (confirm("Сигурни ли сте, че искате да изтриете тази резервация?")) {
-                let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
-                bookings.splice(index, 1);
-                localStorage.setItem('studioBookings', JSON.stringify(bookings));
-                renderAdminBookings();
+                try {
+                    await db.collection('studioBookings').doc(id).delete();
+                    renderAdminBookings();
+                } catch (err) {
+                    alert("Грешка при изтриване: " + err.message);
+                }
             }
         }
 
-        function deleteProject(index) {
+        async function deleteProject(id) {
             if (confirm("Сигурни ли сте, че искате да изтриете този проект?")) {
-                let projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-                projects.splice(index, 1);
-                localStorage.setItem('myProjects', JSON.stringify(projects));
-                renderAdminList();
-                resetProjectForm();
+                try {
+                    await db.collection('projects').doc(id).delete();
+                    renderAdminList();
+                    resetProjectForm();
+                } catch (err) {
+                    alert("Грешка при изтриване: " + err.message);
+                }
             }
         }
 
-        function editProject(index) {
-            const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
-            const p = projects[index];
+        async function editProject(id) {
+            let p = null;
+            try {
+                const doc = await db.collection('projects').doc(id).get();
+                if (doc.exists) p = { id: doc.id, ...doc.data() };
+            } catch (err) {}
+
             if (!p) return;
 
-            document.getElementById('editIndex').value = index;
+            document.getElementById('editIndex').value = id;
             document.getElementById('title').value = p.title || '';
             document.getElementById('mainCategory').value = p.mainCategory || 'residential';
             document.getElementById('subCategory').value = p.subCategory || 'architecture';
@@ -587,16 +645,13 @@
                     mainImage, floorPlans, facadeImages, sectionImage, gallery
                 };
 
-                let projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
                 if (editId !== "") {
-                    projects[editId] = projectData;
-                    alert("Проектът е успешно обновен!");
+                    await db.collection('projects').doc(editId).update(projectData);
+                    alert("Проектът е успешно обновен в облака!");
                 } else {
-                    projects.push(projectData);
-                    alert("Проектът е успешно запазен в каталога!");
+                    await db.collection('projects').add(projectData);
+                    alert("Проектът е успешно запазен в облачния каталог!");
                 }
-
-                localStorage.setItem('myProjects', JSON.stringify(projects));
 
                 resetProjectForm();
                 renderAdminList();
@@ -604,7 +659,7 @@
 
             } catch (err) {
                 console.error(err);
-                alert("Грешка при запазване: " + err.message);
+                alert("Грешка при запазване в базата данни: " + err.message);
             }
         });
     </script>
