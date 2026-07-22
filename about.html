@@ -145,11 +145,11 @@
     <main class="about-container">
         <div>
             <span class="about-eyebrow" data-key="about-eyebrow">ЗА СТУДИОТО</span>
-            <h1 class="about-title" id="aboutTitleText">Личен архив на архитектурни проекти.</h1>
+            <h1 class="about-title" id="aboutTitleText" data-key="about-title">Личен архив на архитектурни проекти.</h1>
         </div>
         <div class="about-text" id="aboutDescText">
-            <p>Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.</p>
-            <p>Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.</p>
+            <p data-key="about-desc-1">Academy Architect Studio е авторски каталог с проекти за къщи. Всеки проект е разработен с внимание към пропорции, светлина и материал — от идейната скица до подробния план на всеки етаж.</p>
+            <p data-key="about-desc-2">Тук качвам собствените си работи. Всеки проект е готов за адаптация към конкретен парцел, климат и бюджет.</p>
         </div>
     </main>
 
@@ -210,7 +210,6 @@
             if (isUserLoggedIn) {
                 let html = '';
                 
-                // Профилна икона и текст "Профил"
                 html += `
                     <a href="login.html" class="user-profile-nav" title="Профил">
                         <div class="user-avatar-badge">
@@ -223,7 +222,6 @@
                     </a>
                 `;
 
-                // Админ бутон при нужда
                 if (isAdmin) {
                     html += `<a href="admin.html" class="btn-admin-nav">Админ</a>`;
                 }
@@ -237,22 +235,15 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            if (typeof initLanguage === 'function') {
-                initLanguage();
-            } else if (typeof setLanguage === 'function') {
-                const savedLang = localStorage.getItem('siteLang') || 'bg';
-                setLanguage(savedLang);
-            }
-            
-            updateNavAuthStatus();
-
-            // Зареждане на редакцията "За нас" от админ панела
+            // Първо зареждаме потребителските данни от админ панела (ако има такива)
             const savedAbout = localStorage.getItem('siteAbout');
             if (savedAbout) {
                 try {
                     const data = JSON.parse(savedAbout);
                     if (data.title && document.getElementById('aboutTitleText')) {
-                        document.getElementById('aboutTitleText').textContent = data.title;
+                        document.getElementById('aboutTitleTexttextContent = data.title;
+                        // Премахваме data-key, за да не се презапише от статичния превод, ако админът е променил текста ръчно
+                        document.getElementById('aboutTitleText').removeAttribute('data-key');
                     }
                     if (data.desc && document.getElementById('aboutDescText')) {
                         const paragraphs = data.desc.split('\n').filter(p => p.trim() !== '');
@@ -264,6 +255,16 @@
                     console.error('Грешка при зареждане на "За нас"', e);
                 }
             }
+
+            // След това инициализираме езика (ще преведе всичко, което има останал data-key)
+            if (typeof initLanguage === 'function') {
+                initLanguage();
+            } else if (typeof setLanguage === 'function') {
+                const savedLang = localStorage.getItem('siteLang') || 'bg';
+                setLanguage(savedLang);
+            }
+            
+            updateNavAuthStatus();
 
             // Зареждане на контактите във футъра от админ панела
             const savedContact = localStorage.getItem('siteContact');
