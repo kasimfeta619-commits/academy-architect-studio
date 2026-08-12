@@ -605,10 +605,15 @@
             document.getElementById('uploadTabBtn').innerText = "➕ Нов проект";
         }
 
-        // Функция за сваляне на календар (.ics)
+        // Оптимизирана функция за календар, съвместима с iPhone/Safari
         async function downloadCalendar() {
             try {
                 const snapshot = await db.collection('studioBookings').get();
+                if (snapshot.empty) {
+                    alert("Няма намерени резервации за синхронизиране.");
+                    return;
+                }
+
                 let icsData = [
                     "BEGIN:VCALENDAR",
                     "VERSION:2.0",
@@ -632,14 +637,17 @@
 
                 icsData.push("END:VCALENDAR");
 
-                const blob = new Blob([icsData.join('\r\n')], { type: 'text/calendar' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'reservations.ics';
-                a.click();
+                const calendarContent = icsData.join('\r\n');
+                const dataUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(calendarContent);
                 
-                alert("Файлът е свален успешно! Отворете го на телефона си, за да добавите резервациите в Apple Calendar.");
+                const a = document.createElement('a');
+                a.href = dataUri;
+                a.download = 'reservations.ics';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                alert("Календарът е генериран успешно! Изберете опцията за отваряне или добавяне в Apple Calendar.");
             } catch (err) {
                 alert("Грешка при генериране: " + err.message);
             }
