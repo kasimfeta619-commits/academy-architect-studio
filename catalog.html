@@ -333,8 +333,11 @@
         };
 
         let app;
+        let dbInstance = null;
         try {
             app = initializeApp(firebaseConfig);
+            dbInstance = getFirestore(app);
+            window.db = dbInstance;
         } catch (e) {}
 
         let allProjectsGlobal = [];
@@ -484,10 +487,10 @@
 
             if (container) {
                 try {
-                    const dbInstance = window.db || getFirestore(app);
+                    const currentDb = window.db || dbInstance;
                     let projects = [];
-                    if (dbInstance) {
-                        const querySnapshot = await getDocs(collection(dbInstance, "projects"));
+                    if (currentDb) {
+                        const querySnapshot = await getDocs(collection(currentDb, "projects"));
                         querySnapshot.forEach((docSnap) => {
                             projects.push({ id: docSnap.id, ...docSnap.data() });
                         });
@@ -507,16 +510,18 @@
             }
 
             try {
-                const dbInstance = window.db || getFirestore(app);
-                const contactSnap = await getDoc(doc(dbInstance, "siteSettings", "contact"));
-                if (contactSnap.exists()) {
-                    const data = contactSnap.data();
-                    if (data.address && document.getElementById('footAddress')) document.getElementById('footAddress').textContent = data.address;
-                    if (data.email) {
-                        if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
-                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink'].href = 'mailto:' + data.email;
+                const currentDb = window.db || dbInstance;
+                if (currentDb) {
+                    const contactSnap = await getDoc(doc(currentDb, "siteSettings", "contact"));
+                    if (contactSnap.exists()) {
+                        const data = contactSnap.data();
+                        if (data.address && document.getElementById('footAddress')) document.getElementById('footAddress').textContent = data.address;
+                        if (data.email) {
+                            if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
+                            if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
+                        }
+                        if (data.phone && document.getElementById('footPhone')) document.getElementById('footPhone').textContent = data.phone;
                     }
-                    if (data.phone && document.getElementById('footPhone')) document.getElementById('footPhone').textContent = data.phone;
                 }
             } catch (e) {}
 
