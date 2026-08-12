@@ -217,9 +217,9 @@
             <h1 class="contact-title" data-key="contact-title">Обсъдете вашия проект или запазете среща.</h1>
             
             <div class="contact-details">
-                <p><strong>Адрес:</strong> <span id="pageAddress">Sofia · Plovdiv · Varna · Gotce Delchev</span></p>
-                <p><strong>Имейл:</strong> <a href="mailto:info@architectstudio.com" id="pageEmailLink"><span id="pageEmail">info@architectstudio.com</span></a></p>
-                <p><strong>Телефон:</strong> <span id="pagePhone">+359 812 345 678</span></p>
+                <p><strong><span data-key="contact-lbl-address">Адрес:</span></strong> <span id="pageAddress">Sofia · Plovdiv · Varna · Gotce Delchev</span></p>
+                <p><strong><span data-key="contact-lbl-email">Имейл:</span></strong> <a href="mailto:info@architectstudio.com" id="pageEmailLink"><span id="pageEmail">info@architectstudio.com</span></a></p>
+                <p><strong><span data-key="contact-lbl-phone">Телефон:</span></strong> <span id="pagePhone">+359 812 345 678</span></p>
             </div>
         </div>
 
@@ -291,7 +291,7 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
-        // Инициализация на Firebase (същата конфигурация)
+        // Инициализация на Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
             authDomain: "architect-studio-1810c.firebaseapp.com",
@@ -396,13 +396,11 @@
                 datetime: new Date().toLocaleString() + ' — ' + message
             };
 
-            // Запис на резервацията/съобщението към Firestore
             try {
                 await db.collection('studioBookings').add(newBooking);
                 alert('Благодарим ви! Вашето запитване беше изпратено успешно.');
                 document.getElementById('contactForm').reset();
             } catch (err) {
-                // Резервен вариант към localStorage, ако възникне мрежова грешка
                 let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
                 bookings.push(newBooking);
                 localStorage.setItem('studioBookings', JSON.stringify(bookings));
@@ -411,50 +409,62 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", async function() {
-            if (typeof initLanguage === 'function') {
-                initLanguage();
-            } else if (typeof setLanguage === 'function') {
-                const savedLang = localStorage.getItem('siteLang') || 'bg';
-                setLanguage(savedLang);
-            }
-            
-            updateNavAuthStatus();
-
-            // Зареждане на актуалните контакти директно от Firebase Firestore
+        // ДУЕЗИЧНА ФУНКЦИЯ ЗА ЗАРЕЖДАНЕ ОТ FIREBASE
+        async function loadContactData() {
             try {
                 const contactDoc = await db.collection('siteSettings').doc('contact').get();
                 if (contactDoc.exists) {
                     const data = contactDoc.data();
-                    
-                    // Страница Контакти
-                    if (data.address && document.getElementById('pageAddress')) {
-                        document.getElementById('pageAddress').textContent = data.address;
-                    }
-                    if (data.email) {
-                        if (document.getElementById('pageEmail')) document.getElementById('pageEmail').textContent = data.email;
-                        if (document.getElementById('pageEmailLink')) document.getElementById('pageEmailLink').href = 'mailto:' + data.email;
-                    }
-                    if (data.phone && document.getElementById('pagePhone')) {
-                        document.getElementById('pagePhone').textContent = data.phone;
-                    }
+                    const currentLang = localStorage.getItem('siteLang') || 'bg';
 
-                    // Футър
-                    if (data.address && document.getElementById('footAddress')) {
-                        document.getElementById('footAddress').textContent = data.address;
-                    }
-                    if (data.email) {
-                        if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
-                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
-                    }
-                    if (data.phone && document.getElementById('footPhone')) {
-                        document.getElementById('footPhone').textContent = data.phone;
-                    }
+                    // Превключване на адреса спрямо текущия език (BG/EN)
+                    const address = currentLang === 'en' 
+                        ? (data.addressEn || data.address || "Sofia · Plovdiv · Varna") 
+                        : (data.address || "Sofia · Plovdiv · Varna");
+                    
+                    const email = data.email || "info@architectstudio.com";
+                    const phone = data.phone || "+359 812 345 678";
+
+                    // Попълване на страниците и футъра
+                    ['pageAddress', 'footAddress'].forEach(id => {
+                        if (document.getElementById(id)) document.getElementById(id).textContent = address;
+                    });
+                    
+                    ['pageEmail', 'footEmail'].forEach(id => {
+                        if (document.getElementById(id)) document.getElementById(id).textContent = email;
+                    });
+                    
+                    ['pageEmailLink', 'footEmailLink'].forEach(id => {
+                        if (document.getElementById(id)) document.getElementById(id).href = 'mailto:' + email;
+                    });
+
+                    ['pagePhone', 'footPhone'].forEach(id => {
+                        if (document.getElementById(id)) document.getElementById(id).textContent = phone;
+                    });
                 }
             } catch (err) {
                 console.error('Грешка при зареждане на контактите от Firebase:', err);
             }
+        }
+
+        document.addEventListener("DOMContentLoaded", async function() {
+            const savedLang = localStorage.getItem('siteLang') || 'bg';
+            if (typeof setLanguage === 'function') {
+                setLanguage(savedLang);
+            }
+            
+            updateNavAuthStatus();
+            await loadContactData();
         });
+
+        // Слушател за смяна на езика в реално време (при клик на EN/BG бутоните)
+        const originalSetLanguage = window.setLanguage;
+        if (typeof originalSetLanguage === 'function') {
+            window.setLanguage = function(lang) {
+                originalSetLanguage(lang);
+                loadContactData(); // Автоматично презарежда правилния език за контактите
+            };
+        }
     </script>
 </body>
 </html>
