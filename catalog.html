@@ -501,11 +501,20 @@
                     if (data.address && document.getElementById('footAddress')) document.getElementById('footAddress').textContent = data.address;
                     if (data.email) {
                         if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
-                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
+                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink'].href = 'mailto:' + data.email;
                     }
                     if (data.phone && document.getElementById('footPhone')) document.getElementById('footPhone').textContent = data.phone;
                 }
             } catch (e) {}
+
+            // Добавен код за автоматично презареждане на проектите при смяна на езика
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTimeout(() => {
+                        renderProjectsList(allProjectsGlobal);
+                    }, 50);
+                });
+            });
         });
     </script>
 </body>
