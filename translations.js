@@ -44,7 +44,7 @@ const translations = {
         "sub-bulgarian": "Български стил",
         "reset-filters": "Изчисти филтрите",
 
-        // Начална страница (Hero & Quote)
+        // Начална страница
         "hero-eyebrow": "АРХИТЕКТУРНО СТУДИО",
         "hero-title": "Проектираме бъдещето с внимание към детайла",
         "hero-desc": "Създаваме минималистични и функционални пространства, съчетавайки модерни технологии с изчистена архитектура.",
@@ -52,136 +52,33 @@ const translations = {
         "hero-btn-contact": "Свържете се с нас",
         "featured-title": "Избрани проекти",
         "quote-text": "\"Добрата архитектура не просто заема пространство, тя му дава смисъл.\"",
-        "quote-sub": "Вярваме, че всеки детайл е от значение при изграждането на перфектния дом или работно пространство, създавайки среда, която вдъхновява всеки ден.",
+        "quote-sub": "Вярваме, че всеки детайл е от значение при изграждането на перфектния дом или работно пространство.",
 
-        // Страница "За нас" (about.html)
+        // Страница "За нас"
         "about-eyebrow": "КОИ СМЕ НИЕ",
-        "about-title": "Создаваме пространства със смисъл, естетика и дълготрайна стойност.",
-        "about-desc1": "Academy Architect Studio обединява съвременния архитектурен дизайн с интелигентно инженерно мислене. Нашата цел е да превърнем всяка визия в реалност, съчетавайки функционалност, устойчивост и изчистен стил.",
-        "about-desc2": "Работим по разнообразни жилищни, обществени и корпоративни проекти, подхождайки индивидуално към всяка идея и клиентско изискване.",
+        "about-title": "Създаваме пространства със смисъл, естетика и дълготрайна стойност.",
+        "about-desc1": "Academy Architect Studio обединява съвременния архитектурен дизайн с интелигентно инженерно мислене.",
+        "about-desc2": "Работим по разнообразни жилищни, обществени и корпоративни проекти.",
         "about-card1-title": "Иновативен дизайн",
-        "about-card1-desc": "Съчетаваме съвременни тенденции в архитектурата с модерен софтуер и AI планиране за максимална прецизност.",
+        "about-card1-desc": "Съчетаваме съвременни тенденции в архитектурата с модерен софтуер и AI планиране.",
         "about-card2-title": "Устойчивост",
-        "about-card2-desc": "Проектираме с грижа за околната среда, използвайки енергоефективни решения и дълготрайни материали.",
+        "about-card2-desc": "Проектираме с грижа за околната среда, използвайки енергоефективни решения.",
         "about-card3-title": "Индивидуален подход",
-        "about-card3-desc": "Всяко пространство се ражда от диалога с нашите клиенти, за да отговаря точно на техния начин на живот.",
+        "about-card3-desc": "Всяко пространство се ражда от диалога с нашите клиенти.",
         "about-mission-title": "Нашата мисия",
-        "about-mission-desc": "Да предоставяме безупречни архитектурни решения, които подобряват качеството на живот и надхвърлят очакванията на нашите клиенти.",
         "about-vision-title": "Нашето виждане",
-        "about-vision-desc": "Вярваме в устойчивата архитектура, която съчетава естетика, иновации и отговорност към бъдещите поколения.",
-        "about-team-title": "Нашият екип",
-        "about-team-subtitle": "Професионалисти с опит в съвременното проектиране и строителен надзор.",
 
-        // Страница "Контакти" (contact.html)
+        // Контакти (ключове за опциите в <select>)
         "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
         "contact-title": "Обсъдете вашия проект или запазете среща.",
-        "contact-address-label": "Адрес:",
-        "contact-email-label": "Имейл:",
-        "contact-phone-label": "Телефон:",
-        "form-type-label": "Тип запитване",
-        "form-name-label": "Вашето име",
-        "form-email-label": "Вашият имейл",
-        "form-phone-label": "Телефонен номер",
-        "form-msg-label": "Съобщение / Детайли",
-        "form-btn-submit": "Изпрати запитване",
-
-        // Административен панел
-        "admin-page-title": "Админ панел | Academy Architect Studio",
-        "admin-logout": "🚪 Изход",
-        "admin-back-home": "← Назад към началната страница",
-        "admin-eyebrow": "УПРАВЛЕНИЕ НА САЙТА",
-        "admin-title": "Админ Панел",
-        "admin-tab-about": "📄 За нас",
-        "admin-tab-contact": "📞 Контакти",
-        "admin-tab-new": "➕ Нов проект",
-        "admin-tab-projects": "🗂️ Проекти",
-        "admin-tab-bookings": "📅 Резервации",
-        "admin-about-heading": "Редакция на страница \"За нас\"",
-        "admin-label-title": "Заглавие",
-        "admin-label-desc": "Основен текст / Описание",
-        "admin-btn-save-about": "Запази промените \"За нас\"",
-        "admin-contact-heading": "Редакция на страница \"Контакти\"",
-        "admin-label-address": "Адрес на студиото",
-        "admin-label-email": "Имейл адрес",
-        "admin-label-phone": "Телефонен номер",
-        "admin-btn-save-contact": "Запази промените \"Контакти\"",
-        "admin-upload-heading": "Качване на нов проект",
-        "admin-proj-title": "Име на проекта *",
-        "admin-proj-maincat": "Главна категория *",
-        "admin-proj-subcat": "Подкатегория (Тип разработка) *",
-        "admin-proj-desc": "Описание",
-        "admin-proj-area": "Площ (м²)",
-        "admin-proj-floors": "Етажи",
-        "admin-proj-beds": "Спални",
-        "admin-proj-baths": "Бани",
-        "admin-proj-material": "Материал / Конструкция",
-        "admin-proj-style": "Стил",
-        "admin-proj-price": "Цена (лв.)",
-        "admin-proj-mainimg": "Главна снимка",
-        "admin-proj-plans": "Разпределения / Планове (множество етажи)",
-        "admin-proj-facades": "Фасади (може да изберете няколко)",
-        "admin-proj-section": "Разрез",
-        "admin-proj-gallery": "Допълнителни визуализации",
-        "admin-proj-fav": "Фаворитен проект (на началната страница)",
-        "admin-btn-save-proj": "Запази проекта в каталога",
-        "admin-btn-cancel": "Отказ",
-        "admin-existing-projects": "Съществуващи проекти",
-        "admin-existing-bookings": "Запазени консултации",
-
-        // Страница "Услуги" (services.html)
-        "services-eyebrow": "НАШИТЕ УСЛУГИ",
-        "services-main-title": "Цялостно проектиране за получаване на разрешение за строеж",
-        "services-main-desc": "Проектно студио с водещ екип предлага пълна гама от услуги – от първоначални консултации и предпроектни проучвания, през инвестиционно проектиране, до авторски надзор.",
-        "services-stage1-tag": "ЕТАП 1",
-        "services-stage1-title": "Консултации и предпроектни проучвания",
-        "services-stage1-desc": "Разглеждаме наличната документация и необходимостта от изходни данни. Коментираме фактора терен – наклон, географски посоки и разположение. Изследваме параметрите за застрояване – плътност, височина, максимално РЗП, озеленяване и отстояния от границите.",
-        "services-stage2-tag": "ЕТАП 2",
-        "services-stage2-title": "Инвестиционно проектиране",
-        "services-stage2-desc": "Започва задължително с виза за проектиране, издадена от Общината. След уточняване на идейния проект и 3D визиите спрямо вашите изисквания, се пристъпва директно към техническата фаза за проектиране по всички специалности.",
-        
-        "services-req-docs-title": "Необходими документи за започване на проектирането",
-        "services-req-concept-title": "/ За започване на Идеен проект /",
-        "services-doc-concept-1-title": "Нотариален акт:",
-        "services-doc-concept-1-desc": " Документ за собственост на имота.",
-        "services-doc-concept-2-title": "Виза за проектиране:",
-        "services-doc-concept-2-desc": " Най-важният документ за започване на проектирането и получаване на изходни данни от ЕРП, ВиК и др. Представлява копие от комбинирана скица с нанесени линии на застрояване. Подава се молба в общината, като се носи скица и/или мотивирано предложение от архитект. Отнема от 3 до 14 дни.",
-        "services-doc-concept-3-title": "Геодезическо заснемане (тахиметрична снимка):",
-        "services-doc-concept-3-desc": " Служи за основа на проектирането. Извършва се от геодезист на място. Обработката отнема до една седмица.",
-        "services-doc-concept-3-note": "💡 В екипа си имаме геодезист, чиито услуги можем да ви предложим.",
-        "services-req-tech-title": "/ За започване на Технически проект /",
-        "services-doc-tech-1-title": "Становище от Електроразпределително дружество:",
-        "services-doc-tech-1-desc": " Подава се молба към ЕРП за издаване на становище за присъединяване към мрежата. За еднофамилни жилищни сгради се иска мощност 10-15 kW (най-добре 15 kW).",
-        "services-doc-tech-2-title": "Изходни данни от ВиК дружество:",
-        "services-doc-tech-2-desc": " Подава се искане до местното ВиК дружество за изходни данни, необходими за изготвяне на ВиК проекта. След изготвянето му, той се съгласува обратно при тях за издаване на становище.",
-
-        "services-specs-title": "Проекти по специалности",
-        "services-req-title": "Задължителни проекти за разрешение за строеж (малки жилищни сгради):",
-        "services-spec-1": "Част „Архитектурна“",
-        "services-spec-2": "Част „Конструктивна“ + Оценка за съответствие (технически контрол)",
-        "services-spec-3": "Част „В и К“ – водопровод и канализация",
-        "services-spec-4": "Част „Електро“",
-        "services-spec-5": "Част „Енергийна ефективност“",
-        "services-spec-6": "Част „Оценка за съответствие на част Енергийна ефективност“",
-        "services-spec-7": "Част „Геодезическа“ (трасировъчен план и вертикална планировка)",
-        "services-opt-title": "Допълнителни проекти (при нужда / изискване):",
-        "services-opt-1": "Част „ОВИК“ – отопление, вентилация и климатизация",
-        "services-opt-2": "Част „ПБЗ“ – План за безопасност и здраве",
-        "services-opt-3": "Част „Паркоустройство и благоустройство“ (при многофамилни сгради)",
-        "services-opt-4": "Част „Пожарна безопасност“ (за сгради над 200кв.м)",
-        "services-opt-5": "Част „ПУСО“ – Отпадъци (за сгради над 300кв.м)",
-        "services-opt-6": "Част „Технологична“ (при промишлени сгради и заведения)",
-        "services-note": "* Забележка: В проектите е включена задължителна сметна документация. В цената за проектиране са включени първите 6 задължителни части.",
-        "services-docs-title": "Необходими документи за вкарване в Община",
-        "services-doc-1": "Копие от нотариален акт",
-        "services-doc-2": "Проектната документация",
-        "services-doc-3": "Предварителни договори с Електро и ВиК дружествата",
-        "services-doc-4": "Виза за проектиране – оригинал",
-        "services-extra-title": "Допълнителни услуги",
-        "services-extra-1": "Архитектурно заснемане на съществуващи сгради",
-        "services-extra-2": "Проекти за надстройки",
-        "services-extra-3": "Проекти за основен ремонт на покрив",
-        "services-extra-4": "Реконструкции",
-        "services-extra-5": "Преустройства"
+        "opt-general": "Общо съобщение",
+        "opt-consultation": "Консултация за проект",
+        "opt-offer": "Запитване за оферта",
+        "contact-name-label": "Вашето име",
+        "contact-email-label": "Вашият имейл",
+        "contact-phone-label": "Телефонен номер",
+        "contact-msg-label": "Съобщение / Детайли",
+        "contact-btn-send": "Изпрати запитване"
     },
     "en": {
         // Navigation & General
@@ -203,14 +100,11 @@ const translations = {
 
         // Catalog
         "catalog-title": "Our Projects",
-        "catalog-desc": "Explore our full portfolio of architectural designs and innovative solutions.",
+        "catalog-desc": "Explore our full portfolio of architectural designs.",
         "no-projects": "No projects added yet.",
-        "page-title-catalog": "Projects - Academy Architect Studio",
-        "catalog-main-title": "Projects & Services",
-        "catalog-main-desc": "Complete engineering design, architecture, interior, and construction solutions from A to Z.",
         "search-placeholder": "Search by number or name...",
         
-        // Филтри в каталог (English)
+        // Filters (English)
         "filter-cat-label": "Category:",
         "cat-all": "All",
         "cat-houses": "🏡 Houses",
@@ -223,155 +117,38 @@ const translations = {
         "sub-wood": "Wood",
         "sub-stone": "Stone",
         "sub-concrete": "Concrete / Solid",
-        "sub-prefab": "Prefabricated",
         "sub-modern": "Modern",
-        "sub-bulgarian": "Bulgarian Style",
         "reset-filters": "Reset Filters",
 
-        // Home Page (Hero & Quote)
+        // Home
         "hero-eyebrow": "ARCHITECTURAL STUDIO",
         "hero-title": "Designing the future with attention to detail",
-        "hero-desc": "We create minimalist and functional spaces, combining modern technologies with clean architecture.",
+        "hero-desc": "We create minimalist and functional spaces, combining modern technologies.",
         "hero-btn-browse": "Browse Projects",
         "hero-btn-contact": "Contact Us",
-        "featured-title": "Featured Projects",
-        "quote-text": "\"Good architecture doesn't just occupy space, it gives it meaning.\"",
-        "quote-sub": "We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.",
-
-        // About Page (about.html)
+        
+        // About
         "about-eyebrow": "WHO WE ARE",
         "about-title": "Creating spaces with meaning, aesthetics, and lasting value.",
-        "about-desc1": "Academy Architect Studio combines modern architectural design with intelligent engineering thinking. Our goal is to turn every vision into reality, combining functionality, sustainability, and clean style.",
-        "about-desc2": "We work on diverse residential, public, and corporate projects, taking an individual approach to every idea and client requirement.",
-        "about-card1-title": "Innovative Design",
-        "about-card1-desc": "We combine modern architectural trends with advanced software and AI planning for maximum precision.",
-        "about-card2-title": "Sustainability",
-        "about-card2-desc": "We design with environmental care, using energy-efficient solutions and durable materials.",
-        "about-card3-title": "Individual Approach",
-        "about-card3-desc": "Every space is born from dialogue with our clients to match their exact lifestyle.",
-        "about-mission-title": "Our Mission",
-        "about-mission-desc": "To deliver flawless architectural solutions that improve the quality of life and exceed our clients' expectations.",
-        "about-vision-title": "Our Vision",
-        "about-vision-desc": "We believe in sustainable architecture that combines aesthetics, innovation, and responsibility toward future generations.",
-        "about-team-title": "Our Team",
-        "about-team-subtitle": "Professionals experienced in modern design and construction supervision.",
-
-        // Contact Page (contact.html)
+        
+        // Contact (English)
         "contact-eyebrow": "CONTACT & BOOKING",
         "contact-title": "Discuss your project or book a meeting.",
-        "contact-address-label": "Address:",
-        "contact-email-label": "Email:",
-        "contact-phone-label": "Phone:",
-        "form-type-label": "Inquiry Type",
-        "form-name-label": "Your Name",
-        "form-email-label": "Your Email",
-        "form-phone-label": "Phone Number",
-        "form-msg-label": "Message / Details",
-        "form-btn-submit": "Send Inquiry",
-
-        // Admin Panel
-        "admin-page-title": "Admin Panel | Academy Architect Studio",
-        "admin-logout": "🚪 Logout",
-        "admin-back-home": "← Back to Home",
-        "admin-eyebrow": "SITE MANAGEMENT",
-        "admin-title": "Admin Panel",
-        "admin-tab-about": "📄 About Us",
-        "admin-tab-contact": "📞 Contacts",
-        "admin-tab-new": "➕ New Project",
-        "admin-tab-projects": "🗂️ Projects",
-        "admin-tab-bookings": "📅 Bookings",
-        "admin-about-heading": "Edit \"About Us\" Page",
-        "admin-label-title": "Title",
-        "admin-label-desc": "Main Text / Description",
-        "admin-btn-save-about": "Save \"About Us\" Changes",
-        "admin-contact-heading": "Edit \"Contacts\" Page",
-        "admin-label-address": "Studio Address",
-        "admin-label-email": "Email Address",
-        "admin-label-phone": "Phone Number",
-        "admin-btn-save-contact": "Save \"Contacts\" Changes",
-        "admin-upload-heading": "Upload New Project",
-        "admin-proj-title": "Project Name *",
-        "admin-proj-maincat": "Main Category *",
-        "admin-proj-subcat": "Subcategory (Type) *",
-        "admin-proj-desc": "Description",
-        "admin-proj-area": "Area (m²)",
-        "admin-proj-floors": "Floors",
-        "admin-proj-beds": "Bedrooms",
-        "admin-proj-baths": "Bathrooms",
-        "admin-proj-material": "Material / Structure",
-        "admin-proj-style": "Style",
-        "admin-proj-price": "Price (BGN)",
-        "admin-proj-mainimg": "Main Image",
-        "admin-proj-plans": "Floor Plans / Layouts (multiple floors)",
-        "admin-proj-facades": "Facades (multiple selection)",
-        "admin-proj-section": "Section",
-        "admin-proj-gallery": "Additional Visualizations",
-        "admin-proj-fav": "Favorite Project (on Home page)",
-        "admin-btn-save-proj": "Save Project to Catalog",
-        "admin-btn-cancel": "Cancel",
-        "admin-existing-projects": "Existing Projects",
-        "admin-existing-bookings": "Saved Consultations",
-
-        // Services Page (services.html)
-        "services-eyebrow": "OUR SERVICES",
-        "services-main-title": "Complete Design for Building Permit Acquisition",
-        "services-main-desc": "Leading design studio offering a full range of services – from initial consultations and pre-design studies to investment design and author supervision.",
-        "services-stage1-tag": "STAGE 1",
-        "services-stage1-title": "Consultations & Pre-Design Studies",
-        "services-stage1-desc": "We review existing documentation and data requirements. We evaluate terrain factors such as slope, orientation, and placement, along with zoning parameters like density, height, maximum floor area, landscaping, and boundary offsets.",
-        "services-stage2-tag": "STAGE 2",
-        "services-stage2-title": "Investment Design",
-        "services-stage2-desc": "Starts with a design visa issued by the Municipality. After refining the conceptual design and 3D visualizations based on your preferences, we proceed directly to the technical design phase across all engineering disciplines.",
-        
-        "services-req-docs-title": "Required Documents to Start Design",
-        "services-req-concept-title": "/ To Start a Conceptual Design /",
-        "services-doc-concept-1-title": "Title Deed:",
-        "services-doc-concept-1-desc": " Property ownership document.",
-        "services-doc-concept-2-title": "Design Visa:",
-        "services-doc-concept-2-desc": " The most important document to start the design and obtain initial data from utility companies. It is a copy of a combined sketch with marked building lines. An application is submitted to the municipality along with a sketch and/or a motivated proposal from an architect. Takes from 3 to 14 days.",
-        "services-doc-concept-3-title": "Geodetic Survey (Tachymetric Survey):",
-        "services-doc-concept-3-desc": " Serves as the basis for the design. Performed by a surveyor on site. Processing takes up to one week.",
-        "services-doc-concept-3-note": "💡 Our team includes a surveyor whose services we can offer you.",
-        "services-req-tech-title": "/ To Start a Technical Design /",
-        "services-doc-tech-1-title": "Opinion from Power Distribution Company:",
-        "services-doc-tech-1-desc": " An application is submitted to the power company to issue a grid connection opinion. For single-family residential buildings, 10-15 kW of power is requested (preferably 15 kW).",
-        "services-doc-tech-2-title": "Initial Data from Water Supply Company:",
-        "services-doc-tech-2-desc": " A request is submitted to the local water company for initial data required for the water supply project preparation. Once prepared, it is coordinated back with them to issue an opinion.",
-
-        "services-specs-title": "Specialized Projects",
-        "services-req-title": "Mandatory Building Permit Projects (Small Residential Buildings):",
-        "services-spec-1": "Architectural Part",
-        "services-spec-2": "Structural Part + Compliance Assessment (Technical Control)",
-        "services-spec-3": "Water Supply and Sewerage (WSS) Part",
-        "services-spec-4": "Electrical Part",
-        "services-spec-5": "Energy Efficiency Part",
-        "services-spec-6": "Energy Efficiency Compliance Assessment",
-        "services-spec-7": "Geodetic Part (Trace Plan and Vertical Planning)",
-        "services-opt-title": "Additional Projects (If Required):",
-        "services-opt-1": "HVAC Part – Heating, Ventilation, and Air Conditioning",
-        "services-opt-2": "Health and Safety Plan (HSP)",
-        "services-opt-3": "Park Design and Landscaping (for multi-family buildings)",
-        "services-opt-4": "Fire Safety Part (for buildings over 200 sq.m)",
-        "services-opt-5": "Construction Waste Management Plan (for buildings over 300 sq.m)",
-        "services-opt-6": "Technological Part (for industrial buildings and food establishments)",
-        "services-note": "* Note: Mandatory cost documentation is included in the projects. The design price includes the first 6 mandatory parts.",
-        "services-docs-title": "Required Documents for Municipal Submission",
-        "services-doc-1": "Copy of Title Deed",
-        "services-doc-2": "Project Documentation",
-        "services-doc-3": "Preliminary Agreements with Electricity and Water Utilities",
-        "services-doc-4": "Design Visa – Original",
-        "services-extra-title": "Additional Services",
-        "services-extra-1": "Architectural Survey of Existing Buildings",
-        "services-extra-2": "Vertical Extension Projects",
-        "services-extra-3": "Roof Renovation Projects",
-        "services-extra-4": "Reconstructions",
-        "services-extra-5": "Alterations"
+        "opt-general": "General Inquiry",
+        "opt-consultation": "Project Consultation",
+        "opt-offer": "Request a Quote",
+        "contact-name-label": "Your Name",
+        "contact-email-label": "Your Email",
+        "contact-phone-label": "Phone Number",
+        "contact-msg-label": "Message / Details",
+        "contact-btn-send": "Send Inquiry"
     }
 };
 
 function setLanguage(lang) {
     localStorage.setItem('siteLang', lang);
     
+    // Превод на innerHTML
     document.querySelectorAll('[data-key]').forEach(element => {
         const key = element.getAttribute('data-key');
         if (translations[lang] && translations[lang][key]) {
@@ -379,6 +156,7 @@ function setLanguage(lang) {
         }
     });
 
+    // Превод на placeholder
     document.querySelectorAll('[data-placeholder-key]').forEach(element => {
         const key = element.getAttribute('data-placeholder-key');
         if (translations[lang] && translations[lang][key]) {
@@ -386,10 +164,28 @@ function setLanguage(lang) {
         }
     });
 
+    // Превод на value (за бутони/input)
+    document.querySelectorAll('[data-value-key]').forEach(element => {
+        const key = element.getAttribute('data-value-key');
+        if (translations[lang] && translations[lang][key]) {
+            element.value = translations[lang][key];
+        }
+    });
+
+    // Превод на title
+    document.querySelectorAll('[data-title-key]').forEach(element => {
+        const key = element.getAttribute('data-title-key');
+        if (translations[lang] && translations[lang][key]) {
+            element.title = translations[lang][key];
+        }
+    });
+
+    // Активен клас на бутоните
     document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
     if (lang === 'en' && document.getElementById('btn-en')) document.getElementById('btn-en').classList.add('active');
     if (lang === 'bg' && document.getElementById('btn-bg')) document.getElementById('btn-bg').classList.add('active');
 
+    // Рестартиране на филтри ако е нужно
     if (typeof filterProjects === 'function') {
         filterProjects();
     }
@@ -399,3 +195,6 @@ function initLanguage() {
     const savedLang = localStorage.getItem('siteLang') || 'bg';
     setLanguage(savedLang);
 }
+
+// Извикваме при зареждане
+document.addEventListener("DOMContentLoaded", initLanguage);
