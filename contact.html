@@ -291,6 +291,20 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
+        // Осигуряване на преводите за тези ключове, ако липсват в translations.js
+        if (typeof translations !== 'undefined') {
+            if (translations['bg']) {
+                translations['bg']['contact-lbl-address'] = 'Адрес:';
+                translations['bg']['contact-lbl-email'] = 'Имейл:';
+                translations['bg']['contact-lbl-phone'] = 'Телефон:';
+            }
+            if (translations['en']) {
+                translations['en']['contact-lbl-address'] = 'Address:';
+                translations['en']['contact-lbl-email'] = 'Email:';
+                translations['en']['contact-lbl-phone'] = 'Phone:';
+            }
+        }
+
         // Инициализация на Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
@@ -409,7 +423,6 @@
             }
         }
 
-        // ДУЕЗИЧНА ФУНКЦИЯ ЗА ЗАРЕЖДАНЕ ОТ FIREBASE
         async function loadContactData() {
             try {
                 const contactDoc = await db.collection('siteSettings').doc('contact').get();
@@ -417,7 +430,6 @@
                     const data = contactDoc.data();
                     const currentLang = localStorage.getItem('siteLang') || 'bg';
 
-                    // Превключване на адреса спрямо текущия език (BG/EN)
                     const address = currentLang === 'en' 
                         ? (data.addressEn || data.address || "Sofia · Plovdiv · Varna") 
                         : (data.address || "Sofia · Plovdiv · Varna");
@@ -425,7 +437,6 @@
                     const email = data.email || "info@architectstudio.com";
                     const phone = data.phone || "+359 812 345 678";
 
-                    // Попълване на страниците и футъра
                     ['pageAddress', 'footAddress'].forEach(id => {
                         if (document.getElementById(id)) document.getElementById(id).textContent = address;
                     });
@@ -457,12 +468,11 @@
             await loadContactData();
         });
 
-        // Слушател за смяна на езика в реално време (при клик на EN/BG бутоните)
         const originalSetLanguage = window.setLanguage;
         if (typeof originalSetLanguage === 'function') {
             window.setLanguage = function(lang) {
                 originalSetLanguage(lang);
-                loadContactData(); // Автоматично презарежда правилния език за контактите
+                loadContactData();
             };
         }
     </script>
