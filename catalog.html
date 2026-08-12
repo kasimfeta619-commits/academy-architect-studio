@@ -1,332 +1,4 @@
-<!DOCTYPE html>
-<html lang="bg">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle" data-key="page-title-catalog">Проекти - Academy Architect Studio</title>
-    <link rel="stylesheet" href="style.css">
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('siteTheme');
-            if (savedTheme === 'dark') {
-                document.documentElement.classList.add('dark-mode');
-            }
-        })();
-    </script>
-    <style>
-        .catalog-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 50px 20px;
-        }
-        
-        /* Заглавна част в редакционен стил */
-        .catalog-top-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-            padding-bottom: 25px;
-        }
-        .catalog-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 8px;
-            font-weight: 300;
-            letter-spacing: -1px;
-        }
-        .catalog-header p {
-            color: #666;
-            font-size: 0.95rem;
-        }
-
-        /* Префинирана търсачка */
-        .search-box {
-            position: relative;
-            width: 320px;
-        }
-        .search-box input {
-            width: 100%;
-            padding: 12px 16px 12px 40px;
-            border: 1px solid rgba(0,0,0,0.15);
-            border-radius: 30px;
-            font-size: 0.9rem;
-            outline: none;
-            transition: all 0.3s ease;
-            background: transparent;
-        }
-        .search-box input:focus {
-            border-color: #111;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            background: var(--card-bg, #fff);
-        }
-        .search-box::before {
-            content: "🔍";
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.85rem;
-            opacity: 0.5;
-        }
-
-        /* Филтри без тежки кутии - леки и ефирни */
-        .filters-bar {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-        .filter-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .filter-label {
-            font-size: 0.75rem;
-            color: #888;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            width: 110px;
-        }
-        .filter-btn {
-            background: transparent;
-            border: 1px solid rgba(0,0,0,0.1);
-            padding: 7px 14px;
-            border-radius: 20px;
-            font-size: 0.82rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: #555;
-            font-weight: 400;
-        }
-        .filter-btn:hover {
-            border-color: #111;
-            color: #111;
-        }
-        .filter-btn.active {
-            background: #111;
-            color: #fff;
-            border-color: #111;
-            font-weight: 500;
-        }
-        
-        /* Бутон за изчистване */
-        .reset-link {
-            background: none;
-            border: none;
-            color: #888;
-            font-size: 0.85rem;
-            cursor: pointer;
-            text-decoration: underline;
-            padding: 0;
-            transition: color 0.2s;
-        }
-        .reset-link:hover {
-            color: #ff4d4d;
-        }
-
-        /* Мрежа за проектите */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 40px 30px;
-        }
-        .project-card {
-            background: transparent;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-        }
-        .project-img-box {
-            position: relative;
-            width: 100%;
-            height: 260px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #f0f0f0;
-            margin-bottom: 15px;
-        }
-        .project-img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .project-card:hover .project-img-box img {
-            transform: scale(1.03);
-        }
-        .project-code-badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(6px);
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        .project-info {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .p-title {
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: var(--text-color, #111);
-            letter-spacing: -0.3px;
-        }
-        .p-meta-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            color: #777;
-        }
-
-        /* Тъмен режим */
-        .dark-mode .catalog-top-flex {
-            border-bottom-color: rgba(255,255,255,0.1);
-        }
-        .dark-mode .search-box input {
-            border-color: rgba(255,255,255,0.2);
-            color: #fff;
-        }
-        .dark-mode .filter-btn {
-            border-color: rgba(255,255,255,0.15);
-            color: #bbb;
-        }
-        .dark-mode .filter-btn:hover {
-            border-color: #fff;
-            color: #fff;
-        }
-        .dark-mode .filter-btn.active {
-            background: #fff;
-            color: #000;
-            border-color: #fff;
-        }
-        .dark-mode .project-img-box {
-            background: #1a1a1a;
-        }
-    </style>
-</head>
-<body>
-
-    <nav class="navbar">
-        <a href="index.html" class="logo-area">
-            <img src="assets/main-graphic.png" alt="Лого на студиото" class="logo-icon" onerror="this.style.display='none'">
-            <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
-        </a>
-        
-        <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
-
-        <div id="nav-links">
-            <a href="index.html" data-key="nav-home">Начало</a>
-            <a href="catalog.html" class="active" data-key="nav-catalog">Проекти</a>
-            <a href="services.html" data-key="nav-services">Услуги</a>
-            <a href="about.html" data-key="nav-about">За нас</a>
-            <a href="planner.html" data-key="nav-planner">AI Planner</a>
-            <a href="estimator.html" data-key="nav-estimator">Калкулатор</a>
-            <a href="contact.html" data-key="nav-contact">Контакти</a>
-        </div>
-
-        <div class="header-actions">
-            <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
-            <div class="lang-switcher">
-                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn active" id="btn-bg" onclick="setLanguage('bg')">BG</button>
-            </div>
-            <div id="navAuthContainer">
-                <a href="login.html" class="btn-login" data-key="nav-login">Вход</a>
-            </div>
-        </div>
-    </nav>
-
-    <main class="catalog-container">
-        <!-- Заглавна секция и търсачка -->
-        <div class="catalog-top-flex">
-            <div class="catalog-header">
-                <h1 data-key="catalog-main-title">Проекти и Услуги</h1>
-                <p data-key="catalog-main-desc">Пълно инженерно проектиране, архитектура, интериор и строителни решения от А до Я.</p>
-            </div>
-            <div class="search-box">
-                <input type="text" id="projectSearchInput" data-placeholder-key="search-placeholder" placeholder="Търсене по номер или име..." oninput="filterProjects()">
-            </div>
-        </div>
-
-        <!-- Разширени и подредени филтри -->
-        <div class="filters-bar">
-            <!-- Ред 1: Основни категории -->
-            <div class="filter-row">
-                <span class="filter-label" data-key="filter-cat-label">Категория:</span>
-                <button class="filter-btn cat-btn active" onclick="setCategoryFilter('all', this)" data-key="cat-all">Всички</button>
-                <button class="filter-btn cat-btn" onclick="setCategoryFilter('houses', this)" data-key="cat-houses">🏡 Къщи</button>
-                <button class="filter-btn cat-btn" onclick="setCategoryFilter('interior', this)" data-key="cat-interior">🛋️ Интериорен дизайн</button>
-                <button class="filter-btn cat-btn" onclick="setCategoryFilter('public', this)" data-key="cat-public">🏢 Обществени & Промишлени</button>
-                <button class="filter-btn cat-btn" onclick="setCategoryFilter('reconstruction', this)" data-key="cat-reconstruction">🛠️ Реконструкции & Надстройки</button>
-                <button class="filter-btn cat-btn" onclick="setCategoryFilter('engineering', this)" data-key="cat-engineering">📐 Заснемане & КПИИ</button>
-            </div>
-            
-            <!-- Ред 2: Специфични материали / площ / стил -->
-            <div class="filter-row">
-                <span class="filter-label" data-key="filter-sub-label">Материал / Тип:</span>
-                <button class="filter-btn sub-btn active" onclick="setSubFilter('all', this)" data-key="sub-all">Всички видове</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('wood', this)" data-key="sub-wood">Дървени</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('stone', this)" data-key="sub-stone">Каменни</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('concrete', this)" data-key="sub-concrete">Бетонни / Масивни</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('prefabricated', this)" data-key="sub-prefab">Сглобяеми</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('modern', this)" data-key="sub-modern">Модерни</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('bulgarian', this)" data-key="sub-bulgarian">Български стил</button>
-                
-                <div style="margin-left: auto;">
-                    <button class="reset-link" onclick="resetFilters()" data-key="reset-filters">Изчисти филтрите</button>
-                </div>
-            </div>
-        </div>
-
-        <section class="catalog-section">
-            <div class="projects-grid" id="catalogProjectsContainer"></div>
-        </section>
-    </main>
-
-    <footer class="main-footer">
-        <div class="footer-logo-area">
-            <div>
-                <div class="footer-brand">Academy Architect Studio</div>
-                <div class="footer-subtext">Design & Engineering</div>
-            </div>
-        </div>
-        
-        <div class="footer-col">
-            <h4 data-key="footer-contacts">Контакти</h4>
-            <p><span id="footAddress">София, България</span></p>
-            <p><a href="mailto:office@architect-studio.bg" id="footEmailLink"><span id="footEmail">office@architect-studio.bg</span></a></p>
-            <p><span id="footPhone">+359 88 123 4567</span></p>
-        </div>
-        
-        <div class="footer-col">
-            <h4 data-key="footer-links-title">Връзки</h4>
-            <p><a href="index.html" data-key="nav-home">Начало</a></p>
-            <p><a href="catalog.html" data-key="nav-catalog">Проекти</a></p>
-            <p><a href="services.html" data-key="nav-services">Услуги</a></p>
-            <p><a href="about.html" data-key="nav-about">За нас</a></p>
-        </div>
-        
-        <div class="footer-right">
-            <p data-key="footer-rights">&copy; 2026 Academy Architect Studio.<br>Всички права запазени.</p>
-        </div>
-    </footer>
-
-    <script src="translations.js"></script>
+<script src="translations.js"></script>
     <script src="auth.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -401,16 +73,36 @@
                 const materialStr = (p.material || '').toLowerCase();
                 const styleStr = (p.style || '').toLowerCase();
                 
-                const matchesSearch = !searchText || title.includes(searchText) || idStr.includes(searchText) || styleStr.includes(searchText);
+                const matchesSearch = !searchText || title.includes(searchText) || idStr.includes(searchText) || styleStr.includes(searchText) || catStr.includes(searchText);
 
                 let matchesCat = true;
                 if (activeCategory !== 'all') {
-                    matchesCat = catStr.includes(activeCategory);
+                    if (activeCategory === 'houses') {
+                        matchesCat = catStr.includes('жилищна') || catStr.includes('house');
+                    } else if (activeCategory === 'interior') {
+                        matchesCat = catStr.includes('интериор') || catStr.includes('interior');
+                    } else if (activeCategory === 'public') {
+                        matchesCat = catStr.includes('обществени') || catStr.includes('industrial') || catStr.includes('public');
+                    } else if (activeCategory === 'reconstruction') {
+                        matchesCat = catStr.includes('реконструкц') || catStr.includes('reconstruction');
+                    } else if (activeCategory === 'engineering') {
+                        matchesCat = catStr.includes('заснемане') || catStr.includes('engineering');
+                    } else {
+                        matchesCat = catStr.includes(activeCategory);
+                    }
                 }
 
                 let matchesSub = true;
                 if (activeSubFilter !== 'all') {
-                    matchesSub = materialStr.includes(activeSubFilter) || styleStr.includes(activeSubFilter);
+                    let subKey = activeSubFilter;
+                    if (subKey === 'wood') subKey = 'дърв';
+                    else if (subKey === 'stone') subKey = 'кам';
+                    else if (subKey === 'concrete') subKey = 'бетон';
+                    else if (subKey === 'prefabricated') subKey = 'сглобяем';
+                    else if (subKey === 'modern') subKey = 'modern';
+                    else if (subKey === 'bulgarian') subKey = 'български';
+
+                    matchesSub = materialStr.includes(subKey) || styleStr.includes(subKey) || title.includes(subKey);
                 }
 
                 return matchesSearch && matchesCat && matchesSub;
@@ -501,13 +193,12 @@
                     if (data.address && document.getElementById('footAddress')) document.getElementById('footAddress').textContent = data.address;
                     if (data.email) {
                         if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
-                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink'].href = 'mailto:' + data.email;
+                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
                     }
                     if (data.phone && document.getElementById('footPhone')) document.getElementById('footPhone').textContent = data.phone;
                 }
             } catch (e) {}
 
-            // Добавен код за автоматично презареждане на проектите при смяна на езика
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     setTimeout(() => {
@@ -517,5 +208,3 @@
             });
         });
     </script>
-</body>
-</html>
