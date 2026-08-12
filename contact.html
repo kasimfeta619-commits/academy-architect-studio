@@ -24,10 +24,11 @@
             max-width: 1200px;
             margin: 60px auto;
             padding: 0 5%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: start;
+        }
+
+        /* Горна част - в една колона */
+        .contact-header {
+            margin-bottom: 50px;
         }
         .contact-eyebrow {
             font-size: 0.75rem;
@@ -42,20 +43,32 @@
             font-weight: 400;
             line-height: 1.2;
             margin: 0 0 30px 0;
+            max-width: 800px;
         }
         .contact-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 40px; /* Хоризонтално подреждане на контактите за по-добър вид */
             font-size: 1.05rem;
-            line-height: 2;
+            line-height: 1.6;
             color: var(--text-color, #1a1a1a);
-            margin-bottom: 30px;
         }
         .contact-details p {
-            margin: 10px 0;
+            margin: 0;
         }
         .contact-details a {
             color: inherit;
             text-decoration: underline;
         }
+
+        /* Долна част - формите разделени на 2 */
+        .contact-forms-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
         .contact-card-form {
             background: var(--card-bg, #ffffff);
             border: 1px solid var(--border-color, #e6dec9);
@@ -110,45 +123,7 @@
             background: #333;
         }
 
-        .user-profile-nav {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            color: inherit;
-        }
-        .user-avatar-badge {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
-            background-color: rgba(0,0,0,0.06);
-            border-radius: 50%;
-            transition: background-color 0.3s;
-        }
-        body.dark-mode .user-avatar-badge {
-            background-color: #2d2d2d;
-        }
-        .user-avatar-badge svg {
-            fill: currentColor;
-        }
-        .online-status-dot {
-            position: absolute;
-            top: 1px;
-            right: 1px;
-            width: 10px;
-            height: 10px;
-            background-color: #2ecc71;
-            border: 2px solid var(--bg-color, #fbf9f4);
-            border-radius: 50%;
-        }
-        .profile-label-text {
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-
+        /* Dark Mode */
         body.dark-mode .contact-card-form {
             background: #1e1e1e !important;
             border-color: #2c2c2c !important;
@@ -168,11 +143,30 @@
             background: #d4c8b6;
         }
 
+        /* User Profile Badge (Nav) */
+        .user-profile-nav {
+            display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;
+        }
+        .user-avatar-badge {
+            position: relative; display: flex; align-items: center; justify-content: center;
+            width: 38px; height: 38px; background-color: rgba(0,0,0,0.06); border-radius: 50%;
+        }
+        body.dark-mode .user-avatar-badge { background-color: #2d2d2d; }
+        .user-avatar-badge svg { fill: currentColor; }
+        .online-status-dot {
+            position: absolute; top: 1px; right: 1px; width: 10px; height: 10px;
+            background-color: #2ecc71; border: 2px solid var(--bg-color, #fbf9f4); border-radius: 50%;
+        }
+        .profile-label-text { font-size: 0.95rem; font-weight: 600; }
+
         @media (max-width: 850px) {
-            .contact-container {
+            .contact-forms-wrapper {
                 grid-template-columns: 1fr;
-                margin: 40px auto;
                 gap: 40px;
+            }
+            .contact-details {
+                flex-direction: column;
+                gap: 15px;
             }
         }
     </style>
@@ -212,50 +206,91 @@
 
     <!-- СЪДЪРЖАНИЕ КОНТАКТИ -->
     <main class="contact-container">
-        <div>
+        
+        <!-- ГОРНА ЧАСТ: Една колона за общата информация -->
+        <div class="contact-header">
             <span class="contact-eyebrow" data-key="contact-eyebrow">ВРЪЗКА И РЕЗЕРВАЦИЯ</span>
             <h1 class="contact-title" data-key="contact-title">Обсъдете вашия проект или запазете среща.</h1>
             
             <div class="contact-details">
-                <p><strong><span data-key="contact-lbl-address">Адрес:</span></strong> <span id="pageAddress">Sofia · Plovdiv · Varna · Gotce Delchev</span></p>
-                <p><strong><span data-key="contact-lbl-email">Имейл:</span></strong> <a href="mailto:info@architectstudio.com" id="pageEmailLink"><span id="pageEmail">info@architectstudio.com</span></a></p>
+                <p><strong><span data-key="contact-lbl-address">Адрес:</span></strong> <span id="pageAddress">Sofia · Plovdiv · Varna · Burgas · Gotce Delchev</span></p>
+                <p><strong><span data-key="contact-lbl-email">Имейл:</span></strong> <a href="mailto:architect.studio.office@gmail.com" id="pageEmailLink"><span id="pageEmail">architect.studio.office@gmail.com</span></a></p>
                 <p><strong><span data-key="contact-lbl-phone">Телефон:</span></strong> <span id="pagePhone">+359 812 345 678</span></p>
             </div>
         </div>
 
-        <div class="contact-card-form">
-            <form id="contactForm" onsubmit="handleContactSubmit(event)">
-                <div class="form-group">
-                    <label data-key="contact-type-label">Тип запитване</label>
-                    <select id="inquiryType">
-                        <option value="Общо съобщение" data-key="opt-general">Общо съобщение</option>
-                        <option value="Консултация за проект" data-key="opt-consultation">Консултация за проект</option>
-                        <option value="Запитване за оферта" data-key="opt-offer">Запитване за оферта</option>
-                    </select>
-                </div>
+        <!-- ДОЛНА ЧАСТ: Формите разделени на 2 -->
+        <div class="contact-forms-wrapper">
+            
+            <!-- ЛЯВА ФОРМА: Интерактивно запазване по часове (през половин час) -->
+            <div class="contact-card-form">
+                <h3 style="margin-top: 0; font-size: 1.1rem; margin-bottom: 20px; font-weight: 500;" data-key="booking-box-title">Директно запазване на час</h3>
+                
+                <form id="clientBookingForm" onsubmit="handleTimeSlotBooking(event)">
+                    <div class="form-group">
+                        <label data-key="booking-date-label">Изберете дата</label>
+                        <input type="date" id="bookingDate" required onchange="loadAvailableSlots()">
+                    </div>
 
-                <div class="form-group">
-                    <label data-key="contact-name-label">Вашето име</label>
-                    <input type="text" id="senderName" required placeholder="">
-                </div>
+                    <div class="form-group">
+                        <label data-key="booking-slots-label">Свободни и заети часове</label>
+                        <div id="slotsContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 8px;">
+                            <p style="color: #8c8275; font-size: 0.9rem; grid-column: 1 / -1;" data-key="booking-select-date-first" id="defaultSlotText">Моля, първо изберете дата.</p>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label data-key="contact-email-label">Вашият имейл</label>
-                    <input type="email" id="senderEmail" required placeholder="">
-                </div>
+                    <input type="hidden" id="selectedTimeSlot" value="">
+                    
+                    <div class="form-group">
+                        <label data-key="booking-client-name">Вашето име за резервацията</label>
+                        <input type="text" id="slotClientName" required placeholder="">
+                    </div>
 
-                <div class="form-group">
-                    <label data-key="contact-phone-label">Телефонен номер</label>
-                    <input type="tel" id="senderPhone" placeholder="+359..." required>
-                </div>
+                    <div class="form-group">
+                        <label data-key="booking-client-phone">Телефон за връзка</label>
+                        <input type="tel" id="slotClientPhone" required placeholder="+359...">
+                    </div>
 
-                <div class="form-group">
-                    <label data-key="contact-msg-label">Съобщение / Детайли</label>
-                    <textarea id="senderMessage" rows="4" required></textarea>
-                </div>
+                    <button type="submit" id="bookBtn" class="btn-submit" disabled data-key="booking-btn-submit">Запази избрания час</button>
+                </form>
+            </div>
 
-                <button type="submit" class="btn-submit" data-key="contact-btn-send">Изпрати запитване</button>
-            </form>
+            <!-- ДЯСНА ФОРМА: Стандартно съобщение / запитване -->
+            <div class="contact-card-form">
+                <form id="contactForm" onsubmit="handleContactSubmit(event)">
+                    <div class="form-group">
+                        <label data-key="contact-type-label">Тип запитване</label>
+                        <select id="inquiryType">
+                            <option value="Общо съобщение" data-key="opt-general">Общо съобщение</option>
+                            <option value="Консултация за проект" data-key="opt-consultation">Консултация за проект</option>
+                            <option value="Запитване за оферта" data-key="opt-offer">Запитване за оферта</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-key="contact-name-label">Вашето име</label>
+                        <input type="text" id="senderName" required placeholder="">
+                    </div>
+
+                    <div class="form-group">
+                        <label data-key="contact-email-label">Вашият имейл</label>
+                        <input type="email" id="senderEmail" required placeholder="">
+                    </div>
+
+                    <div class="form-group">
+                        <label data-key="contact-phone-label">Телефонен номер</label>
+                        <input type="tel" id="senderPhone" placeholder="+359..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-key="contact-msg-label">Съобщение / Детайли</label>
+                        <textarea id="senderMessage" rows="4" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit" data-key="contact-btn-send">Изпрати запитване</button>
+                </form>
+            </div>
+            
         </div>
     </main>
 
@@ -271,7 +306,7 @@
         <div class="footer-col">
             <h4 data-key="footer-contacts">Contacts</h4>
             <p><span id="footAddress">Sofia, Bulgaria</span></p>
-            <p><a href="mailto:office@architect-studio.bg" id="footEmailLink"><span id="footEmail">office@architect-studio.bg</span></a></p>
+            <p><a href="mailto:architect.studio.office@gmail.com" id="footEmailLink"><span id="footEmail">architect.studio.office@gmail.com</span></a></p>
             <p><span id="footPhone">+359 88 123 4567</span></p>
         </div>
         
@@ -291,17 +326,31 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
-        // Осигуряване на преводите за тези ключове, ако липсват в translations.js
+        // Преводи за новите елементи
         if (typeof translations !== 'undefined') {
             if (translations['bg']) {
                 translations['bg']['contact-lbl-address'] = 'Адрес:';
                 translations['bg']['contact-lbl-email'] = 'Имейл:';
                 translations['bg']['contact-lbl-phone'] = 'Телефон:';
+                translations['bg']['booking-box-title'] = 'Директно запазване на час';
+                translations['bg']['booking-date-label'] = 'Изберете дата';
+                translations['bg']['booking-slots-label'] = 'Свободни и заети часове';
+                translations['bg']['booking-select-date-first'] = 'Моля, първо изберете дата.';
+                translations['bg']['booking-client-name'] = 'Вашето име за резервацията';
+                translations['bg']['booking-client-phone'] = 'Телефон за връзка';
+                translations['bg']['booking-btn-submit'] = 'Запази избрания час';
             }
             if (translations['en']) {
                 translations['en']['contact-lbl-address'] = 'Address:';
                 translations['en']['contact-lbl-email'] = 'Email:';
                 translations['en']['contact-lbl-phone'] = 'Phone:';
+                translations['en']['booking-box-title'] = 'Direct Time Booking';
+                translations['en']['booking-date-label'] = 'Select Date';
+                translations['en']['booking-slots-label'] = 'Available & Booked Slots';
+                translations['en']['booking-select-date-first'] = 'Please select a date first.';
+                translations['en']['booking-client-name'] = 'Your Name for Booking';
+                translations['en']['booking-client-phone'] = 'Phone Number';
+                translations['en']['booking-btn-submit'] = 'Book Selected Slot';
             }
         }
 
@@ -393,6 +442,139 @@
             }
         }
 
+        // Работни часове през половин час от 09:00 до 17:00 ч.
+        const workingHours = [
+            "09:00", "09:30", "10:00", "10:30", 
+            "11:00", "11:30", "12:00", "12:30", 
+            "13:00", "13:30", "14:00", "14:30", 
+            "15:00", "15:30", "16:00", "16:30", "17:00"
+        ];
+
+        // Задаване на правилен първоначален текст според езика
+        function updateDefaultSlotText() {
+            const currentLang = localStorage.getItem('siteLang') || 'bg';
+            const defaultText = document.getElementById('defaultSlotText');
+            if (defaultText) {
+                defaultText.textContent = currentLang === 'en' ? 'Please select a date first.' : 'Моля, първо изберете дата.';
+            }
+        }
+
+        async function loadAvailableSlots() {
+            const dateVal = document.getElementById('bookingDate').value;
+            const container = document.getElementById('slotsContainer');
+            document.getElementById('selectedTimeSlot').value = '';
+            document.getElementById('bookBtn').disabled = true;
+
+            if (!dateVal) {
+                updateDefaultSlotText();
+                return;
+            }
+
+            container.innerHTML = `<p style="color: #8c8275; font-size: 0.9rem; grid-column: 1 / -1;">Зареждане...</p>`;
+
+            try {
+                const snapshot = await db.collection('studioBookings').get();
+                let bookedTimes = [];
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.datetime && data.datetime.startsWith(dateVal)) {
+                        const parts = data.datetime.split(' ');
+                        if (parts.length >= 2) {
+                            bookedTimes.push(parts[1].substring(0, 5));
+                        }
+                    }
+                });
+
+                container.innerHTML = '';
+
+                workingHours.forEach(hour => {
+                    const isTaken = bookedTimes.includes(hour);
+                    const slotBtn = document.createElement('button');
+                    slotBtn.type = 'button';
+                    slotBtn.innerText = hour;
+                    slotBtn.style.padding = '8px 2px';
+                    slotBtn.style.borderRadius = '6px';
+                    slotBtn.style.border = '1px solid var(--border-color, #e6dec9)';
+                    slotBtn.style.cursor = isTaken ? 'not-allowed' : 'pointer';
+                    slotBtn.style.fontWeight = '600';
+                    slotBtn.style.fontSize = '0.8rem';
+
+                    if (isTaken) {
+                        slotBtn.style.background = '#f2dede';
+                        slotBtn.style.color = '#a94442';
+                        slotBtn.title = 'Зает час';
+                        slotBtn.disabled = true;
+                    } else {
+                        slotBtn.style.background = 'var(--bg-color, #fff)';
+                        slotBtn.style.color = 'var(--text-color, #1a1a1a)';
+                        slotBtn.onclick = () => {
+                            document.querySelectorAll('#slotsContainer button').forEach(b => {
+                                if (!b.disabled) {
+                                    b.style.background = 'var(--bg-color, #fff)';
+                                    b.style.color = 'var(--text-color, #1a1a1a)';
+                                }
+                            });
+                            slotBtn.style.background = '#1a1a1a';
+                            slotBtn.style.color = '#fff';
+                            
+                            document.getElementById('selectedTimeSlot').value = hour;
+                            document.getElementById('bookBtn').disabled = false;
+                        };
+                    }
+                    container.appendChild(slotBtn);
+                });
+
+            } catch (err) {
+                console.error("Грешка при зареждане на часовете:", err);
+                container.innerHTML = `<p style="color: #a94442; grid-column: 1 / -1; font-size: 0.85rem;">Грешка при проверка на часовете.</p>`;
+            }
+        }
+
+        function resetSlotsContainer() {
+            document.getElementById('slotsContainer').innerHTML = `<p style="color: #8c8275; font-size: 0.9rem; grid-column: 1 / -1;" data-key="booking-select-date-first" id="defaultSlotText"></p>`;
+            updateDefaultSlotText();
+        }
+
+        async function handleTimeSlotBooking(e) {
+            e.preventDefault();
+            const name = document.getElementById('slotClientName').value;
+            const phone = document.getElementById('slotClientPhone').value;
+            const dateVal = document.getElementById('bookingDate').value;
+            const timeVal = document.getElementById('selectedTimeSlot').value;
+
+            if (!dateVal || !timeVal) {
+                alert("Моля, изберете дата и свободен час!");
+                return;
+            }
+
+            const fullDatetime = `${dateVal} ${timeVal}:00`;
+
+            const newBooking = {
+                name: name,
+                phone: phone,
+                service: 'Директен час (Консултация)',
+                datetime: fullDatetime,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await db.collection('studioBookings').add(newBooking);
+                alert('Успешно запазихте своя час!');
+                document.getElementById('clientBookingForm').reset();
+                resetSlotsContainer();
+                document.getElementById('bookBtn').disabled = true;
+            } catch (err) {
+                let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
+                bookings.push(newBooking);
+                localStorage.setItem('studioBookings', JSON.stringify(bookings));
+                alert('Успешно запазихте своя час!');
+                document.getElementById('clientBookingForm').reset();
+                resetSlotsContainer();
+                document.getElementById('bookBtn').disabled = true;
+            }
+        }
+
         async function handleContactSubmit(e) {
             e.preventDefault();
             
@@ -431,10 +613,10 @@
                     const currentLang = localStorage.getItem('siteLang') || 'bg';
 
                     const address = currentLang === 'en' 
-                        ? (data.addressEn || data.address || "Sofia · Plovdiv · Varna") 
-                        : (data.address || "Sofia · Plovdiv · Varna");
+                        ? (data.addressEn || data.address || "Sofia · Plovdiv · Varna · Burgas · Gotce Delchev") 
+                        : (data.address || "Sofia · Plovdiv · Varna · Burgas · Gotce Delchev");
                     
-                    const email = data.email || "info@architectstudio.com";
+                    const email = data.email || "architect.studio.office@gmail.com";
                     const phone = data.phone || "+359 812 345 678";
 
                     ['pageAddress', 'footAddress'].forEach(id => {
@@ -464,6 +646,7 @@
                 setLanguage(savedLang);
             }
             
+            updateDefaultSlotText();
             updateNavAuthStatus();
             await loadContactData();
         });
@@ -472,6 +655,7 @@
         if (typeof originalSetLanguage === 'function') {
             window.setLanguage = function(lang) {
                 originalSetLanguage(lang);
+                updateDefaultSlotText();
                 loadContactData();
             };
         }
