@@ -275,7 +275,12 @@
         </div>
 
         <div id="bookingsTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Запазени консултации</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; font-weight: 400; font-size: 1.3rem;">Запазени консултации</h3>
+                <button onclick="downloadCalendar()" style="background: #1a1a1a; color: #fff; padding: 10px 15px; border: none; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; font-weight: 600;">
+                    📥 Синхронизирай с Календар
+                </button>
+            </div>
             <div id="adminBookingsList"></div>
         </div>
     </main>
@@ -288,7 +293,6 @@
     </div>
 
     <script>
-        // Конфигурацията е качена успешно
         const firebaseConfig = {
             apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
             authDomain: "architect-studio-1810c.firebaseapp.com",
@@ -599,6 +603,46 @@
             document.getElementById('submitBtn').innerText = "Запази проекта в каталога";
             document.getElementById('cancelBtn').style.display = 'none';
             document.getElementById('uploadTabBtn').innerText = "➕ Нов проект";
+        }
+
+        // Функция за сваляне на календар (.ics)
+        async function downloadCalendar() {
+            try {
+                const snapshot = await db.collection('studioBookings').get();
+                let icsData = [
+                    "BEGIN:VCALENDAR",
+                    "VERSION:2.0",
+                    "PRODID:-//Academy Architect Studio//BG",
+                    "METHOD:PUBLISH"
+                ];
+
+                snapshot.forEach(doc => {
+                    const b = doc.data();
+                    if (b.datetime) {
+                        const cleanDate = b.datetime.replace(/[-:]/g, '').replace(' ', 'T') + '00Z';
+                        icsData.push("BEGIN:VEVENT");
+                        icsData.push(`UID:${doc.id}@architect-studio.bg`);
+                        icsData.push(`SUMMARY:Консултация с: ${b.name}`);
+                        icsData.push(`DESCRIPTION:Телефон: ${b.phone} | Услуга: ${b.service}`);
+                        icsData.push(`DTSTART:${cleanDate}`);
+                        icsData.push(`DTEND:${cleanDate}`);
+                        icsData.push("END:VEVENT");
+                    }
+                });
+
+                icsData.push("END:VCALENDAR");
+
+                const blob = new Blob([icsData.join('\r\n')], { type: 'text/calendar' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'reservations.ics';
+                a.click();
+                
+                alert("Файлът е свален успешно! Отворете го на телефона си, за да добавите резервациите в Apple Calendar.");
+            } catch (err) {
+                alert("Грешка при генериране: " + err.message);
+            }
         }
 
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
