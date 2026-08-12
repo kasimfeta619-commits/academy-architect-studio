@@ -71,6 +71,7 @@ const translations = {
         // Контакти (ключове за опциите в <select>)
         "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
         "contact-title": "Обсъдете вашия проект или запазете среща.",
+        "contact-type-label": "Тип запитване",
         "opt-general": "Общо съобщение",
         "opt-consultation": "Консултация за проект",
         "opt-offer": "Запитване за оферта",
@@ -134,6 +135,7 @@ const translations = {
         // Contact (English)
         "contact-eyebrow": "CONTACT & BOOKING",
         "contact-title": "Discuss your project or book a meeting.",
+        "contact-type-label": "Inquiry Type",
         "opt-general": "General Inquiry",
         "opt-consultation": "Project Consultation",
         "opt-offer": "Request a Quote",
@@ -148,11 +150,15 @@ const translations = {
 function setLanguage(lang) {
     localStorage.setItem('siteLang', lang);
     
-    // Превод на innerHTML
+    // Превод на innerHTML (или textContent ако е OPTION)
     document.querySelectorAll('[data-key]').forEach(element => {
         const key = element.getAttribute('data-key');
         if (translations[lang] && translations[lang][key]) {
-            element.innerHTML = translations[lang][key];
+            if (element.tagName === 'OPTION') {
+                element.textContent = translations[lang][key];
+            } else {
+                element.innerHTML = translations[lang][key];
+            }
         }
     });
 
