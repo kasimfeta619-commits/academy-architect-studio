@@ -195,6 +195,26 @@ function setLanguage(lang) {
     if (typeof filterProjects === 'function') {
         filterProjects();
     }
+
+    // ВАЖНО: Възстановяване на данните от админ панела след превод на страницата
+    const savedContact = localStorage.getItem('siteContact');
+    if (savedContact) {
+        try {
+            const data = JSON.parse(savedContact);
+            if (data.address && document.getElementById('footAddress')) {
+                document.getElementById('footAddress').textContent = data.address;
+            }
+            if (data.email) {
+                if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
+                if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
+            }
+            if (data.phone && document.getElementById('footPhone')) {
+                document.getElementById('footPhone').textContent = data.phone;
+            }
+        } catch (e) {
+            console.error('Грешка при зареждане на контактите', e);
+        }
+    }
 }
 
 function initLanguage() {
