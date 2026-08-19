@@ -401,6 +401,9 @@
                         elem.label = dictionary[key];
                     } else if (elem.tagName === 'TITLE') {
                         document.title = dictionary[key];
+                    } else if (key === 'footer-rights') {
+                        // Поправката само за футъра, за да разчита <br> и &copy; правилно
+                        elem.innerHTML = dictionary[key];
                     } else {
                         elem.textContent = dictionary[key];
                     }
