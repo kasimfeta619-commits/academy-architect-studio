@@ -82,7 +82,7 @@
         }
         
         .admin-nav-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid var(--border-color, #eadecc); padding-bottom: 15px; flex-wrap: wrap; }
-        .tab-btn { background: #f4eee5; border: 1px solid #eadecc; padding: 12px 15px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; color: #555; transition: all 0.2s; flex: 1; text-align: center; min-width: 140px; }
+        .tab-btn { background: #f4eee5; border: 1px solid #eadecc; padding: 12px 15px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; color: #555; transition: all 0.2s; flex: 1; text-align: center; min-width: 130px; }
         .tab-btn:hover { background: #eadecc; color: #1a1a1a; }
         .tab-btn.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
 
@@ -92,6 +92,7 @@
         .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
         .form-group label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #8c8275; font-weight: 700; }
         .form-group input[type="text"], 
+        .form-group input[type="number"], 
         .form-group select, 
         .form-group textarea { padding: 12px; border: 1px solid #eadecc; background: #fff; font-size: 1rem; color: #1a1a1a; outline: none; width: 100%; box-sizing: border-box; transition: background-color 0.3s, border-color 0.3s, color 0.3s; font-family: inherit; }
         .form-group textarea { resize: vertical; height: 120px; }
@@ -137,6 +138,7 @@
         body.dark-mode .tab-btn:hover { background: #333 !important; color: #fff !important; }
         body.dark-mode .tab-btn.active { background: #eadecc !important; color: #1a1a1a !important; border-color: #eadecc !important; }
         body.dark-mode .form-group input[type="text"], 
+        body.dark-mode .form-group input[type="number"], 
         body.dark-mode .form-group select, 
         body.dark-mode .form-group textarea,
         body.dark-mode .form-group input[type="file"] { background: #121212 !important; border-color: #444 !important; color: #ffffff !important; }
@@ -195,6 +197,7 @@
         <div class="admin-nav-tabs">
             <button class="tab-btn active" onclick="switchTab('aboutTab', this)">📄 За нас</button>
             <button class="tab-btn" onclick="switchTab('contactTab', this)">📞 Контакти</button>
+            <button class="tab-btn" onclick="switchTab('estimatorTab', this)">🧮 Калкулатор</button>
             <button class="tab-btn" onclick="switchTab('uploadTab', this)" id="uploadTabBtn">➕ Нов проект</button>
             <button class="tab-btn" onclick="switchTab('projectsTab', this)">🗂️ Проекти</button>
             <button class="tab-btn" onclick="switchTab('bookingsTab', this)">📅 Резервации</button>
@@ -216,6 +219,32 @@
                 <div class="form-group"><label>Имейл адрес</label><input type="text" id="contactEmail"></div>
                 <div class="form-group"><label>Телефонен номер</label><input type="text" id="contactPhone"></div>
                 <button type="submit" class="btn-action">Запази промените "Контакти"</button>
+            </form>
+        </div>
+
+        <!-- НОВ РАЗДЕЛ ЗА КАЛКУЛАТОРА (ESTIMATOR CONFIG) -->
+        <div id="estimatorTab" class="admin-section">
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Настройки на цените за калкулатора (Estimator)</h3>
+            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можеш да зададеш точните суми и коефициенти, които публичният калкулатор използва за своите изчисления на кв.м.</p>
+            
+            <form id="estimatorConfigForm">
+                <div class="form-group">
+                    <label>Цена за кв.м - Архитектурен проект (лв./кв.м)</label>
+                    <input type="number" step="0.5" id="priceArch" placeholder="напр. 30">
+                </div>
+                <div class="form-group">
+                    <label>Цена за кв.м - 3D Визуализация (лв./кв.м)</label>
+                    <input type="number" step="0.5" id="price3d" placeholder="напр. 15">
+                </div>
+                <div class="form-group">
+                    <label>Цена за кв.м - Интериорен дизайн (лв./кв.м)</label>
+                    <input type="number" step="0.5" id="priceInterior" placeholder="напр. 45">
+                </div>
+                <div class="form-group">
+                    <label>Базова такса за допълнителни екстри / съгласуване (лв.)</label>
+                    <input type="number" step="1" id="baseFee" placeholder="напр. 500">
+                </div>
+                <button type="submit" class="btn-action">Запази настройките на калкулатора</button>
             </form>
         </div>
 
@@ -252,7 +281,6 @@
                 <div class="form-group"><label>Стил</label><input type="text" id="style"></div>
                 <div class="form-group"><label>Цена (лв.)</label><input type="text" id="price"></div>
                 
-                <!-- ДОБАВЕНО ПОЛЕ ЗА ВИДЕО (YOUTUBE ИЛИ ФАЙЛ) -->
                 <div style="background: #eadecc; padding: 15px; margin-bottom: 20px; border: 1px solid #d4c8b6;">
                     <h4 style="margin-top: 0; font-size: 0.9rem; text-transform: uppercase; color: #1a1a1a;">Видео презентация (Изберете едно от двете)</h4>
                     
@@ -409,6 +437,16 @@
                     document.getElementById('contactEmail').value = data.email || '';
                     document.getElementById('contactPhone').value = data.phone || '';
                 }
+
+                // Зареждане на настройките за калкулатора от Firebase
+                const estimatorDoc = await db.collection('siteSettings').doc('estimatorConfig').get();
+                if (estimatorDoc.exists) {
+                    const edata = estimatorDoc.data();
+                    document.getElementById('priceArch').value = edata.priceArch || '';
+                    document.getElementById('price3d').value = edata.price3d || '';
+                    document.getElementById('priceInterior').value = edata.priceInterior || '';
+                    document.getElementById('baseFee').value = edata.baseFee || '';
+                }
             } catch (err) {
                 console.log("Firebase sync note:", err);
             }
@@ -440,9 +478,28 @@
             };
             try {
                 await db.collection('siteSettings').doc('contact').set(contactData);
-                alert('Страницата "Контакти" е успешно обновена в облака!');
+                localStorage.setItem('siteContact', JSON.stringify(contactData));
+                alert('Страницата "Контакти" е успешно обновена и синхронизирана!');
             } catch (err) {
                 alert('Грешка при запис: ' + err.message);
+            }
+        });
+
+        // ЗАПИС НА НАСТРОЙКИТЕ НА КАЛКУЛАТОРА (Estimator Config)
+        document.getElementById('estimatorConfigForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const estimatorData = {
+                priceArch: parseFloat(document.getElementById('priceArch').value) || 0,
+                price3d: parseFloat(document.getElementById('price3d').value) || 0,
+                priceInterior: parseFloat(document.getElementById('priceInterior').value) || 0,
+                baseFee: parseFloat(document.getElementById('baseFee').value) || 0
+            };
+            try {
+                await db.collection('siteSettings').doc('estimatorConfig').set(estimatorData);
+                localStorage.setItem('estimatorConfig', JSON.stringify(estimatorData));
+                alert('Цените за калкулатора са успешно актуализирани!');
+            } catch (err) {
+                alert('Грешка при запис на калкулатора: ' + err.message);
             }
         });
 
@@ -802,7 +859,7 @@
 
                 resetProjectForm();
                 renderAdminList();
-                switchTab('projectsTab', document.querySelectorAll('.tab-btn')[3]);
+                switchTab('projectsTab', document.querySelectorAll('.tab-btn')[4]);
 
             } catch (err) {
                 console.error(err);
