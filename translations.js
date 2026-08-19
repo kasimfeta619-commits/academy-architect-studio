@@ -150,7 +150,6 @@ const translations = {
 function setLanguage(lang) {
     localStorage.setItem('siteLang', lang);
     
-    // Превод на innerHTML (или textContent ако е OPTION)
     document.querySelectorAll('[data-key]').forEach(element => {
         const key = element.getAttribute('data-key');
         if (translations[lang] && translations[lang][key]) {
@@ -162,7 +161,6 @@ function setLanguage(lang) {
         }
     });
 
-    // Превод на placeholder
     document.querySelectorAll('[data-placeholder-key]').forEach(element => {
         const key = element.getAttribute('data-placeholder-key');
         if (translations[lang] && translations[lang][key]) {
@@ -170,7 +168,6 @@ function setLanguage(lang) {
         }
     });
 
-    // Превод на value (за бутони/input)
     document.querySelectorAll('[data-value-key]').forEach(element => {
         const key = element.getAttribute('data-value-key');
         if (translations[lang] && translations[lang][key]) {
@@ -178,7 +175,6 @@ function setLanguage(lang) {
         }
     });
 
-    // Превод на title
     document.querySelectorAll('[data-title-key]').forEach(element => {
         const key = element.getAttribute('data-title-key');
         if (translations[lang] && translations[lang][key]) {
@@ -186,30 +182,36 @@ function setLanguage(lang) {
         }
     });
 
-    // Активен клас на бутоните
     document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
     if (lang === 'en' && document.getElementById('btn-en')) document.getElementById('btn-en').classList.add('active');
     if (lang === 'bg' && document.getElementById('btn-bg')) document.getElementById('btn-bg').classList.add('active');
 
-    // Рестартиране на филтри ако е нужно
     if (typeof filterProjects === 'function') {
         filterProjects();
     }
 
-    // ВАЖНО: Възстановяване на данните от админ панела след превод на страницата
-    const savedContact = localStorage.getItem('siteContact');
+    // Автоматично взимане на промените от админ панела за контактите
+    loadAdminContacts();
+}
+
+function loadAdminContacts() {
+    const savedContact = localStorage.getItem('siteContact') || localStorage.getItem('contactInfo') || localStorage.getItem('contacts');
     if (savedContact) {
         try {
             const data = JSON.parse(savedContact);
-            if (data.address && document.getElementById('footAddress')) {
-                document.getElementById('footAddress').textContent = data.address;
+            const address = data.address || data.loc || data.location;
+            const email = data.email || data.mail;
+            const phone = data.phone || data.tel;
+
+            if (address && document.getElementById('footAddress')) {
+                document.getElementById('footAddress').textContent = address;
             }
-            if (data.email) {
-                if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
-                if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
+            if (email) {
+                if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = email;
+                if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + email;
             }
-            if (data.phone && document.getElementById('footPhone')) {
-                document.getElementById('footPhone').textContent = data.phone;
+            if (phone && document.getElementById('footPhone')) {
+                document.getElementById('footPhone').textContent = phone;
             }
         } catch (e) {
             console.error('Грешка при зареждане на контактите', e);
@@ -222,5 +224,7 @@ function initLanguage() {
     setLanguage(savedLang);
 }
 
-// Извикваме при зареждане
-document.addEventListener("DOMContentLoaded", initLanguage);
+document.addEventListener("DOMContentLoaded", () => {
+    initLanguage();
+    loadAdminContacts();
+});
