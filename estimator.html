@@ -560,22 +560,36 @@
             setLanguage(currentLang);
             updateNavAuthStatus();
             
-            const savedContact = localStorage.getItem('siteContact');
-            if (savedContact) {
-                try {
-                    const data = JSON.parse(savedContact);
-                    if (data.address && document.getElementById('footAddress')) {
-                        document.getElementById('footAddress').textContent = data.address;
-                    }
-                    if (data.email) {
-                        if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
-                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
-                    }
-                    if (data.phone && document.getElementById('footPhone')) {
-                        document.getElementById('footPhone').textContent = data.phone;
-                    }
-                } catch (e) {
-                    console.error('Грешка при зареждане на контактите', e);
+            // Универсално зареждане на контактите от админ панела (покрива всички възможни ключове)
+            const possibleKeys = ['siteContact', 'contactInfo', 'adminContact', 'contacts', 'studioContact'];
+            let contactData = null;
+            for (let k of possibleKeys) {
+                const saved = localStorage.getItem(k);
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (parsed && typeof parsed === 'object') {
+                            contactData = parsed;
+                            break;
+                        }
+                    } catch (e) {}
+                }
+            }
+
+            if (contactData) {
+                const address = contactData.address || contactData.loc || contactData.location || contactData.addr;
+                const email = contactData.email || contactData.mail || contactData.e_mail;
+                const phone = contactData.phone || contactData.tel || contactData.mobile;
+
+                if (address && document.getElementById('footAddress')) {
+                    document.getElementById('footAddress').textContent = address;
+                }
+                if (email) {
+                    if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = email;
+                    if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + email;
+                }
+                if (phone && document.getElementById('footPhone')) {
+                    document.getElementById('footPhone').textContent = phone;
                 }
             }
         });
