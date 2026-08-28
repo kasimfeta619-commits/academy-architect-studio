@@ -395,8 +395,7 @@
             const filtered = allProjectsGlobal.filter(p => {
                 const title = (p.title || '').toLowerCase();
                 const idStr = String(p.id || '').toLowerCase();
-                // Проверяваме едновременно category и mainCategory за максимална сигурност
-                const catStr = (p.category || p.mainCategory || '').toLowerCase();
+                const catStr = (p.mainCategory || p.category || '').toLowerCase();
                 const materialStr = (p.material || '').toLowerCase();
                 const styleStr = (p.style || '').toLowerCase();
                 
@@ -405,15 +404,15 @@
                 let matchesCat = true;
                 if (activeCategory !== 'all') {
                     if (activeCategory === 'houses') {
-                        matchesCat = catStr.includes('жилищна') || catStr.includes('house') || catStr.includes('residential') || catStr.includes('къщ');
+                        matchesCat = catStr.includes('residential') || catStr.includes('жилищна') || catStr.includes('house') || catStr.includes('къщ');
                     } else if (activeCategory === 'interior') {
-                        matchesCat = catStr.includes('интериор') || catStr.includes('interior');
+                        matchesCat = catStr.includes('interior') || catStr.includes('интериор');
                     } else if (activeCategory === 'public') {
-                        matchesCat = catStr.includes('обществени') || catStr.includes('industrial') || catStr.includes('public') || catStr.includes('commercial');
+                        matchesCat = catStr.includes('commercial') || catStr.includes('industrial') || catStr.includes('обществени') || catStr.includes('промишлен');
                     } else if (activeCategory === 'reconstruction') {
-                        matchesCat = catStr.includes('реконструкц') || catStr.includes('reconstruction');
+                        matchesCat = catStr.includes('reconstruction') || catStr.includes('реконструкц');
                     } else if (activeCategory === 'engineering') {
-                        matchesCat = catStr.includes('заснемане') || catStr.includes('engineering');
+                        matchesCat = catStr.includes('engineering') || catStr.includes('заснемане');
                     } else {
                         matchesCat = catStr.includes(activeCategory);
                     }
@@ -426,7 +425,7 @@
                     else if (subKey === 'stone') subKey = 'кам';
                     else if (subKey === 'concrete') subKey = 'бетон';
                     else if (subKey === 'prefabricated') subKey = 'сглобяем';
-                    else if (subKey === 'modern') subKey = 'modern';
+                    else if (subKey === 'modern') subKey = 'модерн';
                     else if (subKey === 'bulgarian') subKey = 'български';
 
                     matchesSub = materialStr.includes(subKey) || styleStr.includes(subKey) || title.includes(subKey);
@@ -451,7 +450,6 @@
                     const displayCode = p.code || `#${String(index + 1).padStart(3, '0')}`;
                     const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
 
-                    // Интелигентно разпознаване: ако има видео линк, го показваме вместо снимка
                     let mediaContent = '';
                     if (p.videoUrl) {
                         let embedUrl = p.videoUrl;
