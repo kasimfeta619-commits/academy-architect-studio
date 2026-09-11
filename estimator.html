@@ -170,7 +170,7 @@
                 Изберете типа обект, населеното място/област и обхвата на проекта, за да получите бърза и точна справка за необходимия архитектурен и инженерен хонорар.
             </p>
             <p style="font-size: 0.85rem; color: #8c8275; line-height: 1.5;" data-key="estimator-disclaimer">
-                * Цените са базирани на националните и регионални пазарни стандарти за проектиране за 2026 г.
+                * Цените са базирани на актуалните пазарни стандарти и норми за инвестиционно проектиране за 2026 г.
             </p>
         </div>
 
@@ -298,7 +298,7 @@
                 "estimator-eyebrow": "БЮДЖЕТЕН КАЛКУЛАТОР",
                 "estimator-title": "Изчислете ориентировъчния си бюджет за проектиране.",
                 "estimator-desc": "Изберете типа обект, населеното място/област и обхвата на проекта, за да получите бърза и точна справка за необходимия архитектурен и инженерен хонорар.",
-                "estimator-disclaimer": "* Цените са базирани на националните и регионални пазарни стандарти за проектиране за 2026 г.",
+                "estimator-disclaimer": "* Цените са базирани на актуалните пазарни стандарти и норми за инвестиционно проектиране за 2026 г.",
                 "label-type": "Тип обект",
                 "opt-house": "Еднофамилна къща / Вила",
                 "opt-multi": "Многофамилна жилищна сграда",
@@ -346,7 +346,7 @@
                 "estimator-eyebrow": "COST ESTIMATOR",
                 "estimator-title": "Calculate the estimated budget for your project.",
                 "estimator-desc": "Select the project type, location/region in Bulgaria, and scope of work to get a fast and accurate fee estimation.",
-                "estimator-disclaimer": "* Prices are based on national and regional architectural & engineering design market standards for 2026.",
+                "estimator-disclaimer": "* Prices are based on current market standards and engineering design norms for 2026.",
                 "label-type": "Project Type",
                 "opt-house": "Single-family House / Villa",
                 "opt-multi": "Multi-family Residential Building",
@@ -402,7 +402,6 @@
                     } else if (elem.tagName === 'TITLE') {
                         document.title = dictionary[key];
                     } else if (key === 'footer-rights') {
-                        // Поправката само за футъра, за да разчита <br> и &copy; правилно
                         elem.innerHTML = dictionary[key];
                     } else {
                         elem.textContent = dictionary[key];
@@ -452,7 +451,7 @@
             if (menu) menu.style.display = 'none';
         });
 
-        // ИЗЧИСЛЯВАНЕ НА БЮДЖЕТА
+        // ИЗЧИСЛЯВАНЕ НА БЮДЖЕТА (С реалистични пазарни ставки)
         function calculateBudget() {
             const type = document.getElementById('projectType').value;
             const location = document.getElementById('projectLocation').value;
@@ -461,11 +460,12 @@
 
             if (area <= 0) return;
 
-            let baseRate = 10; 
-            if (type === 'house') baseRate = 11;          
-            else if (type === 'multi') baseRate = 8.5;    
-            else if (type === 'industrial') baseRate = 6; 
-            else if (type === 'interior') baseRate = 9;   
+            // Базови пазарни ставки (по-адекватни на реалните условия)
+            let baseRate = 20; 
+            if (type === 'house') baseRate = 22;          
+            else if (type === 'multi') baseRate = 18;    
+            else if (type === 'industrial') baseRate = 15; 
+            else if (type === 'interior') baseRate = 25;   
 
             let locCoeff = 1.0;
             switch(location) {
@@ -483,10 +483,10 @@
                     locCoeff = 1.35;
                     break;
                 case 'large_cities': 
-                    locCoeff = 1.80;
+                    locCoeff = 1.60;
                     break;
                 case 'sofia': 
-                    locCoeff = 2.25;
+                    locCoeff = 2.00;
                     break;
                 case 'other_locations': 
                     locCoeff = 0.90;
@@ -496,13 +496,13 @@
             }
 
             let scopeCoeff = 1.0;
-            if (scope === 'arch_only') scopeCoeff = 0.40;
-            else if (scope === 'full_interior') scopeCoeff = 1.35;
+            if (scope === 'arch_only') scopeCoeff = 0.50;
+            else if (scope === 'full_interior') scopeCoeff = 2.05;
 
             let sqmRate = baseRate * locCoeff * scopeCoeff;
             let total = area * sqmRate;
 
-            const minFee = 350;
+            const minFee = 500;
             if (total < minFee && scope !== 'arch_only') {
                 total = minFee;
                 sqmRate = total / area;
