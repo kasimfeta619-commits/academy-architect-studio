@@ -587,8 +587,13 @@ body.dark-mode .project-img-box {
 .support-copy { display: flex; flex-direction: column; gap: 4px; padding-right: 12px; }
 .support-copy strong { font-size: .92rem; line-height: 1.3; }
 .support-copy span { color: #666; font-size: .8rem; line-height: 1.4; }
+.support-options { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 7px; }
+.support-option { width: 100%; padding: 8px 10px; border: 1px solid #eadecc; border-radius: 8px; background: #f5efe6; color: #1a1a1a; text-align: left; font: inherit; font-size: .75rem; cursor: pointer; }
+.support-option:hover, .support-option:focus-visible { border-color: #8c8275; background: #fff; outline: 2px solid #8c8275; outline-offset: 1px; }
+.support-option-muted { background: transparent; color: #666; }
 .support-action { grid-column: 1 / -1; text-align: center; padding: 9px 12px; border-radius: 8px; background: #1a1a1a; color: #fff; text-decoration: none; font-size: .78rem; font-weight: 600; }
 .support-action:hover { background: #8c8275; }
+.support-action[hidden] { display: none; }
 .support-trigger { display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border: 1px solid #eadecc; border-radius: 999px; background: #1a1a1a; color: #fff; box-shadow: 0 8px 20px rgba(26, 26, 26, .16); font-size: .78rem; font-weight: 600; cursor: pointer; }
 .support-trigger-dot { width: 7px; height: 7px; border-radius: 50%; background: #f5efe6; animation: support-pulse 1.8s ease-in-out infinite; }
 .support-widget.is-collapsed .support-screen { display: none; }
