@@ -210,18 +210,29 @@
                     const member = docSnap.data();
                     const imgSource = member.image || 'https://placehold.co/400x400?text=Architect';
                     
+                    // Генерираме динамичен data-key спрямо ролята от базата (напр. role-architect)
+                    const roleKey = `role-${(member.role || '').toLowerCase().trim()}`;
+                    
                     teamHTML += `
                         <div class="team-member-card" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
                             <div style="width: 180px; height: 180px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; border: 3px solid #e6dfd5; background: #fff;">
                                 <img src="${imgSource}" alt="${member.name}" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                             <h3 style="font-size: 1.25rem; margin-bottom: 8px; color: #1a1a1a; font-weight: 600;">${member.name}</h3>
-                            <p style="font-size: 0.9rem; color: #8c8275; text-transform: uppercase; letter-spacing: 1px; margin: 0; font-weight: 600;">${member.role}</p>
+                            <p data-key="${roleKey}" style="font-size: 0.9rem; color: #8c8275; text-transform: uppercase; letter-spacing: 1px; margin: 0; font-weight: 600;">${member.role}</p>
                         </div>
                     `;
                 });
 
                 teamContainer.innerHTML = teamHTML;
+                
+                // След като се инжектира HTML-а, ако имаме активен преводач, го извикваме да приложи преводите
+                if (typeof updateContent === 'function') {
+                    updateContent();
+                } else if (typeof setLanguage === 'function') {
+                    setLanguage(localStorage.getItem('siteLang') || 'bg');
+                }
+
             } catch (e) {
                 console.error('Грешка при зареждане на екипа', e);
                 document.getElementById('publicTeamGrid').innerHTML = `<p style="text-align: center; color: #a83232; grid-column: 1 / -1;">Възникна грешка при зареждане на екипа.</p>`;
