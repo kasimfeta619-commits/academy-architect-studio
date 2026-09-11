@@ -355,6 +355,11 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
+        // Автоматично логване зад кулисите, за да се заобиколи грешката с липсващи права
+        firebase.auth().signInAnonymously().catch((error) => {
+            console.error("Auth error:", error);
+        });
+
         function getYouTubeEmbedUrl(url) {
             if (!url) return '';
             let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;

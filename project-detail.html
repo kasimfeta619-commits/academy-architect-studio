@@ -67,6 +67,32 @@
             border-radius: 8px;
             margin-bottom: 40px; 
         }
+        .project-video-section {
+            margin: -10px 0 40px;
+            padding: 22px;
+            background: #f4eee5;
+            border: 1px solid #eadecc;
+            border-radius: 8px;
+        }
+        .project-video-section video {
+            display: block;
+            width: 100%;
+            max-height: 560px;
+            border-radius: 4px;
+            background: #111;
+        }
+        .project-video-note {
+            margin: 0 0 12px;
+            color: #8c8275;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        body.dark-mode .project-video-section {
+            background: #1e1e1e !important;
+            border-color: #2c2c2c !important;
+        }
         .project-description { 
             font-size: 1.05rem; 
             line-height: 1.8; 
@@ -266,6 +292,7 @@
                     if (docSnap.exists()) {
                         const p = docSnap.data();
                         const mainImg = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+                        const projectVideoUrl = p.videoUrl || 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/My_first_board_A_modern_two-story-house_with_a_white_and_wood_NOqlVS4n-7gUr2SeVKW5quJx310PYC6da6ObnJ9.mp4';
                         
                         document.getElementById('pageTitle').textContent = `${p.title} | Academy Architect Studio`;
 
@@ -332,6 +359,14 @@
                             </div>
 
                             <img src="${mainImg}" alt="${p.title}" class="main-project-img" onerror="this.src='https://placehold.co/1000x600?text=Image'">
+
+                            <section class="project-video-section" aria-label="Видео представяне на проекта">
+                                <p class="project-video-note">Видео представяне · забавено до 0.4×</p>
+                                <video controls preload="metadata" playsinline onloadedmetadata="this.playbackRate = 0.4">
+                                    <source src="${projectVideoUrl}" type="video/mp4">
+                                    Вашият браузър не поддържа видео елемента.
+                                </video>
+                            </section>
 
                             <div class="project-description">
                                 <p>${p.desc || p.description || ''}</p>
