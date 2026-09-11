@@ -223,12 +223,31 @@
                 <h4 style="margin-top: 0; font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;" id="teamFormSubTitle">Добави нов член на екипа</h4>
                 <div class="form-group">
                     <label>Име и Фамилия *</label>
-                    <input type="text" id="memberName" required placeholder="напр. Архитект Иван Петров">
+                    <input type="text" id="memberName" required placeholder="напр. Иван Петров">
                 </div>
+                
                 <div class="form-group">
                     <label>Позиция / Длъжност *</label>
-                    <input type="text" id="memberRole" required placeholder="напр. Главен архитект / Основател">
+                    <select id="memberRole" required>
+                        <option value="" disabled selected>-- Изберете длъжност --</option>
+                        <option value="manager">Управител (Manager / Director)</option>
+                        <option value="lead_architect">Главен архитект (Lead Architect)</option>
+                        <option value="architect">Архитект (Architect)</option>
+                        <option value="intern_architect">Стажант-архитект (Intern Architect)</option>
+                        <option value="designer">Дизайнер (Designer)</option>
+                        <option value="structural_engineer">Инженер-конструктор (Structural Engineer)</option>
+                        <option value="road_engineer">Пътен инженер (Road Engineer)</option>
+                        <option value="plumbing_engineer">Експерт ВиК (Plumbing Engineer)</option>
+                        <option value="electrical_engineer">Експерт ЕЛ (Electrical Engineer)</option>
+                        <option value="hvac_engineer">Експерт ОВК (HVAC Engineer)</option>
+                        <option value="landscape_architect">Ландшафтен архитект (Landscape Architect)</option>
+                        <option value="geodesist">Геодезист (Geodesist / Surveyor)</option>
+                        <option value="drafter">Чертожник (Drafter / CAD Operator)</option>
+                        <option value="cost_estimator">Бюджетчик / К.С.С. (Cost Estimator)</option>
+                        <option value="project_manager">Ръководител проекти (Project Manager)</option>
+                    </select>
                 </div>
+
                 <div class="form-group">
                     <label>Снимка на члена на екипа *</label>
                     <input type="file" id="memberImg" accept="image/*">

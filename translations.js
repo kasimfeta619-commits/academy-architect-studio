@@ -47,7 +47,7 @@ const translations = {
         // Начална страница
         "hero-eyebrow": "АРХИТЕКТУРНО СТУДИО",
         "hero-title": "Проектираме бъдещето с внимание към детайла",
-        "hero-desc": "Създаваме минималистични и функционални пространства, съчетавайки модерни технологии с изчистена архитектура.",
+        "hero-desc": "Создаваме минималистични и функционални пространства, съчетавайки модерни технологии с изчистена архитектура.",
         "hero-btn-browse": "Разгледай проектите",
         "hero-btn-contact": "Свържете се с нас",
         "featured-title": "Избрани проекти",
@@ -56,7 +56,7 @@ const translations = {
 
         // Страница "За нас" и Екип
         "about-eyebrow": "КОИ СМЕ НИЕ",
-        "about-title": "Създаваме пространства със смисъл, естетика и дълготрайна стойност.",
+        "about-title": "Создаваме пространства със смисъл, естетика и дълготрайна стойност.",
         "about-desc1": "Academy Architect Studio обединява съвременния архитектурен дизайн с интелигентно инженерно мислене.",
         "about-desc2": "Работим по разнообразни жилищни, обществени и корпоративни проекти.",
         "about-card1-title": "Иновативен дизайн",
@@ -70,6 +70,23 @@ const translations = {
         "team-eyebrow": "ПРОФЕСИОНАЛИСТИ",
         "team-title": "Екип в студиото",
         "team-loading": "Зареждане на екипа...",
+
+        // Позиции в екипа (Роли)
+        "role-manager": "Управител (Manager / Director)",
+        "role-lead_architect": "Главен архитект (Lead Architect)",
+        "role-architect": "Архитект (Architect)",
+        "role-intern_architect": "Стажант-архитект (Intern Architect)",
+        "role-designer": "Дизайнер (Designer)",
+        "role-structural_engineer": "Инженер-конструктор (Structural Engineer)",
+        "role-road_engineer": "Пътен инженер (Road Engineer)",
+        "role-plumbing_engineer": "Експерт ВиК (Plumbing Engineer)",
+        "role-electrical_engineer": "Експерт ЕЛ (Electrical Engineer)",
+        "role-hvac_engineer": "Експерт ОВК (HVAC Engineer)",
+        "role-landscape_architect": "Ландшафтен архитект (Landscape Architect)",
+        "role-geodesist": "Геодезист (Geodesist / Surveyor)",
+        "role-drafter": "Чертожник (Drafter / CAD Operator)",
+        "role-cost_estimator": "Бюджетчик / К.С.С. (Cost Estimator)",
+        "role-project_manager": "Ръководител проекти (Project Manager)",
 
         // Контакти
         "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
@@ -210,6 +227,23 @@ const translations = {
         "team-eyebrow": "PROFESSIONALS",
         "team-title": "Studio Team",
         "team-loading": "Loading team...",
+
+        // Team Roles (English)
+        "role-manager": "Manager / Director",
+        "role-lead_architect": "Lead Architect",
+        "role-architect": "Architect",
+        "role-intern_architect": "Intern Architect",
+        "role-designer": "Designer",
+        "role-structural_engineer": "Structural Engineer",
+        "role-road_engineer": "Road Engineer",
+        "role-plumbing_engineer": "Plumbing Engineer",
+        "role-electrical_engineer": "Electrical Engineer",
+        "role-hvac_engineer": "HVAC Engineer",
+        "role-landscape_architect": "Landscape Architect",
+        "role-geodesist": "Geodesist / Surveyor",
+        "role-drafter": "Drafter / CAD Operator",
+        "role-cost_estimator": "Cost Estimator",
+        "role-project_manager": "Project Manager",
         
         // Contact (English)
         "contact-eyebrow": "CONTACT & BOOKING",
