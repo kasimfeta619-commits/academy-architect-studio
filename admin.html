@@ -196,6 +196,7 @@
 
         <div class="admin-nav-tabs">
             <button class="tab-btn active" onclick="switchTab('aboutTab', this)">📄 За нас</button>
+            <button class="tab-btn" onclick="switchTab('teamTab', this)">👥 Екип</button> <!-- НОВ ТАБ -->
             <button class="tab-btn" onclick="switchTab('contactTab', this)">📞 Контакти</button>
             <button class="tab-btn" onclick="switchTab('estimatorTab', this)">🧮 Калкулатор</button>
             <button class="tab-btn" onclick="switchTab('uploadTab', this)" id="uploadTabBtn">➕ Нов проект</button>
@@ -210,6 +211,32 @@
                 <div class="form-group"><label>Основен текст / Описание</label><textarea id="aboutDesc" style="height: 150px;"></textarea></div>
                 <button type="submit" class="btn-action">Запази промените "За нас"</button>
             </form>
+        </div>
+
+        <!-- НОВ РАЗДЕЛ ЗА УПРАВЛЕНИЕ НА ЕКИПА -->
+        <div id="teamTab" class="admin-section">
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Управление на екипа</h3>
+            
+            <form id="teamMemberForm" style="background: #fff; padding: 20px; border: 1px solid #eadecc; margin-bottom: 30px;">
+                <h4 style="margin-top: 0; font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Добави нов член на екипа</h4>
+                <div class="form-group">
+                    <label>Име и Фамилия *</label>
+                    <input type="text" id="memberName" required placeholder="напр. Архитект Иван Петров">
+                </div>
+                <div class="form-group">
+                    <label>Позиция / Длъжност *</label>
+                    <input type="text" id="memberRole" required placeholder="напр. Главен архитект / Основател">
+                </div>
+                <div class="form-group">
+                    <label>Снимка на члена на екипа *</label>
+                    <input type="file" id="memberImg" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn-action">Добави в екипа</button>
+                <div id="teamLoader" style="display:none; margin-top: 10px; font-weight: 600; color: #8c8275; text-align: center;">Качване на снимката... Моля, изчакайте.</div>
+            </form>
+
+            <h4 style="font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Текущ екип</h4>
+            <div id="adminTeamList"></div>
         </div>
 
         <div id="contactTab" class="admin-section">
@@ -458,6 +485,7 @@
 
             renderAdminList();
             renderAdminBookings();
+            renderAdminTeam(); // Зареждане на екипа при стартиране
         });
 
         document.getElementById('aboutForm').addEventListener('submit', async (e) => {
@@ -505,6 +533,88 @@
                 alert('Цените за калкулатора са успешно актуализирани!');
             } catch (err) {
                 alert('Грешка при запис на калкулатора: ' + err.message);
+            }
+        });
+
+        // ФУНКЦИИ ЗА УПРАВЛЕНИЕ НА ЕКИПА
+        async function renderAdminTeam() {
+            const listContainer = document.getElementById('adminTeamList');
+            if (!listContainer) return;
+            
+            let teamMembers = [];
+            try {
+                const snapshot = await db.collection('teamMembers').get();
+                teamMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (err) {
+                console.error("Грешка при зареждане на екипа:", err);
+            }
+            
+            if (teamMembers.length === 0) {
+                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма добавени членове на екипа.</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = teamMembers.map((m) => `
+                <div class="project-item-admin">
+                    <div class="project-info-wrapper">
+                        ${m.image ? `<img src="${m.image}" alt="${m.name}" class="admin-project-thumb" style="border-radius: 50%;">` : `<div class="admin-project-no-thumb" style="border-radius: 50%;">Няма снимка</div>`}
+                        <div>
+                            <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${m.name}</strong>
+                            <div style="font-size: 0.8rem; color: #8c8275;">💼 ${m.role}</div>
+                        </div>
+                    </div>
+                    <div class="admin-btns">
+                        <button class="btn-delete" onclick="deleteTeamMember('${m.id}')">Изтрий</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteTeamMember(id) {
+            if (confirm("Сигурни ли сте, че искате да премахнете този член от екипа?")) {
+                try {
+                    await db.collection('teamMembers').doc(id).delete();
+                    renderAdminTeam();
+                } catch (err) {
+                    alert("Грешка при изтриване: " + err.message);
+                }
+            }
+        }
+
+        document.getElementById('teamMemberForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const loader = document.getElementById('teamLoader');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+
+            loader.style.display = 'block';
+            submitBtn.disabled = true;
+
+            try {
+                const name = document.getElementById('memberName').value.trim();
+                const role = document.getElementById('memberRole').value.trim();
+                const imgFile = document.getElementById('memberImg').files[0];
+
+                let imageUrl = '';
+                if (imgFile) {
+                    imageUrl = await compressImage(imgFile, 600, 0.7);
+                }
+
+                await db.collection('teamMembers').add({
+                    name: name,
+                    role: role,
+                    image: imageUrl,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert("Членът на екипа е успешно добавен!");
+                document.getElementById('teamMemberForm').reset();
+                renderAdminTeam();
+            } catch (err) {
+                console.error(err);
+                alert("Грешка при качване: " + err.message);
+            } finally {
+                loader.style.display = 'none';
+                submitBtn.disabled = false;
             }
         });
 
@@ -837,7 +947,7 @@
                 }
 
                 const projectData = {
-                    title: document.getElementById('title').value,
+                    title: document.getElementById('title'.value),
                     mainCategory: document.getElementById('mainCategory').value,
                     subCategory: document.getElementById('subCategory').value,
                     desc: document.getElementById('desc').value,
@@ -864,7 +974,7 @@
 
                 resetProjectForm();
                 renderAdminList();
-                switchTab('projectsTab', document.querySelectorAll('.tab-btn')[4]);
+                switchTab('projectsTab', document.querySelectorAll('.tab-btn')[5]);
 
             } catch (err) {
                 console.error(err);
