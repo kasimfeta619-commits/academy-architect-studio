@@ -68,7 +68,7 @@ const translations = {
         "about-mission-title": "Нашата мисия",
         "about-vision-title": "Нашето виждане",
 
-        // Контакти (ключове за опциите в <select>)
+        // Контакти
         "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
         "contact-title": "Обсъдете вашия проект или запазете среща.",
         "contact-type-label": "Тип запитване",
@@ -99,10 +99,13 @@ const translations = {
         "footer-links-title": "Links",
         "footer-rights": "&copy; 2026 Academy Architect Studio.<br>All rights reserved.",
 
-        // Catalog
+        // Catalog (Добавени липсващите ключове)
         "catalog-title": "Our Projects",
-        "catalog-desc": "Explore our full portfolio of architectural designs.",
+        "catalog-desc": "Explore our full portfolio of architectural designs and innovative solutions.",
         "no-projects": "No projects added yet.",
+        "page-title-catalog": "Projects - Academy Architect Studio",
+        "catalog-main-title": "Projects & Services",
+        "catalog-main-desc": "Full engineering design, architecture, interior, and construction solutions from A to Z.",
         "search-placeholder": "Search by number or name...",
         
         // Filters (English)
@@ -118,23 +121,36 @@ const translations = {
         "sub-wood": "Wood",
         "sub-stone": "Stone",
         "sub-concrete": "Concrete / Solid",
+        "sub-prefab": "Prefabricated",
         "sub-modern": "Modern",
+        "sub-bulgarian": "Bulgarian Style",
         "reset-filters": "Reset Filters",
 
         // Home
         "hero-eyebrow": "ARCHITECTURAL STUDIO",
         "hero-title": "Designing the future with attention to detail",
-        "hero-desc": "We create minimalist and functional spaces, combining modern technologies.",
+        "hero-desc": "We create minimalist and functional spaces, combining modern technologies with clean architecture.",
         "hero-btn-browse": "Browse Projects",
         "hero-btn-contact": "Contact Us",
+        "featured-title": "Featured Projects",
         
-        // Quote (Добавените преводи на английски)
+        // Quote
         "quote-text": "\"Good architecture doesn't just occupy space, it gives it meaning.\"",
-        "quote-sub": "We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.",
+        "quote-sub": "We believe that every detail matters when building the perfect home or workspace.",
 
         // About
         "about-eyebrow": "WHO WE ARE",
         "about-title": "Creating spaces with meaning, aesthetics, and lasting value.",
+        "about-desc1": "Academy Architect Studio unites contemporary architectural design with intelligent engineering thinking.",
+        "about-desc2": "We work on diverse residential, public, and corporate projects.",
+        "about-card1-title": "Innovative Design",
+        "about-card1-desc": "We combine modern architectural trends with advanced software and AI planning.",
+        "about-card2-title": "Sustainability",
+        "about-card2-desc": "We design with care for the environment, using energy-efficient solutions.",
+        "about-card3-title": "Individual Approach",
+        "about-card3-desc": "Every space is born from a dialogue with our clients.",
+        "about-mission-title": "Our Mission",
+        "about-vision-title": "Our Vision",
         
         // Contact (English)
         "contact-eyebrow": "CONTACT & BOOKING",
@@ -172,6 +188,7 @@ function setLanguage(lang) {
         }
     });
 
+    document.querySelectorAll('[data-value-key]').format = ... // запазено
     document.querySelectorAll('[data-value-key]').forEach(element => {
         const key = element.getAttribute('data-value-key');
         if (translations[lang] && translations[lang][key]) {
@@ -211,7 +228,7 @@ function loadAdminContacts() {
             }
             if (email) {
                 if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = email;
-                if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + email;
+                if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink'.toString()) /* safe */.href = 'mailto:' + email;
             }
             if (phone && document.getElementById('footPhone')) {
                 document.getElementById('footPhone').textContent = phone;
