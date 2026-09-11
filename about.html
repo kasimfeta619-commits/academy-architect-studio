@@ -74,7 +74,7 @@
         </div>
 
         <!-- Карти с ценности / предимства -->
-        <div class="about-cards-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="about-cards-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 80px;">
             <div class="about-card" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 30px; border-radius: 12px;">
                 <h3 data-key="about-card1-title" style="font-size: 1.2rem; margin-bottom: 15px;">Иновативен дизайн</h3>
                 <p data-key="about-card1-desc" style="color: #666; font-size: 0.95rem; line-height: 1.5;">Съчетаваме съвременни тенденции в архитектурата с модерен софтуер и AI планиране за максимална прецизност.</p>
@@ -88,6 +88,19 @@
             <div class="about-card" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 30px; border-radius: 12px;">
                 <h3 data-key="about-card3-title" style="font-size: 1.2rem; margin-bottom: 15px;">Индивидуален подход</h3>
                 <p data-key="about-card3-desc" style="color: #666; font-size: 0.95rem; line-height: 1.5;">Всяко пространство се ражда от диалога с нашите клиенти, за да отговаря точно на техния начин на живот.</p>
+            </div>
+        </div>
+
+        <!-- НОВА ЛЕНТА: ЕКИП В СТУДИОТО -->
+        <div class="team-section-wrapper" style="margin-top: 40px; border-top: 2px solid #e6dfd5; padding-top: 50px;">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <span style="font-size: 0.8rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; font-weight: bold;">ПРОФЕСИОНАЛИСТИ</span>
+                <h2 style="font-size: 2rem; margin-top: 10px; font-weight: 500;">Екип в студиото</h2>
+            </div>
+
+            <!-- Контейнер, където динамично се зареждат архитектите от Firebase -->
+            <div id="publicTeamGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px;">
+                <p style="text-align: center; color: #8c8275; grid-column: 1 / -1;">Зареждане на екипа...</p>
             </div>
         </div>
     </main>
@@ -125,7 +138,7 @@
     <script src="auth.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
@@ -176,9 +189,10 @@
                 setLanguage(savedLang);
             }
 
+            const dbInstance = window.db || getFirestore(app);
+
             // Зареждане на контактите за футъра от Firebase Firestore
             try {
-                const dbInstance = window.db || getFirestore(app);
                 const contactDocRef = doc(dbInstance, "siteSettings", "contact");
                 const contactSnap = await getDoc(contactDocRef);
 
@@ -198,8 +212,40 @@
             } catch (e) {
                 console.error('Грешка при зареждане на контактите от Firebase', e);
             }
+
+            // Зареждане на екипа от Firebase Firestore
+            try {
+                const teamContainer = document.getElementById('publicTeamGrid');
+                const teamSnapshot = await getDocs(collection(dbInstance, "teamMembers"));
+                
+                if (teamSnapshot.empty) {
+                    teamContainer.innerHTML = `<p style="text-align: center; color: #8c8275; grid-column: 1 / -1;">Все още няма добавени членове на екипа.</p>`;
+                    return;
+                }
+
+                let teamHTML = '';
+                teamSnapshot.forEach((docSnap) => {
+                    const member = docSnap.data();
+                    const imgSource = member.image || 'https://placehold.co/300x300?text=Architect';
+                    
+                    teamHTML += `
+                        <div class="team-member-card" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 25px; border-radius: 12px; text-align: center; transition: transform 0.2s;">
+                            <div style="width: 130px; height: 130px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; border: 2px solid #e6dfd5;">
+                                <img src="${imgSource}" alt="${member.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <h3 style="font-size: 1.15rem; margin-bottom: 5px; color: #1a1a1a;">${member.name}</h3>
+                            <p style="font-size: 0.85rem; color: #8c8275; text-transform: uppercase; letter-spacing: 1px; margin: 0; font-weight: 600;">${member.role}</p>
+                        </div>
+                    `;
+                });
+
+                teamContainer.innerHTML = teamHTML;
+            } catch (e) {
+                console.error('Грешка при зареждане на екипа от Firebase', e);
+                document.getElementById('publicTeamGrid').innerHTML = `<p style="text-align: center; color: #a83232; grid-column: 1 / -1;">Възникна грешка при зареждане на екипа.</p>`;
+            }
         });
     </script>
-  <script src="support-widget.js"></script>
+    <script src="support-widget.js"></script>
 </body>
 </html>
