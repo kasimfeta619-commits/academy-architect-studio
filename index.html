@@ -71,8 +71,22 @@
         </div>
 
         <div class="hero-image-area">
-            <div class="hero-main-img">
-                <img src="assets/hero-blueprint.png" alt="Architectural Blueprint">
+            <div class="hero-main-img hero-video-frame">
+                <img class="hero-video-poster" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-4Wh8VhyRX9L3yropcOcQkqLLPwYOki.png" alt="Architectural Blueprint">
+                <video
+                    id="homeArchitectureVideo"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    poster="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-4Wh8VhyRX9L3yropcOcQkqLLPwYOki.png"
+                    aria-label="Видео представяне на модерен архитектурен проект"
+                >
+                    <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/My_first_board_A_modern_two-story_house_with_a_white_and_wood_NOqlVS4n-7gUr2SeVKW5quJx310PYC6da6ObnJ9.mp4" type="video/mp4">
+                    Вашият браузър не поддържа видео.
+                </video>
+                <span class="hero-video-label">ARCHITECTURE IN MOTION</span>
             </div>
             
             <div class="latest-badge">
@@ -122,6 +136,17 @@
 
     <script src="translations.js"></script>
     <script>
+        const homeArchitectureVideo = document.getElementById('homeArchitectureVideo');
+        if (homeArchitectureVideo) {
+            const revealHomeVideo = () => homeArchitectureVideo.classList.add('is-ready');
+            homeArchitectureVideo.playbackRate = 0.4;
+            homeArchitectureVideo.addEventListener('loadedmetadata', () => {
+                homeArchitectureVideo.playbackRate = 0.4;
+            });
+            homeArchitectureVideo.addEventListener('playing', revealHomeVideo, { once: true });
+            homeArchitectureVideo.play().catch(() => {});
+        }
+
         // Firebase конфигурация
         const firebaseConfig = {
             apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
