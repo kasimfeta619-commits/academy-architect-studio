@@ -195,7 +195,6 @@
                 console.error('Грешка при зареждане на контактите', e);
             }
 
-            // Зареждане на екипа с по-големи снимки (180x180px)
             try {
                 const teamContainer = document.getElementById('publicTeamGrid');
                 const teamSnapshot = await getDocs(collection(dbInstance, "teamMembers"));
@@ -209,8 +208,6 @@
                 teamSnapshot.forEach((docSnap) => {
                     const member = docSnap.data();
                     const imgSource = member.image || 'https://placehold.co/400x400?text=Architect';
-                    
-                    // Генерираме динамичен data-key спрямо ролята от базата (напр. role-architect)
                     const roleKey = `role-${(member.role || '').toLowerCase().trim()}`;
                     
                     teamHTML += `
@@ -226,7 +223,6 @@
 
                 teamContainer.innerHTML = teamHTML;
                 
-                // След като се инжектира HTML-а, ако имаме активен преводач, го извикваме да приложи преводите
                 if (typeof updateContent === 'function') {
                     updateContent();
                 } else if (typeof setLanguage === 'function') {
