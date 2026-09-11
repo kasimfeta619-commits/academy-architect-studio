@@ -3,25 +3,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const widget = document.createElement('aside');
   widget.className = 'support-widget';
-  widget.setAttribute('aria-label', 'Помощ и контакт');
+  widget.setAttribute('aria-label', 'Интелигентен помощник');
   widget.innerHTML = `
     <div class="support-screen" role="status" aria-live="polite">
       <button class="support-close" type="button" aria-label="Затвори съобщението">×</button>
       <div class="support-screen-face" aria-hidden="true"><span>АС</span></div>
       <div class="support-copy">
-        <strong>Имате ли нужда от помощ?</strong>
-        <span class="support-message">Желаете ли да Ви помогна?</span>
+        <strong>Здравей! 📐</strong>
+        <span class="support-message">Какво ще проектираме днес?</span>
       </div>
-      <div class="support-options" role="group" aria-label="Изберете от какво имате нужда">
-        <button class="support-option" type="button" data-choice="project">Искам да обсъдя проект</button>
-        <button class="support-option" type="button" data-choice="question">Имам въпрос</button>
-        <button class="support-option support-option-muted" type="button" data-choice="no">Не, благодаря</button>
+      <div class="support-options" role="group" aria-label="Изберете опция">
+        <button class="support-option" type="button" data-choice="project">✨ Искам уникален проект</button>
+        <button class="support-option" type="button" data-choice="estimator">🧮 Трябва ми бърза цена (Калкулатор)</button>
+        <button class="support-option" type="button" data-choice="ai">🤖 Искам да тествам AI Планера</button>
+        <button class="support-option support-option-muted" type="button" data-choice="no">Само разглеждам, благодаря</button>
       </div>
-      <a class="support-action" href="contact.html" hidden>Свържете се с нас</a>
+      <a class="support-action" href="contact.html" hidden>Към контактната форма</a>
     </div>
     <button class="support-trigger" type="button" aria-label="Отвори помощта">
       <span class="support-trigger-dot" aria-hidden="true"></span>
-      <span>Помощ</span>
+      <span>Консултант</span>
     </button>
   `;
   document.body.appendChild(widget);
@@ -37,16 +38,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const choice = event.target.closest('[data-choice]');
     if (!choice) return;
 
-    if (choice.dataset.choice === 'no') {
-      message.textContent = 'Разбирам. Ако промените решението си, аз съм тук.';
+    const type = choice.dataset.choice;
+
+    if (type === 'no') {
+      message.textContent = 'Разбрах! Разгледай портфолиото, а аз съм на линия, ако размислиш. ☕';
       options.hidden = true;
       action.hidden = true;
       return;
     }
 
-    message.textContent = choice.dataset.choice === 'project'
-      ? 'Чудесно. Разкажете ни накратко за Вашия проект.'
-      : 'Разбира се. Ще се радваме да отговорим на въпроса Ви.';
+    if (type === 'estimator') {
+      message.textContent = 'Страхотно! Можеш да изчислиш ориентировъчна стойност в нашия ценови калкулатор.';
+      action.textContent = 'Към калкулатора';
+      action.href = 'estimator.html';
+    } else if (type === 'ai') {
+      message.textContent = 'Интересен избор! Нашите AI алгоритми могат да ти помогнат с първоначално разпределение.';
+      action.textContent = 'Към AI Планера';
+      action.href = 'planner.html';
+    } else {
+      message.textContent = 'Чудесно! Нека обсъдим визията и детайлите за твоя бъдещ обект.';
+      action.textContent = 'Свържете се с нас';
+      action.href = 'contact.html';
+    }
+
     options.hidden = true;
     action.hidden = false;
     action.focus();
@@ -56,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
     widget.classList.add('is-collapsed');
     trigger.focus();
   });
+  
   trigger.addEventListener('click', function () {
     widget.classList.remove('is-collapsed');
     screen.classList.remove('is-reopened');
