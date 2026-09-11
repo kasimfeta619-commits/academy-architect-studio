@@ -128,6 +128,10 @@ const translations = {
         "hero-btn-browse": "Browse Projects",
         "hero-btn-contact": "Contact Us",
         
+        // Quote (Добавените преводи на английски)
+        "quote-text": "\"Good architecture doesn't just occupy space, it gives it meaning.\"",
+        "quote-sub": "We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.",
+
         // About
         "about-eyebrow": "WHO WE ARE",
         "about-title": "Creating spaces with meaning, aesthetics, and lasting value.",
@@ -190,7 +194,6 @@ function setLanguage(lang) {
         filterProjects();
     }
 
-    // Автоматично взимане на промените от админ панела за контактите
     loadAdminContacts();
 }
 
