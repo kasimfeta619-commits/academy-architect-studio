@@ -195,73 +195,14 @@ body {
     position: relative;
 }
 
-.hero-main-img img {
-    width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-}
-
-.hero-video-frame {
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 16 / 9;
-    background: #f7f4ee;
-    box-shadow: 0 24px 55px rgba(0,0,0,0.14);
-}
-
-.hero-video-frame .hero-video-poster,
-.hero-video-frame video {
-    position: absolute;
-    inset: 0;
+.hero-main-img img,
+.hero-main-img video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 12px;
-}
-
-.hero-video-frame .hero-video-poster {
-    z-index: 0;
-}
-
-.hero-video-frame video {
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 900ms ease;
-}
-
-.hero-video-frame video.is-ready {
-    opacity: 1;
-}
-
-.hero-video-frame::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    background: linear-gradient(120deg, rgba(255,255,255,0.08), transparent 45%, rgba(255,255,255,0.16));
-    mix-blend-mode: screen;
-}
-
-.hero-video-label {
-    position: absolute;
-    z-index: 3;
-    top: 18px;
-    right: 18px;
-    padding: 8px 11px;
-    border: 1px solid rgba(255,255,255,0.45);
-    border-radius: 999px;
-    color: #fff;
-    background: rgba(26,26,26,0.46);
-    font-size: 0.62rem;
-    letter-spacing: 1.4px;
-    backdrop-filter: blur(8px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .hero-video-frame video {
-        display: none;
-    }
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    display: block;
 }
 
 .latest-badge {
@@ -557,128 +498,5 @@ body.dark-mode .project-img-box {
         grid-template-columns: 1fr;
         gap: 30px;
         text-align: center;
-    }
-}
-
-/* Floating support widget */
-.support-widget {
-    position: fixed;
-    right: 24px;
-    bottom: 24px;
-    z-index: 1100;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-.support-screen {
-    position: relative;
-    width: min(320px, calc(100vw - 32px));
-    padding: 18px;
-    display: grid;
-    grid-template-columns: 58px 1fr;
-    gap: 12px;
-    align-items: center;
-    background: #fff;
-    color: #1a1a1a;
-    border: 1px solid #eadecc;
-    border-radius: 14px;
-    box-shadow: 0 18px 42px rgba(26, 26, 26, 0.16);
-    animation: support-pop-in 0.55s cubic-bezier(.22, 1.2, .36, 1) both;
-}
-
-.support-screen::after {
-    content: "";
-    position: absolute;
-    right: 25px;
-    bottom: -8px;
-    width: 16px;
-    height: 16px;
-    background: #fff;
-    border-right: 1px solid #eadecc;
-    border-bottom: 1px solid #eadecc;
-    transform: rotate(45deg);
-}
-
-.support-close {
-    position: absolute;
-    top: 7px;
-    right: 9px;
-    z-index: 1;
-    width: 24px;
-    height: 24px;
-    border: 0;
-    background: transparent;
-    color: #8c8275;
-    font-size: 20px;
-    line-height: 1;
-    cursor: pointer;
-}
-
-.support-screen-face {
-    width: 58px;
-    height: 48px;
-    display: grid;
-    place-items: center;
-    position: relative;
-    border: 3px solid #1a1a1a;
-    border-radius: 7px;
-    background: #f5efe6;
-    box-shadow: inset 0 0 0 3px #fff;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .08em;
-}
-
-.support-screen-face::before,
-.support-screen-face::after {
-    content: "";
-    position: absolute;
-    top: 17px;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: #1a1a1a;
-}
-
-.support-screen-face::before { left: 10px; }
-.support-screen-face::after { right: 10px; }
-.support-screen-face span { color: #8c8275; }
-
-.support-copy { display: flex; flex-direction: column; gap: 4px; padding-right: 12px; }
-.support-copy strong { font-size: .92rem; line-height: 1.3; }
-.support-copy span { color: #666; font-size: .8rem; line-height: 1.4; }
-.support-options { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 7px; }
-.support-option { width: 100%; padding: 8px 10px; border: 1px solid #eadecc; border-radius: 8px; background: #f5efe6; color: #1a1a1a; text-align: left; font: inherit; font-size: .75rem; cursor: pointer; }
-.support-option:hover, .support-option:focus-visible { border-color: #8c8275; background: #fff; outline: 2px solid #8c8275; outline-offset: 1px; }
-.support-option-muted { background: transparent; color: #666; }
-.support-action { grid-column: 1 / -1; text-align: center; padding: 9px 12px; border-radius: 8px; background: #1a1a1a; color: #fff; text-decoration: none; font-size: .78rem; font-weight: 600; }
-.support-action:hover { background: #8c8275; }
-.support-action[hidden] { display: none; }
-.support-trigger { display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border: 1px solid #eadecc; border-radius: 999px; background: #1a1a1a; color: #fff; box-shadow: 0 8px 20px rgba(26, 26, 26, .16); font-size: .78rem; font-weight: 600; cursor: pointer; }
-.support-trigger-dot { width: 7px; height: 7px; border-radius: 50%; background: #f5efe6; animation: support-pulse 1.8s ease-in-out infinite; }
-.support-widget.is-collapsed .support-screen { display: none; }
-.support-widget.is-collapsed .support-trigger { animation: support-bounce 0.4s ease-out; }
-.support-screen.is-reopened { animation: support-pop-in .4s cubic-bezier(.22, 1.2, .36, 1) both; }
-
-@keyframes support-pop-in { from { opacity: 0; transform: translateY(18px) scale(.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@keyframes support-bounce { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-7px); } }
-@keyframes support-pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
-
-@media (prefers-reduced-motion: reduce) {
-    .support-screen, .support-trigger, .support-screen.is-reopened { animation: none; }
-    .support-trigger-dot { animation: none; }
-}
-
-@media (max-width: 520px) {
-    .support-widget { right: 16px; bottom: 16px; }
-    .support-screen { padding: 15px; }
-}
-
-body.dark-mode @media (max-width: 768px) {
-    #nav-links {
-        border-top-color: #2c2c2c !important;
     }
 }
