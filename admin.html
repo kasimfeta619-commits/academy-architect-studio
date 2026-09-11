@@ -196,7 +196,7 @@
 
         <div class="admin-nav-tabs">
             <button class="tab-btn active" onclick="switchTab('aboutTab', this)">📄 За нас</button>
-            <button class="tab-btn" onclick="switchTab('teamTab', this)">👥 Екип</button> <!-- НОВ ТАБ -->
+            <button class="tab-btn" onclick="switchTab('teamTab', this)">👥 Екип</button>
             <button class="tab-btn" onclick="switchTab('contactTab', this)">📞 Контакти</button>
             <button class="tab-btn" onclick="switchTab('estimatorTab', this)">🧮 Калкулатор</button>
             <button class="tab-btn" onclick="switchTab('uploadTab', this)" id="uploadTabBtn">➕ Нов проект</button>
@@ -213,12 +213,14 @@
             </form>
         </div>
 
-        <!-- НОВ РАЗДЕЛ ЗА УПРАВЛЕНИЕ НА ЕКИПА -->
+        <!-- УПРАВЛЕНИЕ НА ЕКИПА -->
         <div id="teamTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Управление на екипа</h3>
+            <h3 id="teamFormTitle" style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Управление на екипа</h3>
             
             <form id="teamMemberForm" style="background: #fff; padding: 20px; border: 1px solid #eadecc; margin-bottom: 30px;">
-                <h4 style="margin-top: 0; font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Добави нов член на екипа</h4>
+                <input type="hidden" id="editTeamId" value="">
+                
+                <h4 style="margin-top: 0; font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;" id="teamFormSubTitle">Добави нов член на екипа</h4>
                 <div class="form-group">
                     <label>Име и Фамилия *</label>
                     <input type="text" id="memberName" required placeholder="напр. Архитект Иван Петров">
@@ -229,9 +231,11 @@
                 </div>
                 <div class="form-group">
                     <label>Снимка на члена на екипа *</label>
-                    <input type="file" id="memberImg" accept="image/*" required>
+                    <input type="file" id="memberImg" accept="image/*">
+                    <span id="currentTeamImgInfo" style="font-size: 0.8rem; color: #8c8275; margin-top: 4px;"></span>
                 </div>
-                <button type="submit" class="btn-action">Добави в екипа</button>
+                <button type="submit" id="teamSubmitBtn" class="btn-action">Добави в екипа</button>
+                <button type="button" id="teamCancelBtn" onclick="resetTeamForm()" class="btn-action" style="margin-top: 10px; background: #8c8275; display: none;">Отказ</button>
                 <div id="teamLoader" style="display:none; margin-top: 10px; font-weight: 600; color: #8c8275; text-align: center;">Качване на снимката... Моля, изчакайте.</div>
             </form>
 
@@ -249,7 +253,6 @@
             </form>
         </div>
 
-        <!-- НОВ РАЗДЕЛ ЗА КАЛКУЛАТОРА (ESTIMATOR CONFIG) -->
         <div id="estimatorTab" class="admin-section">
             <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Настройки на цените за калкулатора (Estimator)</h3>
             <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можеш да зададеш точните суми и коефициенти, които публичният калкулатор използва за своите изчисления на кв.м.</p>
@@ -382,7 +385,6 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        // Автоматично логване зад кулисите, за да се заобиколи грешката с липсващи права
         firebase.auth().signInAnonymously().catch((error) => {
             console.error("Auth error:", error);
         });
@@ -470,7 +472,6 @@
                     document.getElementById('contactPhone').value = data.phone || '';
                 }
 
-                // Зареждане на настройките за калкулатора от Firebase
                 const estimatorDoc = await db.collection('siteSettings').doc('estimatorConfig').get();
                 if (estimatorDoc.exists) {
                     const edata = estimatorDoc.data();
@@ -485,7 +486,7 @@
 
             renderAdminList();
             renderAdminBookings();
-            renderAdminTeam(); // Зареждане на екипа при стартиране
+            renderAdminTeam();
         });
 
         document.getElementById('aboutForm').addEventListener('submit', async (e) => {
@@ -518,7 +519,6 @@
             }
         });
 
-        // ЗАПИС НА НАСТРОЙКИТЕ НА КАЛКУЛАТОРА (Estimator Config)
         document.getElementById('estimatorConfigForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const estimatorData = {
@@ -536,7 +536,7 @@
             }
         });
 
-        // ФУНКЦИИ ЗА УПРАВЛЕНИЕ НА ЕКИПА
+        // УПРАВЛЕНИЕ НА ЕКИПА (Рендиране, Преглед, Редакция и Изтриване)
         async function renderAdminTeam() {
             const listContainer = document.getElementById('adminTeamList');
             if (!listContainer) return;
@@ -564,10 +564,70 @@
                         </div>
                     </div>
                     <div class="admin-btns">
+                        <button class="btn-view" onclick="openTeamPreviewModal('${m.id}')">👁️ Преглед</button>
+                        <button class="btn-edit" onclick="editTeamMember('${m.id}')">Редактирай</button>
                         <button class="btn-delete" onclick="deleteTeamMember('${m.id}')">Изтрий</button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        async function openTeamPreviewModal(id) {
+            let m = null;
+            try {
+                const docSnap = await db.collection('teamMembers').doc(id).get();
+                if (docSnap.exists) m = docSnap.data();
+            } catch (err) {}
+
+            if (!m) return;
+
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div style="text-align: center;">
+                    <h2 style="margin-top:0;">Член на екипа</h2>
+                    ${m.image ? `<img src="${m.image}" style="width:140px; height:140px; border-radius:50%; object-fit: cover; border: 2px solid #eadecc; margin-bottom: 15px;">` : ''}
+                    <h3 style="margin-bottom: 5px;">${m.name}</h3>
+                    <p style="color: #8c8275; font-weight: bold; text-transform: uppercase; font-size: 0.9rem;">${m.role}</p>
+                </div>
+            `;
+            document.getElementById('previewModal').style.display = 'flex';
+        }
+
+        async function editTeamMember(id) {
+            let m = null;
+            try {
+                const docSnap = await db.collection('teamMembers').doc(id).get();
+                if (docSnap.exists) m = { id: docSnap.id, ...docSnap.data() };
+            } catch (err) {}
+
+            if (!m) return;
+
+            document.getElementById('editTeamId').value = m.id;
+            document.getElementById('memberName').value = m.name || '';
+            document.getElementById('memberRole').value = m.role || '';
+            
+            window.existingTeamImg = m.image || '';
+            if (window.existingTeamImg) {
+                document.getElementById('currentTeamImgInfo').innerText = "✓ Има налична снимка.";
+            } else {
+                document.getElementById('currentTeamImgInfo').innerText = "";
+            }
+
+            document.getElementById('teamFormSubTitle').innerText = "Редактиране на член: " + m.name;
+            document.getElementById('teamSubmitBtn').innerText = "Запази промените";
+            document.getElementById('teamCancelBtn').style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetTeamForm() {
+            document.getElementById('teamMemberForm').reset();
+            document.getElementById('editTeamId').value = '';
+            document.getElementById('currentTeamImgInfo').innerText = '';
+            window.existingTeamImg = '';
+            document.getElementById('teamFormSubTitle').innerText = "Добави нов член на екипа";
+            document.getElementById('teamSubmitBtn').innerText = "Добави в екипа";
+            document.getElementById('teamCancelBtn').style.display = 'none';
         }
 
         async function deleteTeamMember(id) {
@@ -575,6 +635,7 @@
                 try {
                     await db.collection('teamMembers').doc(id).delete();
                     renderAdminTeam();
+                    resetTeamForm();
                 } catch (err) {
                     alert("Грешка при изтриване: " + err.message);
                 }
@@ -583,8 +644,9 @@
 
         document.getElementById('teamMemberForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const editId = document.getElementById('editTeamId').value;
             const loader = document.getElementById('teamLoader');
-            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const submitBtn = document.getElementById('teamSubmitBtn');
 
             loader.style.display = 'block';
             submitBtn.disabled = true;
@@ -594,20 +656,27 @@
                 const role = document.getElementById('memberRole').value.trim();
                 const imgFile = document.getElementById('memberImg').files[0];
 
-                let imageUrl = '';
+                let imageUrl = window.existingTeamImg || '';
                 if (imgFile) {
                     imageUrl = await compressImage(imgFile, 600, 0.7);
                 }
 
-                await db.collection('teamMembers').add({
+                const teamData = {
                     name: name,
                     role: role,
-                    image: imageUrl,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                    image: imageUrl
+                };
 
-                alert("Членът на екипа е успешно добавен!");
-                document.getElementById('teamMemberForm').reset();
+                if (editId !== "") {
+                    await db.collection('teamMembers').doc(editId).update(teamData);
+                    alert("Членът на екипа е успешно обновен!");
+                } else {
+                    teamData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('teamMembers').add(teamData);
+                    alert("Членът на екипа е успешно добавен!");
+                }
+
+                resetTeamForm();
                 renderAdminTeam();
             } catch (err) {
                 console.error(err);
@@ -947,7 +1016,7 @@
                 }
 
                 const projectData = {
-                    title: document.getElementById('title'.value),
+                    title: document.getElementById('title').value,
                     mainCategory: document.getElementById('mainCategory').value,
                     subCategory: document.getElementById('subCategory').value,
                     desc: document.getElementById('desc').value,
