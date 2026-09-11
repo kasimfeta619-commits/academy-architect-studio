@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .hero-main-img {
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .hero-main-img video {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            background: #f7f4ee;
+        }
+    </style>
 </head>
 <body>
 
@@ -47,7 +62,19 @@
 
         <div class="hero-image-area">
             <div class="hero-main-img">
-                <img src="assets/hero-blueprint.png" alt="Architectural Blueprint">
+                <video
+                    id="heroArchitectureVideo"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    poster="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-4Wh8VhyRX9L3yropcOcQkqLLPwYOki.png"
+                    aria-label="Видео представяне на архитектурен проект"
+                >
+                    <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/My_first_board_A_modern_two-story_house_with_a_white_and_wood_NOqlVS4n-7gUr2SeVKW5quJx310PYC6da6ObnJ9.mp4" type="video/mp4">
+                    Вашият браузър не поддържа видео.
+                </video>
             </div>
             
             <div class="latest-badge">
@@ -98,6 +125,14 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             initLanguage();
+
+            const heroVideo = document.getElementById('heroArchitectureVideo');
+            if (heroVideo) {
+                heroVideo.playbackRate = 0.4;
+                heroVideo.addEventListener('loadedmetadata', function() {
+                    heroVideo.playbackRate = 0.4;
+                });
+            }
             const container = document.getElementById('featuredProjectsContainer');
             const projects = JSON.parse(localStorage.getItem('myProjects') || '[]');
             const currentLang = localStorage.getItem('siteLang') || 'en';
