@@ -294,7 +294,7 @@
         <div class="footer-logo-area">
             <div>
                 <div class="footer-brand">Academy Architect Studio</div>
-                <div class="footer-subtext">Design & Engineering</div>
+                <div class="footer-subtext" data-key="footer-subtitle">Design & Engineering</div>
             </div>
         </div>
         
@@ -444,6 +444,26 @@
 
             if (!container) return;
 
+            const dict = {
+                'en': {
+                    'residential': 'Residential',
+                    'жилищна': 'Residential',
+                    'къщи': 'House',
+                    'интериор': 'Interior Design',
+                    'обществени': 'Public & Industrial',
+                    'реконструкц': 'Reconstruction',
+                    'заснемане': 'Survey & Engineering',
+                    'български': 'Bulgarian Style',
+                    'минималистичен': 'Minimalist',
+                    'minimalist': 'Minimalist',
+                    'модерен': 'Modern',
+                    'default': 'Architectural Project'
+                },
+                'bg': {
+                    'default': 'Архитектурен проект'
+                }
+            };
+
             if (projectsList && projectsList.length > 0) {
                 container.innerHTML = projectsList.map((p, index) => {
                     const projectId = p.id || index;
@@ -461,6 +481,17 @@
                         mediaContent = `<img src="${imgSrc}" alt="${p.title || 'Project'}" onerror="this.src='https://placehold.co/600x400?text=Image'">`;
                     }
 
+                    let rawStyle = p.style || p.category || p.mainCategory || '';
+                    let displayStyle = rawStyle;
+                    
+                    if (currentLang === 'en') {
+                        let lower = rawStyle.toLowerCase();
+                        let translated = Object.keys(dict.en).find(k => lower.includes(k));
+                        displayStyle = translated ? dict.en[translated] : (rawStyle || dict.en['default']);
+                    } else {
+                        displayStyle = rawStyle || dict.bg['default'];
+                    }
+
                     return `
                         <a href="project-detail.html?id=${projectId}" class="project-card">
                             <div class="project-img-box">
@@ -470,7 +501,7 @@
                             <div class="project-info">
                                 <span class="p-title">${p.title || 'Без заглавие'}</span>
                                 <div class="p-meta-row">
-                                    <span>${p.style || p.category || p.mainCategory || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
+                                    <span>${displayStyle}</span>
                                     <span style="font-weight: 500; color: var(--text-color, #111);">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
                                 </div>
                             </div>
