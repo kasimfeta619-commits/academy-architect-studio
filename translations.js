@@ -99,7 +99,7 @@ const translations = {
         "footer-links-title": "Links",
         "footer-rights": "&copy; 2026 Academy Architect Studio.<br>All rights reserved.",
 
-        // Catalog (Добавени липсващите ключове)
+        // Catalog
         "catalog-title": "Our Projects",
         "catalog-desc": "Explore our full portfolio of architectural designs and innovative solutions.",
         "no-projects": "No projects added yet.",
@@ -188,7 +188,6 @@ function setLanguage(lang) {
         }
     });
 
-    document.querySelectorAll('[data-value-key]').format = ... // запазено
     document.querySelectorAll('[data-value-key]').forEach(element => {
         const key = element.getAttribute('data-value-key');
         if (translations[lang] && translations[lang][key]) {
@@ -228,7 +227,7 @@ function loadAdminContacts() {
             }
             if (email) {
                 if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = email;
-                if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink'.toString()) /* safe */.href = 'mailto:' + email;
+                if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + email;
             }
             if (phone && document.getElementById('footPhone')) {
                 document.getElementById('footPhone').textContent = phone;
