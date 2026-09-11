@@ -199,9 +199,10 @@ body {
 .hero-main-img {
     position: relative;
     width: 100%;
-    height: 480px; /* Увеличена височина за по-мащабна визия */
+    height: 480px;
     border-radius: 12px;
     overflow: hidden;
+    background-color: #1a1a1a; /* Черен фон отстрани, ако видеото има разлика в пропорциите */
     box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 }
 
@@ -212,7 +213,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover !important; /* Запълва цялата площ плътно от край до край */
+    object-fit: contain !important; /* Побира цялото видео от край до край в рамката */
     display: block;
 }
 
@@ -400,7 +401,7 @@ body.dark-mode .quote-section {
 
 body.dark-mode .logo-studio,
 body.dark-mode #nav-links a,
-body.dark-mode .lang-btn,
+body.dark-Mode .lang-btn,
 body.dark-mode .footer-col a,
 body.dark-mode .footer-subtext,
 body.dark-mode .footer-col,
