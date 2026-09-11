@@ -91,16 +91,16 @@
             </div>
         </div>
 
-        <!-- НОВА ЛЕНТА: ЕКИП В СТУДИОТО -->
+        <!-- ЛЕНТА: ЕКИП В СТУДИОТО -->
         <div class="team-section-wrapper" style="margin-top: 40px; border-top: 2px solid #e6dfd5; padding-top: 50px;">
             <div style="text-align: center; margin-bottom: 40px;">
-                <span style="font-size: 0.8rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; font-weight: bold;">ПРОФЕСИОНАЛИСТИ</span>
-                <h2 style="font-size: 2rem; margin-top: 10px; font-weight: 500;">Екип в студиото</h2>
+                <span style="font-size: 0.8rem; letter-spacing: 2px; color: #8c8275; text-transform: uppercase; font-weight: bold;" data-key="team-eyebrow">ПРОФЕСИОНАЛИСТИ</span>
+                <h2 style="font-size: 2rem; margin-top: 10px; font-weight: 500;" data-key="team-title">Екип в студиото</h2>
             </div>
 
-            <!-- Контейнер, където динамично се зареждат архитектите от Firebase -->
-            <div id="publicTeamGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px;">
-                <p style="text-align: center; color: #8c8275; grid-column: 1 / -1;">Зареждане на екипа...</p>
+            <!-- Контейнер за екипа -->
+            <div id="publicTeamGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;">
+                <p style="text-align: center; color: #8c8275; grid-column: 1 / -1;" data-key="team-loading">Зареждане на екипа...</p>
             </div>
         </div>
     </main>
@@ -153,26 +153,16 @@
         let app;
         try {
             app = initializeApp(firebaseConfig);
-        } catch (e) {
-            // Вече е инициализирано
-        }
+        } catch (e) {}
 
-        // Функция за превключване на тъмния режим
         window.toggleDarkMode = function() {
             const isDark = document.documentElement.classList.toggle('dark-mode');
             document.body.classList.toggle('dark-mode', isDark);
-            
-            if (isDark) {
-                localStorage.setItem('siteTheme', 'dark');
-            } else {
-                localStorage.setItem('siteTheme', 'light');
-            }
+            localStorage.setItem('siteTheme', isDark ? 'dark' : 'light');
         };
 
-        // Функция за мобилното меню
         window.toggleMobileMenu = function() {
-            const navLinks = document.getElementById('nav-links');
-            navLinks.classList.toggle('mobile-open');
+            document.getElementById('nav-links').classList.toggle('mobile-open');
         };
 
         document.addEventListener("DOMContentLoaded", async function() {
@@ -185,35 +175,27 @@
             if (typeof initLanguage === 'function') {
                 initLanguage();
             } else if (typeof setLanguage === 'function') {
-                const savedLang = localStorage.getItem('siteLang') || 'bg';
-                setLanguage(savedLang);
+                setLanguage(localStorage.getItem('siteLang') || 'bg');
             }
 
             const dbInstance = window.db || getFirestore(app);
 
-            // Зареждане на контактите за футъра от Firebase Firestore
             try {
-                const contactDocRef = doc(dbInstance, "siteSettings", "contact");
-                const contactSnap = await getDoc(contactDocRef);
-
+                const contactSnap = await getDoc(doc(dbInstance, "siteSettings", "contact"));
                 if (contactSnap.exists()) {
                     const data = contactSnap.data();
-                    if (data.address && document.getElementById('footAddress')) {
-                        document.getElementById('footAddress').textContent = data.address;
-                    }
+                    if (data.address && document.getElementById('footAddress')) document.getElementById('footAddress').textContent = data.address;
                     if (data.email) {
                         if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
                         if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
                     }
-                    if (data.phone && document.getElementById('footPhone')) {
-                        document.getElementById('footPhone').textContent = data.phone;
-                    }
+                    if (data.phone && document.getElementById('footPhone')) document.getElementById('footPhone').textContent = data.phone;
                 }
             } catch (e) {
-                console.error('Грешка при зареждане на контактите от Firebase', e);
+                console.error('Грешка при зареждане на контактите', e);
             }
 
-            // Зареждане на екипа от Firebase Firestore
+            // Зареждане на екипа с по-големи снимки (180x180px)
             try {
                 const teamContainer = document.getElementById('publicTeamGrid');
                 const teamSnapshot = await getDocs(collection(dbInstance, "teamMembers"));
@@ -226,22 +208,22 @@
                 let teamHTML = '';
                 teamSnapshot.forEach((docSnap) => {
                     const member = docSnap.data();
-                    const imgSource = member.image || 'https://placehold.co/300x300?text=Architect';
+                    const imgSource = member.image || 'https://placehold.co/400x400?text=Architect';
                     
                     teamHTML += `
-                        <div class="team-member-card" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 25px; border-radius: 12px; text-align: center; transition: transform 0.2s;">
-                            <div style="width: 130px; height: 130px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; border: 2px solid #e6dfd5;">
+                        <div class="team-member-card" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                            <div style="width: 180px; height: 180px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; border: 3px solid #e6dfd5; background: #fff;">
                                 <img src="${imgSource}" alt="${member.name}" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
-                            <h3 style="font-size: 1.15rem; margin-bottom: 5px; color: #1a1a1a;">${member.name}</h3>
-                            <p style="font-size: 0.85rem; color: #8c8275; text-transform: uppercase; letter-spacing: 1px; margin: 0; font-weight: 600;">${member.role}</p>
+                            <h3 style="font-size: 1.25rem; margin-bottom: 8px; color: #1a1a1a; font-weight: 600;">${member.name}</h3>
+                            <p style="font-size: 0.9rem; color: #8c8275; text-transform: uppercase; letter-spacing: 1px; margin: 0; font-weight: 600;">${member.role}</p>
                         </div>
                     `;
                 });
 
                 teamContainer.innerHTML = teamHTML;
             } catch (e) {
-                console.error('Грешка при зареждане на екипа от Firebase', e);
+                console.error('Грешка при зареждане на екипа', e);
                 document.getElementById('publicTeamGrid').innerHTML = `<p style="text-align: center; color: #a83232; grid-column: 1 / -1;">Възникна грешка при зареждане на екипа.</p>`;
             }
         });
