@@ -193,15 +193,26 @@ body {
 
 .hero-image-area {
     position: relative;
+    width: 100%;
+}
+
+.hero-main-img {
+    position: relative;
+    width: 100%;
+    height: 440px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 }
 
 .hero-main-img img,
 .hero-main-img video {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
     display: block;
 }
 
@@ -214,6 +225,7 @@ body {
     padding: 15px 25px;
     border-radius: 8px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    z-index: 10;
 }
 
 .latest-badge .badge-title {
