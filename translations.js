@@ -54,7 +54,7 @@ const translations = {
         "quote-text": "\"Добрата архитектура не просто заема пространство, тя му дава смисъл.\"",
         "quote-sub": "Вярваме, че всеки детайл е от значение при изграждането на перфектния дом или работно пространство.",
 
-        // Страница "За нас"
+        // Страница "За нас" и Екип
         "about-eyebrow": "КОИ СМЕ НИЕ",
         "about-title": "Създаваме пространства със смисъл, естетика и дълготрайна стойност.",
         "about-desc1": "Academy Architect Studio обединява съвременния архитектурен дизайн с интелигентно инженерно мислене.",
@@ -67,6 +67,9 @@ const translations = {
         "about-card3-desc": "Всяко пространство се ражда от диалога с нашите клиенти.",
         "about-mission-title": "Нашата мисия",
         "about-vision-title": "Нашето виждане",
+        "team-eyebrow": "ПРОФЕСИОНАЛИСТИ",
+        "team-title": "Екип в студиото",
+        "team-loading": "Зареждане на екипа...",
 
         // Контакти
         "contact-eyebrow": "ВРЪЗКА И РЕЗЕРВАЦИЯ",
@@ -191,7 +194,7 @@ const translations = {
         "quote-text": "\"Good architecture doesn't just occupy space, it gives it meaning.\"",
         "quote-sub": "We believe that every detail matters when building the perfect home or workspace.",
 
-        // About
+        // About & Team
         "about-eyebrow": "WHO WE ARE",
         "about-title": "Creating spaces with meaning, aesthetics, and lasting value.",
         "about-desc1": "Academy Architect Studio unites contemporary architectural design with intelligent engineering thinking.",
@@ -204,6 +207,9 @@ const translations = {
         "about-card3-desc": "Every space is born from a dialogue with our clients.",
         "about-mission-title": "Our Mission",
         "about-vision-title": "Our Vision",
+        "team-eyebrow": "PROFESSIONALS",
+        "team-title": "Studio Team",
+        "team-loading": "Loading team...",
         
         // Contact (English)
         "contact-eyebrow": "CONTACT & BOOKING",
