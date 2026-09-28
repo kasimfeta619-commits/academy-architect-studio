@@ -10,9 +10,6 @@
     
     <link rel="stylesheet" href="style.css">
     
-    <!-- Leaflet CSS за интерактивната карта -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    
     <!-- Firebase SDK Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -28,7 +25,7 @@
     </script>
 
     <style>
-        /* Стилизация на секцията с картата, съобразена с дизайна на студиото */
+        /* Стилизация на секцията с картата */
         .map-section {
             padding: 60px 20px;
             max-width: 1200px;
@@ -49,17 +46,79 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+        
+        /* Контейнер за скицата/картата на България */
         #projectMap {
+            position: relative;
             width: 100%;
-            height: 450px;
+            height: 500px;
             border-radius: 12px;
             border: 1px solid #eadecc;
+            background: #fbf9f5 url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Bulgaria_relief_location_map.jpg/800px-Bulgaria_relief_location_map.jpg') no-repeat center center;
+            background-size: cover;
             box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            z-index: 1;
+            overflow: hidden;
         }
         body.dark-mode #projectMap {
             border-color: #2c2c2c;
-            filter: brightness(0.85);
+            filter: brightness(0.85) contrast(1.1);
+        }
+
+        /* Персонализирани пин игли с топка */
+        .map-pin {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            transform: translate(-50%, -100%);
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.2s ease;
+        }
+        .map-pin:hover {
+            transform: translate(-50%, -100%) scale(1.2);
+        }
+        .map-pin .pin-head {
+            width: 16px;
+            height: 16px;
+            background: #111;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            margin: 0 auto;
+        }
+        body.dark-mode .map-pin .pin-head {
+            background: #e2c19a;
+            border-color: #1a1a1a;
+        }
+        .map-pin .pin-needle {
+            width: 2px;
+            height: 10px;
+            background: #111;
+            margin: -2px auto 0 auto;
+        }
+        body.dark-mode .map-pin .pin-needle {
+            background: #e2c19a;
+        }
+
+        /* Информационен прозорец (туултип/попъп) при клик на пина */
+        .map-popup {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            font-size: 0.85rem;
+            color: #1a1a1a;
+            white-space: nowrap;
+            display: none;
+            z-index: 20;
+            border: 1px solid #eadecc;
+        }
+        .map-pin.active .map-popup {
+            display: block;
         }
     </style>
 </head>
@@ -134,7 +193,7 @@
         <p data-key="quote-sub">We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.</p>
     </section>
 
-    <!-- СЕКЦИЯ ИНТЕРАКТИВНА КАРТА -->
+    <!-- СЕКЦИЯ ИНТЕРАКТИВНА КАРТА НА БЪЛГАРИЯ -->
     <section class="map-section">
         <h2 class="map-title">Географски обхват на проектите</h2>
         <p class="map-subtitle">Част от нашите реализирани обекти и проекти в страната</p>
@@ -169,8 +228,6 @@
         </div>
     </footer>
 
-    <!-- Leaflet JS библиотека -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="translations.js"></script>
     <script>
         // Firebase конфигурация
@@ -189,7 +246,6 @@
         }
         const db = firebase.firestore();
 
-        // Функция за превключване на тъмния режим
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
@@ -199,13 +255,11 @@
             }
         }
 
-        // Функция за мобилното меню (хамбургер бутон)
         function toggleMobileMenu() {
             const navLinks = document.getElementById('nav-links');
             navLinks.classList.toggle('mobile-open');
         }
 
-        // Динамична проверка на статуса на входа за навигацията
         function updateNavAuthStatus() {
             const container = document.getElementById('navAuthContainer');
             if (!container) return;
@@ -234,24 +288,17 @@
         }
 
         document.addEventListener("DOMContentLoaded", async function() {
-            // Инициализация на картата с център около България
-            const map = L.map('projectMap').setView([42.7339, 25.4858], 7);
+            const mapContainer = document.getElementById('projectMap');
 
-            // Надежден слой от CartoDB, който се зарежда моментално без грешки
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
-            }).addTo(map);
-
-            // Принудително преизчисляване на размера, за да се елиминира сигурно всякакво бяло поле
-            setTimeout(() => {
-                map.invalidateSize();
-            }, 250);
-
-            // Динамично зареждане на точките от Firebase базата данни (админ панела)
+            // Зареждане на точките от Firebase базата данни (админ панела) и поставяне на пинове с черни/тъмни топчета
             try {
                 const mapSnapshot = await db.collection('map_locations').get();
                 
+                // Граници на България за изчисляване на процентите (позициониране върху картата)
+                // Лат: от ~41.2 до ~44.3, Лонг: от ~22.3 до ~28.6
+                const minLat = 41.20, maxLat = 44.35;
+                const minLng = 22.35, maxLng = 28.60;
+
                 if (!mapSnapshot.empty) {
                     mapSnapshot.forEach(doc => {
                         const loc = doc.data();
@@ -266,12 +313,43 @@
                         }
 
                         if (!isNaN(lat) && !isNaN(lng)) {
-                            L.marker([lat, lng]).addTo(map)
-                              .bindPopup(`<b>${loc.title || loc.name || 'Обект'}</b><br>${loc.desc || loc.description || ''}`);
+                            // Пресмятане на процентите спрямо картинката на България
+                            const topPercent = ((maxLat - lat) / (maxLat - minLat)) * 100;
+                            const leftPercent = ((lng - minLng) / (maxLng - minLng)) * 100;
+
+                            if (topPercent >= 0 && topPercent <= 100 && leftPercent >= 0 && leftPercent <= 100) {
+                                const pinElement = document.createElement('div');
+                                pinElement.className = 'map-pin';
+                                pinElement.style.top = `${topPercent}%`;
+                                pinElement.style.left = `${leftPercent}%`;
+                                
+                                pinElement.innerHTML = `
+                                    <div class="pin-head"></div>
+                                    <div class="pin-needle"></div>
+                                    <div class="map-popup">
+                                        <b>${loc.title || loc.name || 'Обект'}</b><br>${loc.desc || loc.description || ''}
+                                    </div>
+                                `;
+
+                                // При клик се отваря/затваря попъп прозорецът
+                                pinElement.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
+                                    pinElement.classList.toggle('active');
+                                });
+
+                                mapContainer.appendChild(pinElement);
+                            }
                         }
                     });
+
+                    // Затваряне при клик извън пин
+                    document.addEventListener('click', () => {
+                        document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
+                    });
+
                 } else {
-                    console.log("Няма намерени точки в базата данни за картата.");
+                    console.log("Няма намерени точки в базата данни.");
                 }
             } catch (err) {
                 console.error("Грешка при зареждане на точките за картата от Firebase:", err);
@@ -286,7 +364,6 @@
             
             updateNavAuthStatus();
 
-            // Забавяне на видеото в началния екран (0.4 = наполовина по-бавно)
             const heroVideo = document.querySelector('.hero-main-img video');
             if (heroVideo) {
                 heroVideo.playbackRate = 0.4;
@@ -295,26 +372,21 @@
             const currentLang = localStorage.getItem('siteLang') || localStorage.getItem('preferredLang') || 'bg';
             const container = document.getElementById('featuredProjectsContainer');
 
-            // 1. Зареждане на проектите от Firestore с хибридна подредба
+            // Зареждане на проектите от Firestore
             try {
                 const snapshot = await db.collection('projects').get();
                 const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
                 if (projects.length > 0) {
                     const maxFeaturedCount = 3;
-
                     const manualFavorites = projects.filter(p => p.isFavorite === true || p.isFavorite === "true");
                     const otherProjects = projects.filter(p => !p.isFavorite && p.isFavorite !== "true");
-
                     otherProjects.sort((a, b) => (b.views || 0) - (a.views || 0));
-
                     const featured = [...manualFavorites, ...otherProjects].slice(0, maxFeaturedCount);
-
                     const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
 
                     container.innerHTML = featured.map((p) => {
                         const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
-
                         return `
                             <a href="project-detail.html?id=${p.id}" class="project-card">
                                 <div class="project-img-box">
@@ -333,14 +405,13 @@
                 }
             } catch (err) {
                 console.error("Грешка при зареждане на проектите от Firebase:", err);
-                container.innerHTML = `<p style="color: #a83232; font-size: 0.95rem; grid-column: 1 / -1;">Грешка при зареждане на данните.</p>`;
             }
 
             if (typeof applyTranslations === 'function') {
                 applyTranslations(currentLang);
             }
 
-            // 2. Зареждане на контактите от Firebase
+            // Зареждане на контактите от Firebase
             try {
                 const contactDoc = await db.collection('siteSettings').doc('contact').get();
                 if (contactDoc.exists) {
