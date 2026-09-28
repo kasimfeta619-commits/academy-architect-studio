@@ -80,10 +80,10 @@
 </head>
 <body>
 
-    <!-- Навигация (използва вашите оригинални класове от style_2.css) -->
+    <!-- Навигация с оправено лого -->
     <header class="navbar">
         <a href="index.html" class="logo-area">
-            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" onerror="this.style.display='none'">
+            <img src="assets/main-graphic.png" alt="Logo" class="logo-icon" style="height: 32px; width: auto;" onerror="this.style.display='none'">
             <span class="logo-studio" data-key="nav-studio">Academy Architect Studio</span>
         </a>
         <button class="menu-toggle" aria-label="Toggle menu">&#9776;</button>
@@ -111,7 +111,7 @@
         </div>
     </main>
 
-    <!-- Футър (използва вашите оригинални класове от style_2.css) -->
+    <!-- Футър -->
     <footer class="main-footer">
         <div>
             <div class="footer-brand" data-key="nav-studio">Academy Architect Studio</div>
@@ -303,7 +303,7 @@
                 });
             }
 
-            // Мобилно меню функционалност (ако я имате в другите страници)
+            // Мобилно меню функционалност
             const menuToggle = document.querySelector('.menu-toggle');
             const navLinks = document.getElementById('nav-links');
             if (menuToggle && navLinks) {
