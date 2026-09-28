@@ -64,7 +64,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain; /* сменено от cover на contain, за да се вижда цялата карта */
+            object-fit: contain;
             display: block;
             background-color: #fbf9f5;
         }
@@ -214,7 +214,7 @@
         <h2 class="map-title">Географски обхват на проектите</h2>
         <p class="map-subtitle">Част от нашите реализирани обекти и проекти в страната</p>
         <div id="projectMap">
-            <!-- Вече зарежда локалния файл bulgaria-map.jpg от assets паката -->
+            <!-- Зарежда локалния файл bulgaria-map.jpg от assets паката -->
             <img class="map-bg-image" src="assets/bulgaria-map.jpg" alt="Карта на България">
         </div>
     </section>
@@ -309,12 +309,12 @@
         document.addEventListener("DOMContentLoaded", async function() {
             const mapContainer = document.getElementById('projectMap');
 
-            // Зареждане на точките от Firebase базата данни
+            // Зареждане на точките от Firebase базата данни с коригирани граници
             try {
                 const mapSnapshot = await db.collection('map_locations').get();
                 
-                const minLat = 41.20, maxLat = 44.35;
-                const minLng = 22.35, maxLng = 28.60;
+                const minLat = 41.00, maxLat = 44.40;
+                const minLng = 22.20, maxLng = 28.70;
 
                 if (!mapSnapshot.empty) {
                     mapSnapshot.forEach(doc => {
@@ -333,28 +333,27 @@
                             const topPercent = ((maxLat - lat) / (maxLat - minLat)) * 100;
                             const leftPercent = ((lng - minLng) / (maxLng - minLng)) * 100;
 
-                            if (topPercent >= 0 && topPercent <= 100 && leftPercent >= 0 && leftPercent <= 100) {
-                                const pinElement = document.createElement('div');
-                                pinElement.className = 'map-pin';
-                                pinElement.style.top = `${topPercent}%`;
-                                pinElement.style.left = `${leftPercent}%`;
-                                
-                                pinElement.innerHTML = `
-                                    <div class="pin-head"></div>
-                                    <div class="pin-needle"></div>
-                                    <div class="map-popup">
-                                        <b>${loc.title || loc.name || 'Обект'}</b><br>${loc.desc || loc.description || ''}
-                                    </div>
-                                `;
+                            const pinElement = document.createElement('div');
+                            pinElement.className = 'map-pin';
+                            // Безопасно позициониране в рамките на картата, без излишно изрязване
+                            pinElement.style.top = Math.max(0, Math.min(100, topPercent)) + '%';
+                            pinElement.style.left = Math.max(0, Math.min(100, leftPercent)) + '%';
+                            
+                            pinElement.innerHTML = `
+                                <div class="pin-head"></div>
+                                <div class="pin-needle"></div>
+                                <div class="map-popup">
+                                    <b>${loc.title || loc.name || 'Обект'}</b><br>${loc.desc || loc.description || ''}
+                                </div>
+                            `;
 
-                                pinElement.addEventListener('click', (e) => {
-                                    e.stopPropagation();
-                                    document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
-                                    pinElement.classList.toggle('active');
-                                });
+                            pinElement.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
+                                pinElement.classList.toggle('active');
+                            });
 
-                                mapContainer.appendChild(pinElement);
-                            }
+                            mapContainer.appendChild(pinElement);
                         }
                     });
 
@@ -432,7 +431,7 @@
                     }
                     if (data.email) {
                         if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
-                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink'].href = 'mailto:' + data.email;
+                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
                     }
                     if (data.phone && document.getElementById('footPhone')) {
                         document.getElementById('footPhone').textContent = data.phone;
