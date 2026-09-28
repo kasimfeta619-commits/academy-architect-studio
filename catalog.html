@@ -438,16 +438,16 @@
 
                 let matchesSub = true;
                 if (activeSubFilter !== 'all') {
-                    let subKey = activeSubFilter;
-                    if (subKey === 'classic') subKey = 'класич';
-                    else if (subKey === 'minimalist') subKey = 'минимал';
-                    else if (subKey === 'modern') subKey = 'модерн';
-                    else if (subKey === 'scandinavian') subKey = 'скандинав';
-                    else if (subKey === 'industrial') subKey = 'индустриал';
-                    else if (subKey === 'bulgarian') subKey = 'българ';
-                    else if (subKey === 'mediterranean') subKey = 'средиземномор';
+                    let subTerms = [activeSubFilter];
+                    if (activeSubFilter === 'classic') subTerms = ['класич', 'classic'];
+                    else if (activeSubFilter === 'minimalist') subTerms = ['минимал', 'minimalist', 'minimal'];
+                    else if (activeSubFilter === 'modern') subTerms = ['модерн', 'modern'];
+                    else if (activeSubFilter === 'scandinavian') subTerms = ['скандинав', 'scandinavian'];
+                    else if (activeSubFilter === 'industrial') subTerms = ['индустриал', 'industrial'];
+                    else if (activeSubFilter === 'bulgarian') subTerms = ['българ', 'bulgarian'];
+                    else if (activeSubFilter === 'mediterranean') subTerms = ['средиземномор', 'mediterranean'];
 
-                    matchesSub = materialStr.includes(subKey) || styleStr.includes(subKey) || title.includes(subKey);
+                    matchesSub = subTerms.some(term => materialStr.includes(term) || styleStr.includes(term) || title.includes(term));
                 }
 
                 return matchesSearch && matchesCat && matchesSub;
