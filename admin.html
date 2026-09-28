@@ -983,7 +983,7 @@
             }
         }
 
-        // КОРИГИРАНА ФУНКЦИЯ ЗА МНЕНИЯ НА ОБЩНОСТТА
+        // НАПЪЛНО ПОПРАВЕНА И ГЪВКАВА ФУНКЦИЯ ЗА МНЕНИЯ НА ОБЩНОСТТА
         async function renderAdminReviews() {
             const listContainer = document.getElementById('adminReviewsList');
             if (!listContainer) return;
@@ -992,7 +992,9 @@
             try {
                 const snapshot = await db.collection('reviews').get();
                 reviews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            } catch (err) {}
+            } catch (err) {
+                console.error("Грешка при зареждане на мненията:", err);
+            }
             
             if (reviews.length === 0) {
                 listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма добавени мнения от общността.</p>`;
@@ -1002,13 +1004,14 @@
             listContainer.innerHTML = reviews.map((r) => {
                 const ratingNum = parseInt(r.rating) || 5;
                 const stars = '★'.repeat(ratingNum) + '☆'.repeat(5 - ratingNum);
-                const commentText = r.comment || r.text || 'Няма текстов коментар';
+                const commentText = r.comment || r.text || r.message || 'Няма текстов коментар';
+                const authorName = r.author || r.name || r.userName || 'Анонимен';
 
                 return `
                     <div class="review-item-admin">
                         <div>
                             <div style="font-weight: bold; font-size: 1.05rem; margin-bottom: 4px;">
-                                ${r.author || 'Анонимен'} <span style="color: #f39c12; margin-left: 8px; font-size: 0.95rem;">${stars}</span>
+                                ${authorName} <span style="color: #f39c12; margin-left: 8px; font-size: 0.95rem;">${stars}</span>
                             </div>
                             <div style="font-size: 0.9rem; color: #333; margin-bottom: 4px;">"${commentText}"</div>
                             <div style="font-size: 0.75rem; color: #8c8275;">Проект ID: ${r.projectId || 'Общ'}</div>
@@ -1248,7 +1251,7 @@
                 }
 
                 const projectData = {
-                    title: document.getElementById('title').value,
+                    title: document.getElementById('title'].value,
                     mainCategory: document.getElementById('mainCategory').value,
                     subCategory: document.getElementById('subCategory').value,
                     desc: document.getElementById('desc').value,
