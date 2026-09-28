@@ -82,7 +82,7 @@
         }
         
         .admin-nav-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid var(--border-color, #eadecc); padding-bottom: 15px; flex-wrap: wrap; }
-        .tab-btn { background: #f4eee5; border: 1px solid #eadecc; padding: 12px 15px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; color: #555; transition: all 0.2s; flex: 1; text-align: center; min-width: 130px; }
+        .tab-btn { background: #f4eee5; border: 1px solid #eadecc; padding: 12px 15px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; color: #555; transition: all 0.2s; flex: 1; text-align: center; min-width: 110px; }
         .tab-btn:hover { background: #eadecc; color: #1a1a1a; }
         .tab-btn.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
 
@@ -103,7 +103,7 @@
         .btn-action { background: #1a1a1a; color: #fff; padding: 15px 30px; border: none; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; font-size: 0.9rem; }
         .btn-action:hover { background: #333; }
         
-        .project-item-admin, .booking-item-admin { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 20px; border: 1px solid #eadecc; margin-bottom: 12px; gap: 15px; transition: background-color 0.3s, border-color 0.3s; }
+        .project-item-admin, .booking-item-admin, .review-item-admin { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 20px; border: 1px solid #eadecc; margin-bottom: 12px; gap: 15px; transition: background-color 0.3s, border-color 0.3s; }
         .project-info-wrapper { display: flex; align-items: center; gap: 15px; }
         .admin-project-thumb { width: 65px; height: 65px; object-fit: cover; border: 1px solid #eadecc; flex-shrink: 0; }
         .admin-project-no-thumb { width: 65px; height: 65px; background: #f4eee5; border: 1px solid #eadecc; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #8c8275; text-align: center; flex-shrink: 0; text-transform: uppercase; }
@@ -125,18 +125,16 @@
         .modal-close:hover { color: #1a1a1a; }
         .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
         .preview-grid img { width: 100%; height: 100px; object-fit: cover; border: 1px solid #eadecc; }
-  .existing-assets { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 10px; }
-  .existing-asset { position: relative; width: 110px; height: 82px; border: 1px solid #d4c8b6; background: #fff; border-radius: 4px; overflow: hidden; }
-  .existing-asset img { width: 100%; height: 100%; object-fit: cover; }
-  .existing-asset-remove { position: absolute; top: 3px; right: 3px; width: 24px; height: 24px; border: 0; border-radius: 50%; background: #b33236; color: #fff; font-weight: 700; cursor: pointer; line-height: 20px; }
-  .existing-assets:empty { display: none; }
-  .project-form-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px; border-bottom:1px solid #d4c8b6; padding-bottom:12px; }
-  .project-form-tab { border:1px solid #d4c8b6; background:#fff; color:#5f554a; padding:10px 16px; cursor:pointer; border-radius:999px; font-weight:600; }
-  .project-form-tab.active { background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
-  .project-form-zone { display:none; }
-  .project-form-zone.active { display:block; }
-  .feedback-admin-note { padding:16px; background:#f4eee5; color:#766a5e; margin-bottom:16px; }
-  .project-feedback-admin { color:#766a5e; }
+        .existing-assets { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 10px; }
+        .existing-asset { position: relative; width: 110px; height: 82px; border: 1px solid #d4c8b6; background: #fff; border-radius: 4px; overflow: hidden; }
+        .existing-asset img { width: 100%; height: 100%; object-fit: cover; }
+        .existing-asset-remove { position: absolute; top: 3px; right: 3px; width: 24px; height: 24px; border: 0; border-radius: 50%; background: #b33236; color: #fff; font-weight: 700; cursor: pointer; line-height: 20px; }
+        .existing-assets:empty { display: none; }
+        .project-form-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; border-bottom: 1px solid #d4c8b6; padding-bottom: 12px; }
+        .project-form-tab { border: 1px solid #d4c8b6; background: #fff; color: #5f554a; padding: 10px 16px; cursor: pointer; border-radius: 999px; font-weight: 600; }
+        .project-form-tab.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+        .project-form-zone { display: none; }
+        .project-form-zone.active { display: block; }
 
         body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
         body.dark-mode header.navbar { background: #1a1a1a !important; border-bottom-color: #2c2c2c !important; }
@@ -155,7 +153,8 @@
         body.dark-mode .form-group textarea,
         body.dark-mode .form-group input[type="file"] { background: #121212 !important; border-color: #444 !important; color: #ffffff !important; }
         body.dark-mode .project-item-admin, 
-        body.dark-mode .booking-item-admin { background: #1e1e1e !important; border-color: #2c2c2c !important; }
+        body.dark-mode .booking-item-admin,
+        body.dark-mode .review-item-admin { background: #1e1e1e !important; border-color: #2c2c2c !important; }
         body.dark-mode .admin-project-no-thumb { background: #252525 !important; border-color: #333 !important; }
         body.dark-mode h1, body.dark-mode h3, body.dark-mode label, body.dark-mode .checkbox-group label { color: #ffffff !important; }
         body.dark-mode .btn-action { background-color: #eadecc; color: #1a1a1a; }
@@ -170,7 +169,7 @@
             .tab-btn { width: 100%; min-width: 100%; padding: 14px; font-size: 0.8rem; }
             .admin-section { padding: 20px 15px; }
             h1 { font-size: 2rem !important; }
-            .project-item-admin, .booking-item-admin { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .project-item-admin, .booking-item-admin, .review-item-admin { flex-direction: column; align-items: flex-start; gap: 12px; }
             .project-info-wrapper { width: 100%; }
             .admin-btns { width: 100%; display: flex; justify-content: flex-start; flex-wrap: wrap; }
             .btn-view, .btn-edit, .btn-delete { padding: 10px 14px; font-size: 0.85rem; flex: 1; text-align: center; }
@@ -207,13 +206,15 @@
         <h1 style="font-size: 2.5rem; font-weight: 400; margin-top: 5px; color: #1a1a1a; margin-bottom: 20px;">Админ Панел</h1>
 
         <div class="admin-nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('aboutTab', this)">📄 За нас</button>
-            <button class="tab-btn" onclick="switchTab('teamTab', this)">👥 Екип</button>
-            <button class="tab-btn" onclick="switchTab('contactTab', this)">📞 Контакти</button>
-            <button class="tab-btn" onclick="switchTab('estimatorTab', this)">🧮 Калкулатор</button>
-            <button class="tab-btn" onclick="switchTab('uploadTab', this)" id="uploadTabBtn">➕ Нов проект</button>
-            <button class="tab-btn" onclick="switchTab('projectsTab', this)">🗂️ Проекти</button>
-            <button class="tab-btn" onclick="switchTab('bookingsTab', this)">📅 Резервации</button>
+            <button class="tab-btn active" onclick="switchTab('aboutTab', this)">За нас</button>
+            <button class="tab-btn" onclick="switchTab('teamTab', this)">Екип</button>
+            <button class="tab-btn" onclick="switchTab('contactTab', this)">Контакти</button>
+            <button class="tab-btn" onclick="switchTab('estimatorTab', this)">Калкулатор</button>
+            <button class="tab-btn" onclick="switchTab('uploadTab', this)" id="uploadTabBtn">Качване</button>
+            <button class="tab-btn" onclick="switchTab('projectsTab', this)">Проекти</button>
+            <button class="tab-btn" onclick="switchTab('detailTab', this)">Project Detail</button>
+            <button class="tab-btn" onclick="switchTab('bookingsTab', this)">Резервации</button>
+            <button class="tab-btn" onclick="switchTab('reviewsTab', this)">Мнения</button>
         </div>
         
         <div id="aboutTab" class="admin-section active">
@@ -315,94 +316,90 @@
                 <div class="project-form-tabs" role="tablist" aria-label="Раздели на проекта">
                     <button type="button" class="project-form-tab active" onclick="showProjectZone('detailsZone', this)">1. Данни</button>
                     <button type="button" class="project-form-tab" onclick="showProjectZone('mediaZone', this)">2. Медия</button>
-                    <button type="button" class="project-form-tab" onclick="showProjectZone('feedbackZone', this)">3. Мнения</button>
                 </div>
                 <input type="hidden" id="editIndex" value="">
+                
                 <div id="detailsZone" class="project-form-zone active">
-
-                <div class="form-group"><label>Име на проекта *</label><input type="text" id="title" required></div>
-                
-                <div class="form-group">
-                    <label>Главна категория *</label>
-                    <select id="mainCategory" required>
-                        <option value="residential">🏠 Жилищна и многофамилна сграда</option>
-                        <option value="commercial">🏢 Търговски обект и промишлена сграда</option>
-                        <option value="interior">🛋️ Интериорен дизайн и обзавеждане</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Подкатегория (Тип разработка) *</label>
-                    <select id="subCategory" required>
-                        <option value="architecture">📐 Архитектурен проект</option>
-                        <option value="3d">🖼️ 3D сграда / Визуализация</option>
-                    </select>
-                </div>
-
-                <div class="form-group"><label>Описание</label><textarea id="desc"></textarea></div>
-                <div class="form-group"><label>Площ (м²)</label><input type="text" id="area"></div>
-                <div class="form-group"><label>Етажи</label><input type="text" id="floors"></div>
-                <div class="form-group"><label>Спални</label><input type="text" id="beds"></div>
-                <div class="form-group"><label>Бани</label><input type="text" id="baths"></div>
-                <div class="form-group">
-                    <label>Материал / Конструкция</label>
-                    <select id="material">
-                        <option value="">Изберете конструкция</option>
-                        <option value="Стоманобетон с тухли">Стоманобетон с тухли</option>
-                        <option value="Стоманобетон с газобетон">Стоманобетон с газобетон</option>
-                        <option value="Стоманобетонна конструкция">Стоманобетонна конструкция</option>
-                        <option value="Метална конструкция">Метална конструкция</option>
-                        <option value="Дървена конструкция">Дървена конструкция</option>
-                        <option value="Сглобяема конструкция">Сглобяема конструкция</option>
-                        <option value="Каменна конструкция">Каменна конструкция</option>
-                        <option value="Смесена конструкция">Смесена конструкция</option>
-                        <option value="Друго">Друго</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Стил</label>
-                    <select id="style">
-                        <option value="">Изберете стил</option>
-                        <option value="Classic">Класически</option>
-                        <option value="Minimalist">Минималистичен</option>
-                        <option value="Modern">Модерен</option>
-                        <option value="Scandinavian">Скандинавски</option>
-                        <option value="Industrial">Индустриален</option>
-                        <option value="Bulgarian">Български</option>
-                        <option value="Mediterranean">Средиземноморски</option>
-                    </select>
-                </div>
-                <div class="form-group"><label>Цена (€)</label><input type="text" id="price" inputmode="decimal" placeholder="напр. 25 000"></div>
-                </div>
-                <div id="mediaZone" class="project-form-zone">
-                <div style="background: #eadecc; padding: 15px; margin-bottom: 20px; border: 1px solid #d4c8b6;">
-                    <h4 style="margin-top: 0; font-size: 0.9rem; text-transform: uppercase; color: #1a1a1a;">Видео презентация (Изберете едно от двете)</h4>
+                    <div class="form-group"><label>Име на проекта *</label><input type="text" id="title" required></div>
                     
-                    <div class="form-group" style="margin-bottom: 15px;">
-                        <label>Вариант 1: YouTube Линк (URL)</label>
-                        <input type="text" id="youtubeUrl" placeholder="напр. https://www.youtube.com/watch?v=XXXXX">
+                    <div class="form-group">
+                        <label>Главна категория *</label>
+                        <select id="mainCategory" required>
+                            <option value="residential">🏠 Жилищна и многофамилна сграда</option>
+                            <option value="commercial">🏢 Търговски обект и промишлена сграда</option>
+                            <option value="interior">🛋️ Интериорен дизайн и обзавеждане</option>
+                        </select>
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Вариант 2: Качване на .mp4 файл от компютъра</label>
-                        <input type="file" id="videoFile" accept="video/mp4,video/webm">
-                        <span id="currentVideoInfo" style="font-size: 0.8rem; color: #8c8275; margin-top: 4px;"></span>
+                    <div class="form-group">
+                        <label>Подкатегория (Тип разработка) *</label>
+                        <select id="subCategory" required>
+                            <option value="architecture">📐 Архитектурен проект</option>
+                            <option value="3d">🖼️ 3D сграда / Визуализация</option>
+                        </select>
                     </div>
+
+                    <div class="form-group"><label>Описание</label><textarea id="desc"></textarea></div>
+                    <div class="form-group"><label>Площ (м²)</label><input type="text" id="area"></div>
+                    <div class="form-group"><label>Етажи</label><input type="text" id="floors"></div>
+                    <div class="form-group"><label>Спални</label><input type="text" id="beds"></div>
+                    <div class="form-group"><label>Бани</label><input type="text" id="baths"></div>
+                    <div class="form-group">
+                        <label>Материал / Конструкция</label>
+                        <select id="material">
+                            <option value="">Изберете конструкция</option>
+                            <option value="Стоманобетон с тухли">Стоманобетон с тухли</option>
+                            <option value="Стоманобетон с газобетон">Стоманобетон с газобетон</option>
+                            <option value="Стоманобетонна конструкция">Стоманобетонна конструкция</option>
+                            <option value="Метална конструкция">Метална конструкция</option>
+                            <option value="Дървена конструкция">Дървена конструкция</option>
+                            <option value="Сглобяема конструкция">Сглобяема конструкция</option>
+                            <option value="Каменна конструкция">Каменна конструкция</option>
+                            <option value="Смесена конструкция">Смесена конструкция</option>
+                            <option value="Друго">Друго</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Стил</label>
+                        <select id="style">
+                            <option value="">Изберете стил</option>
+                            <option value="Classic">Класически</option>
+                            <option value="Minimalist">Минималистичен</option>
+                            <option value="Modern">Модерен</option>
+                            <option value="Scandinavian">Скандинавски</option>
+                            <option value="Industrial">Индустриален</option>
+                            <option value="Bulgarian">Български</option>
+                            <option value="Mediterranean">Средиземноморски</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Цена (€)</label><input type="text" id="price" inputmode="decimal" placeholder="напр. 25 000"></div>
                 </div>
 
-                <hr style="border: 0; border-top: 1px solid #eadecc; margin: 25px 0;">
-                
-                <div class="form-group"><label>Главна снимка</label><div id="mainImageExisting" class="existing-assets"></div><input type="file" id="mainImg" accept="image/*"></div>
-                <div class="form-group"><label>Разпределения / Планове (множество етажи)</label><div id="floorPlansExisting" class="existing-assets"></div><input type="file" id="planImgs" accept="image/*" multiple></div>
-                <div class="form-group"><label>Фасади (може да изберете няколко)</label><div id="facadesExisting" class="existing-assets"></div><input type="file" id="facadeImgs" accept="image/*" multiple></div>
-                <div class="form-group"><label>Разрез</label><div id="sectionImageExisting" class="existing-assets"></div><input type="file" id="sectionImg" accept="image/*"></div>
-                <div class="form-group"><label>Допълнителни визуализации</label><div id="galleryExisting" class="existing-assets"></div><input type="file" id="galleryImgs" accept="image/*" multiple></div>
+                <div id="mediaZone" class="project-form-zone">
+                    <div style="background: #eadecc; padding: 15px; margin-bottom: 20px; border: 1px solid #d4c8b6;">
+                        <h4 style="margin-top: 0; font-size: 0.9rem; text-transform: uppercase; color: #1a1a1a;">Видео презентация (Изберете едно от двете)</h4>
+                        
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label>Вариант 1: YouTube Линк (URL)</label>
+                            <input type="text" id="youtubeUrl" placeholder="напр. https://www.youtube.com/watch?v=XXXXX">
+                        </div>
 
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Вариант 2: Качване на .mp4 файл от компютъра</label>
+                            <input type="file" id="videoFile" accept="video/mp4,video/webm">
+                            <span id="currentVideoInfo" style="font-size: 0.8rem; color: #8c8275; margin-top: 4px;"></span>
+                        </div>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid #eadecc; margin: 25px 0;">
+                    
+                    <div class="form-group"><label>Главна снимка</label><div id="mainImageExisting" class="existing-assets"></div><input type="file" id="mainImg" accept="image/*"></div>
+                    <div class="form-group"><label>Разпределения / Планове (множество етажи)</label><div id="floorPlansExisting" class="existing-assets"></div><input type="file" id="planImgs" accept="image/*" multiple></div>
+                    <div class="form-group"><label>Фасади (може да изберете няколко)</label><div id="facadesExisting" class="existing-assets"></div><input type="file" id="facadeImgs" accept="image/*" multiple></div>
+                    <div class="form-group"><label>Разрез</label><div id="sectionImageExisting" class="existing-assets"></div><input type="file" id="sectionImg" accept="image/*"></div>
+                    <div class="form-group"><label>Допълнителни визуализации</label><div id="galleryExisting" class="existing-assets"></div><input type="file" id="galleryImgs" accept="image/*" multiple></div>
                 </div>
-                <div id="feedbackZone" class="project-form-zone">
-                    <div class="feedback-admin-note">Мненията и рейтингите се събират от страницата на проекта и се показват тук при редакция.</div>
-                    <div id="projectFeedbackAdmin" class="project-feedback-admin">Няма добавени мнения.</div>
-                </div>
+
                 <div class="form-group checkbox-group" style="margin-top: 20px;">
                     <input type="checkbox" id="isFav"> 
                     <label for="isFav" style="cursor: pointer; font-size: 0.85rem; font-weight: 600;">Фаворитен проект (на началната страница)</label>
@@ -415,8 +412,15 @@
         </div>
 
         <div id="projectsTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Съществу��ащи проекти</h3>
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Съществуващи проекти</h3>
             <div id="adminProjectsList"></div>
+        </div>
+
+        <!-- НОВ СЕКТОР ЗА УПРАВЛЕНИЕ НА PROJECT DETAIL (КОЙТО ИСКАТЕ ДА ВИЖДАТЕ В АДМИНА) -->
+        <div id="detailTab" class="admin-section">
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Управление на Project Detail елементи</h3>
+            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можете да преглеждате проектите и да преценявате или премахвате детайли/медия от самите страници с подробности за проект (Project Detail).</p>
+            <div id="adminDetailList"></div>
         </div>
 
         <div id="bookingsTab" class="admin-section">
@@ -427,6 +431,11 @@
                 </button>
             </div>
             <div id="adminBookingsList"></div>
+        </div>
+
+        <div id="reviewsTab" class="admin-section">
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Модерация на мнения</h3>
+            <div id="adminReviewsList"></div>
         </div>
     </main>
 
@@ -554,8 +563,10 @@
             }
 
             renderAdminList();
+            renderAdminDetailList();
             renderAdminBookings();
             renderAdminTeam();
+            renderAdminReviews();
         });
 
         document.getElementById('aboutForm').addEventListener('submit', async (e) => {
@@ -605,7 +616,7 @@
             }
         });
 
-        // УПРАВЛЕНИЕ НА ЕКИПА (Рендиране, Преглед, Редакция и Изтриване)
+        // УПРАВЛЕНИЕ НА ЕКИПА
         async function renderAdminTeam() {
             const listContainer = document.getElementById('adminTeamList');
             if (!listContainer) return;
@@ -742,7 +753,7 @@
                 } else {
                     teamData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection('teamMembers').add(teamData);
-                    alert("Членът на екип�� е успешно добавен!");
+                    alert("Членът на екипа е успешно добавен!");
                 }
 
                 resetTeamForm();
@@ -807,6 +818,43 @@
                             <button class="btn-view" onclick="openPreviewModal('${p.id}')">👁️ Преглед</button>
                             <button class="btn-edit" onclick="editProject('${p.id}')">Редактирай</button>
                             <button class="btn-delete" onclick="deleteProject('${p.id}')">Изтрий</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // РЕНДЕРИРАНЕ НА ПРОЕКТИТЕ В СЕКЦИЯТА "PROJECT DETAIL" ЗА УПРАВЛЕНИЕ И ПРЕМАХВАНЕ НА ЕЛЕМЕНТИ
+        async function renderAdminDetailList() {
+            const listContainer = document.getElementById('adminDetailList');
+            if (!listContainer) return;
+            let projects = [];
+            
+            try {
+                const snapshot = await db.collection('projects').get();
+                projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (err) {}
+            
+            if (projects.length === 0) {
+                listContainer.innerHTML = `<p style="color: #8c8275;">Няма налични проекти за управление на детайли.</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = projects.map((p) => {
+                let thumbHtml = p.mainImage ? `<img src="${p.mainImage}" alt="${p.title}" class="admin-project-thumb">` : `<div class="admin-project-no-thumb">Няма снимка</div>`;
+                return `
+                    <div class="project-item-admin">
+                        <div class="project-info-wrapper">
+                            ${thumbHtml}
+                            <div>
+                                <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${p.title} (Детайли)</strong>
+                                <div style="font-size: 0.8rem; color: #8c8275;">
+                                    Планове: ${(p.floorPlans || []).length} | Фасади: ${(p.facadeImages || []).length} | Галерия: ${(p.gallery || []).length}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="admin-btns">
+                            <button class="btn-edit" onclick="editProject('${p.id}')">Управлявай / Махай детайли</button>
                         </div>
                     </div>
                 `;
@@ -916,11 +964,53 @@
             }
         }
 
+        async function renderAdminReviews() {
+            const listContainer = document.getElementById('adminReviewsList');
+            if (!listContainer) return;
+            let reviews = [];
+            
+            try {
+                const snapshot = await db.collection('reviews').get();
+                reviews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (err) {}
+            
+            if (reviews.length === 0) {
+                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма добавени мнения.</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = reviews.map((r) => {
+                return `
+                    <div class="review-item-admin">
+                        <div>
+                            <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${r.author || 'Анонимен'}</strong>
+                            <div style="font-size: 0.8rem; color: #8c8275;">Оценка: ${r.rating || '5'}★ | "${r.text || ''}"</div>
+                        </div>
+                        <div class="admin-btns">
+                            <button class="btn-delete" onclick="deleteReview('${r.id}')">Изтрий</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function deleteReview(id) {
+            if (confirm("Сигурни ли сте, че искате да изтриете това мнение?")) {
+                try {
+                    await db.collection('reviews').doc(id).delete();
+                    renderAdminReviews();
+                } catch (err) {
+                    alert("Грешка при изтриване: " + err.message);
+                }
+            }
+        }
+
         async function deleteProject(id) {
             if (confirm("Сигурни ли сте, че искате да изтриете този проект?")) {
                 try {
                     await db.collection('projects').doc(id).delete();
                     renderAdminList();
+                    renderAdminDetailList();
                     resetProjectForm();
                 } catch (err) {
                     alert("Грешка при изтриване: " + err.message);
@@ -928,35 +1018,35 @@
             }
         }
 
-window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: [], sectionImage: '', gallery: [] };
-  window.removedProjectAssets = new Set();
+        window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: [], sectionImage: '', gallery: [] };
+        window.removedProjectAssets = new Set();
 
-  function renderExistingAssets() {
-  const groups = {
-    mainImage: ['mainImageExisting', window.existingProjectAssets.mainImage ? [window.existingProjectAssets.mainImage] : []],
-    floorPlans: ['floorPlansExisting', window.existingProjectAssets.floorPlans],
-    facadeImages: ['facadesExisting', window.existingProjectAssets.facadeImages],
-    sectionImage: ['sectionImageExisting', window.existingProjectAssets.sectionImage ? [window.existingProjectAssets.sectionImage] : []],
-    gallery: ['galleryExisting', window.existingProjectAssets.gallery]
-  };
-  Object.entries(groups).forEach(([key, [containerId, urls]]) => {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    container.innerHTML = urls.map((url, index) => `<div class="existing-asset"><img src="${url}" alt="Съществуваща снимка"><button type="button" class="existing-asset-remove" aria-label="Премахни снимката" onclick="removeExistingAsset('${key}', ${index})">×</button></div>`).join('');
-  });
-  }
+        function renderExistingAssets() {
+            const groups = {
+                mainImage: ['mainImageExisting', window.existingProjectAssets.mainImage ? [window.existingProjectAssets.mainImage] : []],
+                floorPlans: ['floorPlansExisting', window.existingProjectAssets.floorPlans],
+                facadeImages: ['facadesExisting', window.existingProjectAssets.facadeImages],
+                sectionImage: ['sectionImageExisting', window.existingProjectAssets.sectionImage ? [window.existingProjectAssets.sectionImage] : []],
+                gallery: ['galleryExisting', window.existingProjectAssets.gallery]
+            };
+            Object.entries(groups).forEach(([key, [containerId, urls]]) => {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                container.innerHTML = urls.map((url, index) => `<div class="existing-asset"><img src="${url}" alt="Съществуваща снимка"><button type="button" class="existing-asset-remove" aria-label="Премахни снимката" onclick="removeExistingAsset('${key}', ${index})">×</button></div>`).join('');
+            });
+        }
 
-  function removeExistingAsset(key, index) {
-  const urls = key === 'mainImage' || key === 'sectionImage' ? [window.existingProjectAssets[key]] : window.existingProjectAssets[key];
-  const url = urls[index];
-  if (url) window.removedProjectAssets.add(`${key}:${url}`);
-  if (key === 'mainImage' || key === 'sectionImage') window.existingProjectAssets[key] = '';
-  else window.existingProjectAssets[key].splice(index, 1);
-  renderExistingAssets();
-  }
+        function removeExistingAsset(key, index) {
+            const urls = key === 'mainImage' || key === 'sectionImage' ? [window.existingProjectAssets[key]] : window.existingProjectAssets[key];
+            const url = urls[index];
+            if (url) window.removedProjectAssets.add(`${key}:${url}`);
+            if (key === 'mainImage' || key === 'sectionImage') window.existingProjectAssets[key] = '';
+            else window.existingProjectAssets[key].splice(index, 1);
+            renderExistingAssets();
+        }
 
-  async function editProject(id) {
-  let p = null;
+        async function editProject(id) {
+            let p = null;
             try {
                 const docSnap = await db.collection('projects').doc(id).get();
                 if (docSnap.exists) p = { id: docSnap.id, ...docSnap.data() };
@@ -973,18 +1063,19 @@ window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: []
             document.getElementById('floors').value = p.floors || '';
             document.getElementById('beds').value = p.beds || '';
             document.getElementById('baths').value = p.baths || '';
-document.getElementById('material').value = p.material || '';
-  document.getElementById('style').value = p.style || '';
-  document.getElementById('price').value = p.price || '';
-  window.existingProjectAssets = {
-  mainImage: p.mainImage || '',
-  floorPlans: Array.isArray(p.floorPlans) ? [...p.floorPlans] : [],
-  facadeImages: Array.isArray(p.facadeImages) ? [...p.facadeImages] : [],
-  sectionImage: p.sectionImage || '',
-  gallery: Array.isArray(p.gallery) ? [...p.gallery] : []
-  };
-  window.removedProjectAssets = new Set();
-  renderExistingAssets();
+            document.getElementById('material').value = p.material || '';
+            document.getElementById('style').value = p.style || '';
+            document.getElementById('price').value = p.price || '';
+            
+            window.existingProjectAssets = {
+                mainImage: p.mainImage || '',
+                floorPlans: Array.isArray(p.floorPlans) ? [...p.floorPlans] : [],
+                facadeImages: Array.isArray(p.facadeImages) ? [...p.facadeImages] : [],
+                sectionImage: p.sectionImage || '',
+                gallery: Array.isArray(p.gallery) ? [...p.gallery] : []
+            };
+            window.removedProjectAssets = new Set();
+            renderExistingAssets();
             document.getElementById('youtubeUrl').value = p.youtubeUrl || '';
             
             window.existingVideoUrl = p.videoUrl || '';
@@ -1004,23 +1095,23 @@ document.getElementById('material').value = p.material || '';
             switchTab('uploadTab', document.getElementById('uploadTabBtn'));
         }
 
-window.showProjectZone = function(zoneId, button) {
-  document.querySelectorAll('.project-form-zone').forEach(zone => zone.classList.toggle('active', zone.id === zoneId));
-  document.querySelectorAll('.project-form-tab').forEach(tab => tab.classList.toggle('active', tab === button));
-};
+        window.showProjectZone = function(zoneId, button) {
+            document.querySelectorAll('.project-form-zone').forEach(zone => zone.classList.toggle('active', zone.id === zoneId));
+            document.querySelectorAll('.project-form-tab').forEach(tab => tab.classList.toggle('active', tab === button));
+        };
 
-function resetProjectForm() {
-  document.getElementById('uploadForm').reset();
-  window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: [], sectionImage: '', gallery: [] };
-  window.removedProjectAssets = new Set();
-  renderExistingAssets();
-  document.getElementById('editIndex').value = '';
+        function resetProjectForm() {
+            document.getElementById('uploadForm').reset();
+            window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: [], sectionImage: '', gallery: [] };
+            window.removedProjectAssets = new Set();
+            renderExistingAssets();
+            document.getElementById('editIndex').value = '';
             document.getElementById('currentVideoInfo').innerText = '';
             window.existingVideoUrl = '';
             document.getElementById('formTitle').innerText = "Качване на нов проект";
             document.getElementById('submitBtn').innerText = "Запази проекта в каталога";
             document.getElementById('cancelBtn').style.display = 'none';
-            document.getElementById('uploadTabBtn').innerText = "➕ Нов проект";
+            document.getElementById('uploadTabBtn').innerText = "Качване";
         }
 
         async function downloadCalendar() {
@@ -1055,7 +1146,7 @@ function resetProjectForm() {
                             icsContent += "BEGIN:VEVENT\n";
                             icsContent += `UID:${docSnap.id}@architect-studio.bg\n`;
                             icsContent += `SUMMARY:Консултация: ${b.name || 'Клиент'}\n`;
-                            icsContent += `DESCRIPTION:Услуга: ${b.service || 'Консу��тация'}\\nТелефон: ${b.phone || 'Няма телефон'}\n`;
+                            icsContent += `DESCRIPTION:Услуга: ${b.service || 'Консултация'}\\nТелефон: ${b.phone || 'Няма телефон'}\n`;
                             icsContent += `DTSTART:${startTimestamp}\n`;
                             icsContent += `DTEND:${endTimestamp}\n`;
                             icsContent += "END:VEVENT\n";
@@ -1156,6 +1247,7 @@ function resetProjectForm() {
 
                 resetProjectForm();
                 renderAdminList();
+                renderAdminDetailList();
                 switchTab('projectsTab', document.querySelectorAll('.tab-btn')[5]);
 
             } catch (err) {
