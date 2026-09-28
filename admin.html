@@ -52,8 +52,8 @@
 
     <style>
         body { background-color: var(--bg-color, #fbf9f4); color: var(--text-color, #1a1a1a); font-family: sans-serif; margin: 0; transition: background-color 0.3s, color 0.3s; }
-        .admin-container { padding: 40px 8%; max-width: 950px; margin: 0 auto; min-height: 80vh; }
-        .back-home-link { display: inline-block; margin-bottom: 20px; color: #8c8275; text-decoration: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .admin-container { padding: 30px 5%; max-width: 1100px; margin: 0 auto; min-height: 80vh; }
+        .back-home-link { display: inline-block; margin-bottom: 15px; color: #8c8275; text-decoration: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         .back-home-link:hover { color: var(--text-color, #1a1a1a); }
 
         .user-avatar-badge {
@@ -81,8 +81,30 @@
             transition: border-color 0.3s;
         }
         
-        .admin-nav-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid var(--border-color, #eadecc); padding-bottom: 15px; flex-wrap: wrap; }
-        .tab-btn { background: #f4eee5; border: 1px solid #eadecc; padding: 12px 15px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; color: #555; transition: all 0.2s; flex: 1; text-align: center; min-width: 110px; }
+        /* Фиксирани табове, за да не се застъпват */
+        .admin-nav-tabs { 
+            display: flex; 
+            gap: 6px; 
+            margin: 20px 0 30px 0; 
+            border-bottom: 2px solid var(--border-color, #eadecc); 
+            padding-bottom: 15px; 
+            flex-wrap: wrap; 
+        }
+        .tab-btn { 
+            background: #f4eee5; 
+            border: 1px solid #eadecc; 
+            padding: 10px 12px; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            color: #555; 
+            transition: all 0.2s; 
+            flex: 1; 
+            text-align: center; 
+            min-width: 95px; 
+        }
         .tab-btn:hover { background: #eadecc; color: #1a1a1a; }
         .tab-btn.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
 
@@ -202,8 +224,10 @@
     <main class="admin-container">
         <a href="index.html" class="back-home-link">← Назад към началната страница</a>
         
-        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #8c8275; font-weight: 700;">УПРАВЛЕНИЕ НА САЙТА</span>
-        <h1 style="font-size: 2.5rem; font-weight: 400; margin-top: 5px; color: #1a1a1a; margin-bottom: 20px;">Админ Панел</h1>
+        <div style="margin-bottom: 15px;">
+            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #8c8275; font-weight: 700;">Управление на сайта</span>
+            <h1 style="font-size: 2.3rem; font-weight: 400; margin-top: 5px; margin-bottom: 0; color: #1a1a1a;">Админ Панел</h1>
+        </div>
 
         <div class="admin-nav-tabs">
             <button class="tab-btn active" onclick="switchTab('aboutTab', this)">За нас</button>
@@ -987,7 +1011,6 @@
             }
         }
 
-        // ОБНОВЕНА СЕКЦИЯ ЗА МНЕНИЯ (С ОДОБРЕНИЕ И РЕДАКЦИЯ)
         async function renderAdminReviews() {
             const listContainer = document.getElementById('adminReviewsList');
             if (!listContainer) return;
@@ -1314,7 +1337,7 @@
 
                 const projectData = {
                     title: document.getElementById('title').value,
-                    mainCategory: document.getElementById('mainCategory'].value,
+                    mainCategory: document.getElementById('mainCategory').value,
                     subCategory: document.getElementById('subCategory').value,
                     desc: document.getElementById('desc').value,
                     area: document.getElementById('area').value,
