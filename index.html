@@ -210,7 +210,7 @@
                 const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
                 if (projects.length > 0) {
-                    const featured = projects.slice(-3).reverse(); 
+                    const featured = projects.filter(p => p.isFavorite === true || p.isFavorite === "true");
                     const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
 
                     container.innerHTML = featured.map((p) => {
