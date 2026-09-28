@@ -61,7 +61,7 @@
         .gallery-grid img { width: 100%; height: 220px; object-fit: cover; border: 1px solid #eadecc; display: block; }
 
         /* Езикови бутони в хедъра */
-        .lang-switcher { display: flex; gap: 5px; margin-left: 15px; }
+        .lang-switcher { display: flex; gap: 5px; margin-left: 15px; position: relative; z-index: 1000; }
         .lang-btn { background: transparent; border: 1px solid #eadecc; padding: 4px 8px; cursor: pointer; font-size: 0.75rem; font-weight: 700; border-radius: 3px; color: inherit; }
         .lang-btn.active { background: #8c8275; color: #fff; border-color: #8c8275; }
 
@@ -102,8 +102,8 @@
             <a href="login.html" class="btn-login" data-key="nav-login">Вход</a>
             <!-- Бутони за смяна на езика -->
             <div class="lang-switcher">
-                <button id="btn-bg" class="lang-btn" onclick="setLanguage('bg')">BG</button>
-                <button id="btn-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
+                <button id="btn-bg" class="lang-btn" type="button">BG</button>
+                <button id="btn-en" class="lang-btn" type="button">EN</button>
             </div>
         </div>
     </header>
@@ -133,7 +133,7 @@
         </div>
     </footer>
 
-    <!-- СВЪРЗВАНЕ С FIREBASE И РАЗДЕЛ ЗА ДИНАМИЧЕН РЕНДЪР -->
+    <!-- СКРИПТОВЕ -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -232,7 +232,7 @@
                             </div>
                             <div class="quick-switch-box">
                                 <span class="spec-label" style="margin:0;" data-key="project-select-label">Избери проект:</span>
-                                <select id="projectSelector" onchange="if(this.value) window.location.href='project-detail_6.html?id=' + encodeURIComponent(this.value);">
+                                <select id="projectSelector" onchange="if(this.value) window.location.href='project-detail_5.html?id=' + encodeURIComponent(this.value);">
                                     ${optionsHTML}
                                 </select>
                             </div>
@@ -273,7 +273,6 @@
                         ${galleryHTML}
                     `;
 
-                    // След като динамично вкараме HTML-а, превеждаме страницата според текущия език
                     if (typeof initLanguage === 'function') {
                         initLanguage();
                     }
@@ -287,7 +286,24 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', loadProjectDetails);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProjectDetails();
+            
+            // Връзка с езиковите бутони
+            const btnBg = document.getElementById('btn-bg');
+            const btnEn = document.getElementById('btn-en');
+
+            if (btnBg) {
+                btnBg.addEventListener('click', () => {
+                    if (typeof setLanguage === 'function') setLanguage('bg');
+                });
+            }
+            if (btnEn) {
+                btnEn.addEventListener('click', () => {
+                    if (typeof setLanguage === 'function') setLanguage('en');
+                });
+            }
+        });
     </script>
 </body>
 </html>
