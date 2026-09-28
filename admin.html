@@ -415,7 +415,7 @@
         </div>
 
         <div id="projectsTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Съществуващи проекти</h3>
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Съществу��ащи проекти</h3>
             <div id="adminProjectsList"></div>
         </div>
 
@@ -742,7 +742,7 @@
                 } else {
                     teamData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection('teamMembers').add(teamData);
-                    alert("Членът на екипа е успешно добавен!");
+                    alert("Членът на екип�� е успешно добавен!");
                 }
 
                 resetTeamForm();
@@ -1004,14 +1004,14 @@ document.getElementById('material').value = p.material || '';
             switchTab('uploadTab', document.getElementById('uploadTabBtn'));
         }
 
-function resetProjectForm() {
-  document.getElementById('uploadForm').reset();
 window.showProjectZone = function(zoneId, button) {
   document.querySelectorAll('.project-form-zone').forEach(zone => zone.classList.toggle('active', zone.id === zoneId));
   document.querySelectorAll('.project-form-tab').forEach(tab => tab.classList.toggle('active', tab === button));
 };
 
-window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: [], sectionImage: '', gallery: [] };
+function resetProjectForm() {
+  document.getElementById('uploadForm').reset();
+  window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: [], sectionImage: '', gallery: [] };
   window.removedProjectAssets = new Set();
   renderExistingAssets();
   document.getElementById('editIndex').value = '';
@@ -1055,7 +1055,7 @@ window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: []
                             icsContent += "BEGIN:VEVENT\n";
                             icsContent += `UID:${docSnap.id}@architect-studio.bg\n`;
                             icsContent += `SUMMARY:Консултация: ${b.name || 'Клиент'}\n`;
-                            icsContent += `DESCRIPTION:Услуга: ${b.service || 'Консултация'}\\nТелефон: ${b.phone || 'Няма телефон'}\n`;
+                            icsContent += `DESCRIPTION:Услуга: ${b.service || 'Консу��тация'}\\nТелефон: ${b.phone || 'Няма телефон'}\n`;
                             icsContent += `DTSTART:${startTimestamp}\n`;
                             icsContent += `DTEND:${endTimestamp}\n`;
                             icsContent += "END:VEVENT\n";
