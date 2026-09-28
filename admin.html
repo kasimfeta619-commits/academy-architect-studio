@@ -231,6 +231,7 @@
             <button class="tab-btn active" onclick="switchTab('aboutTab', this)">За нас</button>
             <button class="tab-btn" onclick="switchTab('teamTab', this)">Екип</button>
             <button class="tab-btn" onclick="switchTab('contactTab', this)">Контакти</button>
+            <button class="tab-btn" onclick="switchTab('mapTab', this)">Карта</button>
             <button class="tab-btn" onclick="switchTab('estimatorTab', this)">Калкулатор</button>
             <button class="tab-btn" onclick="switchTab('uploadTab', this)" id="uploadTabBtn">Качване</button>
             <button class="tab-btn" onclick="switchTab('projectsTab', this)">Проекти</button>
@@ -305,6 +306,44 @@
                 <div class="form-group"><label>Телефонен номер</label><input type="text" id="contactPhone"></div>
                 <button type="submit" class="btn-action">Запази промените "Контакти"</button>
             </form>
+        </div>
+
+        <!-- УПРАВЛЕНИЕ НА КАРТАТА -->
+        <div id="mapTab" class="admin-section">
+            <h3 id="mapFormTitle" style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Управление на точките на картата</h3>
+            
+            <form id="mapLocationForm" style="background: #fff; padding: 20px; border: 1px solid #eadecc; margin-bottom: 30px;">
+                <input type="hidden" id="editMapId" value="">
+                
+                <h4 style="margin-top: 0; font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;" id="mapFormSubTitle">Добави нов град / обект на картата</h4>
+                
+                <div class="form-group">
+                    <label>Име на град / обект *</label>
+                    <input type="text" id="mapTitle" required placeholder="напр. Пловдив">
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Географска ширина (Lat) *</label>
+                        <input type="number" step="any" id="mapLat" required placeholder="напр. 42.1354">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Географска дължина (Lng) *</label>
+                        <input type="number" step="any" id="mapLng" required placeholder="напр. 24.7453">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Описание / Пояснение *</label>
+                    <textarea id="mapDesc" required placeholder="напр. Жилищни комплекси и интериорни проекти" style="height: 80px;"></textarea>
+                </div>
+
+                <button type="submit" id="mapSubmitBtn" class="btn-action">Добави точка на картата</button>
+                <button type="button" id="mapCancelBtn" onclick="resetMapForm()" class="btn-action" style="margin-top: 10px; background: #8c8275; display: none;">Отказ</button>
+            </form>
+
+            <h4 style="font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Съществуващи локации на картата</h4>
+            <div id="adminMapList"></div>
         </div>
 
         <div id="estimatorTab" class="admin-section">
@@ -546,7 +585,7 @@
                         resolve(canvas.toDataURL('image/jpeg', quality));
                     };
                     img.onerror = () => {
-                        resolve(event.target.result); // Fallback към оригиналния файл при проблем с кеширането/декодирането
+                        resolve(event.target.result);
                     };
                 };
             });
@@ -617,6 +656,7 @@
             renderAdminBookings();
             renderAdminTeam();
             renderAdminReviews();
+            renderAdminMapLocations();
         });
 
         document.getElementById('aboutForm').addEventListener('submit', async (e) => {
@@ -663,6 +703,111 @@
                 alert('Цените за калкулатора са успешно актуализирани!');
             } catch (err) {
                 alert('Грешка при запис на калкулатора: ' + err.message);
+            }
+        });
+
+        // УПРАВЛЕНИЕ НА КАРТАТА ЛОКАЦИИ
+        async function renderAdminMapLocations() {
+            const listContainer = document.getElementById('adminMapList');
+            if (!listContainer) return;
+            
+            let locations = [];
+            try {
+                const snapshot = await db.collection('mapLocations').get();
+                locations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (err) {
+                console.error("Грешка при зареждане на локациите:", err);
+            }
+            
+            if (locations.length === 0) {
+                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма добавени локации за картата.</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = locations.map((loc) => `
+                <div class="project-item-admin">
+                    <div class="project-info-wrapper">
+                        <div>
+                            <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">📍 ${loc.title}</strong>
+                            <div style="font-size: 0.8rem; color: #8c8275;">Координати: [${loc.lat}, ${loc.lng}] | Описание: ${loc.desc}</div>
+                        </div>
+                    </div>
+                    <div class="admin-btns">
+                        <button class="btn-edit" onclick="editMapLocation('${loc.id}')">Редактирай</button>
+                        <button class="btn-delete" onclick="deleteMapLocation('${loc.id}')">Изтрий</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function editMapLocation(id) {
+            let loc = null;
+            try {
+                const docSnap = await db.collection('mapLocations').doc(id).get();
+                if (docSnap.exists) loc = { id: docSnap.id, ...docSnap.data() };
+            } catch (err) {}
+
+            if (!loc) return;
+
+            document.getElementById('editMapId').value = loc.id;
+            document.getElementById('mapTitle').value = loc.title || '';
+            document.getElementById('mapLat').value = loc.lat || '';
+            document.getElementById('mapLng').value = loc.lng || '';
+            document.getElementById('mapDesc').value = loc.desc || '';
+
+            document.getElementById('mapFormSubTitle').innerText = "Редактиране на локация: " + loc.title;
+            document.getElementById('mapSubmitBtn').innerText = "Запази промените";
+            document.getElementById('mapCancelBtn').style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetMapForm() {
+            document.getElementById('mapLocationForm').reset();
+            document.getElementById('editMapId').value = '';
+            document.getElementById('mapFormSubTitle').innerText = "Добави нов град / обект на картата";
+            document.getElementById('mapSubmitBtn').innerText = "Добави точка на картата";
+            document.getElementById('mapCancelBtn').style.display = 'none';
+        }
+
+        async function deleteMapLocation(id) {
+            if (confirm("Сигурни ли сте, че искате да премахнете тази локация от картата?")) {
+                try {
+                    await db.collection('mapLocations').doc(id).delete();
+                    renderAdminMapLocations();
+                    resetMapForm();
+                } catch (err) {
+                    alert("Грешка при изтриване: " + err.message);
+                }
+            }
+        }
+
+        document.getElementById('mapLocationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('editMapId').value;
+
+            try {
+                const mapData = {
+                    title: document.getElementById('mapTitle').value.trim(),
+                    lat: parseFloat(document.getElementById('mapLat').value),
+                    lng: parseFloat(document.getElementById('mapLng').value),
+                    desc: document.getElementById('mapDesc').value.trim()
+                };
+
+                if (editId !== "") {
+                    await db.collection('mapLocations').doc(editId).update(mapData);
+                    alert("Локацията на картата е успешно обновена!");
+                } else {
+                    mapData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('mapLocations').add(mapData);
+                    alert("Новата локация е успешно добавена към картата!");
+                }
+
+                resetMapForm();
+                renderAdminMapLocations();
+            } catch (err) {
+                console.error(err);
+                alert("Грешка при запис: " + err.message);
             }
         });
 
@@ -1064,13 +1209,9 @@
                                 projectTitle: projectTitle
                             });
                         });
-                    } catch (subErr) {
-                        console.log("Грешка при четене на подколекция reviews за проект " + projectId, subErr);
-                    }
+                    } catch (subErr) {}
                 }
-            } catch (err) {
-                console.error("Грешка при зареждане на мненията:", err);
-            }
+            } catch (err) {}
             
             if (allReviews.length === 0) {
                 listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма добавени мнения.</p>`;
@@ -1381,9 +1522,7 @@
                             icsContent += `DTSTART:${startTimestamp}\n`;
                             icsContent += `DTEND:${endTimestamp}\n`;
                             icsContent += "END:VEVENT\n";
-                        } catch (err) {
-                            console.error("Грешка при обработка на дата за резервация:", err);
-                        }
+                        } catch (err) {}
                     }
                 });
 
@@ -1479,7 +1618,7 @@
                 resetProjectForm();
                 renderAdminList();
                 renderAdminDetailList();
-                switchTab('projectsTab', document.querySelectorAll('.tab-btn')[5]);
+                switchTab('projectsTab', document.querySelectorAll('.tab-btn')[6]);
 
             } catch (err) {
                 console.error(err);

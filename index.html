@@ -10,6 +10,9 @@
     
     <link rel="stylesheet" href="style.css">
     
+    <!-- Leaflet CSS за интерактивната карта -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
     <!-- Firebase SDK Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -23,6 +26,42 @@
             }
         })();
     </script>
+
+    <style>
+        /* Стилизация на секцията с картата, съобразена с дизайна на студиото */
+        .map-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .map-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 400;
+            color: var(--text-color, #1a1a1a);
+        }
+        .map-subtitle {
+            text-align: center;
+            color: #8c8275;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        #projectMap {
+            width: 100%;
+            height: 450px;
+            border-radius: 12px;
+            border: 1px solid #eadecc;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            z-index: 1;
+        }
+        body.dark-mode #projectMap {
+            border-color: #2c2c2c;
+            filter: brightness(0.85);
+        }
+    </style>
 </head>
 <body>
 
@@ -95,6 +134,13 @@
         <p data-key="quote-sub">We believe that every detail matters when building the perfect home or workspace, creating an environment that inspires every day.</p>
     </section>
 
+    <!-- СЕКЦИЯ ИНТЕРАКТИВНА КАРТА -->
+    <section class="map-section">
+        <h2 class="map-title">Географски обхват на проектите</h2>
+        <p class="map-subtitle">Част от нашите реализирани обекти и проекти в страната</p>
+        <div id="projectMap"></div>
+    </section>
+
     <footer class="main-footer">
         <div class="footer-logo-area">
             <div>
@@ -123,6 +169,8 @@
         </div>
     </footer>
 
+    <!-- Leaflet JS библиотека -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="translations.js"></script>
     <script>
         // Firebase конфигурация
@@ -186,6 +234,25 @@
         }
 
         document.addEventListener("DOMContentLoaded", async function() {
+            // Инициализация на картата
+            const map = L.map('projectMap').setView([41.5653, 23.7294], 9);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
+            }).addTo(map);
+
+            const locations = [
+                { lat: 41.5653, lng: 23.7294, title: "Гоце Делчев", desc: "Главен офис и жилищни сгради" },
+                { lat: 41.8386, lng: 23.4847, title: "Банско", desc: "Ваканционни къщи и комплекси" },
+                { lat: 42.6977, lng: 23.3219, title: "София", desc: "Инвестиционни проекти" }
+            ];
+
+            locations.forEach(loc => {
+                L.marker([loc.lat, loc.lng]).addTo(map)
+                  .bindPopup(`<b>${loc.title}</b><br>${loc.desc}`);
+            });
+
             if (typeof initLanguage === 'function') {
                 initLanguage();
             } else if (typeof setLanguage === 'function') {
@@ -195,7 +262,7 @@
             
             updateNavAuthStatus();
 
-            // Забавяне на видеото в началния екран (0.5 = наполовина по-бавно)
+            // Забавяне на видеото в началния екран (0.4 = наполовина по-бавно)
             const heroVideo = document.querySelector('.hero-main-img video');
             if (heroVideo) {
                 heroVideo.playbackRate = 0.4;
@@ -210,16 +277,13 @@
                 const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
                 if (projects.length > 0) {
-                    const maxFeaturedCount = 3; // Можете да го увеличите на колкото искате (напр. 6 или 15)
+                    const maxFeaturedCount = 3;
 
-                    // Разделяме проектите на ръчни фаворити и останали
                     const manualFavorites = projects.filter(p => p.isFavorite === true || p.isFavorite === "true");
                     const otherProjects = projects.filter(p => !p.isFavorite && p.isFavorite !== "true");
 
-                    // Сортираме останалите проекти по брой гледания (най-гледаните първи)
                     otherProjects.sort((a, b) => (b.views || 0) - (a.views || 0));
 
-                    // Обединяваме ги: първо ръчните фаворити, след това най-гледаните, и ограничаваме до лимита
                     const featured = [...manualFavorites, ...otherProjects].slice(0, maxFeaturedCount);
 
                     const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
@@ -262,7 +326,7 @@
                     }
                     if (data.email) {
                         if (document.getElementById('footEmail')) document.getElementById('footEmail').textContent = data.email;
-                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink').href = 'mailto:' + data.email;
+                        if (document.getElementById('footEmailLink')) document.getElementById('footEmailLink'].href = 'mailto:' + data.email;
                     }
                     if (data.phone && document.getElementById('footPhone')) {
                         document.getElementById('footPhone').textContent = data.phone;
