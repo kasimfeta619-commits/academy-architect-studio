@@ -25,31 +25,23 @@
         .project-title { font-size: 2.3rem; font-weight: 400; color: inherit; margin: 5px 0 0 0; }
         .project-style-tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #8c8275; font-weight: 700; }
 
-        /* Двуколонен грид за горната част (главна снимка отляво, всичко друго вертикално отдясно) */
+        /* ТРИКОЛОНЕН ГРИД: Снимка (ляво) | Информация (среда) | Ревюта (дясно) */
         .top-section-grid { 
             display: grid; 
-            grid-template-columns: 1.2fr 1fr; 
+            grid-template-columns: 1.2fr 1fr 340px; 
             gap: 25px; 
             align-items: start; 
             margin-bottom: 30px; 
         }
 
-        /* Контейнер в дясната колона за вертикално подреждане */
-        .right-column-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
         .hero-image-box { width: 100%; height: 340px; border: 1px solid #eadecc; overflow: hidden; background: #fff; }
         .hero-image-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        .description-card { background: #fff; padding: 25px; border: 1px solid #eadecc; box-sizing: border-box; }
+        /* Проектна информация (средната колона) */
+        .project-sidebar { background: #f4eee5; padding: 25px; border: 1px solid #eadecc; display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; height: 100%; }
         
-        .project-sidebar { background: #f4eee5; padding: 25px; border: 1px solid #eadecc; display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; }
-        
-        /* Секция за Community Opinion */
-        .community-opinion-card { background: #f4eee5; padding: 25px; border: 1px solid #eadecc; box-sizing: border-box; }
+        /* Community Opinion (най-дясната колона) */
+        .community-opinion-card { background: #f4eee5; padding: 25px; border: 1px solid #eadecc; box-sizing: border-box; height: 100%; }
 
         .spec-row { display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid #eadecc; font-size: 0.9rem; }
         .spec-label { color: #8c8275; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; }
@@ -68,7 +60,6 @@
 
         /* Dark Mode Overrides */
         body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
-        body.dark-mode .description-card, 
         body.dark-mode .hero-image-box, 
         body.dark-mode .tech-card img { background: #1e1e1e !important; border-color: #2c2c2c !important; }
         body.dark-mode .project-sidebar, 
@@ -151,7 +142,7 @@
                     const p = docSnap.data();
                     const mainImgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
 
-                    // Подготовка на техническите чертежи (планове, фасади, разрези)
+                    // Подготовка на техническите чертежи
                     let techCards = [];
                     if (p.floorPlans && p.floorPlans.length > 0) {
                         p.floorPlans.forEach((plan, i) => {
@@ -194,7 +185,7 @@
                         `;
                     }
 
-                    // Рендериране на всичко с правилно подредена дясна колона
+                    // Рендериране в 3 колони (Снимка | Project Information | Community Opinion)
                     container.innerHTML = `
                         <div class="project-header">
                             <span class="project-style-tag">${p.style || 'Архитектурен проект'}</span>
@@ -202,41 +193,35 @@
                         </div>
 
                         <div class="top-section-grid">
-                            <!-- ЛЯВА КОЛОНА: Главна снимка -->
+                            <!-- 1. КОЛОНА ОТЛЯВО: Главна снимка -->
                             <div class="hero-image-box">
                                 <img src="${mainImgSrc}" alt="${p.title}">
                             </div>
 
-                            <!-- ДЯСНА КОЛОНА: Вертикално подредени елементи едно под друго -->
-                            <div class="right-column-stack">
-                                <div class="description-card">
-                                    <span class="spec-label" style="display: block; margin-bottom: 10px;">За проекта</span>
-                                    <p style="font-size: 0.95rem; line-height: 1.6; color: inherit; margin: 0;">${p.desc || 'Няма добавено описание за този проект.'}</p>
+                            <!-- 2. СРЕДНА КОЛОНА: Project Information -->
+                            <div class="project-sidebar">
+                                <div>
+                                    <span class="spec-label">PROJECT INFORMATION</span>
+                                    <div class="project-price-box" style="font-size: 1.3rem; margin: 5px 0 15px 0;">${p.title}</div>
                                 </div>
 
-                                <div class="project-sidebar">
-                                    <div>
-                                        <span class="spec-label">Ориентировъчна цена</span>
-                                        <div class="project-price-box">${p.price ? p.price + ' лв.' : 'По запитване'}</div>
-                                    </div>
-
-                                    <div style="margin-top: 5px;">
-                                        <div class="spec-row"><span class="spec-label">Площ</span><span class="spec-value">${p.area ? p.area + ' кв.м' : '-'}</span></div>
-                                        <div class="spec-row"><span class="spec-label">Етажи</span><span class="spec-value">${p.floors || '-'}</span></div>
-                                        <div class="spec-row"><span class="spec-label">Спални</span><span class="spec-value">${p.beds || '-'}</span></div>
-                                        <div class="spec-row"><span class="spec-label">Бани</span><span class="spec-value">${p.baths || '-'}</span></div>
-                                        <div class="spec-row"><span class="spec-label">Конструкция</span><span class="spec-value">${p.material || '-'}</span></div>
-                                        <div class="spec-row"><span class="spec-label">Стил</span><span class="spec-value">${p.style || '-'}</span></div>
-                                    </div>
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <div class="spec-row"><span class="spec-label">Category</span><span class="spec-value">-</span></div>
+                                    <div class="spec-row"><span class="spec-label">Style</span><span class="spec-value">${p.style || '-'}</span></div>
+                                    <div class="spec-row"><span class="spec-label">Construction</span><span class="spec-value">${p.material || '-'}</span></div>
+                                    <div class="spec-row"><span class="spec-label">Area</span><span class="spec-value">${p.area ? p.area + ' sq.m' : '-'}</span></div>
+                                    <div class="spec-row"><span class="spec-label">Floors</span><span class="spec-value">${p.floors || '-'}</span></div>
+                                    <div class="spec-row"><span class="spec-label">Project price</span><span class="spec-value">${p.price ? p.price + ' €' : '0 €'}</span></div>
                                 </div>
+                            </div>
 
-                                <!-- COMMUNITY OPINION - ДИРЕКТНО ПОД ПРОЕКТНАТА ИНФОРМАЦИЯ -->
-                                <div class="community-opinion-card">
-                                    <span class="spec-label">Community Opinion</span>
-                                    <h3 style="font-size: 1.1rem; margin: 5px 0 10px 0;">Project rating</h3>
-                                    <div style="font-size: 0.9rem; color: #8c8275; margin-bottom: 8px;">★★★★★ 0.0 (0)</div>
-                                    <p style="font-size: 0.85rem; color: #8c8275; margin: 0;">No reviews yet.</p>
-                                </div>
+                            <!-- 3. НАЙ-ДЯСНА КОЛОНА: Community Opinion -->
+                            <div class="community-opinion-card">
+                                <span class="spec-label">COMMUNITY OPINION</span>
+                                <h3 style="font-size: 1.1rem; margin: 5px 0 5px 0; font-weight: 600;">Project rating</h3>
+                                <div style="font-size: 0.85rem; color: #b8860b; margin-bottom: 8px;">★★★★★ <span style="color: inherit; font-weight: bold;">0.0 (0)</span></div>
+                                <p style="font-size: 0.8rem; color: #8c8275; margin: 0 0 15px 0;">Share your opinion about this project</p>
+                                <p style="font-size: 0.85rem; color: #666; margin: 0;">No reviews yet.</p>
                             </div>
                         </div>
 
