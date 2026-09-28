@@ -154,7 +154,28 @@ const translations = {
         "services-extra-2": "Проекти за надстройки",
         "services-extra-3": "Проекти за основен ремонт на покрив",
         "services-extra-4": "Реконструкции",
-        "services-extra-5": "Преустройства"
+        "services-extra-5": "Преустройства",
+
+        // Детайли за проект
+        "project-back": "← Обратно към проектите",
+        "project-select-label": "Избери проект:",
+        "project-info-title": "ИНФОРМАЦИЯ ЗА ПРОЕКТА",
+        "project-community-title": "МНЕНИЕ НА ОБЩНОСТТА",
+        "project-rating-title": "Оценка на проекта",
+        "project-share-opinion": "Споделете вашето мнение за този проект",
+        "project-no-reviews": "Все още няма отзиви.",
+        "project-tech-docs": "Техническа документация",
+        "project-floor-plans": "Разпределения по етажи",
+        "project-facades": "Фасади и Разрези",
+        "project-gallery": "Галерия",
+        "project-visuals": "Визуализации",
+        "spec-category": "Категория",
+        "spec-style": "Стил",
+        "spec-construction": "Конструкция",
+        "spec-area": "Площ",
+        "spec-floors": "Етажи",
+        "spec-price": "Цена на проекта",
+        "loading-project": "Зареждане на детайлите за проекта..."
     },
     "en": {
         // Navigation & General
@@ -313,7 +334,28 @@ const translations = {
         "services-extra-2": "Extension designs",
         "services-extra-3": "Roof major renovation designs",
         "services-extra-4": "Reconstructions",
-        "services-extra-5": "Alterations"
+        "services-extra-5": "Alterations",
+
+        // Project Details
+        "project-back": "← Back to projects",
+        "project-select-label": "Select project:",
+        "project-info-title": "PROJECT INFORMATION",
+        "project-community-title": "COMMUNITY OPINION",
+        "project-rating-title": "Project rating",
+        "project-share-opinion": "Share your opinion about this project",
+        "project-no-reviews": "No reviews yet.",
+        "project-tech-docs": "Technical Documentation",
+        "project-floor-plans": "Floor Plans",
+        "project-facades": "Facades & Sections",
+        "project-gallery": "Gallery",
+        "project-visuals": "Visualizations",
+        "spec-category": "Category",
+        "spec-style": "Style",
+        "spec-construction": "Construction",
+        "spec-area": "Area",
+        "spec-floors": "Floors",
+        "spec-price": "Project price",
+        "loading-project": "Loading project details..."
     }
 };
 
