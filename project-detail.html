@@ -89,7 +89,7 @@
         </a>
         <nav id="nav-links">
             <a href="index.html">Начало</a>
-            <a href="projects.html">Проекти</a>
+            <a href="catalog.html">Проекти</a>
             <a href="about.html">За нас</a>
             <a href="planner.html">ИИ Планер</a>
             <a href="contact.html">Контакти</a>
@@ -100,7 +100,7 @@
     </header>
 
     <main class="project-detail-container">
-        <a href="projects.html" class="back-link">← Обратно към проектите</a>
+        <a href="catalog.html" class="back-link">← Обратно към проектите</a>
         <div id="projectDetailsArea">
             <p style="color: #8c8275;">Зареждане на детайлите за проекта...</p>
         </div>
@@ -127,15 +127,28 @@
 
     <!-- СВЪРЗВАНЕ С FIREBASE -->
     <script type="module">
-        import { db, doc, getDoc, collection, getDocs } from './firebase-config.js';
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
+            authDomain: "architect-studio-1810c.firebaseapp.com",
+            projectId: "architect-studio-1810c",
+            storageBucket: "architect-studio-1810c.firebasestorage.app",
+            messagingSenderId: "1053914253758",
+            appId: "1:1053914253758:web:97d9bc28ac5465730311ef",
+            measurementId: "G-NN7GYSF55G"
+        };
 
         async function loadProjectDetails() {
+            const container = document.getElementById('projectDetailsArea');
             const urlParams = new URLSearchParams(window.location.search);
             let projectId = urlParams.get('id') || urlParams.get('index'); 
-            const container = document.getElementById('projectDetailsArea');
 
             try {
-                // Извличане на всички проекти за падащото меню и евентуален автоматичен избор
+                const app = initializeApp(firebaseConfig);
+                const db = getFirestore(app);
+
                 const querySnapshot = await getDocs(collection(db, "projects"));
                 if (querySnapshot.empty) {
                     container.innerHTML = `<h2>Няма намерени проекти в базата данни.</h2>`;
@@ -147,7 +160,6 @@
                     allProjects.push({ id: document.id, ...document.data() });
                 });
 
-                // Ако няма подадено ID в линка, взимаме автоматично първия проект
                 if (!projectId) {
                     projectId = allProjects[0].id;
                 }
@@ -159,7 +171,6 @@
                     const p = docSnap.data();
                     const mainImgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
 
-                    // Технически чертежи
                     let techCards = [];
                     if (p.floorPlans && p.floorPlans.length > 0) {
                         p.floorPlans.forEach((plan, i) => {
@@ -183,7 +194,6 @@
                         </div>
                     ` : '';
 
-                    // Галерия
                     let galleryHTML = p.gallery && p.gallery.length > 0 ? `
                         <div class="gallery-section">
                             <span class="spec-label">Галерия</span>
@@ -192,41 +202,37 @@
                         </div>
                     ` : '';
 
-                    // Опции за падащото меню
                     let optionsHTML = allProjects.map(proj => `
                         <option value="${proj.id}" ${proj.id === projectId ? 'selected' : ''}>${proj.title || proj.id}</option>
                     `).join('');
 
-                    // Финално рендериране
                     container.innerHTML = `
                         <div class="project-header">
                             <div>
                                 <span class="project-style-tag">${p.style || 'Архитектурен проект'}</span>
-                                <h1 class="project-title">${p.title}</h1>
+                                <h1 class="project-title">${p.title || 'Без заглавие'}</h1>
                             </div>
                             <div class="quick-switch-box">
                                 <span class="spec-label" style="margin:0;">Избери проект:</span>
-                                <select id="projectSelector" onchange="if(this.value) window.location.href='project_3.html?id=' + encodeURIComponent(this.value);">
+                                <select id="projectSelector" onchange="if(this.value) window.location.href='project-detail.html?id=' + encodeURIComponent(this.value);">
                                     ${optionsHTML}
                                 </select>
                             </div>
                         </div>
 
                         <div class="top-section-grid">
-                            <!-- 1. КОЛОНА ОТЛЯВО: Главна снимка -->
                             <div class="hero-image-box">
-                                <img src="${mainImgSrc}" alt="${p.title}">
+                                <img src="${mainImgSrc}" alt="${p.title || ''}">
                             </div>
 
-                            <!-- 2. СРЕДНА КОЛОНА: Project Information -->
                             <div class="project-sidebar">
                                 <div>
                                     <span class="spec-label">PROJECT INFORMATION</span>
-                                    <div class="project-price-box" style="font-size: 1.3rem; margin: 5px 0 15px 0;">${p.title}</div>
+                                    <div class="project-price-box" style="font-size: 1.3rem; margin: 5px 0 15px 0;">${p.title || ''}</div>
                                 </div>
 
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                                    <div class="spec-row"><span class="spec-label">Category</span><span class="spec-value">-</span></div>
+                                    <div class="spec-row"><span class="spec-label">Category</span><span class="spec-value">${p.mainCategory || p.category || '-'}</span></div>
                                     <div class="spec-row"><span class="spec-label">Style</span><span class="spec-value">${p.style || '-'}</span></div>
                                     <div class="spec-row"><span class="spec-label">Construction</span><span class="spec-value">${p.material || '-'}</span></div>
                                     <div class="spec-row"><span class="spec-label">Area</span><span class="spec-value">${p.area ? p.area + ' sq.m' : '-'}</span></div>
@@ -235,7 +241,6 @@
                                 </div>
                             </div>
 
-                            <!-- 3. НАЙ-ДЯСНА КОЛОНА: Community Opinion -->
                             <div class="community-opinion-card">
                                 <span class="spec-label">COMMUNITY OPINION</span>
                                 <h3 style="font-size: 1.1rem; margin: 5px 0 5px 0; font-weight: 600;">Project rating</h3>
@@ -250,11 +255,11 @@
                     `;
 
                 } else {
-                    container.innerHTML = `<h2>Проектът не е намерен.</h2><p><a href="projects.html" class="back-link">Върнете се към проектите</a></p>`;
+                    container.innerHTML = `<h2>Проектът не е намерен в базата данни.</h2><p><a href="catalog.html" class="back-link">Обратно към каталога</a></p>`;
                 }
             } catch (err) {
                 console.error("Грешка при зареждане на проекта:", err);
-                container.innerHTML = `<h2>Грешка при връзка с базата данни.</h2>`;
+                container.innerHTML = `<h2 style="color: red;">Грешка при връзка с Firebase:</h2><p>${err.message}</p>`;
             }
         }
 
