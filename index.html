@@ -64,8 +64,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* сменено от cover на contain, за да се вижда цялата карта */
             display: block;
+            background-color: #fbf9f5;
         }
         body.dark-mode #projectMap {
             border-color: #2c2c2c;
@@ -213,8 +214,8 @@
         <h2 class="map-title">Географски обхват на проектите</h2>
         <p class="map-subtitle">Част от нашите реализирани обекти и проекти в страната</p>
         <div id="projectMap">
-            <!-- Използваме директен img таг вместо CSS background за максимална стабилност -->
-            <img class="map-bg-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Bulgaria_relief_location_map.jpg/800px-Bulgaria_relief_location_map.jpg" alt="Карта на България">
+            <!-- Вече зарежда локалния файл bulgaria-map.jpg от assets паката -->
+            <img class="map-bg-image" src="assets/bulgaria-map.jpg" alt="Карта на България">
         </div>
     </section>
 
