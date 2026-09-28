@@ -234,24 +234,44 @@
         }
 
         document.addEventListener("DOMContentLoaded", async function() {
-            // Инициализация на картата
-            const map = L.map('projectMap').setView([41.5653, 23.7294], 9);
+            // Инициализация на картата с център около България
+            const map = L.map('projectMap').setView([41.5653, 23.7294], 8);
 
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            // Сателитен слой "като земя" (Esri World Imagery)
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19,
-                attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             }).addTo(map);
 
-            const locations = [
-                { lat: 41.5653, lng: 23.7294, title: "Гоце Делчев", desc: "Главен офис и жилищни сгради" },
-                { lat: 41.8386, lng: 23.4847, title: "Банско", desc: "Ваканционни къщи и комплекси" },
-                { lat: 42.6977, lng: 23.3219, title: "София", desc: "Инвестиционни проекти" }
-            ];
+            // Динамично зареждане на точките от Firebase базата данни (админ панела)
+            try {
+                const mapSnapshot = await db.collection('map_locations').get();
+                
+                if (!mapSnapshot.empty) {
+                    mapSnapshot.forEach(doc => {
+                        const loc = doc.data();
+                        let lat, lng;
+                        
+                        // Проверяваме различните възможни формати на координатите от админа
+                        if (Array.isArray(loc.coordinates)) {
+                            lat = parseFloat(loc.coordinates[0]);
+                            lng = parseFloat(loc.coordinates[1]);
+                        } else {
+                            lat = parseFloat(loc.lat);
+                            lng = parseFloat(loc.lng);
+                        }
 
-            locations.forEach(loc => {
-                L.marker([loc.lat, loc.lng]).addTo(map)
-                  .bindPopup(`<b>${loc.title}</b><br>${loc.desc}`);
-            });
+                        if (!isNaN(lat) && !isNaN(lng)) {
+                            L.marker([lat, lng]).addTo(map)
+                              .bindPopup(`<b>${loc.title || loc.name || 'Обект'}</b><br>${loc.desc || loc.description || ''}`);
+                        }
+                    });
+                } else {
+                    console.log("Няма намерени точки в базата данни за картата.");
+                }
+            } catch (err) {
+                console.error("Грешка при зареждане на точките за картата от Firebase:", err);
+            }
 
             if (typeof initLanguage === 'function') {
                 initLanguage();
