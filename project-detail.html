@@ -171,26 +171,38 @@
                     const p = docSnap.data();
                     const mainImgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
 
-                    let techCards = [];
+                    // 1. Разпределения по етажи отделно
+                    let floorPlansCards = [];
                     if (p.floorPlans && p.floorPlans.length > 0) {
                         p.floorPlans.forEach((plan, i) => {
-                            techCards.push(`<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Разпределение / План ${p.floorPlans.length > 1 ? (i + 1) : ''}</span><img src="${plan}" alt="План"></div>`);
+                            floorPlansCards.push(`<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Разпределение / План ${p.floorPlans.length > 1 ? (i + 1) : ''}</span><img src="${plan}" alt="План"></div>`);
                         });
                     }
+
+                    // 2. Фасади и разрез отделно
+                    let facadeCards = [];
                     if (p.facadeImages && p.facadeImages.length > 0) {
                         p.facadeImages.forEach((facade, i) => {
-                            techCards.push(`<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Фасада ${p.facadeImages.length > 1 ? (i + 1) : ''}</span><img src="${facade}" alt="Фасада"></div>`);
+                            facadeCards.push(`<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Фасада ${p.facadeImages.length > 1 ? (i + 1) : ''}</span><img src="${facade}" alt="Фасада"></div>`);
                         });
                     }
                     if (p.sectionImage) {
-                        techCards.push(`<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Разрез</span><img src="${p.sectionImage}" alt="Разрез"></div>`);
+                        facadeCards.push(`<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Разрез</span><img src="${p.sectionImage}" alt="Разрез"></div>`);
                     }
 
-                    let techSectionHTML = techCards.length > 0 ? `
+                    let floorPlansSectionHTML = floorPlansCards.length > 0 ? `
                         <div class="technical-drawings-section">
                             <span class="spec-label">Техническа документация</span>
-                            <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Чертежи и Разрези</h3>
-                            <div class="tech-grid">${techCards.join('')}</div>
+                            <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Разпределения по етажи</h3>
+                            <div class="tech-grid">${floorPlansCards.join('')}</div>
+                        </div>
+                    ` : '';
+
+                    let facadeSectionHTML = facadeCards.length > 0 ? `
+                        <div class="technical-drawings-section">
+                            <span class="spec-label">Техническа документация</span>
+                            <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Фасади и Разрези</h3>
+                            <div class="tech-grid">${facadeCards.join('')}</div>
                         </div>
                     ` : '';
 
@@ -250,7 +262,8 @@
                             </div>
                         </div>
 
-                        ${techSectionHTML}
+                        ${floorPlansSectionHTML}
+                        ${facadeSectionHTML}
                         ${galleryHTML}
                     `;
 
