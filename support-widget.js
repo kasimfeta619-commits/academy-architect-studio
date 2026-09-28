@@ -7,11 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
   widget.innerHTML = `
     <div class="support-screen" role="status" aria-live="polite">
       <button class="support-close" type="button" aria-label="Затвори съобщението">×</button>
-      
-      <!-- Динамичен статус за свободни консултации днес -->
-      <div style="font-size: 0.7rem; background: #f0eae1; padding: 4px 8px; border-radius: 6px; color: #8c8275; margin-bottom: 8px; font-weight: 600; display: inline-block;">
-        🟢 Арх. Петров има 2 свободни часа днес
-      </div>
 
       <div class="support-screen-face" aria-hidden="true"><span>АС</span></div>
       <div class="support-copy">
