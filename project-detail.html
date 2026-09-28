@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-key="page-title-catalog">Детайли за проект | Academy Architect Studio</title>
     
-    <!-- Зареждане на файла с преводи -->
-    <script src="translations_5.js"></script>
+    <!-- Зареждане на файла с преводи (увери се, че името съвпада с твоя файл) -->
+    <script src="translations_2.js"></script>
 
     <!-- Проверка за Тъмна тема преди зареждане -->
     <script>
@@ -281,9 +281,10 @@
                         ${galleryHTML}
                     `;
 
-                    // Извикваме езиковата функция, ако съществува в translations_5.js
-                    if (typeof initLanguage === 'function') {
-                        initLanguage();
+                    // Прилагаме активния език веднага след като динамичният HTML се зареди
+                    const currentLang = localStorage.getItem('siteLang') || 'bg';
+                    if (typeof setLanguage === 'function') {
+                        setLanguage(currentLang);
                     }
 
                 } else {
