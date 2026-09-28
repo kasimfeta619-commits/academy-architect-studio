@@ -129,10 +129,10 @@
         .admin-project-thumb { width: 65px; height: 65px; object-fit: cover; border: 1px solid #eadecc; flex-shrink: 0; }
         .admin-project-no-thumb { width: 65px; height: 65px; background: #f4eee5; border: 1px solid #eadecc; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #8c8275; text-align: center; flex-shrink: 0; text-transform: uppercase; }
 
-        .admin-btns { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
+        .admin-btns { display: flex; gap: 8px; flex-shrink: 0; align-items: center; flex-wrap: wrap; }
         .btn-view { background: #1a1a1a; color: #fff; text-decoration: none; padding: 8px 12px; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; transition: background 0.2s; border: none; cursor: pointer; }
         .btn-view:hover { background: #333; }
-        .btn-edit { background: #8c8275; color: #fff; border: none; padding: 8px 12px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; border-radius: 3px; }
+        .btn-edit { background: #8c8275; color: #fff; border: none; padding: 8px 12px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; border-radius: 3px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
         .btn-edit:hover { background: #736a5e; }
         .btn-delete { background: #a83232; color: #fff; border: none; padding: 8px 12px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; border-radius: 3px; }
         .btn-delete:hover { background: #872828; }
@@ -862,6 +862,7 @@
                             </div>
                         </div>
                         <div class="admin-btns">
+                            <a href="project-detail.html?id=${p.id}" target="_blank" class="btn-view" style="background: #8c8275; text-decoration: none;">🔗 Към страницата</a>
                             <button class="btn-view" onclick="openPreviewModal('${p.id}')">👁️ Преглед</button>
                             <button class="btn-edit" onclick="editProject('${p.id}')">Редактирай</button>
                             <button class="btn-delete" onclick="deleteProject('${p.id}')">Изтрий</button>
@@ -900,6 +901,7 @@
                             </div>
                         </div>
                         <div class="admin-btns">
+                            <a href="project-detail.html?id=${p.id}" target="_blank" class="btn-view" style="text-decoration: none;">🌐 Отвори публичен детайл</a>
                             <button class="btn-edit" onclick="editProject('${p.id}')">Управлявай / Махай детайли</button>
                         </div>
                     </div>
@@ -1010,20 +1012,17 @@
             }
         }
 
-        // ПОПРАВЕНО: Събира мнения както от отделна колекция 'reviews', така и ако са записани в самите проекти
         async function renderAdminReviews() {
             const listContainer = document.getElementById('adminReviewsList');
             if (!listContainer) return;
             let allReviews = [];
             
             try {
-                // 1. Проверяваме самостоятелната колекция 'reviews'
                 const snapshot = await db.collection('reviews').get();
                 snapshot.forEach(doc => {
                     allReviews.push({ id: doc.id, source: 'collection', ...doc.data() });
                 });
 
-                // 2. Проверяваме дали мненията са записани в самите проекти (като масив или поле)
                 const projSnapshot = await db.collection('projects').get();
                 projSnapshot.forEach(doc => {
                     const pData = doc.data();
@@ -1127,7 +1126,6 @@
             document.getElementById('editReviewRating').value = r.rating || 5;
             document.getElementById('editReviewText').value = r.text || r.comment || '';
 
-            // Запомняме индекса или източника за формата
             window.currentEditingReviewMeta = { source, projectId, index };
 
             document.getElementById('reviewEditModal').style.display = 'flex';
