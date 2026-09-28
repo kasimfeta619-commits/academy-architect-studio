@@ -142,6 +142,7 @@
             color: inherit;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
         .project-img-box {
             position: relative;
@@ -176,6 +177,35 @@
             letter-spacing: 1px;
             z-index: 2;
         }
+        
+        /* Стили за бутона със сърчице */
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.85);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            z-index: 3;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .favorite-btn:hover {
+            transform: scale(1.1);
+            background: #fff;
+        }
+        .favorite-btn.active {
+            background: #fff;
+            color: #ff3b30;
+        }
+
         .project-info {
             display: flex;
             flex-direction: column;
@@ -193,6 +223,82 @@
             align-items: center;
             font-size: 0.85rem;
             color: #777;
+        }
+
+        /* Стилове за бутона за любими в навигацията */
+        .wishlist-nav-btn {
+            background: none;
+            border: 1px solid rgba(112, 91, 66, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: inherit;
+            transition: all 0.2s;
+        }
+        .wishlist-nav-btn:hover {
+            border-color: #111;
+            background: rgba(0,0,0,0.03);
+        }
+
+        /* Модален прозорец за сравнение */
+        .comparison-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .comparison-modal-content {
+            background: var(--card-bg, #fbf9f4);
+            color: var(--text-color, #111);
+            width: 100%;
+            max-width: 1100px;
+            max-height: 90vh;
+            border-radius: 12px;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .comparison-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: inherit;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 12px;
+            text-align: center;
+        }
+        .comparison-table th {
+            background: rgba(112, 91, 66, 0.1);
+            font-weight: 600;
+        }
+        .comparison-table td img {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 4px;
         }
 
         .dark-mode .catalog-top-flex {
@@ -218,12 +324,19 @@
         .dark-mode .project-img-box {
             background: #1a1a1a;
         }
+        .dark-mode .comparison-modal-content {
+            background: #1a1a1a;
+            border: 1px solid #333;
+        }
+        .dark-mode .comparison-table th, .dark-mode .comparison-table td {
+            border-color: rgba(255,255,255,0.15);
+        }
+
         @media (max-width: 700px) {
             .filters-bar { padding: 18px 14px; border-radius: 14px; }
             .filter-row { align-items: flex-start; }
             .filter-label { width: 100%; margin-bottom: 2px; }
             .filter-btn { font-size: 0.8rem; padding: 8px 12px; }
-            .filter-row > div[style] { margin-left: 0 !important; width: 100%; margin-top: 4px; }
         }
     </style>
 </head>
@@ -248,6 +361,10 @@
         </div>
 
         <div class="header-actions">
+            <!-- Бутон за Любими / Сравнение -->
+            <button class="wishlist-nav-btn" onclick="openComparisonModal()">
+                ❤️ <span data-key="wishlist-btn-text">Любими</span> (<span id="wishlistCount">0</span>)
+            </button>
             <button id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
             <div class="lang-switcher">
                 <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
@@ -304,6 +421,19 @@
         </section>
     </main>
 
+    <!-- Модален прозорец за сравнение на любими проекти -->
+    <div class="comparison-modal-overlay" id="comparisonModal">
+        <div class="comparison-modal-content">
+            <button class="comparison-close" onclick="closeComparisonModal()">&times;</button>
+            <h2 style="margin-top: 0; font-weight: 400; font-size: 1.8rem;" data-key="comparison-title">Сравнителен анализ на любими проекти</h2>
+            <p style="color: #777; font-size: 0.9rem;" data-key="comparison-desc">Тук можете да сравните избраните от вас проекти по основни показатели.</p>
+            
+            <div id="comparisonBody">
+                <!-- Съдържанието се генерира динамично -->
+            </div>
+        </div>
+    </div>
+
     <footer class="main-footer">
         <div class="footer-logo-area">
             <div>
@@ -359,6 +489,100 @@
         let allProjectsGlobal = [];
         let activeCategory = 'all';
         let activeSubFilter = 'all';
+
+        // Логика за Любими (Wishlist / Favorites)
+        window.getFavorites = function() {
+            try {
+                return JSON.parse(localStorage.getItem('favoriteProjects') || '[]');
+            } catch(e) {
+                return [];
+            }
+        }
+
+        window.toggleFavorite = function(projectId, event) {
+            if (event) event.stopPropagation();
+            let favs = window.getFavorites();
+            const index = favs.indexOf(projectId);
+            
+            if (index > -1) {
+                favs.splice(index, 1);
+            } else {
+                favs.push(projectId);
+            }
+            localStorage.setItem('favoriteProjects', JSON.stringify(favs));
+            updateWishlistCounter();
+            renderProjectsList(allProjectsGlobal);
+        }
+
+        function updateWishlistCounter() {
+            const favs = window.getFavorites();
+            const counterEl = document.getElementById('wishlistCount');
+            if (counterEl) counterEl.textContent = favs.length;
+        }
+
+        window.openComparisonModal = function() {
+            const modal = document.getElementById('comparisonModal');
+            const bodyContainer = document.getElementById('comparisonBody');
+            const favs = window.getFavorites();
+            const currentLang = localStorage.getItem('siteLang') || 'bg';
+
+            if (favs.length === 0) {
+                bodyContainer.innerHTML = `<p style="padding: 30px 0; text-align: center; color: #777;">${currentLang === 'en' ? 'No favorite projects selected yet. Click the heart icon on any project.' : 'Все още нямате избрани любими проекти. Кликнете върху сърчицето на някой проект.'}</p>`;
+            } else {
+                const selectedProjects = allProjectsGlobal.filter(p => favs.includes(p.id));
+
+                let tableHtml = `
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>${currentLang === 'en' ? 'Parameter' : 'Показател'}</th>
+                                ${selectedProjects.map(p => `<th>${p.title || 'Проект'}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${currentLang === 'en' ? 'Image' : 'Снимка'}</td>
+                                ${selectedProjects.map(p => `<td><img src="${p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png'}" alt=""></td>`).join('')}
+                            </tr>
+                            <tr>
+                                <td>${currentLang === 'en' ? 'Code' : 'Код'}</td>
+                                ${selectedProjects.map(p => `<td><b>${p.code || '-'}</b></td>`).join('')}
+                            </tr>
+                            <tr>
+                                <td>${currentLang === 'en' ? 'Area' : 'Площ'}</td>
+                                ${selectedProjects.map(p => `<td>${p.area ? p.area + ' кв.м' : '-'}</td>`).join('')}
+                            </tr>
+                            <tr>
+                                <td>${currentLang === 'en' ? 'Floors' : 'Етажи'}</td>
+                                ${selectedProjects.map(p => `<td>${p.floors || '-'}</td>`).join('')}
+                            </tr>
+                            <tr>
+                                <td>${currentLang === 'en' ? 'Style / Material' : 'Стил / Материал'}</td>
+                                ${selectedProjects.map(p => `<td>${p.style || p.material || '-'}</td>`).join('')}
+                            </tr>
+                            <tr>
+                                <td>${currentLang === 'en' ? 'Estimated Price' : 'Цена'}</td>
+                                ${selectedProjects.map(p => `<td><b>${p.price ? p.price + ' €' : '-'}</b></td>`).join('')}
+                            </tr>
+                            <tr>
+                                <td>${currentLang === 'en' ? 'Action' : 'Действие'}</td>
+                                ${selectedProjects.map(p => `<td><a href="project-detail.html?id=${p.id}" style="color: #8c8275; text-decoration: underline; font-size: 0.85rem;">${currentLang === 'en' ? 'View Details' : 'Виж детайли'}</a></td>`).join('')}
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 25px; text-align: right;">
+                        <a href="contact.html" style="background: #111; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-size: 0.9rem;">${currentLang === 'en' ? 'Send Inquiry for Selected' : 'Изпрати запитване за избраните'}</a>
+                    </div>
+                `;
+                bodyContainer.innerHTML = tableHtml;
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        window.closeComparisonModal = function() {
+            document.getElementById('comparisonModal').style.display = 'none';
+        }
 
         window.toggleDarkMode = function() {
             const isDark = document.documentElement.classList.toggle('dark-mode');
@@ -422,15 +646,13 @@
                     } else if (activeCategory === 'multifamily') {
                         matchesCat = catStr.includes('multifamily') || catStr.includes('многофамил') || catStr.includes('multi');
                     } else if (activeCategory === 'commercial') {
-                        matchesCat = catStr.includes('commercial') || catStr.includes('търгов') || catStr.includes('commercial');
+                        matchesCat = catStr.includes('commercial') || catStr.includes('търгов');
                     } else if (activeCategory === 'interior') {
                         matchesCat = catStr.includes('interior') || catStr.includes('интериор');
                     } else if (activeCategory === 'public') {
                         matchesCat = catStr.includes('commercial') || catStr.includes('industrial') || catStr.includes('обществени') || catStr.includes('промишлен');
                     } else if (activeCategory === 'reconstruction') {
                         matchesCat = catStr.includes('reconstruction') || catStr.includes('реконструкц');
-                    } else if (activeCategory === 'engineering') {
-                        matchesCat = catStr.includes('engineering') || catStr.includes('заснемане');
                     } else {
                         matchesCat = catStr.includes(activeCategory);
                     }
@@ -460,6 +682,7 @@
             const container = document.getElementById('catalogProjectsContainer');
             const currentLang = localStorage.getItem('siteLang') || 'bg';
             const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
+            const favs = window.getFavorites();
 
             if (!container) return;
 
@@ -471,10 +694,8 @@
                     'интериор': 'Interior Design',
                     'обществени': 'Public & Industrial',
                     'реконструкц': 'Reconstruction',
-                    'заснемане': 'Survey & Engineering',
                     'български': 'Bulgarian Style',
                     'минималистичен': 'Minimalist',
-                    'minimalist': 'Minimalist',
                     'модерен': 'Modern',
                     'default': 'Architectural Project'
                 },
@@ -488,6 +709,7 @@
                     const projectId = p.id || index;
                     const displayCode = p.code || `#${String(index + 1).padStart(3, '0')}`;
                     const imgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+                    const isFav = favs.includes(projectId);
 
                     let mediaContent = '';
                     if (p.videoUrl) {
@@ -515,6 +737,9 @@
                         <a href="project-detail.html?id=${projectId}" class="project-card">
                             <div class="project-img-box">
                                 <span class="project-code-badge">${displayCode}</span>
+                                <button class="favorite-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${projectId}', event)" title="Харесай проект">
+                                    ${isFav ? '❤️' : '🤍'}
+                                </button>
                                 ${mediaContent}
                             </div>
                             <div class="project-info">
@@ -545,6 +770,8 @@
             } else if (typeof setLanguage === 'function') {
                 setLanguage(localStorage.getItem('siteLang') || 'bg');
             }
+
+            updateWishlistCounter();
 
             const container = document.getElementById('catalogProjectsContainer');
 
