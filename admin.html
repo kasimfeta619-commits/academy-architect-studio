@@ -344,6 +344,20 @@
                     <div class="form-group"><label>Етажи</label><input type="text" id="floors"></div>
                     <div class="form-group"><label>Спални</label><input type="text" id="beds"></div>
                     <div class="form-group"><label>Бани</label><input type="text" id="baths"></div>
+                    
+                    <!-- НОВО ПОЛЕ ЗА ОЦЕНКА / РЕЙТИНГ СО ЗВЕЗДИ -->
+                    <div class="form-group">
+                        <label>Оценка / Рейтинг на проекта (Звезди)</label>
+                        <select id="projectRating">
+                            <option value="5">⭐⭐⭐⭐⭐ (5 Звезди - Отличен)</option>
+                            <option value="4">⭐⭐⭐⭐ (4 Звезди - Много добър)</option>
+                            <option value="3">⭐⭐⭐ (3 Звезди - Добър)</option>
+                            <option value="2">⭐⭐ (2 Звезди - Среден)</option>
+                            <option value="1">⭐ (1 Звезда - Слаб)</option>
+                            <option value="0">Без рейтинг / Скрий звездите</option>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label>Материал / Конструкция</label>
                         <select id="material">
@@ -416,7 +430,6 @@
             <div id="adminProjectsList"></div>
         </div>
 
-        <!-- НОВ СЕКТОР ЗА УПРАВЛЕНИЕ НА PROJECT DETAIL (КОЙТО ИСКАТЕ ДА ВИЖДАТЕ В АДМИНА) -->
         <div id="detailTab" class="admin-section">
             <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Управление на Project Detail елементи</h3>
             <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можете да преглеждате проектите и да преценявате или премахвате детайли/медия от самите страници с подробности за проект (Project Detail).</p>
@@ -616,7 +629,6 @@
             }
         });
 
-        // УПРАВЛЕНИЕ НА ЕКИПА
         async function renderAdminTeam() {
             const listContainer = document.getElementById('adminTeamList');
             if (!listContainer) return;
@@ -802,6 +814,10 @@
                 const mainCatLabel = mainCatNames[p.mainCategory] || 'Жилищна';
                 const subCatLabel = subCatNames[p.subCategory] || 'Архитектура';
                 const hasVideoIndicator = (p.videoUrl || p.youtubeUrl) ? '| 🎬 Видео' : '';
+                
+                // Генериране на звезди за списъка
+                let ratingVal = parseInt(p.rating) || 0;
+                let starsHtml = ratingVal > 0 ? '⭐'.repeat(ratingVal) : 'Без рейтинг';
 
                 return `
                     <div class="project-item-admin">
@@ -810,7 +826,7 @@
                             <div>
                                 <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${p.title}</strong>
                                 <div style="font-size: 0.8rem; color: #8c8275;">
-                                    📁 ${mainCatLabel} (${subCatLabel}) | Стил: ${p.style || '-'} | Площ: ${p.area ? p.area + ' кв.м' : '-'} ${hasVideoIndicator}
+                                    📁 ${mainCatLabel} (${subCatLabel}) | Рейтинг: ${starsHtml} | Площ: ${p.area ? p.area + ' кв.м' : '-'} ${hasVideoIndicator}
                                 </div>
                             </div>
                         </div>
@@ -824,7 +840,6 @@
             }).join('');
         }
 
-        // РЕНДЕРИРАНЕ НА ПРОЕКТИТЕ В СЕКЦИЯТА "PROJECT DETAIL" ЗА УПРАВЛЕНИЕ И ПРЕМАХВАНЕ НА ЕЛЕМЕНТИ
         async function renderAdminDetailList() {
             const listContainer = document.getElementById('adminDetailList');
             if (!listContainer) return;
@@ -876,6 +891,9 @@
             let facadeHtml = p.facadeImages && p.facadeImages.length ? p.facadeImages.map(img => `<img src="${img}">`).join('') : '';
             let galleryHtml = p.gallery && p.gallery.length ? p.gallery.map(img => `<img src="${img}">`).join('') : '';
 
+            let ratingVal = parseInt(p.rating) || 0;
+            let ratingDisplay = ratingVal > 0 ? '⭐'.repeat(ratingVal) + ` (${ratingVal}/5)` : 'Няма зададен рейтинг';
+
             let videoSectionHtml = '';
             if (p.youtubeUrl) {
                 const embedUrl = getYouTubeEmbedUrl(p.youtubeUrl);
@@ -905,6 +923,7 @@
                 
                 ${videoSectionHtml}
 
+                <p><strong>Оценка / Рейтинг:</strong> ${ratingDisplay}</p>
                 <p><strong>Описание:</strong> ${p.desc || 'Няма описание'}</p>
                 <p><strong>Детайли:</strong> Площ: ${p.area || '-'} м² | Етажи: ${p.floors || '-'} | Спални: ${p.beds || '-'} | Бани: ${p.baths || '-'} | Стил: ${p.style || '-'}</p>
                 <p><strong>Цена:</strong> ${p.price ? p.price + ' €' : '-'}</p>
@@ -1063,6 +1082,7 @@
             document.getElementById('floors').value = p.floors || '';
             document.getElementById('beds').value = p.beds || '';
             document.getElementById('baths').value = p.baths || '';
+            document.getElementById('projectRating').value = p.rating !== undefined ? p.rating : '5'; // Зареждане на записания рейтинг
             document.getElementById('material').value = p.material || '';
             document.getElementById('style').value = p.style || '';
             document.getElementById('price').value = p.price || '';
@@ -1228,6 +1248,7 @@
                     floors: document.getElementById('floors').value,
                     beds: document.getElementById('beds').value,
                     baths: document.getElementById('baths').value,
+                    rating: parseInt(document.getElementById('projectRating').value) || 0, // Запазване на оценката
                     material: document.getElementById('material').value,
                     style: document.getElementById('style').value,
                     price: document.getElementById('price').value,
