@@ -164,6 +164,22 @@
         .detail-tab.active { background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
         .detail-zone { display:none; }
         .detail-zone.active { display:block; }
+        .formal-project-layout { display:grid; grid-template-columns:minmax(0, 1.65fr) minmax(280px, .85fr); gap:34px; align-items:start; margin-top:28px; }
+        .formal-gallery-frame { border:1px solid #ded4c7; background:#fff; padding:12px; }
+        .formal-main-image { display:block; width:100%; aspect-ratio:1.55; object-fit:cover; }
+        .formal-thumbnail-row { display:flex; gap:10px; overflow-x:auto; padding-top:14px; }
+        .formal-thumbnail { flex:0 0 88px; height:64px; padding:3px; border:1px solid #ded4c7; background:#fff; cursor:pointer; }
+        .formal-thumbnail.active { border:2px solid #1a1a1a; }
+        .formal-thumbnail img { display:block; width:100%; height:100%; object-fit:cover; }
+        .formal-project-summary { border-top:4px solid #1a1a1a; padding-top:18px; }
+        .formal-kicker { margin:0 0 12px; color:#8c8275; font-size:.78rem; letter-spacing:1.6px; text-transform:uppercase; font-weight:700; }
+        .formal-project-title { margin:0 0 22px; font-size:clamp(1.7rem, 3vw, 2.8rem); line-height:1.08; font-weight:500; }
+        .formal-facts { margin:0; border-top:1px solid #d8cfc4; }
+        .formal-facts div { display:flex; justify-content:space-between; gap:18px; padding:13px 0; border-bottom:1px solid #d8cfc4; }
+        .formal-facts dt { color:#6f665d; }
+        .formal-facts dd { margin:0; text-align:right; font-weight:600; }
+        .formal-facts .formal-price dt, .formal-facts .formal-price dd { color:#a56d25; font-size:1.05rem; font-weight:700; }
+        .formal-offer-button { display:block; margin-top:24px; padding:15px 18px; background:#1a1a1a; color:#fff; text-align:center; text-decoration:none; font-weight:600; }
         .feedback-layout { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); gap:24px; align-items:start; }
         .project-info-card, .rating-panel { padding:28px; border:1px solid #eadecc; border-radius:12px; background:#fff; }
         .project-info-card h2, .rating-panel h2 { margin:0 0 22px; font-size:1.55rem; font-weight:500; }
@@ -180,7 +196,7 @@
         .review-card { border:1px solid #eadecc; padding:14px; margin:10px 0; background:#fff; }
         .empty-reviews { color:#8c8275; }
         .contact-project-button { display:inline-block; margin-top:26px; padding:14px 22px; background:#1a1a1a; color:#fff; text-decoration:none; border-radius:4px; font-weight:600; }
-        @media (max-width: 760px) { .feedback-layout { grid-template-columns:1fr; } .project-info-card, .rating-panel { padding:20px; } }
+        @media (max-width: 760px) { .formal-project-layout, .feedback-layout { grid-template-columns:1fr; } .project-info-card, .rating-panel { padding:20px; } .formal-project-summary { border-top:0; border-left:4px solid #1a1a1a; padding:18px 0 0 18px; } }
         body.dark-mode .detail-tab, body.dark-mode .review-input, body.dark-mode .review-card, body.dark-mode .project-info-card, body.dark-mode .rating-panel { background:#1e1e1e; color:#fff; border-color:#2c2c2c; }
         body.dark-mode .project-facts dd { color:#fff; }
         body.dark-mode .project-facts div { border-color:#2c2c2c; }
@@ -288,6 +304,11 @@
             navLinks.classList.toggle('mobile-open');
         };
 
+        window.selectProjectImage = function(imageUrl, button) {
+            const mainImage = document.getElementById('projectMainImage');
+            if (mainImage) mainImage.src = imageUrl;
+            document.querySelectorAll('.formal-thumbnail').forEach(thumbnail => thumbnail.classList.toggle('active', thumbnail === button));
+        };
         window.showDetailZone = function(zoneId, button) {
             document.querySelectorAll('.detail-zone').forEach(zone => zone.classList.toggle('active', zone.id === zoneId));
             document.querySelectorAll('.detail-tab').forEach(tab => tab.classList.toggle('active', tab === button));
@@ -346,6 +367,7 @@
                         const p = docSnap.data();
                         window.currentProjectRef = docRef;
                         const mainImg = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
+                        const projectImages = [mainImg, ...(p.gallery || p.images || []), ...(p.facadeImages || [])].filter((image, index, all) => image && all.indexOf(image) === index);
                         const projectVideoUrl = p.videoUrl || 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/My_first_board_A_modern_two-story-house_with_a_white_and_wood_NOqlVS4n-7gUr2SeVKW5quJx310PYC6da6ObnJ9.mp4';
                         
                         document.getElementById('pageTitle').textContent = `${p.title} | Academy Architect Studio`;
@@ -410,15 +432,28 @@
                                 <button class="detail-tab" onclick="showDetailZone('feedbackZone', this)">${currentLang === 'en' ? 'Reviews' : 'Мнения и рейтинг'}</button>
                             </div>
                             <section id="overviewZone" class="detail-zone active">
-                            <h1 class="project-title">${p.title}</h1>
-                            <div class="project-meta-badges">
-                                ${p.style ? `<span class="badge-item">${p.style}</span>` : ''}
-                                ${p.area ? `<span class="badge-item">${p.area} ${areaUnit}</span>` : ''}
-                                ${p.floors ? `<span class="badge-item">${p.floors} ${currentLang === 'en' ? 'Floors' : 'етажа'}</span>` : ''}
+                            <div class="formal-project-layout">
+                                <div class="formal-project-gallery">
+                                    <div class="formal-gallery-frame">
+                                        <img id="projectMainImage" src="${mainImg}" alt="${p.title}" class="formal-main-image" onerror="this.src='https://placehold.co/1000x600?text=Image'">
+                                    </div>
+                                    <div class="formal-thumbnail-row" aria-label="${currentLang === 'en' ? 'Project images' : 'Снимки на проекта'}">
+                                        ${projectImages.map((image, index) => `<button type="button" class="formal-thumbnail ${index === 0 ? 'active' : ''}" onclick="selectProjectImage('${image.replace(/'/g, "\\'")}', this)" aria-label="${currentLang === 'en' ? 'Image' : 'Снимка'} ${index + 1}"><img src="${image}" alt=""></button>`).join('')}
+                                    </div>
+                                </div>
+                                <aside class="formal-project-summary">
+                                    <p class="formal-kicker">${currentLang === 'en' ? 'Project information' : 'Информация за проекта'}</p>
+                                    <h1 class="formal-project-title">${p.title}</h1>
+                                    <dl class="formal-facts">
+                                        <div><dt>${currentLang === 'en' ? 'Project no.' : 'Проект №'}</dt><dd>${p.projectNumber || p.id || '—'}</dd></div>
+                                        <div><dt>${currentLang === 'en' ? 'Area' : 'РЗП'}</dt><dd>${p.area ? `${p.area} ${areaUnit}` : '—'}</dd></div>
+                                        <div><dt>${currentLang === 'en' ? 'Floors' : 'Етажи'}</dt><dd>${p.floors || '—'}</dd></div>
+                                        <div><dt>${currentLang === 'en' ? 'Style' : 'Стил'}</dt><dd>${p.style || '—'}</dd></div>
+                                        <div class="formal-price"><dt>${currentLang === 'en' ? 'Project price' : 'Цена на проекта'}</dt><dd>${p.price ? `${p.price} €` : '—'}</dd></div>
+                                    </dl>
+                                    <a class="formal-offer-button" href="contact.html?project=${encodeURIComponent(p.title || '')}&type=project">${currentLang === 'en' ? 'Request an offer' : 'Направете ми оферта'}</a>
+                                </aside>
                             </div>
-
-                            <img src="${mainImg}" alt="${p.title}" class="main-project-img" onerror="this.src='https://placehold.co/1000x600?text=Image'">
-
                             </section>
                             <section id="mediaZone" class="detail-zone">
                             <section class="project-video-section" aria-label="Видео представяне на проекта">
