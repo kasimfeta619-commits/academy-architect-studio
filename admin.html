@@ -344,19 +344,6 @@
                     <div class="form-group"><label>Етажи</label><input type="text" id="floors"></div>
                     <div class="form-group"><label>Спални</label><input type="text" id="beds"></div>
                     <div class="form-group"><label>Бани</label><input type="text" id="baths"></div>
-                    
-                    <div class="form-group">
-                        <label>Оценка / Рейтинг на проекта (Звезди)</label>
-                        <select id="projectRating">
-                            <option value="5">⭐⭐⭐⭐⭐ (5 Звезди - Отличен)</option>
-                            <option value="4">⭐⭐⭐⭐ (4 Звезди - Много добър)</option>
-                            <option value="3">⭐⭐⭐ (3 Звезди - Добър)</option>
-                            <option value="2">⭐⭐ (2 Звезди - Среден)</option>
-                            <option value="1">⭐ (1 Звезда - Слаб)</option>
-                            <option value="0">Без рейтинг / Скрий звездите</option>
-                        </select>
-                    </div>
-
                     <div class="form-group">
                         <label>Материал / Конструкция</label>
                         <select id="material">
@@ -429,6 +416,7 @@
             <div id="adminProjectsList"></div>
         </div>
 
+        <!-- УПРАВЛЕНИЕ НА PROJECT DETAIL -->
         <div id="detailTab" class="admin-section">
             <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Управление на Project Detail елементи</h3>
             <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можете да преглеждате проектите и да преценявате или премахвате детайли/медия от самите страници с подробности за проект (Project Detail).</p>
@@ -445,10 +433,8 @@
             <div id="adminBookingsList"></div>
         </div>
 
-        <!-- СЕКЦИЯ МНЕНИЯ НА ОБЩНОСТТА -->
         <div id="reviewsTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Мнение на общността (Модерация)</h3>
-            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Преглед и управление на потребителските коментари и оценки, изпратени под проектите.</p>
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Модерация на мнения</h3>
             <div id="adminReviewsList"></div>
         </div>
     </main>
@@ -457,6 +443,30 @@
         <div class="modal-content">
             <span class="modal-close" onclick="closePreviewModal(true)">&times;</span>
             <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- МОДАЛ ЗА РЕДАКЦИЯ НА МНЕНИЕ -->
+    <div id="reviewEditModal" class="modal-overlay" onclick="closeReviewEditModal(event)">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="modal-close" onclick="closeReviewEditModal(true)">&times;</span>
+            <h3 style="margin-top:0;">Редактиране на мнение</h3>
+            <form id="reviewEditForm">
+                <input type="hidden" id="editReviewId">
+                <div class="form-group">
+                    <label>Автор</label>
+                    <input type="text" id="editReviewAuthor" required>
+                </div>
+                <div class="form-group">
+                    <label>Оценка (1-5)</label>
+                    <input type="number" id="editReviewRating" min="1" max="5" required>
+                </div>
+                <div class="form-group">
+                    <label>Текст на мнението</label>
+                    <textarea id="editReviewText" style="height: 100px;" required></textarea>
+                </div>
+                <button type="submit" class="btn-action">Запази промените</button>
+            </form>
         </div>
     </div>
 
@@ -630,6 +640,7 @@
             }
         });
 
+        // УПРАВЛЕНИЕ НА ЕКИПА
         async function renderAdminTeam() {
             const listContainer = document.getElementById('adminTeamList');
             if (!listContainer) return;
@@ -815,9 +826,6 @@
                 const mainCatLabel = mainCatNames[p.mainCategory] || 'Жилищна';
                 const subCatLabel = subCatNames[p.subCategory] || 'Архитектура';
                 const hasVideoIndicator = (p.videoUrl || p.youtubeUrl) ? '| 🎬 Видео' : '';
-                
-                let ratingVal = parseInt(p.rating) || 0;
-                let starsHtml = ratingVal > 0 ? '⭐'.repeat(ratingVal) : 'Без рейтинг';
 
                 return `
                     <div class="project-item-admin">
@@ -826,7 +834,7 @@
                             <div>
                                 <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${p.title}</strong>
                                 <div style="font-size: 0.8rem; color: #8c8275;">
-                                    📁 ${mainCatLabel} (${subCatLabel}) | Рейтинг: ${starsHtml} | Площ: ${p.area ? p.area + ' кв.м' : '-'} ${hasVideoIndicator}
+                                    📁 ${mainCatLabel} (${subCatLabel}) | Стил: ${p.style || '-'} | Площ: ${p.area ? p.area + ' кв.м' : '-'} ${hasVideoIndicator}
                                 </div>
                             </div>
                         </div>
@@ -891,9 +899,6 @@
             let facadeHtml = p.facadeImages && p.facadeImages.length ? p.facadeImages.map(img => `<img src="${img}">`).join('') : '';
             let galleryHtml = p.gallery && p.gallery.length ? p.gallery.map(img => `<img src="${img}">`).join('') : '';
 
-            let ratingVal = parseInt(p.rating) || 0;
-            let ratingDisplay = ratingVal > 0 ? '⭐'.repeat(ratingVal) + ` (${ratingVal}/5)` : 'Няма зададен рейтинг';
-
             let videoSectionHtml = '';
             if (p.youtubeUrl) {
                 const embedUrl = getYouTubeEmbedUrl(p.youtubeUrl);
@@ -923,7 +928,6 @@
                 
                 ${videoSectionHtml}
 
-                <p><strong>Оценка / Рейтинг:</strong> ${ratingDisplay}</p>
                 <p><strong>Описание:</strong> ${p.desc || 'Няма описание'}</p>
                 <p><strong>Детайли:</strong> Площ: ${p.area || '-'} м² | Етажи: ${p.floors || '-'} | Спални: ${p.beds || '-'} | Бани: ${p.baths || '-'} | Стил: ${p.style || '-'}</p>
                 <p><strong>Цена:</strong> ${p.price ? p.price + ' €' : '-'}</p>
@@ -983,7 +987,7 @@
             }
         }
 
-        // НАПЪЛНО ПОПРАВЕНА И ГЪВКАВА ФУНКЦИЯ ЗА МНЕНИЯ НА ОБЩНОСТТА
+        // ОБНОВЕНА СЕКЦИЯ ЗА МНЕНИЯ (С ОДОБРЕНИЕ И РЕДАКЦИЯ)
         async function renderAdminReviews() {
             const listContainer = document.getElementById('adminReviewsList');
             if (!listContainer) return;
@@ -997,32 +1001,91 @@
             }
             
             if (reviews.length === 0) {
-                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма добавени мнения от общността.</p>`;
+                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма добавени мнения.</p>`;
                 return;
             }
 
             listContainer.innerHTML = reviews.map((r) => {
-                const ratingNum = parseInt(r.rating) || 5;
-                const stars = '★'.repeat(ratingNum) + '☆'.repeat(5 - ratingNum);
-                const commentText = r.comment || r.text || r.message || 'Няма текстов коментар';
-                const authorName = r.author || r.name || r.userName || 'Анонимен';
+                const isApproved = r.approved === true;
+                const statusBadge = isApproved 
+                    ? `<span style="color: #2ecc71; font-weight: bold; font-size: 0.75rem;">✓ Одобрено</span>` 
+                    : `<span style="color: #e67e22; font-weight: bold; font-size: 0.75rem;">⏳ Чакащ преглед</span>`;
+                
+                const approveBtnText = isApproved ? 'Скрий' : 'Одобри';
+                const approveBtnColor = isApproved ? '#8c8275' : '#2ecc71';
 
                 return `
                     <div class="review-item-admin">
-                        <div>
-                            <div style="font-weight: bold; font-size: 1.05rem; margin-bottom: 4px;">
-                                ${authorName} <span style="color: #f39c12; margin-left: 8px; font-size: 0.95rem;">${stars}</span>
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 3px;">
+                                <strong style="font-size: 1.05rem;">${r.author || 'Анонимен'}</strong>
+                                ${statusBadge}
                             </div>
-                            <div style="font-size: 0.9rem; color: #333; margin-bottom: 4px;">"${commentText}"</div>
-                            <div style="font-size: 0.75rem; color: #8c8275;">Проект ID: ${r.projectId || 'Общ'}</div>
+                            <div style="font-size: 0.8rem; color: #8c8275;">Оценка: ${r.rating || '5'}★ | "${r.text || ''}"</div>
                         </div>
                         <div class="admin-btns">
+                            <button class="btn-view" style="background: ${approveBtnColor};" onclick="toggleApproveReview('${r.id}', ${isApproved})">${approveBtnText}</button>
+                            <button class="btn-edit" onclick="openReviewEditModal('${r.id}')">Редактирай</button>
                             <button class="btn-delete" onclick="deleteReview('${r.id}')">Изтрий</button>
                         </div>
                     </div>
                 `;
             }).join('');
         }
+
+        async function toggleApproveReview(id, currentStatus) {
+            try {
+                await db.collection('reviews').doc(id).update({
+                    approved: !currentStatus
+                });
+                renderAdminReviews();
+            } catch (err) {
+                alert("Грешка при промяна на статуса: " + err.message);
+            }
+        }
+
+        async function openReviewEditModal(id) {
+            let r = null;
+            try {
+                const docSnap = await db.collection('reviews').doc(id).get();
+                if (docSnap.exists) r = docSnap.data();
+            } catch (err) {}
+
+            if (!r) return;
+
+            document.getElementById('editReviewId').value = id;
+            document.getElementById('editReviewAuthor').value = r.author || 'Анонимен';
+            document.getElementById('editReviewRating').value = r.rating || 5;
+            document.getElementById('editReviewText').value = r.text || '';
+
+            document.getElementById('reviewEditModal').style.display = 'flex';
+        }
+
+        function closeReviewEditModal(e) {
+            if (e === true || e.target.id === 'reviewEditModal') {
+                document.getElementById('reviewEditModal').style.display = 'none';
+            }
+        }
+
+        document.getElementById('reviewEditForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editReviewId').value;
+            
+            const updatedData = {
+                author: document.getElementById('editReviewAuthor').value.trim(),
+                rating: Number(document.getElementById('editReviewRating').value),
+                text: document.getElementById('editReviewText').value.trim()
+            };
+
+            try {
+                await db.collection('reviews').doc(id).update(updatedData);
+                closeReviewEditModal(true);
+                renderAdminReviews();
+                alert("Мнението е успешно обновено!");
+            } catch (err) {
+                alert("Грешка при обновяване: " + err.message);
+            }
+        });
 
         async function deleteReview(id) {
             if (confirm("Сигурни ли сте, че искате да изтриете това мнение?")) {
@@ -1093,7 +1156,6 @@
             document.getElementById('floors').value = p.floors || '';
             document.getElementById('beds').value = p.beds || '';
             document.getElementById('baths').value = p.baths || '';
-            document.getElementById('projectRating').value = p.rating !== undefined ? p.rating : '5';
             document.getElementById('material').value = p.material || '';
             document.getElementById('style').value = p.style || '';
             document.getElementById('price').value = p.price || '';
@@ -1251,7 +1313,7 @@
                 }
 
                 const projectData = {
-                    title: document.getElementById('title'].value,
+                    title: document.getElementById('title').value,
                     mainCategory: document.getElementById('mainCategory').value,
                     subCategory: document.getElementById('subCategory').value,
                     desc: document.getElementById('desc').value,
@@ -1259,7 +1321,6 @@
                     floors: document.getElementById('floors').value,
                     beds: document.getElementById('beds').value,
                     baths: document.getElementById('baths').value,
-                    rating: parseInt(document.getElementById('projectRating').value) || 0,
                     material: document.getElementById('material').value,
                     style: document.getElementById('style').value,
                     price: document.getElementById('price').value,
