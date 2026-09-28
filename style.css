@@ -331,6 +331,115 @@ body {
     line-height: 1.6;
 }
 
+/* ==========================================
+   СТИЛОВЕ ЗА КАРТАТА НА БЪЛГАРИЯ И ПИНОВЕТЕ
+   ========================================== */
+.map-section {
+    padding: 60px 8%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.map-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+.map-subtitle {
+    text-align: center;
+    color: #8c8275;
+    margin-bottom: 30px;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#projectMap {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    border-radius: 12px;
+    border: 1px solid #eadecc;
+    background: #fbf9f5 url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Bulgaria_relief_location_map.jpg/800px-Bulgaria_relief_location_map.jpg') no-repeat center center;
+    background-size: cover;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    overflow: hidden;
+}
+
+body.dark-mode #projectMap {
+    border-color: #2c2c2c;
+    filter: brightness(0.85) contrast(1.1);
+}
+
+.map-pin {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -100%);
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s ease;
+}
+
+.map-pin:hover {
+    transform: translate(-50%, -100%) scale(1.2);
+}
+
+.map-pin .pin-head {
+    width: 16px;
+    height: 16px;
+    background: #111;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    margin: 0 auto;
+}
+
+body.dark-mode .map-pin .pin-head {
+    background: #e2c19a;
+    border-color: #1a1a1a;
+}
+
+.map-pin .pin-needle {
+    width: 2px;
+    height: 10px;
+    background: #111;
+    margin: -2px auto 0 auto;
+}
+
+body.dark-mode .map-pin .pin-needle {
+    background: #e2c19a;
+}
+
+.map-popup {
+    position: absolute;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    font-size: 0.85rem;
+    color: #1a1a1a;
+    white-space: nowrap;
+    display: none;
+    z-index: 20;
+    border: 1px solid #eadecc;
+}
+
+body.dark-mode .map-popup {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #333;
+}
+
+.map-pin.active .map-popup {
+    display: block;
+}
+
 /* Footer */
 .main-footer {
     display: grid;
@@ -417,7 +526,8 @@ body.dark-mode .footer-brand,
 body.dark-mode .p-title,
 body.dark-mode .p-area,
 body.dark-mode h1,
-body.dark-mode h2 {
+body.dark-mode h2,
+body.dark-mode .map-title {
     color: #ffffff !important;
 }
 
