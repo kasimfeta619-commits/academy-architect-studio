@@ -232,7 +232,7 @@
                             </div>
                             <div class="quick-switch-box">
                                 <span class="spec-label" style="margin:0;" data-key="project-select-label">Избери проект:</span>
-                                <select id="projectSelector" onchange="if(this.value) window.location.href='project-detail.html?id=' + encodeURIComponent(this.value);">
+                                <select id="projectSelector" onchange="if(this.value) window.location.href='project-detail_6.html?id=' + encodeURIComponent(this.value);">
                                     ${optionsHTML}
                                 </select>
                             </div>
@@ -273,7 +273,7 @@
                         ${galleryHTML}
                     `;
 
-                    // След като динамично вкараме HTML-а, прилагаме текущия език
+                    // След като динамично вкараме HTML-а, превеждаме страницата според текущия език
                     if (typeof initLanguage === 'function') {
                         initLanguage();
                     }
