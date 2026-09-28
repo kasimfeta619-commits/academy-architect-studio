@@ -345,7 +345,6 @@
                     <div class="form-group"><label>Спални</label><input type="text" id="beds"></div>
                     <div class="form-group"><label>Бани</label><input type="text" id="baths"></div>
                     
-                    <!-- НОВО ПОЛЕ ЗА ОЦЕНКА / РЕЙТИНГ СО ЗВЕЗДИ -->
                     <div class="form-group">
                         <label>Оценка / Рейтинг на проекта (Звезди)</label>
                         <select id="projectRating">
@@ -446,8 +445,10 @@
             <div id="adminBookingsList"></div>
         </div>
 
+        <!-- СЕКЦИЯ МНЕНИЯ НА ОБЩНОСТТА -->
         <div id="reviewsTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Модерация на мнения</h3>
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Мнение на общността (Модерация)</h3>
+            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Преглед и управление на потребителските коментари и оценки, изпратени под проектите.</p>
             <div id="adminReviewsList"></div>
         </div>
     </main>
@@ -982,6 +983,7 @@
             }
         }
 
+        // КОРИГИРАНА ФУНКЦИЯ ЗА МНЕНИЯ НА ОБЩНОСТТА
         async function renderAdminReviews() {
             const listContainer = document.getElementById('adminReviewsList');
             if (!listContainer) return;
@@ -993,16 +995,23 @@
             } catch (err) {}
             
             if (reviews.length === 0) {
-                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма добавени мнения.</p>`;
+                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма добавени мнения от общността.</p>`;
                 return;
             }
 
             listContainer.innerHTML = reviews.map((r) => {
+                const ratingNum = parseInt(r.rating) || 5;
+                const stars = '★'.repeat(ratingNum) + '☆'.repeat(5 - ratingNum);
+                const commentText = r.comment || r.text || 'Няма текстов коментар';
+
                 return `
                     <div class="review-item-admin">
                         <div>
-                            <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${r.author || 'Анонимен'}</strong>
-                            <div style="font-size: 0.8rem; color: #8c8275;">Оценка: ${r.rating || '5'}★ | "${r.text || ''}"</div>
+                            <div style="font-weight: bold; font-size: 1.05rem; margin-bottom: 4px;">
+                                ${r.author || 'Анонимен'} <span style="color: #f39c12; margin-left: 8px; font-size: 0.95rem;">${stars}</span>
+                            </div>
+                            <div style="font-size: 0.9rem; color: #333; margin-bottom: 4px;">"${commentText}"</div>
+                            <div style="font-size: 0.75rem; color: #8c8275;">Проект ID: ${r.projectId || 'Общ'}</div>
                         </div>
                         <div class="admin-btns">
                             <button class="btn-delete" onclick="deleteReview('${r.id}')">Изтрий</button>
