@@ -130,6 +130,13 @@
   .existing-asset img { width: 100%; height: 100%; object-fit: cover; }
   .existing-asset-remove { position: absolute; top: 3px; right: 3px; width: 24px; height: 24px; border: 0; border-radius: 50%; background: #b33236; color: #fff; font-weight: 700; cursor: pointer; line-height: 20px; }
   .existing-assets:empty { display: none; }
+  .project-form-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px; border-bottom:1px solid #d4c8b6; padding-bottom:12px; }
+  .project-form-tab { border:1px solid #d4c8b6; background:#fff; color:#5f554a; padding:10px 16px; cursor:pointer; border-radius:999px; font-weight:600; }
+  .project-form-tab.active { background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
+  .project-form-zone { display:none; }
+  .project-form-zone.active { display:block; }
+  .feedback-admin-note { padding:16px; background:#f4eee5; color:#766a5e; margin-bottom:16px; }
+  .project-feedback-admin { color:#766a5e; }
 
         body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
         body.dark-mode header.navbar { background: #1a1a1a !important; border-bottom-color: #2c2c2c !important; }
@@ -305,7 +312,13 @@
         <div id="uploadTab" class="admin-section">
             <h3 id="formTitle" style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Качване на нов проект</h3>
             <form id="uploadForm">
+                <div class="project-form-tabs" role="tablist" aria-label="Раздели на проекта">
+                    <button type="button" class="project-form-tab active" onclick="showProjectZone('detailsZone', this)">1. Данни</button>
+                    <button type="button" class="project-form-tab" onclick="showProjectZone('mediaZone', this)">2. Медия</button>
+                    <button type="button" class="project-form-tab" onclick="showProjectZone('feedbackZone', this)">3. Мнения</button>
+                </div>
                 <input type="hidden" id="editIndex" value="">
+                <div id="detailsZone" class="project-form-zone active">
 
                 <div class="form-group"><label>Име на проекта *</label><input type="text" id="title" required></div>
                 
@@ -360,7 +373,8 @@
                     </select>
                 </div>
                 <div class="form-group"><label>Цена (€)</label><input type="text" id="price" inputmode="decimal" placeholder="напр. 25 000"></div>
-                
+                </div>
+                <div id="mediaZone" class="project-form-zone">
                 <div style="background: #eadecc; padding: 15px; margin-bottom: 20px; border: 1px solid #d4c8b6;">
                     <h4 style="margin-top: 0; font-size: 0.9rem; text-transform: uppercase; color: #1a1a1a;">Видео презентация (Изберете едно от двете)</h4>
                     
@@ -384,6 +398,11 @@
                 <div class="form-group"><label>Разрез</label><div id="sectionImageExisting" class="existing-assets"></div><input type="file" id="sectionImg" accept="image/*"></div>
                 <div class="form-group"><label>Допълнителни визуализации</label><div id="galleryExisting" class="existing-assets"></div><input type="file" id="galleryImgs" accept="image/*" multiple></div>
 
+                </div>
+                <div id="feedbackZone" class="project-form-zone">
+                    <div class="feedback-admin-note">Мненията и рейтингите се събират от страницата на проекта и се показват тук при редакция.</div>
+                    <div id="projectFeedbackAdmin" class="project-feedback-admin">Няма добавени мнения.</div>
+                </div>
                 <div class="form-group checkbox-group" style="margin-top: 20px;">
                     <input type="checkbox" id="isFav"> 
                     <label for="isFav" style="cursor: pointer; font-size: 0.85rem; font-weight: 600;">Фаворитен проект (на началната страница)</label>
@@ -987,7 +1006,12 @@ document.getElementById('material').value = p.material || '';
 
 function resetProjectForm() {
   document.getElementById('uploadForm').reset();
-  window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: [], sectionImage: '', gallery: [] };
+window.showProjectZone = function(zoneId, button) {
+  document.querySelectorAll('.project-form-zone').forEach(zone => zone.classList.toggle('active', zone.id === zoneId));
+  document.querySelectorAll('.project-form-tab').forEach(tab => tab.classList.toggle('active', tab === button));
+};
+
+window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: [], sectionImage: '', gallery: [] };
   window.removedProjectAssets = new Set();
   renderExistingAssets();
   document.getElementById('editIndex').value = '';
