@@ -1012,35 +1012,64 @@
             }
         }
 
+        // КОРИГИРАНА ФУНКЦИЯ ЗА ЗАРЕЖДАНЕ НА МНЕНИЯТА (ВКЛЮЧВА ПОДКОЛЕКЦИИТЕ КЪМ ПРОЕКТИТЕ)
         async function renderAdminReviews() {
             const listContainer = document.getElementById('adminReviewsList');
             if (!listContainer) return;
             let allReviews = [];
             
             try {
+                // 1. Проверяваме главната колекция 'reviews' (ако има такива)
                 const snapshot = await db.collection('reviews').get();
                 snapshot.forEach(doc => {
                     allReviews.push({ id: doc.id, source: 'collection', ...doc.data() });
                 });
 
+                // 2. Проверяваме поле-масив reviews в самите проекти (ако се ползва)
                 const projSnapshot = await db.collection('projects').get();
-                projSnapshot.forEach(doc => {
+                
+                for (const doc of projSnapshot.docs) {
                     const pData = doc.data();
+                    const projectId = doc.id;
+                    const projectTitle = pData.title || 'Проект';
+
+                    // А) Проверка за поле-масив 'reviews' в документа на проекта
                     if (pData.reviews && Array.isArray(pData.reviews)) {
                         pData.reviews.forEach((rev, idx) => {
                             allReviews.push({
-                                id: `${doc.id}_${idx}`,
-                                projectId: doc.id,
+                                id: `${projectId}_arr_${idx}`,
+                                projectId: projectId,
                                 source: 'project_embedded',
                                 index: idx,
                                 author: rev.author || rev.name || 'Анонимен',
                                 rating: rev.rating || 5,
                                 text: rev.text || rev.comment || '',
-                                approved: rev.approved !== false
+                                approved: rev.approved !== false,
+                                projectTitle: projectTitle
                             });
                         });
                     }
-                });
+
+                    // Б) Проверка за ПОДКОЛЕКЦИЯ 'reviews' към съответния проект (projects/{id}/reviews)
+                    try {
+                        const subReviewsSnap = await db.collection('projects').doc(projectId).collection('reviews').get();
+                        subReviewsSnap.forEach(subDoc => {
+                            const revData = subDoc.data();
+                            allReviews.push({
+                                id: subDoc.id,
+                                projectId: projectId,
+                                source: 'project_subcollection',
+                                author: revData.author || revData.name || 'Анонимен',
+                                rating: revData.rating || 5,
+                                text: revData.text || revData.comment || '',
+                                approved: revData.approved !== false,
+                                projectTitle: projectTitle
+                            });
+                        });
+                    } catch (subErr) {
+                        console.log("Грешка при четене на подколекция reviews за проект " + projectId, subErr);
+                    }
+                }
             } catch (err) {
                 console.error("Грешка при зареждане на мненията:", err);
             }
@@ -1058,10 +1087,12 @@
                 
                 const approveBtnText = isApproved ? 'Скрий' : 'Одобри';
                 const approveBtnColor = isApproved ? '#8c8275' : '#2ecc71';
+                const projectTag = r.projectTitle ? `<div style="font-size: 0.75rem; color: #8c8275; margin-bottom: 2px;">📌 Проект: ${r.projectTitle}</div>` : '';
 
                 return `
                     <div class="review-item-admin">
                         <div style="flex: 1;">
+                            ${projectTag}
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 3px;">
                                 <strong style="font-size: 1.05rem;">${r.author || 'Анонимен'}</strong>
                                 ${statusBadge}
@@ -1080,7 +1111,11 @@
 
         async function toggleApproveReview(id, currentStatus, source, projectId, index) {
             try {
-                if (source === 'project_embedded') {
+                if (source === 'project_subcollection') {
+                    await db.collection('projects').doc(projectId).collection('reviews').doc(id).update({
+                        approved: !currentStatus
+                    });
+                } else if (source === 'project_embedded') {
                     const docRef = db.collection('projects').doc(projectId);
                     const docSnap = await docRef.get();
                     if (docSnap.exists) {
@@ -1104,7 +1139,10 @@
         async function openReviewEditModal(id, source, projectId, index) {
             let r = null;
             try {
-                if (source === 'project_embedded') {
+                if (source === 'project_subcollection') {
+                    const docSnap = await db.collection('projects').doc(projectId).collection('reviews').doc(id).get();
+                    if (docSnap.exists) r = docSnap.data();
+                } else if (source === 'project_embedded') {
                     const docSnap = await db.collection('projects').doc(projectId).get();
                     if (docSnap.exists) {
                         const pData = docSnap.data();
@@ -1149,7 +1187,9 @@
             };
 
             try {
-                if (meta.source === 'project_embedded') {
+                if (meta.source === 'project_subcollection') {
+                    await db.collection('projects').doc(meta.projectId).collection('reviews').doc(id).update(updatedData);
+                } else if (meta.source === 'project_embedded') {
                     const docRef = db.collection('projects').doc(meta.projectId);
                     const docSnap = await docRef.get();
                     if (docSnap.exists) {
@@ -1176,7 +1216,9 @@
         async function deleteReview(id, source, projectId, index) {
             if (confirm("Сигурни ли сте, че искате да изтриете това мнение?")) {
                 try {
-                    if (source === 'project_embedded') {
+                    if (source === 'project_subcollection') {
+                        await db.collection('projects').doc(projectId).collection('reviews').doc(id).delete();
+                    } else if (source === 'project_embedded') {
                         const docRef = db.collection('projects').doc(projectId);
                         const docSnap = await docRef.get();
                         if (docSnap.exists) {
