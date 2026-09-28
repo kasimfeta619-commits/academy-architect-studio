@@ -164,15 +164,26 @@
         .detail-tab.active { background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
         .detail-zone { display:none; }
         .detail-zone.active { display:block; }
+        .feedback-layout { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); gap:24px; align-items:start; }
+        .project-info-card, .rating-panel { padding:28px; border:1px solid #eadecc; border-radius:12px; background:#fff; }
+        .project-info-card h2, .rating-panel h2 { margin:0 0 22px; font-size:1.55rem; font-weight:500; }
+        .eyebrow-label { margin:0 0 10px; color:#8c8275; font-size:.75rem; text-transform:uppercase; letter-spacing:1.5px; font-weight:700; }
+        .project-facts { margin:0; }
+        .project-facts div { display:flex; justify-content:space-between; gap:20px; padding:12px 0; border-bottom:1px solid #eee6dc; }
+        .project-facts dt { color:#8c8275; }
+        .project-facts dd { margin:0; text-align:right; font-weight:600; color:#333; }
         .rating-summary { display:flex; align-items:center; gap:12px; font-size:1.1rem; margin-bottom:15px; }
         .rating-stars, .review-stars { color:#c29135; letter-spacing:2px; }
         .rating-picker { display:flex; gap:5px; margin-bottom:14px; }
-        .rating-picker button { border:0; background:transparent; color:#c29135; font-size:2rem; cursor:pointer; }
-        .review-input { width:100%; min-height:110px; border:1px solid #e0d3c2; padding:14px; font:inherit; resize:vertical; margin-bottom:14px; }
+        .rating-picker button { border:0; background:transparent; color:#c29135; font-size:2rem; cursor:pointer; padding:0 2px; }
+        .review-input { width:100%; min-height:110px; border:1px solid #e0d3c2; padding:14px; font:inherit; resize:vertical; margin-bottom:14px; box-sizing:border-box; }
         .review-card { border:1px solid #eadecc; padding:14px; margin:10px 0; background:#fff; }
         .empty-reviews { color:#8c8275; }
-        .contact-project-button { display:inline-block; margin-top:26px; padding:14px 22px; background:#1a1a1a; color:#fff; text-decoration:none; }
-        body.dark-mode .detail-tab, body.dark-mode .review-input, body.dark-mode .review-card { background:#1e1e1e; color:#fff; border-color:#2c2c2c; }
+        .contact-project-button { display:inline-block; margin-top:26px; padding:14px 22px; background:#1a1a1a; color:#fff; text-decoration:none; border-radius:4px; font-weight:600; }
+        @media (max-width: 760px) { .feedback-layout { grid-template-columns:1fr; } .project-info-card, .rating-panel { padding:20px; } }
+        body.dark-mode .detail-tab, body.dark-mode .review-input, body.dark-mode .review-card, body.dark-mode .project-info-card, body.dark-mode .rating-panel { background:#1e1e1e; color:#fff; border-color:#2c2c2c; }
+        body.dark-mode .project-facts dd { color:#fff; }
+        body.dark-mode .project-facts div { border-color:#2c2c2c; }
     </style>
 </head>
 <body>
@@ -301,7 +312,8 @@
             stars.textContent = '★★★★★';
             value.textContent = average.toFixed(1);
             count.textContent = `(${reviews.length})`;
-            list.innerHTML = reviews.length ? reviews.map(review => `<article class="review-card"><div class="review-stars">${'★'.repeat(Number(review.rating || 0))}</div><p>${review.text || ''}</p></article>`).join('') : '<p class="empty-reviews">Все още няма мнения.</p>';
+            const currentLang = localStorage.getItem('siteLang') || localStorage.getItem('preferredLang') || 'bg';
+            list.innerHTML = reviews.length ? reviews.map(review => `<article class="review-card"><div class="review-stars">${'★'.repeat(Number(review.rating || 0))}</div><p>${review.text || ''}</p></article>`).join('') : `<p class="empty-reviews">${currentLang === 'en' ? 'No reviews yet.' : 'Все още няма мнения.'}</p>`;
         }
 
         document.addEventListener("DOMContentLoaded", async function() {
@@ -427,12 +439,28 @@
                             ${galleryHtml}
                             </section>
                             <section id="feedbackZone" class="detail-zone">
-                                <h2 class="section-heading">${currentLang === 'en' ? 'Project rating and reviews' : 'Рейтинг и мнения за проекта'}</h2>
-                                <div class="rating-summary"><span class="rating-stars" id="ratingStars">★★★★★</span><strong id="ratingValue">0.0</strong><span id="ratingCount">(0)</span></div>
-                                <div class="rating-picker" aria-label="Дайте оценка от 1 до 5 звезди">${[1,2,3,4,5].map(n => `<button type="button" onclick="submitProjectReview(${n})" aria-label="${n} звезди">★</button>`).join('')}</div>
-                                <textarea id="reviewText" class="review-input" placeholder="Споделете мнението си за проекта..."></textarea>
-                                <div id="reviewsList" class="reviews-list"></div>
-                                <a class="contact-project-button" href="contact.html?project=${encodeURIComponent(p.title || '')}">${currentLang === 'en' ? 'Discuss this project' : 'Свържете се с нас за този проект'}</a>
+                                <div class="feedback-layout">
+                                    <div class="project-info-card">
+                                        <p class="eyebrow-label">${currentLang === 'en' ? 'Project information' : 'Информация за проекта'}</p>
+                                        <h2>${p.title || (currentLang === 'en' ? 'Project' : 'Проект')}</h2>
+                                        <dl class="project-facts">
+                                            <div><dt>${currentLang === 'en' ? 'Category' : 'Категория'}</dt><dd>${p.category || '—'}</dd></div>
+                                            <div><dt>${currentLang === 'en' ? 'Style' : 'Стил'}</dt><dd>${p.style || '—'}</dd></div>
+                                            <div><dt>${currentLang === 'en' ? 'Construction' : 'Конструкция'}</dt><dd>${p.material || (currentLang === 'en' ? '—' : '—')}</dd></div>
+                                            <div><dt>${currentLang === 'en' ? 'Area' : 'Площ'}</dt><dd>${p.area ? `${p.area} ${areaUnit}` : '—'}</dd></div>
+                                            <div><dt>${currentLang === 'en' ? 'Price' : 'Цена'}</dt><dd>${p.price ? `${p.price} €` : '—'}</dd></div>
+                                        </dl>
+                                        <a class="contact-project-button" href="contact.html?project=${encodeURIComponent(p.title || '')}&type=project">${currentLang === 'en' ? 'Request an offer' : 'Направете ми оферта'}</a>
+                                    </div>
+                                    <div class="rating-panel">
+                                        <p class="eyebrow-label">${currentLang === 'en' ? 'Community opinion' : 'Мнение на посетителите'}</p>
+                                        <h2>${currentLang === 'en' ? 'Project rating' : 'Рейтинг на проекта'}</h2>
+                                        <div class="rating-summary"><span class="rating-stars" id="ratingStars">★★★★★</span><strong id="ratingValue">0.0</strong><span id="ratingCount">(0)</span></div>
+                                        <div class="rating-picker" aria-label="${currentLang === 'en' ? 'Rate from 1 to 5 stars' : 'Дайте оценка от 1 до 5 звезди'}">${[1,2,3,4,5].map(n => `<button type="button" onclick="submitProjectReview(${n})" aria-label="${n} ${currentLang === 'en' ? 'stars' : 'звезди'}">★</button>`).join('')}</div>
+                                        <textarea id="reviewText" class="review-input" placeholder="${currentLang === 'en' ? 'Share your opinion about this project...' : 'Споделете мнението си за проекта...'}"></textarea>
+                                        <div id="reviewsList" class="reviews-list"></div>
+                                    </div>
+                                </div>
                             </section>
                         `;
                         renderProjectReviews(p.reviews || []);
