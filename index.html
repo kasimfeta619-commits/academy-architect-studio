@@ -47,20 +47,30 @@
             letter-spacing: 1px;
         }
         
-        /* Контейнер за скицата/картата на България */
+        /* Контейнер за картата на България */
         #projectMap {
             position: relative;
             width: 100%;
             height: 500px;
             border-radius: 12px;
             border: 1px solid #eadecc;
-            background: #fbf9f5 url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Bulgaria_relief_location_map.jpg/800px-Bulgaria_relief_location_map.jpg') no-repeat center center;
-            background-size: cover;
+            background: #fbf9f5;
             box-shadow: 0 4px 20px rgba(0,0,0,0.03);
             overflow: hidden;
         }
+        #projectMap img.map-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
         body.dark-mode #projectMap {
             border-color: #2c2c2c;
+        }
+        body.dark-mode #projectMap img.map-bg-image {
             filter: brightness(0.85) contrast(1.1);
         }
 
@@ -116,6 +126,11 @@
             display: none;
             z-index: 20;
             border: 1px solid #eadecc;
+        }
+        body.dark-mode .map-popup {
+            background: #1a1a1a;
+            color: #fff;
+            border-color: #333;
         }
         .map-pin.active .map-popup {
             display: block;
@@ -197,7 +212,10 @@
     <section class="map-section">
         <h2 class="map-title">Географски обхват на проектите</h2>
         <p class="map-subtitle">Част от нашите реализирани обекти и проекти в страната</p>
-        <div id="projectMap"></div>
+        <div id="projectMap">
+            <!-- Използваме директен img таг вместо CSS background за максимална стабилност -->
+            <img class="map-bg-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Bulgaria_relief_location_map.jpg/800px-Bulgaria_relief_location_map.jpg" alt="Карта на България">
+        </div>
     </section>
 
     <footer class="main-footer">
@@ -290,12 +308,10 @@
         document.addEventListener("DOMContentLoaded", async function() {
             const mapContainer = document.getElementById('projectMap');
 
-            // Зареждане на точките от Firebase базата данни (админ панела) и поставяне на пинове с черни/тъмни топчета
+            // Зареждане на точките от Firebase базата данни
             try {
                 const mapSnapshot = await db.collection('map_locations').get();
                 
-                // Граници на България за изчисляване на процентите (позициониране върху картата)
-                // Лат: от ~41.2 до ~44.3, Лонг: от ~22.3 до ~28.6
                 const minLat = 41.20, maxLat = 44.35;
                 const minLng = 22.35, maxLng = 28.60;
 
@@ -313,7 +329,6 @@
                         }
 
                         if (!isNaN(lat) && !isNaN(lng)) {
-                            // Пресмятане на процентите спрямо картинката на България
                             const topPercent = ((maxLat - lat) / (maxLat - minLat)) * 100;
                             const leftPercent = ((lng - minLng) / (maxLng - minLng)) * 100;
 
@@ -331,7 +346,6 @@
                                     </div>
                                 `;
 
-                                // При клик се отваря/затваря попъп прозорецът
                                 pinElement.addEventListener('click', (e) => {
                                     e.stopPropagation();
                                     document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
@@ -343,13 +357,9 @@
                         }
                     });
 
-                    // Затваряне при клик извън пин
                     document.addEventListener('click', () => {
                         document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
                     });
-
-                } else {
-                    console.log("Няма намерени точки в базата данни.");
                 }
             } catch (err) {
                 console.error("Грешка при зареждане на точките за картата от Firebase:", err);
