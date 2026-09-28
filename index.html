@@ -204,13 +204,24 @@
             const currentLang = localStorage.getItem('siteLang') || localStorage.getItem('preferredLang') || 'bg';
             const container = document.getElementById('featuredProjectsContainer');
 
-            // 1. Зареждане на проектите от Firestore
+            // 1. Зареждане на проектите от Firestore с хибридна подредба
             try {
                 const snapshot = await db.collection('projects').get();
                 const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
                 if (projects.length > 0) {
-                    const featured = projects.filter(p => p.isFavorite === true || p.isFavorite === "true");
+                    const maxFeaturedCount = 3; // Можете да го увеличите на колкото искате (напр. 6 или 15)
+
+                    // Разделяме проектите на ръчни фаворити и останали
+                    const manualFavorites = projects.filter(p => p.isFavorite === true || p.isFavorite === "true");
+                    const otherProjects = projects.filter(p => !p.isFavorite && p.isFavorite !== "true");
+
+                    // Сортираме останалите проекти по брой гледания (най-гледаните първи)
+                    otherProjects.sort((a, b) => (b.views || 0) - (a.views || 0));
+
+                    // Обединяваме ги: първо ръчните фаворити, след това най-гледаните, и ограничаваме до лимита
+                    const featured = [...manualFavorites, ...otherProjects].slice(0, maxFeaturedCount);
+
                     const areaUnit = currentLang === 'en' ? 'sq.m' : 'кв.м';
 
                     container.innerHTML = featured.map((p) => {
@@ -224,7 +235,7 @@
                                 <div class="project-info">
                                     <span class="p-title">${p.title}</span>
                                     <span class="p-meta">${p.style || (currentLang === 'en' ? 'Architectural Project' : 'Архитектурен проект')}</span>
-                                    <span class="p-area">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
+                                    <span class="p.area">${p.area ? p.area + ' ' + areaUnit : '-'}</span>
                                 </div>
                             </a>
                         `;

@@ -163,6 +163,13 @@
         async function loadProjectAndReviews() {
             const project = allProjectsList.find(p => p.id === currentProjectId) || allProjectsList[0];
             
+            // Автоматично увеличаване на брояча на гледанията в Firestore
+            if (project && project.id) {
+                db.collection('projects').doc(project.id).update({
+                    views: firebase.firestore.FieldValue.increment(1)
+                }).catch(err => console.log("Грешка при обновяване на гледанията:", err));
+            }
+            
             try {
                 const reviewsSnapshot = await db.collection('projects').doc(project.id).collection('reviews').orderBy('createdAt', 'desc').get();
                 project.reviews = reviewsSnapshot.docs.map(doc => doc.data());
