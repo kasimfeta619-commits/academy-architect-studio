@@ -81,7 +81,6 @@
             transition: border-color 0.3s;
         }
         
-        /* Фиксирани табове, за да не се застъпват */
         .admin-nav-tabs { 
             display: flex; 
             gap: 6px; 
@@ -151,7 +150,6 @@
         .existing-asset { position: relative; width: 110px; height: 82px; border: 1px solid #d4c8b6; background: #fff; border-radius: 4px; overflow: hidden; }
         .existing-asset img { width: 100%; height: 100%; object-fit: cover; }
         .existing-asset-remove { position: absolute; top: 3px; right: 3px; width: 24px; height: 24px; border: 0; border-radius: 50%; background: #b33236; color: #fff; font-weight: 700; cursor: pointer; line-height: 20px; }
-        .existing-assets:empty { display: none; }
         .project-form-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; border-bottom: 1px solid #d4c8b6; padding-bottom: 12px; }
         .project-form-tab { border: 1px solid #d4c8b6; background: #fff; color: #5f554a; padding: 10px 16px; cursor: pointer; border-radius: 999px; font-weight: 600; }
         .project-form-tab.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
@@ -477,6 +475,7 @@
             <h3 style="margin-top:0;">Редактиране на мнение</h3>
             <form id="reviewEditForm">
                 <input type="hidden" id="editReviewId">
+                <input type="hidden" id="editReviewProjectId">
                 <div class="form-group">
                     <label>Автор</label>
                     <input type="text" id="editReviewAuthor" required>
@@ -1011,24 +1010,48 @@
             }
         }
 
+        // ПОПРАВЕНО: Събира мнения както от отделна колекция 'reviews', така и ако са записани в самите проекти
         async function renderAdminReviews() {
             const listContainer = document.getElementById('adminReviewsList');
             if (!listContainer) return;
-            let reviews = [];
+            let allReviews = [];
             
             try {
+                // 1. Проверяваме самостоятелната колекция 'reviews'
                 const snapshot = await db.collection('reviews').get();
-                reviews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                snapshot.forEach(doc => {
+                    allReviews.push({ id: doc.id, source: 'collection', ...doc.data() });
+                });
+
+                // 2. Проверяваме дали мненията са записани в самите проекти (като масив или поле)
+                const projSnapshot = await db.collection('projects').get();
+                projSnapshot.forEach(doc => {
+                    const pData = doc.data();
+                    if (pData.reviews && Array.isArray(pData.reviews)) {
+                        pData.reviews.forEach((rev, idx) => {
+                            allReviews.push({
+                                id: `${doc.id}_${idx}`,
+                                projectId: doc.id,
+                                source: 'project_embedded',
+                                index: idx,
+                                author: rev.author || rev.name || 'Анонимен',
+                                rating: rev.rating || 5,
+                                text: rev.text || rev.comment || '',
+                                approved: rev.approved !== false
+                            });
+                        });
+                    }
+                });
             } catch (err) {
                 console.error("Грешка при зареждане на мненията:", err);
             }
             
-            if (reviews.length === 0) {
+            if (allReviews.length === 0) {
                 listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма добавени мнения.</p>`;
                 return;
             }
 
-            listContainer.innerHTML = reviews.map((r) => {
+            listContainer.innerHTML = allReviews.map((r) => {
                 const isApproved = r.approved === true;
                 const statusBadge = isApproved 
                     ? `<span style="color: #2ecc71; font-weight: bold; font-size: 0.75rem;">✓ Одобрено</span>` 
@@ -1047,39 +1070,65 @@
                             <div style="font-size: 0.8rem; color: #8c8275;">Оценка: ${r.rating || '5'}★ | "${r.text || ''}"</div>
                         </div>
                         <div class="admin-btns">
-                            <button class="btn-view" style="background: ${approveBtnColor};" onclick="toggleApproveReview('${r.id}', ${isApproved})">${approveBtnText}</button>
-                            <button class="btn-edit" onclick="openReviewEditModal('${r.id}')">Редактирай</button>
-                            <button class="btn-delete" onclick="deleteReview('${r.id}')">Изтрий</button>
+                            <button class="btn-view" style="background: ${approveBtnColor};" onclick="toggleApproveReview('${r.id}', ${isApproved}, '${r.source || ''}', '${r.projectId || ''}', ${r.index !== undefined ? r.index : -1})">${approveBtnText}</button>
+                            <button class="btn-edit" onclick="openReviewEditModal('${r.id}', '${r.source || ''}', '${r.projectId || ''}', ${r.index !== undefined ? r.index : -1})">Редактирай</button>
+                            <button class="btn-delete" onclick="deleteReview('${r.id}', '${r.source || ''}', '${r.projectId || ''}', ${r.index !== undefined ? r.index : -1})">Изтрий</button>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        async function toggleApproveReview(id, currentStatus) {
+        async function toggleApproveReview(id, currentStatus, source, projectId, index) {
             try {
-                await db.collection('reviews').doc(id).update({
-                    approved: !currentStatus
-                });
+                if (source === 'project_embedded') {
+                    const docRef = db.collection('projects').doc(projectId);
+                    const docSnap = await docRef.get();
+                    if (docSnap.exists) {
+                        let pData = docSnap.data();
+                        if (pData.reviews && pData.reviews[index]) {
+                            pData.reviews[index].approved = !currentStatus;
+                            await docRef.update({ reviews: pData.reviews });
+                        }
+                    }
+                } else {
+                    await db.collection('reviews').doc(id).update({
+                        approved: !currentStatus
+                    });
+                }
                 renderAdminReviews();
             } catch (err) {
                 alert("Грешка при промяна на статуса: " + err.message);
             }
         }
 
-        async function openReviewEditModal(id) {
+        async function openReviewEditModal(id, source, projectId, index) {
             let r = null;
             try {
-                const docSnap = await db.collection('reviews').doc(id).get();
-                if (docSnap.exists) r = docSnap.data();
+                if (source === 'project_embedded') {
+                    const docSnap = await db.collection('projects').doc(projectId).get();
+                    if (docSnap.exists) {
+                        const pData = docSnap.data();
+                        if (pData.reviews && pData.reviews[index]) {
+                            r = pData.reviews[index];
+                        }
+                    }
+                } else {
+                    const docSnap = await db.collection('reviews').doc(id).get();
+                    if (docSnap.exists) r = docSnap.data();
+                }
             } catch (err) {}
 
             if (!r) return;
 
             document.getElementById('editReviewId').value = id;
-            document.getElementById('editReviewAuthor').value = r.author || 'Анонимен';
+            document.getElementById('editReviewProjectId').value = projectId || '';
+            document.getElementById('editReviewAuthor').value = r.author || r.name || 'Анонимен';
             document.getElementById('editReviewRating').value = r.rating || 5;
-            document.getElementById('editReviewText').value = r.text || '';
+            document.getElementById('editReviewText').value = r.text || r.comment || '';
+
+            // Запомняме индекса или източника за формата
+            window.currentEditingReviewMeta = { source, projectId, index };
 
             document.getElementById('reviewEditModal').style.display = 'flex';
         }
@@ -1093,6 +1142,7 @@
         document.getElementById('reviewEditForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('editReviewId').value;
+            const meta = window.currentEditingReviewMeta || {};
             
             const updatedData = {
                 author: document.getElementById('editReviewAuthor').value.trim(),
@@ -1101,7 +1151,22 @@
             };
 
             try {
-                await db.collection('reviews').doc(id).update(updatedData);
+                if (meta.source === 'project_embedded') {
+                    const docRef = db.collection('projects').doc(meta.projectId);
+                    const docSnap = await docRef.get();
+                    if (docSnap.exists) {
+                        let pData = docSnap.data();
+                        if (pData.reviews && pData.reviews[meta.index]) {
+                            pData.reviews[meta.index].author = updatedData.author;
+                            pData.reviews[meta.index].rating = updatedData.rating;
+                            pData.reviews[meta.index].text = updatedData.text;
+                            await docRef.update({ reviews: pData.reviews });
+                        }
+                    }
+                } else {
+                    await db.collection('reviews').doc(id).update(updatedData);
+                }
+
                 closeReviewEditModal(true);
                 renderAdminReviews();
                 alert("Мнението е успешно обновено!");
@@ -1110,10 +1175,22 @@
             }
         });
 
-        async function deleteReview(id) {
+        async function deleteReview(id, source, projectId, index) {
             if (confirm("Сигурни ли сте, че искате да изтриете това мнение?")) {
                 try {
-                    await db.collection('reviews').doc(id).delete();
+                    if (source === 'project_embedded') {
+                        const docRef = db.collection('projects').doc(projectId);
+                        const docSnap = await docRef.get();
+                        if (docSnap.exists) {
+                            let pData = docSnap.data();
+                            if (pData.reviews && Array.isArray(pData.reviews)) {
+                                pData.reviews.splice(index, 1);
+                                await docRef.update({ reviews: pData.reviews });
+                            }
+                        }
+                    } else {
+                        await db.collection('reviews').doc(id).delete();
+                    }
                     renderAdminReviews();
                 } catch (err) {
                     alert("Грешка при изтриване: " + err.message);
