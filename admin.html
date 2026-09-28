@@ -815,7 +815,6 @@
                 const subCatLabel = subCatNames[p.subCategory] || 'Архитектура';
                 const hasVideoIndicator = (p.videoUrl || p.youtubeUrl) ? '| 🎬 Видео' : '';
                 
-                // Генериране на звезди за списъка
                 let ratingVal = parseInt(p.rating) || 0;
                 let starsHtml = ratingVal > 0 ? '⭐'.repeat(ratingVal) : 'Без рейтинг';
 
@@ -1082,7 +1081,7 @@
             document.getElementById('floors').value = p.floors || '';
             document.getElementById('beds').value = p.beds || '';
             document.getElementById('baths').value = p.baths || '';
-            document.getElementById('projectRating').value = p.rating !== undefined ? p.rating : '5'; // Зареждане на записания рейтинг
+            document.getElementById('projectRating').value = p.rating !== undefined ? p.rating : '5';
             document.getElementById('material').value = p.material || '';
             document.getElementById('style').value = p.style || '';
             document.getElementById('price').value = p.price || '';
@@ -1248,7 +1247,7 @@
                     floors: document.getElementById('floors').value,
                     beds: document.getElementById('beds').value,
                     baths: document.getElementById('baths').value,
-                    rating: parseInt(document.getElementById('projectRating').value) || 0, // Запазване на оценката
+                    rating: parseInt(document.getElementById('projectRating').value) || 0,
                     material: document.getElementById('material').value,
                     style: document.getElementById('style').value,
                     price: document.getElementById('price').value,
