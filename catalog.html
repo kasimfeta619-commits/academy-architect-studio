@@ -73,8 +73,13 @@
         .filters-bar {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
             margin-bottom: 40px;
+            padding: 22px 24px;
+            border: 1px solid rgba(112, 91, 66, 0.14);
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.72), rgba(246,240,232,0.62));
+            box-shadow: 0 12px 30px rgba(74, 54, 35, 0.05);
         }
         .filter-row {
             display: flex;
@@ -83,19 +88,19 @@
             flex-wrap: wrap;
         }
         .filter-label {
-            font-size: 0.75rem;
-            color: #888;
-            font-weight: 600;
+            font-size: 0.72rem;
+            color: #806f5e;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.4px;
             width: 110px;
         }
         .filter-btn {
-            background: transparent;
-            border: 1px solid rgba(0,0,0,0.1);
-            padding: 7px 14px;
-            border-radius: 20px;
-            font-size: 0.82rem;
+            background: rgba(255,255,255,0.58);
+            border: 1px solid rgba(112,91,66,0.18);
+            padding: 9px 16px;
+            border-radius: 999px;
+            font-size: 0.86rem;
             cursor: pointer;
             transition: all 0.2s ease;
             color: #555;
@@ -213,6 +218,13 @@
         .dark-mode .project-img-box {
             background: #1a1a1a;
         }
+        @media (max-width: 700px) {
+            .filters-bar { padding: 18px 14px; border-radius: 14px; }
+            .filter-row { align-items: flex-start; }
+            .filter-label { width: 100%; margin-bottom: 2px; }
+            .filter-btn { font-size: 0.8rem; padding: 8px 12px; }
+            .filter-row > div[style] { margin-left: 0 !important; width: 100%; margin-top: 4px; }
+        }
     </style>
 </head>
 <body>
@@ -262,22 +274,24 @@
             <div class="filter-row">
                 <span class="filter-label" data-key="filter-cat-label">Категория:</span>
                 <button class="filter-btn cat-btn active" onclick="setCategoryFilter('all', this)" data-key="cat-all">Всички</button>
-                <button class="filter-btn cat-btn" onclick="setCategoryFilter('houses', this)" data-key="cat-houses">🏡 Къщи</button>
-                <button class="filter-btn cat-btn" onclick="setCategoryFilter('interior', this)" data-key="cat-interior">🛋️ Интериорен дизайн</button>
-                <button class="filter-btn cat-btn" onclick="setCategoryFilter('public', this)" data-key="cat-public">🏢 Обществени & Промишлени</button>
-                <button class="filter-btn cat-btn" onclick="setCategoryFilter('reconstruction', this)" data-key="cat-reconstruction">🛠️ Реконструкции & Надстройки</button>
-                <button class="filter-btn cat-btn" onclick="setCategoryFilter('engineering', this)" data-key="cat-engineering">📐 Заснемане & КПИИ</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('residential', this)" data-key="cat-residential">🏡 Жилищни</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('multifamily', this)" data-key="cat-multifamily">🏢 Многофамилни</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('commercial', this)" data-key="cat-commercial">🏬 Търговски</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('interior', this)" data-key="cat-interior">🛋️ Интериорни</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('public', this)" data-key="cat-public">🏛️ Обществени & Промишлени</button>
+                <button class="filter-btn cat-btn" onclick="setCategoryFilter('reconstruction', this)" data-key="cat-reconstruction">🛠️ Реконструкции</button>
             </div>
             
             <div class="filter-row">
-                <span class="filter-label" data-key="filter-sub-label">Материал / Тип:</span>
-                <button class="filter-btn sub-btn active" onclick="setSubFilter('all', this)" data-key="sub-all">Всички видове</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('wood', this)" data-key="sub-wood">Дървени</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('stone', this)" data-key="sub-stone">Каменни</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('concrete', this)" data-key="sub-concrete">Бетонни / Масивни</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('prefabricated', this)" data-key="sub-prefab">Сглобяеми</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('modern', this)" data-key="sub-modern">Модерни</button>
-                <button class="filter-btn sub-btn" onclick="setSubFilter('bulgarian', this)" data-key="sub-bulgarian">Български стил</button>
+                <span class="filter-label" data-key="filter-sub-label">Стил:</span>
+                <button class="filter-btn sub-btn active" onclick="setSubFilter('all', this)" data-key="sub-all">Всички стилове</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('classic', this)" data-key="sub-classic">Класически</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('minimalist', this)" data-key="sub-minimalist">Минималистичен</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('modern', this)" data-key="sub-modern">Модерен</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('scandinavian', this)" data-key="sub-scandinavian">Скандинавски</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('industrial', this)" data-key="sub-industrial">Индустриален</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('bulgarian', this)" data-key="sub-bulgarian">Български</button>
+                <button class="filter-btn sub-btn" onclick="setSubFilter('mediterranean', this)" data-key="sub-mediterranean">Средиземноморски</button>
                 
                 <div style="margin-left: auto;">
                     <button class="reset-link" onclick="resetFilters()" data-key="reset-filters">Изчисти филтрите</button>
@@ -403,8 +417,12 @@
 
                 let matchesCat = true;
                 if (activeCategory !== 'all') {
-                    if (activeCategory === 'houses') {
-                        matchesCat = catStr.includes('residential') || catStr.includes('жилищна') || catStr.includes('house') || catStr.includes('къщ');
+                    if (activeCategory === 'residential') {
+                        matchesCat = catStr.includes('residential') || catStr.includes('жилищ') || catStr.includes('house') || catStr.includes('къщ');
+                    } else if (activeCategory === 'multifamily') {
+                        matchesCat = catStr.includes('multifamily') || catStr.includes('многофамил') || catStr.includes('multi');
+                    } else if (activeCategory === 'commercial') {
+                        matchesCat = catStr.includes('commercial') || catStr.includes('търгов') || catStr.includes('commercial');
                     } else if (activeCategory === 'interior') {
                         matchesCat = catStr.includes('interior') || catStr.includes('интериор');
                     } else if (activeCategory === 'public') {
@@ -421,12 +439,13 @@
                 let matchesSub = true;
                 if (activeSubFilter !== 'all') {
                     let subKey = activeSubFilter;
-                    if (subKey === 'wood') subKey = 'дърв';
-                    else if (subKey === 'stone') subKey = 'кам';
-                    else if (subKey === 'concrete') subKey = 'бетон';
-                    else if (subKey === 'prefabricated') subKey = 'сглобяем';
+                    if (subKey === 'classic') subKey = 'класич';
+                    else if (subKey === 'minimalist') subKey = 'минимал';
                     else if (subKey === 'modern') subKey = 'модерн';
-                    else if (subKey === 'bulgarian') subKey = 'български';
+                    else if (subKey === 'scandinavian') subKey = 'скандинав';
+                    else if (subKey === 'industrial') subKey = 'индустриал';
+                    else if (subKey === 'bulgarian') subKey = 'българ';
+                    else if (subKey === 'mediterranean') subKey = 'средиземномор';
 
                     matchesSub = materialStr.includes(subKey) || styleStr.includes(subKey) || title.includes(subKey);
                 }
