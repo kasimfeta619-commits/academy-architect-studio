@@ -235,13 +235,18 @@
 
         document.addEventListener("DOMContentLoaded", async function() {
             // Инициализация на картата с център около България
-            const map = L.map('projectMap').setView([41.5653, 23.7294], 8);
+            const map = L.map('projectMap').setView([42.7339, 25.4858], 7);
 
-            // Сателитен слой "като земя" (Esri World Imagery)
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            // Надежден слой от CartoDB, който се зарежда моментално без грешки
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                 maxZoom: 19,
-                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
             }).addTo(map);
+
+            // Принудително преизчисляване на размера, за да се елиминира сигурно всякакво бяло поле
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 250);
 
             // Динамично зареждане на точките от Firebase базата данни (админ панела)
             try {
@@ -252,7 +257,6 @@
                         const loc = doc.data();
                         let lat, lng;
                         
-                        // Проверяваме различните възможни формати на координатите от админа
                         if (Array.isArray(loc.coordinates)) {
                             lat = parseFloat(loc.coordinates[0]);
                             lng = parseFloat(loc.coordinates[1]);
