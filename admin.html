@@ -545,6 +545,9 @@
 
                         resolve(canvas.toDataURL('image/jpeg', quality));
                     };
+                    img.onerror = () => {
+                        resolve(event.target.result); // Fallback към оригиналния файл при проблем с кеширането/декодирането
+                    };
                 };
             });
         }
@@ -1012,20 +1015,17 @@
             }
         }
 
-        // КОРИГИРАНА ФУНКЦИЯ ЗА ЗАРЕЖДАНЕ НА МНЕНИЯТА (ВКЛЮЧВА ПОДКОЛЕКЦИИТЕ КЪМ ПРОЕКТИТЕ)
         async function renderAdminReviews() {
             const listContainer = document.getElementById('adminReviewsList');
             if (!listContainer) return;
             let allReviews = [];
             
             try {
-                // 1. Проверяваме главната колекция 'reviews' (ако има такива)
                 const snapshot = await db.collection('reviews').get();
                 snapshot.forEach(doc => {
                     allReviews.push({ id: doc.id, source: 'collection', ...doc.data() });
                 });
 
-                // 2. Проверяваме поле-масив reviews в самите проекти (ако се ползва)
                 const projSnapshot = await db.collection('projects').get();
                 
                 for (const doc of projSnapshot.docs) {
@@ -1033,7 +1033,6 @@
                     const projectId = doc.id;
                     const projectTitle = pData.title || 'Проект';
 
-                    // А) Проверка за поле-масив 'reviews' в документа на проекта
                     if (pData.reviews && Array.isArray(pData.reviews)) {
                         pData.reviews.forEach((rev, idx) => {
                             allReviews.push({
@@ -1050,7 +1049,6 @@
                         });
                     }
 
-                    // Б) Проверка за ПОДКОЛЕКЦИЯ 'reviews' към съответния проект (projects/{id}/reviews)
                     try {
                         const subReviewsSnap = await db.collection('projects').doc(projectId).collection('reviews').get();
                         subReviewsSnap.forEach(subDoc => {
