@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-key="page-title-catalog">Детайли за проект | Academy Architect Studio</title>
     
-    <!-- Зареждане на файла с преводи (увери се, че името съвпада с твоя файл) -->
+    <!-- Зареждане на файла с преводи -->
     <script src="translations_2.js"></script>
 
     <!-- Проверка за Тъмна тема преди зареждане -->
@@ -35,7 +35,7 @@
         .header-actions { display: flex; align-items: center; gap: 15px; }
         .lang-switcher { display: flex; gap: 5px; }
         .lang-btn { background: none; border: 1px solid #eadecc; padding: 4px 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: inherit; border-radius: 4px; }
-        .lang-btn:hover { background: #eadecc; }
+        .lang-btn:hover, .lang-btn.active { background: #eadecc; color: #1a1a1a; }
         .btn-login { text-decoration: none; color: inherit; font-size: 0.85rem; font-weight: 600; padding: 6px 14px; border: 1px solid #1a1a1a; border-radius: 4px; }
 
         /* Падащо меню за бърз преглед */
@@ -281,10 +281,10 @@
                         ${galleryHTML}
                     `;
 
-                    // Прилагаме активния език веднага след като динамичният HTML се зареди
-                    const currentLang = localStorage.getItem('siteLang') || 'bg';
+                    // Принудително прилагане на езика след като данните се заредят
+                    const savedLang = localStorage.getItem('siteLang') || 'bg';
                     if (typeof setLanguage === 'function') {
-                        setLanguage(currentLang);
+                        setLanguage(savedLang);
                     }
 
                 } else {
@@ -299,18 +299,25 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadProjectDetails();
 
-            // Връзка с бутоните за превод
+            // Директно закачане на събитията към бутоните за превод
             const btnBg = document.getElementById('btn-bg');
             const btnEn = document.getElementById('btn-en');
 
             if (btnBg) {
-                btnBg.addEventListener('click', () => {
-                    if (typeof setLanguage === 'function') setLanguage('bg');
+                btnBg.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (typeof setLanguage === 'function') {
+                        setLanguage('bg');
+                    }
                 });
             }
+
             if (btnEn) {
-                btnEn.addEventListener('click', () => {
-                    if (typeof setLanguage === 'function') setLanguage('en');
+                btnEn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (typeof setLanguage === 'function') {
+                        setLanguage('en');
+                    }
                 });
             }
         });
