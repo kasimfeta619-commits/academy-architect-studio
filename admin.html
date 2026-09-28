@@ -125,6 +125,11 @@
         .modal-close:hover { color: #1a1a1a; }
         .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
         .preview-grid img { width: 100%; height: 100px; object-fit: cover; border: 1px solid #eadecc; }
+  .existing-assets { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 10px; }
+  .existing-asset { position: relative; width: 110px; height: 82px; border: 1px solid #d4c8b6; background: #fff; border-radius: 4px; overflow: hidden; }
+  .existing-asset img { width: 100%; height: 100%; object-fit: cover; }
+  .existing-asset-remove { position: absolute; top: 3px; right: 3px; width: 24px; height: 24px; border: 0; border-radius: 50%; background: #b33236; color: #fff; font-weight: 700; cursor: pointer; line-height: 20px; }
+  .existing-assets:empty { display: none; }
 
         body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
         body.dark-mode header.navbar { background: #1a1a1a !important; border-bottom-color: #2c2c2c !important; }
@@ -326,9 +331,35 @@
                 <div class="form-group"><label>Етажи</label><input type="text" id="floors"></div>
                 <div class="form-group"><label>Спални</label><input type="text" id="beds"></div>
                 <div class="form-group"><label>Бани</label><input type="text" id="baths"></div>
-                <div class="form-group"><label>Материал / Конструкция</label><input type="text" id="material"></div>
-                <div class="form-group"><label>Стил</label><input type="text" id="style"></div>
-                <div class="form-group"><label>Цена (лв.)</label><input type="text" id="price"></div>
+                <div class="form-group">
+                    <label>Материал / Конструкция</label>
+                    <select id="material">
+                        <option value="">Изберете конструкция</option>
+                        <option value="Стоманобетон с тухли">Стоманобетон с тухли</option>
+                        <option value="Стоманобетон с газобетон">Стоманобетон с газобетон</option>
+                        <option value="Стоманобетонна конструкция">Стоманобетонна конструкция</option>
+                        <option value="Метална конструкция">Метална конструкция</option>
+                        <option value="Дървена конструкция">Дървена конструкция</option>
+                        <option value="Сглобяема конструкция">Сглобяема конструкция</option>
+                        <option value="Каменна конструкция">Каменна конструкция</option>
+                        <option value="Смесена конструкция">Смесена конструкция</option>
+                        <option value="Друго">Друго</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Стил</label>
+                    <select id="style">
+                        <option value="">Изберете стил</option>
+                        <option value="Classic">Класически</option>
+                        <option value="Minimalist">Минималистичен</option>
+                        <option value="Modern">Модерен</option>
+                        <option value="Scandinavian">Скандинавски</option>
+                        <option value="Industrial">Индустриален</option>
+                        <option value="Bulgarian">Български</option>
+                        <option value="Mediterranean">Средиземноморски</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Цена (€)</label><input type="text" id="price" inputmode="decimal" placeholder="напр. 25 000"></div>
                 
                 <div style="background: #eadecc; padding: 15px; margin-bottom: 20px; border: 1px solid #d4c8b6;">
                     <h4 style="margin-top: 0; font-size: 0.9rem; text-transform: uppercase; color: #1a1a1a;">Видео презентация (Изберете едно от двете)</h4>
@@ -347,11 +378,11 @@
 
                 <hr style="border: 0; border-top: 1px solid #eadecc; margin: 25px 0;">
                 
-                <div class="form-group"><label>Главна снимка</label><input type="file" id="mainImg"></div>
-                <div class="form-group"><label>Разпределения / Планове (множество етажи)</label><input type="file" id="planImgs" multiple></div>
-                <div class="form-group"><label>Фасади (може да изберете няколко)</label><input type="file" id="facadeImgs" multiple></div>
-                <div class="form-group"><label>Разрез</label><input type="file" id="sectionImg"></div>
-                <div class="form-group"><label>Допълнителни визуализации</label><input type="file" id="galleryImgs" multiple></div>
+                <div class="form-group"><label>Главна снимка</label><div id="mainImageExisting" class="existing-assets"></div><input type="file" id="mainImg" accept="image/*"></div>
+                <div class="form-group"><label>Разпределения / Планове (множество етажи)</label><div id="floorPlansExisting" class="existing-assets"></div><input type="file" id="planImgs" accept="image/*" multiple></div>
+                <div class="form-group"><label>Фасади (може да изберете няколко)</label><div id="facadesExisting" class="existing-assets"></div><input type="file" id="facadeImgs" accept="image/*" multiple></div>
+                <div class="form-group"><label>Разрез</label><div id="sectionImageExisting" class="existing-assets"></div><input type="file" id="sectionImg" accept="image/*"></div>
+                <div class="form-group"><label>Допълнителни визуализации</label><div id="galleryExisting" class="existing-assets"></div><input type="file" id="galleryImgs" accept="image/*" multiple></div>
 
                 <div class="form-group checkbox-group" style="margin-top: 20px;">
                     <input type="checkbox" id="isFav"> 
@@ -809,7 +840,7 @@
 
                 <p><strong>Описание:</strong> ${p.desc || 'Няма описание'}</p>
                 <p><strong>Детайли:</strong> Площ: ${p.area || '-'} м² | Етажи: ${p.floors || '-'} | Спални: ${p.beds || '-'} | Бани: ${p.baths || '-'} | Стил: ${p.style || '-'}</p>
-                <p><strong>Цена:</strong> ${p.price ? p.price + ' лв.' : '-'}</p>
+                <p><strong>Цена:</strong> ${p.price ? p.price + ' €' : '-'}</p>
                 
                 ${floorPlansHtml ? `<h4>Планове / Разпределения</h4><div class="preview-grid">${floorPlansHtml}</div>` : ''}
                 ${facadeHtml ? `<h4>Фасади</h4><div class="preview-grid">${facadeHtml}</div>` : ''}
@@ -878,8 +909,35 @@
             }
         }
 
-        async function editProject(id) {
-            let p = null;
+window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: [], sectionImage: '', gallery: [] };
+  window.removedProjectAssets = new Set();
+
+  function renderExistingAssets() {
+  const groups = {
+    mainImage: ['mainImageExisting', window.existingProjectAssets.mainImage ? [window.existingProjectAssets.mainImage] : []],
+    floorPlans: ['floorPlansExisting', window.existingProjectAssets.floorPlans],
+    facadeImages: ['facadesExisting', window.existingProjectAssets.facadeImages],
+    sectionImage: ['sectionImageExisting', window.existingProjectAssets.sectionImage ? [window.existingProjectAssets.sectionImage] : []],
+    gallery: ['galleryExisting', window.existingProjectAssets.gallery]
+  };
+  Object.entries(groups).forEach(([key, [containerId, urls]]) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = urls.map((url, index) => `<div class="existing-asset"><img src="${url}" alt="Съществуваща снимка"><button type="button" class="existing-asset-remove" aria-label="Премахни снимката" onclick="removeExistingAsset('${key}', ${index})">×</button></div>`).join('');
+  });
+  }
+
+  function removeExistingAsset(key, index) {
+  const urls = key === 'mainImage' || key === 'sectionImage' ? [window.existingProjectAssets[key]] : window.existingProjectAssets[key];
+  const url = urls[index];
+  if (url) window.removedProjectAssets.add(`${key}:${url}`);
+  if (key === 'mainImage' || key === 'sectionImage') window.existingProjectAssets[key] = '';
+  else window.existingProjectAssets[key].splice(index, 1);
+  renderExistingAssets();
+  }
+
+  async function editProject(id) {
+  let p = null;
             try {
                 const docSnap = await db.collection('projects').doc(id).get();
                 if (docSnap.exists) p = { id: docSnap.id, ...docSnap.data() };
@@ -896,9 +954,18 @@
             document.getElementById('floors').value = p.floors || '';
             document.getElementById('beds').value = p.beds || '';
             document.getElementById('baths').value = p.baths || '';
-            document.getElementById('material').value = p.material || '';
-            document.getElementById('style').value = p.style || '';
-            document.getElementById('price').value = p.price || '';
+document.getElementById('material').value = p.material || '';
+  document.getElementById('style').value = p.style || '';
+  document.getElementById('price').value = p.price || '';
+  window.existingProjectAssets = {
+  mainImage: p.mainImage || '',
+  floorPlans: Array.isArray(p.floorPlans) ? [...p.floorPlans] : [],
+  facadeImages: Array.isArray(p.facadeImages) ? [...p.facadeImages] : [],
+  sectionImage: p.sectionImage || '',
+  gallery: Array.isArray(p.gallery) ? [...p.gallery] : []
+  };
+  window.removedProjectAssets = new Set();
+  renderExistingAssets();
             document.getElementById('youtubeUrl').value = p.youtubeUrl || '';
             
             window.existingVideoUrl = p.videoUrl || '';
@@ -918,9 +985,12 @@
             switchTab('uploadTab', document.getElementById('uploadTabBtn'));
         }
 
-        function resetProjectForm() {
-            document.getElementById('uploadForm').reset();
-            document.getElementById('editIndex').value = '';
+function resetProjectForm() {
+  document.getElementById('uploadForm').reset();
+  window.existingProjectAssets = { mainImage: '', floorPlans: [], facadeImages: [], sectionImage: '', gallery: [] };
+  window.removedProjectAssets = new Set();
+  renderExistingAssets();
+  document.getElementById('editIndex').value = '';
             document.getElementById('currentVideoInfo').innerText = '';
             window.existingVideoUrl = '';
             document.getElementById('formTitle').innerText = "Качване на нов проект";
@@ -1011,25 +1081,25 @@
                 }
 
                 const mainFile = document.getElementById('mainImg').files[0];
-                const mainImage = mainFile ? await compressImage(mainFile, 800, 0.6) : '';
+                const mainImage = mainFile ? await compressImage(mainFile, 800, 0.6) : (editId ? window.existingProjectAssets.mainImage : '');
 
                 const planFiles = document.getElementById('planImgs').files;
-                let floorPlans = [];
+                let floorPlans = editId ? [...window.existingProjectAssets.floorPlans] : [];
                 for (let file of planFiles) {
                     floorPlans.push(await compressImage(file, 800, 0.6));
                 }
 
                 const facadeFiles = document.getElementById('facadeImgs').files;
-                let facadeImages = [];
+                let facadeImages = editId ? [...window.existingProjectAssets.facadeImages] : [];
                 for (let file of facadeFiles) {
                     facadeImages.push(await compressImage(file, 800, 0.6));
                 }
 
                 const sectionFile = document.getElementById('sectionImg').files[0];
-                const sectionImage = sectionFile ? await compressImage(sectionFile, 800, 0.6) : '';
+                const sectionImage = sectionFile ? await compressImage(sectionFile, 800, 0.6) : (editId ? window.existingProjectAssets.sectionImage : '');
 
                 const galleryFiles = document.getElementById('galleryImgs').files;
-                let gallery = [];
+                let gallery = editId ? [...window.existingProjectAssets.gallery] : [];
                 for (let file of galleryFiles) {
                     gallery.push(await compressImage(file, 800, 0.6));
                 }
