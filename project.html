@@ -21,9 +21,13 @@
         .back-link { display: inline-block; margin-bottom: 20px; color: #8c8275; text-decoration: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         .back-link:hover { color: #1a1a1a; }
         
-        .project-header { margin-bottom: 25px; }
+        .project-header { margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px; }
         .project-title { font-size: 2.3rem; font-weight: 400; color: inherit; margin: 5px 0 0 0; }
         .project-style-tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #8c8275; font-weight: 700; }
+
+        /* Падащо меню за бърз преглед */
+        .quick-switch-box { display: flex; align-items: center; gap: 10px; }
+        .quick-switch-box select { padding: 8px 12px; border: 1px solid #eadecc; background: #f4eee5; color: inherit; font-size: 0.85rem; border-radius: 4px; outline: none; cursor: pointer; }
 
         /* ТРИКОЛОНЕН ГРИД: Снимка (ляво) | Информация (среда) | Ревюта (дясно) */
         .top-section-grid { 
@@ -65,7 +69,8 @@
         body.dark-mode .project-sidebar, 
         body.dark-mode .community-opinion-card,
         body.dark-mode .technical-drawings-section, 
-        body.dark-mode .gallery-section { background: #1a1a1a !important; border-color: #2c2c2c !important; }
+        body.dark-mode .gallery-section,
+        body.dark-mode .quick-switch-box select { background: #1a1a1a !important; border-color: #2c2c2c !important; color: #ffffff !important; }
         body.dark-mode .spec-row { border-bottom-color: #2c2c2c !important; }
 
         @media (max-width: 1100px) {
@@ -122,19 +127,31 @@
 
     <!-- СВЪРЗВАНЕ С FIREBASE -->
     <script type="module">
-        import { db, doc, getDoc } from './firebase-config.js';
+        import { db, doc, getDoc, collection, getDocs } from './firebase-config.js';
 
         async function loadProjectDetails() {
             const urlParams = new URLSearchParams(window.location.search);
-            const projectId = urlParams.get('id') || urlParams.get('index'); 
+            let projectId = urlParams.get('id') || urlParams.get('index'); 
             const container = document.getElementById('projectDetailsArea');
 
-            if (!projectId) {
-                container.innerHTML = `<h2>Проектът не е намерен.</h2><p><a href="projects.html" class="back-link">Върнете се към проектите</a></p>`;
-                return;
-            }
-
             try {
+                // Извличане на всички проекти за падащото меню и евентуален автоматичен избор
+                const querySnapshot = await getDocs(collection(db, "projects"));
+                if (querySnapshot.empty) {
+                    container.innerHTML = `<h2>Няма намерени проекти в базата данни.</h2>`;
+                    return;
+                }
+
+                let allProjects = [];
+                querySnapshot.forEach((document) => {
+                    allProjects.push({ id: document.id, ...document.data() });
+                });
+
+                // Ако няма подадено ID в линка, взимаме автоматично първия проект
+                if (!projectId) {
+                    projectId = allProjects[0].id;
+                }
+
                 const docRef = doc(db, "projects", projectId);
                 const docSnap = await getDoc(docRef);
 
@@ -142,7 +159,7 @@
                     const p = docSnap.data();
                     const mainImgSrc = p.mainImage || (p.gallery && p.gallery[0]) || 'assets/main-graphic.png';
 
-                    // Подготовка на техническите чертежи
+                    // Технически чертежи
                     let techCards = [];
                     if (p.floorPlans && p.floorPlans.length > 0) {
                         p.floorPlans.forEach((plan, i) => {
@@ -158,38 +175,41 @@
                         techCards.push(`<div class="tech-card"><span style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:5px; padding: 0 10px;">Разрез</span><img src="${p.sectionImage}" alt="Разрез"></div>`);
                     }
 
-                    let techSectionHTML = '';
-                    if (techCards.length > 0) {
-                        techSectionHTML = `
-                            <div class="technical-drawings-section">
-                                <span class="spec-label">Техническа документация</span>
-                                <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Чертежи и Разрези</h3>
-                                <div class="tech-grid">
-                                    ${techCards.join('')}
-                                </div>
-                            </div>
-                        `;
-                    }
+                    let techSectionHTML = techCards.length > 0 ? `
+                        <div class="technical-drawings-section">
+                            <span class="spec-label">Техническа документация</span>
+                            <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Чертежи и Разрези</h3>
+                            <div class="tech-grid">${techCards.join('')}</div>
+                        </div>
+                    ` : '';
 
-                    // Подготовка на галерията
-                    let galleryHTML = '';
-                    if (p.gallery && p.gallery.length > 0) {
-                        galleryHTML = `
-                            <div class="gallery-section">
-                                <span class="spec-label">Галерия</span>
-                                <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Визуализации</h3>
-                                <div class="gallery-grid">
-                                    ${p.gallery.map(img => `<img src="${img}" alt="Визуализация">`).join('')}
-                                </div>
-                            </div>
-                        `;
-                    }
+                    // Галерия
+                    let galleryHTML = p.gallery && p.gallery.length > 0 ? `
+                        <div class="gallery-section">
+                            <span class="spec-label">Галерия</span>
+                            <h3 style="font-size: 1.2rem; font-weight: 400; margin: 5px 0 15px 0;">Визуализации</h3>
+                            <div class="gallery-grid">${p.gallery.map(img => `<img src="${img}" alt="Визуализация">`).join('')}</div>
+                        </div>
+                    ` : '';
 
-                    // Рендериране в 3 колони (Снимка | Project Information | Community Opinion)
+                    // Опции за падащото меню
+                    let optionsHTML = allProjects.map(proj => `
+                        <option value="${proj.id}" ${proj.id === projectId ? 'selected' : ''}>${proj.title || proj.id}</option>
+                    `).join('');
+
+                    // Финално рендериране
                     container.innerHTML = `
                         <div class="project-header">
-                            <span class="project-style-tag">${p.style || 'Архитектурен проект'}</span>
-                            <h1 class="project-title">${p.title}</h1>
+                            <div>
+                                <span class="project-style-tag">${p.style || 'Архитектурен проект'}</span>
+                                <h1 class="project-title">${p.title}</h1>
+                            </div>
+                            <div class="quick-switch-box">
+                                <span class="spec-label" style="margin:0;">Избери проект:</span>
+                                <select id="projectSelector" onchange="if(this.value) window.location.href='project_3.html?id=' + encodeURIComponent(this.value);">
+                                    ${optionsHTML}
+                                </select>
+                            </div>
                         </div>
 
                         <div class="top-section-grid">
@@ -230,11 +250,11 @@
                     `;
 
                 } else {
-                    container.innerHTML = `<h2>Проектът не е намерен или е бил изтрит.</h2><p><a href="projects.html" class="back-link">Върнете се към проектите</a></p>`;
+                    container.innerHTML = `<h2>Проектът не е намерен.</h2><p><a href="projects.html" class="back-link">Върнете се към проектите</a></p>`;
                 }
             } catch (err) {
                 console.error("Грешка при зареждане на проекта:", err);
-                container.innerHTML = `<h2>Грешка при зареждане на проекта.</h2><p><a href="projects.html" class="back-link">Върнете се към проектите</a></p>`;
+                container.innerHTML = `<h2>Грешка при връзка с базата данни.</h2>`;
             }
         }
 
