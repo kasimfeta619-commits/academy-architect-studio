@@ -265,11 +265,29 @@
 
         <div id="settingsTab" class="admin-section">
             <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Общи настройки / Начален екран (Hero)</h3>
-            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можеш да променяш основните надписи на сайта директно, без да влизаш във Firebase.</p>
+            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можеш да променяш основните надписи и видео визуализацията на началния екран директно в облака.</p>
             <form id="settingsForm">
-                <div class="form-group"><label>Главном заглавие (Hero Title)</label><input type="text" id="siteHeroTitle" placeholder="напр. Архитектурно студио и дизайн"></div>
+                <div class="form-group"><label>Главно заглавие (Hero Title)</label><input type="text" id="siteHeroTitle" placeholder="напр. Архитектурно студио и дизайн"></div>
                 <div class="form-group"><label>Подзаглавие / Описание</label><textarea id="siteHeroSubtitle" style="height: 100px;" placeholder="напр. Създаваме пространства с характер..."></textarea></div>
-                <button type="submit" class="btn-action">Запази настройките в облака</button>
+                
+                <!-- НОВОТО ПОЛЕ ЗА HERO ВИДЕО -->
+                <div style="background: #eadecc; padding: 15px; margin-top: 20px; margin-bottom: 20px; border: 1px solid #d4c8b6;">
+                    <h4 style="margin-top: 0; font-size: 0.9rem; text-transform: uppercase; color: #1a1a1a;">Hero Видео Настройка (Начална страница)</h4>
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Вариант 1: Линк към видео (URL / YouTube / MP4 линк)</label>
+                        <input type="text" id="siteHeroVideoUrl" placeholder="напр. https://example.com/video.mp4">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Вариант 2: Качване на .mp4 файл директно от компютъра</label>
+                        <input type="file" id="siteHeroVideoFile" accept="video/mp4,video/webm">
+                        <span id="currentHeroVideoInfo" style="font-size: 0.8rem; color: #8c8275; margin-top: 4px;"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-action" id="settingsSubmitBtn">Запази настройките в облака</button>
+                <div id="settingsLoader" style="display:none; margin-top: 10px; font-weight: 600; color: #8c8275; text-align: center;">Качване на видеото и запис... Моля, изчакайте.</div>
             </form>
         </div>
 
@@ -696,6 +714,9 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Променлива за запазване на съществуващото качено видео за Hero секцията
+        window.existingHeroVideoUrl = '';
+
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 const aboutDoc = await db.collection('siteSettings').doc('about').get();
@@ -710,6 +731,12 @@
                     const hData = heroDoc.data();
                     document.getElementById('siteHeroTitle').value = hData.title || '';
                     document.getElementById('siteHeroSubtitle').value = hData.subtitle || '';
+                    document.getElementById('siteHeroVideoUrl').value = hData.videoUrl || '';
+                    
+                    window.existingHeroVideoUrl = hData.videoUrl || '';
+                    if (window.existingHeroVideoUrl) {
+                        document.getElementById('currentHeroVideoInfo').innerText = "✓ Има активно Hero видео в системата.";
+                    }
                 }
 
                 const contactDoc = await db.collection('siteSettings').doc('contact').get();
@@ -754,17 +781,44 @@
             }
         });
 
+        // Запазване на Hero настройките (вкл. видео файл или линк)
         document.getElementById('settingsForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const heroData = {
-                title: document.getElementById('siteHeroTitle').value,
-                subtitle: document.getElementById('siteHeroSubtitle').value
-            };
+            const loader = document.getElementById('settingsLoader');
+            const submitBtn = document.getElementById('settingsSubmitBtn');
+
+            loader.style.display = 'block';
+            submitBtn.disabled = true;
+
             try {
+                const videoFileInput = document.getElementById('siteHeroVideoFile');
+                let finalVideoUrl = document.getElementById('siteHeroVideoUrl').value.trim() || window.existingHeroVideoUrl;
+
+                // Ако потребителят е избрал файл от компютъра за качекване във Firebase Storage
+                if (videoFileInput.files && videoFileInput.files[0]) {
+                    const videoFile = videoFileInput.files[0];
+                    const storageRef = storage.ref(`hero_videos/${Date.now()}_${videoFile.name}`);
+                    const uploadSnapshot = await storageRef.put(videoFile);
+                    finalVideoUrl = await uploadSnapshot.ref.getDownloadURL();
+                }
+
+                const heroData = {
+                    title: document.getElementById('siteHeroTitle').value,
+                    subtitle: document.getElementById('siteHeroSubtitle').value,
+                    videoUrl: finalVideoUrl
+                };
+
                 await db.collection('siteSettings').doc('hero').set(heroData);
-                alert('Настройките на началния екран (Hero) са успешно запазени във Firebase!');
+                window.existingHeroVideoUrl = finalVideoUrl;
+                document.getElementById('siteHeroVideoUrl').value = finalVideoUrl;
+                document.getElementById('currentHeroVideoInfo').innerText = "✓ Видео файлът е успешно обновен.";
+                
+                alert('Настройките на началния екран (Hero) и видеото са успешно запазени във Firebase!');
             } catch (err) {
                 alert('Грешка при запис: ' + err.message);
+            } finally {
+                loader.style.display = 'none';
+                submitBtn.disabled = false;
             }
         });
 
