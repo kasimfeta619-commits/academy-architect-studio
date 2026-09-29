@@ -12,6 +12,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
+    <!-- Leaflet CSS & JS за интерактивната карта -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     <script>
         (function() {
             const savedTheme = localStorage.getItem('siteTheme');
@@ -155,6 +159,15 @@
         .project-form-tab.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
         .project-form-zone { display: none; }
         .project-form-zone.active { display: block; }
+
+        /* Стил за интерактивната карта в админ панела */
+        #adminPickerMap {
+            width: 100%;
+            height: 320px;
+            border: 1px solid #eadecc;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
 
         body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
         body.dark-mode header.navbar { background: #1a1a1a !important; border-bottom-color: #2c2c2c !important; }
@@ -308,7 +321,7 @@
             </form>
         </div>
 
-        <!-- УПРАВЛЕНИЕ НА КАРТАТА -->
+        <!-- УПРАВЛЕНИЕ НА КАРТАТА С ИНТЕРАКТИВЕН ИЗБОР -->
         <div id="mapTab" class="admin-section">
             <h3 id="mapFormTitle" style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Управление на точките на картата</h3>
             
@@ -320,6 +333,12 @@
                 <div class="form-group">
                     <label>Име на град / обект *</label>
                     <input type="text" id="mapTitle" required placeholder="напр. Пловдив">
+                </div>
+
+                <!-- Интерактивна карта за избор с мишка -->
+                <div class="form-group">
+                    <label>Кликнете върху картата, за да изберете точното място *</label>
+                    <div id="adminPickerMap"></div>
                 </div>
                 
                 <div style="display: flex; gap: 15px;">
@@ -609,6 +628,47 @@
             }
         }
 
+        let adminMap = null;
+        let adminMarker = null;
+
+        function initAdminMap(defaultLat = 42.6977, defaultLng = 23.3219) {
+            const mapContainer = document.getElementById('adminPickerMap');
+            if (!mapContainer) return;
+
+            // Ако картата вече е инициализирана, премахваме я преди повторно създаване
+            if (adminMap) {
+                adminMap.remove();
+                adminMap = null;
+            }
+
+            adminMap = L.map('adminPickerMap').setView([defaultLat, defaultLng], 7);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(adminMap);
+
+            // Поставяме начален маркер
+            adminMarker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(adminMap);
+
+            // При кликване върху картата местя маркера и актуализирам полетата
+            adminMap.on('click', function(e) {
+                const lat = e.latlng.lat.toFixed(6);
+                const lng = e.latlng.lng.toFixed(6);
+                
+                adminMarker.setLatLng([lat, lng]);
+                document.getElementById('mapLat').value = lat;
+                document.getElementById('mapLng').value = lng;
+            });
+
+            // При влачене на маркера също актуализираме полетата
+            adminMarker.on('dragend', function(e) {
+                const pos = adminMarker.getLatLng();
+                document.getElementById('mapLat').value = pos.lat.toFixed(6);
+                document.getElementById('mapLng').value = pos.lng.toFixed(6);
+            });
+        }
+
         function switchTab(tabId, btnElement) {
             document.querySelectorAll('.admin-section').forEach(section => {
                 section.classList.remove('active');
@@ -619,6 +679,16 @@
             
             document.getElementById(tabId).classList.add('active');
             if (btnElement) btnElement.classList.add('active');
+            
+            // Ако отваряме секцията с картата, инциализираме или презареждаме картата, за да се покаже коректно
+            if (tabId === 'mapTab') {
+                setTimeout(() => {
+                    const latVal = parseFloat(document.getElementById('mapLat').value) || 42.6977;
+                    const lngVal = parseFloat(document.getElementById('mapLng').value) || 23.3219;
+                    initAdminMap(latVal, lngVal);
+                }, 150);
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -657,6 +727,11 @@
             renderAdminTeam();
             renderAdminReviews();
             renderAdminMapLocations();
+            
+            // Инициализация на картата по подразбиране (ако сме директно на таба)
+            setTimeout(() => {
+                initAdminMap();
+            }, 200);
         });
 
         document.getElementById('aboutForm').addEventListener('submit', async (e) => {
@@ -755,6 +830,13 @@
             document.getElementById('mapLng').value = loc.lng || '';
             document.getElementById('mapDesc').value = loc.desc || '';
 
+            // Обновяваме позицията и на визуалната карта
+            if (adminMap && adminMarker) {
+                const newLatLng = [loc.lat || 42.6977, loc.lng || 23.3219];
+                adminMarker.setLatLng(newLatLng);
+                adminMap.setView(newLatLng, 12);
+            }
+
             document.getElementById('mapFormSubTitle').innerText = "Редактиране на локация: " + loc.title;
             document.getElementById('mapSubmitBtn').innerText = "Запази промените";
             document.getElementById('mapCancelBtn').style.display = 'block';
@@ -768,6 +850,12 @@
             document.getElementById('mapFormSubTitle').innerText = "Добави нов град / обект на картата";
             document.getElementById('mapSubmitBtn').innerText = "Добави точка на картата";
             document.getElementById('mapCancelBtn').style.display = 'none';
+            
+            if (adminMap && adminMarker) {
+                const defaultPos = [42.6977, 23.3219];
+                adminMarker.setLatLng(defaultPos);
+                adminMap.setView(defaultPos, 7);
+            }
         }
 
         async function deleteMapLocation(id) {
@@ -1603,7 +1691,7 @@
                     price: document.getElementById('price').value,
                     videoUrl: videoUrl,
                     youtubeUrl: youtubeUrl,
-                    isFavorite: document.getElementById('isFav').checked,
+                    isFavorite: document.getElementById('isFav'].checked,
                     mainImage, floorPlans, facadeImages, sectionImage, gallery
                 };
 

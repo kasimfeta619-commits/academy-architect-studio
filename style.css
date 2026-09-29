@@ -1,4 +1,4 @@
-о/* ==========================================
+/* ==========================================
    BASE RESET & VARIABLES (LIGHT MODE)
    ========================================== */
 * {
@@ -377,7 +377,6 @@ body {
     height: 100%;
     object-fit: fill;
     display: block;
-}
 }
 
 body.dark-mode #projectMap {
