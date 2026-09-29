@@ -311,7 +311,7 @@
 
             // Зареждане на точките от Firebase базата данни с коригирани граници
             try {
-                const mapSnapshot = await db.collection('map_locations').get();
+                const mapSnapshot = await db.collection('mapLocations').get();
                 
                 const minLat = 41.00, maxLat = 44.40;
                 const minLng = 22.20, maxLng = 28.70;
