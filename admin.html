@@ -242,6 +242,7 @@
 
         <div class="admin-nav-tabs">
             <button class="tab-btn active" onclick="switchTab('aboutTab', this)">За нас</button>
+            <button class="tab-btn" onclick="switchTab('settingsTab', this)">Настройки</button> <!-- НОВИЯТ ТАБ -->
             <button class="tab-btn" onclick="switchTab('teamTab', this)">Екип</button>
             <button class="tab-btn" onclick="switchTab('contactTab', this)">Контакти</button>
             <button class="tab-btn" onclick="switchTab('mapTab', this)">Карта</button>
@@ -259,6 +260,17 @@
                 <div class="form-group"><label>Заглавие</label><input type="text" id="aboutTitle"></div>
                 <div class="form-group"><label>Основен текст / Описание</label><textarea id="aboutDesc" style="height: 150px;"></textarea></div>
                 <button type="submit" class="btn-action">Запази промените "За нас"</button>
+            </form>
+        </div>
+
+        <!-- НОВА СЕКЦИЯ ЗА НАСТРОЙКИ (HERO / СЪДЪРЖАНИЕ) -->
+        <div id="settingsTab" class="admin-section">
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Общи настройки / Начален екран (Hero)</h3>
+            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можеш да променяш основните надписи на сайта директно, без да влизаш във Firebase.</p>
+            <form id="settingsForm">
+                <div class="form-group"><label>Главном заглавие (Hero Title)</label><input type="text" id="siteHeroTitle" placeholder="напр. Архитектурно студио и дизайн"></div>
+                <div class="form-group"><label>Подзаглавие / Описание</label><textarea id="siteHeroSubtitle" style="height: 100px;" placeholder="напр. Създаваме пространства с характер..."></textarea></div>
+                <button type="submit" class="btn-action">Запази настройките в облака</button>
             </form>
         </div>
 
@@ -635,7 +647,6 @@
             const mapContainer = document.getElementById('adminPickerMap');
             if (!mapContainer) return;
 
-            // Ако картата вече е инициализирана, премахваме я преди повторно създаване
             if (adminMap) {
                 adminMap.remove();
                 adminMap = null;
@@ -648,10 +659,8 @@
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(adminMap);
 
-            // Поставяме начален маркер
             adminMarker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(adminMap);
 
-            // При кликване върху картата местя маркера и актуализирам полетата
             adminMap.on('click', function(e) {
                 const lat = e.latlng.lat.toFixed(6);
                 const lng = e.latlng.lng.toFixed(6);
@@ -661,7 +670,6 @@
                 document.getElementById('mapLng').value = lng;
             });
 
-            // При влачене на маркера също актуализираме полетата
             adminMarker.on('dragend', function(e) {
                 const pos = adminMarker.getLatLng();
                 document.getElementById('mapLat').value = pos.lat.toFixed(6);
@@ -680,7 +688,6 @@
             document.getElementById(tabId).classList.add('active');
             if (btnElement) btnElement.classList.add('active');
             
-            // Корекция за картата: Опреснява се винаги при отваряне на таба, за да работи интерактивността
             if (tabId === 'mapTab') {
                 setTimeout(() => {
                     const latVal = parseFloat(document.getElementById('mapLat').value) || 42.6977;
@@ -702,6 +709,14 @@
                     const data = aboutDoc.data();
                     document.getElementById('aboutTitle').value = data.title || '';
                     document.getElementById('aboutDesc').value = data.desc || '';
+                }
+
+                // Зареждане на Hero настройките в новия таб
+                const heroDoc = await db.collection('siteSettings').doc('hero').get();
+                if (heroDoc.exists) {
+                    const hData = heroDoc.data();
+                    document.getElementById('siteHeroTitle').value = hData.title || '';
+                    document.getElementById('siteHeroSubtitle').value = hData.subtitle || '';
                 }
 
                 const contactDoc = await db.collection('siteSettings').doc('contact').get();
@@ -741,6 +756,21 @@
             try {
                 await db.collection('siteSettings').doc('about').set(aboutData);
                 alert('Страницата "За нас" е успешно обновена в облака!');
+            } catch (err) {
+                alert('Грешка при запис: ' + err.message);
+            }
+        });
+
+        // ЗАПИСВАНЕ НА HERO НАСТРОЙКИТЕ ОТ НОВИЯ ТАБ
+        document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const heroData = {
+                title: document.getElementById('siteHeroTitle').value,
+                subtitle: document.getElementById('siteHeroSubtitle').value
+            };
+            try {
+                await db.collection('siteSettings').doc('hero').set(heroData);
+                alert('Настройките на началния екран (Hero) са успешно запазени във Firebase!');
             } catch (err) {
                 alert('Грешка при запис: ' + err.message);
             }
@@ -828,7 +858,6 @@
             document.getElementById('mapLng').value = loc.lng || '';
             document.getElementById('mapDesc').value = loc.desc || '';
 
-            // Обновяваме позицията и на визуалната карта
             if (adminMap && adminMarker) {
                 const newLatLng = [loc.lat || 42.6977, loc.lng || 23.3219];
                 adminMarker.setLatLng(newLatLng);
