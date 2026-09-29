@@ -24,7 +24,6 @@
 
         .project-main-box { background: #f4eee5; border: 1px solid #eadecc; padding: 30px; margin-bottom: 30px; border-radius: 4px; }
         
-        /* Главна мрежа: лява колона (снимка + описание) и дясна колона (инфо + ревюта) */
         .project-top-grid { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 30px; align-items: start; }
         @media (max-width: 992px) { .project-top-grid { grid-template-columns: 1fr; } }
 
@@ -64,10 +63,15 @@
         .project-images-grid img { width: 100%; height: 220px; object-fit: cover; border-radius: 4px; border: 1px solid #eadecc; cursor: pointer; transition: transform 0.2s; }
         .project-images-grid img:hover { transform: scale(1.02); }
 
-        /* Lightbox стилове */
-        #imageModal { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
-        #modalImg { max-width: 90%; max-height: 90%; border: 2px solid #fff; border-radius: 4px; box-shadow: 0 0 25px rgba(0,0,0,0.7); }
-        .close-modal { position: absolute; top: 20px; right: 35px; color: #fff; font-size: 45px; font-weight: bold; cursor: pointer; }
+        /* Lightbox със слайд и бутони */
+        #imageModal { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
+        #modalImg { max-width: 85%; max-height: 85%; border: 2px solid #fff; border-radius: 4px; box-shadow: 0 0 25px rgba(0,0,0,0.7); object-fit: contain; }
+        .close-modal { position: absolute; top: 20px; right: 35px; color: #fff; font-size: 45px; font-weight: bold; cursor: pointer; z-index: 10000; }
+        
+        .prev-modal, .next-modal { position: absolute; top: 50%; transform: translateY(-50%); color: #fff; font-size: 50px; font-weight: bold; cursor: pointer; padding: 10px 20px; user-select: none; background: rgba(255,255,255,0.1); border-radius: 4px; transition: background 0.2s; z-index: 10000; }
+        .prev-modal:hover, .next-modal:hover { background: rgba(255,255,255,0.3); }
+        .prev-modal { left: 30px; }
+        .next-modal { right: 30px; }
 
         body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
         body.dark-mode header.navbar { background: #1a1a1a !important; border-bottom-color: #2c2c2c !important; }
@@ -100,10 +104,12 @@
         <p style="text-align: center; color: #8c8275; padding: 50px;" data-key="loading-project">Зареждане на детайлите за проекта...</p>
     </main>
 
-    <!-- Модален прозорец за уголемяване на снимките -->
+    <!-- Модален прозорец със стрелки за слайдване -->
     <div id="imageModal">
         <span class="close-modal" onclick="closeModal()">&times;</span>
+        <span class="prev-modal" onclick="changeImage(-1)">&#10094;</span>
         <img id="modalImg" alt="Уголемена снимка">
+        <span class="next-modal" onclick="changeImage(1)">&#10095;</span>
     </div>
 
     <script>
@@ -146,6 +152,10 @@
         let allProjectsList = [];
         let currentProjectId = null;
         let selectedRating = 5;
+
+        // Променливи за слайдъра на снимките
+        let currentModalImages = [];
+        let currentModalIndex = 0;
 
         async function initProjectPage() {
             currentProjectId = getProjectIdFromUrl();
@@ -237,20 +247,20 @@
                 <div style="margin-top: 40px;">
                     <div class="section-category-title">${currentLang === 'en' ? 'Technical Documentation' : 'Техническа документация'}</div>
                     <h3 class="section-heading">${currentLang === 'en' ? 'Floor Plans' : 'Разпределения по етажи'}</h3>
-                    <div class="project-images-grid">${project.floorPlans.map(img => `<img src="${img}" onclick="openModal('${img}')" alt="Floor Plan">`).join('')}</div>
+                    <div class="project-images-grid">${project.floorPlans.map((img, idx) => `<img src="${img}" onclick="openModal('floorPlans', ${idx})" alt="Floor Plan">`).join('')}</div>
                 </div>` : '';
 
             let facadeHtml = project.facadeImages && project.facadeImages.length ? `
                 <div style="margin-top: 40px;">
                     <div class="section-category-title">${currentLang === 'en' ? 'Technical Documentation' : 'Техническа документация'}</div>
                     <h3 class="section-heading">${currentLang === 'en' ? 'Facades & Sections' : 'Фасади и Разрези'}</h3>
-                    <div class="project-images-grid">${project.facadeImages.map(img => `<img src="${img}" onclick="openModal('${img}')" alt="Facade">`).join('')}</div>
+                    <div class="project-images-grid">${project.facadeImages.map((img, idx) => `<img src="${img}" onclick="openModal('facadeImages', ${idx})" alt="Facade">`).join('')}</div>
                 </div>` : '';
 
             let galleryHtml = project.gallery && project.gallery.length ? `
                 <div style="margin-top: 40px;">
                     <h3 class="section-heading">${currentLang === 'en' ? 'Gallery' : 'Галерия'}</h3>
-                    <div class="project-images-grid">${project.gallery.map(img => `<img src="${img}" onclick="openModal('${img}')" alt="Gallery">`).join('')}</div>
+                    <div class="project-images-grid">${project.gallery.map((img, idx) => `<img src="${img}" onclick="openModal('gallery', ${idx})" alt="Gallery">`).join('')}</div>
                 </div>` : '';
 
             const container = document.getElementById('projectContainer');
@@ -268,7 +278,7 @@
                 <div class="project-main-box">
                     <div class="project-top-grid">
                         <div class="left-column">
-                            ${project.mainImage ? `<img src="${project.mainImage}" alt="${project.title}" class="main-project-img" onclick="openModal('${project.mainImage}')">` : `<div class="main-project-img" style="display:flex; align-items:center; justify-content:center; color:#8c8275;">Няма основна снимка</div>`}
+                            ${project.mainImage ? `<img src="${project.mainImage}" alt="${project.title}" class="main-project-img" onclick="openModal('main', 0)">` : `<div class="main-project-img" style="display:flex; align-items:center; justify-content:center; color:#8c8275;">Няма основна снимка</div>`}
                             
                             ${project.desc ? `
                             <div class="project-desc-card">
@@ -324,17 +334,63 @@
             `;
         }
 
-        // Функции за модалния прозорец (Lightbox)
-        function openModal(imgSrc) {
+        // Функции за модалния прозорец и слайдване на снимки
+        function openModal(category, index) {
+            let images = [];
+            if (category === 'main') {
+                images = [window.activeProjectData.mainImage];
+            } else if (window.activeProjectData[category]) {
+                images = window.activeProjectData[category];
+            }
+
+            currentModalImages = images;
+            currentModalIndex = index;
+
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImg');
             modal.style.display = 'flex';
-            modalImg.src = imgSrc;
+            modalImg.src = currentModalImages[currentModalIndex];
+
+            // Скриваме стрелките, ако има само 1 снимка в групата
+            const prevBtn = document.querySelector('.prev-modal');
+            const nextBtn = document.querySelector('.next-modal');
+            if (currentModalImages.length > 1) {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+            } else {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            }
+        }
+
+        function changeImage(direction) {
+            if (currentModalImages.length <= 1) return;
+            currentModalIndex += direction;
+            if (currentModalIndex >= currentModalImages.length) {
+                currentModalIndex = 0; // Връща се на първата
+            } else if (currentModalIndex < 0) {
+                currentModalIndex = currentModalImages.length - 1; // Отива на последната
+            }
+            document.getElementById('modalImg').src = currentModalImages[currentModalIndex];
         }
 
         function closeModal() {
             document.getElementById('imageModal').style.display = 'none';
         }
+
+        // Поддръжка на клавиши със стрелки (ляво/дясно/Escape) от клавиатурата
+        window.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('imageModal');
+            if (modal.style.display === 'flex') {
+                if (event.key === 'ArrowLeft') {
+                    changeImage(-1);
+                } else if (event.key === 'ArrowRight') {
+                    changeImage(1);
+                } else if (event.key === 'Escape') {
+                    closeModal();
+                }
+            }
+        });
 
         // Затваряне при клик извън изображението
         window.addEventListener('click', function(event) {
