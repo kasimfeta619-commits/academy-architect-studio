@@ -242,7 +242,7 @@
 
         <div class="admin-nav-tabs">
             <button class="tab-btn active" onclick="switchTab('aboutTab', this)">За нас</button>
-            <button class="tab-btn" onclick="switchTab('settingsTab', this)">Настройки</button> <!-- НОВИЯТ ТАБ -->
+            <button class="tab-btn" onclick="switchTab('settingsTab', this)">Настройки</button>
             <button class="tab-btn" onclick="switchTab('teamTab', this)">Екип</button>
             <button class="tab-btn" onclick="switchTab('contactTab', this)">Контакти</button>
             <button class="tab-btn" onclick="switchTab('mapTab', this)">Карта</button>
@@ -263,7 +263,6 @@
             </form>
         </div>
 
-        <!-- НОВА СЕКЦИЯ ЗА НАСТРОЙКИ (HERO / СЪДЪРЖАНИЕ) -->
         <div id="settingsTab" class="admin-section">
             <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Общи настройки / Начален екран (Hero)</h3>
             <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можеш да променяш основните надписи на сайта директно, без да влизаш във Firebase.</p>
@@ -274,7 +273,6 @@
             </form>
         </div>
 
-        <!-- УПРАВЛЕНИЕ НА ЕКИПА -->
         <div id="teamTab" class="admin-section">
             <h3 id="teamFormTitle" style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Управление на екипа</h3>
             
@@ -333,7 +331,6 @@
             </form>
         </div>
 
-        <!-- УПРАВЛЕНИЕ НА КАРТАТА С ИНТЕРАКТИВЕН ИЗБОР -->
         <div id="mapTab" class="admin-section">
             <h3 id="mapFormTitle" style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Управление на точките на картата</h3>
             
@@ -347,7 +344,6 @@
                     <input type="text" id="mapTitle" required placeholder="напр. Пловдив">
                 </div>
 
-                <!-- Интерактивна карта за избор с мишка -->
                 <div class="form-group">
                     <label>Кликнете върху картата, за да изберете точното място *</label>
                     <div id="adminPickerMap"></div>
@@ -508,7 +504,6 @@
             <div id="adminProjectsList"></div>
         </div>
 
-        <!-- УПРАВЛЕНИЕ НА PROJECT DETAIL -->
         <div id="detailTab" class="admin-section">
             <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Управление на Project Detail елементи</h3>
             <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можете да преглеждате проектите и да преценявате или премахвате детайли/медия от самите страници с подробности за проект (Project Detail).</p>
@@ -538,7 +533,6 @@
         </div>
     </div>
 
-    <!-- МОДАЛ ЗА РЕДАКЦИЯ НА МНЕНИЕ -->
     <div id="reviewEditModal" class="modal-overlay" onclick="closeReviewEditModal(event)">
         <div class="modal-content" style="max-width: 500px;">
             <span class="modal-close" onclick="closeReviewEditModal(true)">&times;</span>
@@ -711,7 +705,6 @@
                     document.getElementById('aboutDesc').value = data.desc || '';
                 }
 
-                // Зареждане на Hero настройките в новия таб
                 const heroDoc = await db.collection('siteSettings').doc('hero').get();
                 if (heroDoc.exists) {
                     const hData = heroDoc.data();
@@ -761,7 +754,6 @@
             }
         });
 
-        // ЗАПИСВАНЕ НА HERO НАСТРОЙКИТЕ ОТ НОВИЯ ТАБ
         document.getElementById('settingsForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const heroData = {
@@ -809,7 +801,6 @@
             }
         });
 
-        // УПРАВЛЕНИЕ НА КАРТАТА ЛОКАЦИИ
         async function renderAdminMapLocations() {
             const listContainer = document.getElementById('adminMapList');
             if (!listContainer) return;
@@ -928,7 +919,6 @@
             }
         });
 
-        // УПРАВЛЕНИЕ НА ЕКИПА
         async function renderAdminTeam() {
             const listContainer = document.getElementById('adminTeamList');
             if (!listContainer) return;
