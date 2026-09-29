@@ -10,6 +10,9 @@
     
     <link rel="stylesheet" href="style.css">
     
+    <!-- Leaflet CSS за интерактивната карта -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <!-- Firebase SDK Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -47,94 +50,18 @@
             letter-spacing: 1px;
         }
         
-        /* Контейнер за картата на България */
+        /* Контейнер за картата */
         #projectMap {
-            position: relative;
             width: 100%;
             height: 500px;
             border-radius: 12px;
             border: 1px solid #eadecc;
-            background: #fbf9f5;
             box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            overflow: hidden;
-        }
-        #projectMap img.map-bg-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-            background-color: #fbf9f5;
+            z-index: 1;
         }
         body.dark-mode #projectMap {
             border-color: #2c2c2c;
-        }
-        body.dark-mode #projectMap img.map-bg-image {
             filter: brightness(0.85) contrast(1.1);
-        }
-
-        /* Персонализирани пин игли с топка */
-        .map-pin {
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            transform: translate(-50%, -100%);
-            cursor: pointer;
-            z-index: 10;
-            transition: transform 0.2s ease;
-        }
-        .map-pin:hover {
-            transform: translate(-50%, -100%) scale(1.2);
-        }
-        .map-pin .pin-head {
-            width: 16px;
-            height: 16px;
-            background: #111;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            margin: 0 auto;
-        }
-        body.dark-mode .map-pin .pin-head {
-            background: #e2c19a;
-            border-color: #1a1a1a;
-        }
-        .map-pin .pin-needle {
-            width: 2px;
-            height: 10px;
-            background: #111;
-            margin: -2px auto 0 auto;
-        }
-        body.dark-mode .map-pin .pin-needle {
-            background: #e2c19a;
-        }
-
-        /* Информационен прозорец (туултип/попъп) при клик на пина */
-        .map-popup {
-            position: absolute;
-            bottom: 35px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #fff;
-            padding: 10px 14px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            font-size: 0.85rem;
-            color: #1a1a1a;
-            white-space: nowrap;
-            display: none;
-            z-index: 20;
-            border: 1px solid #eadecc;
-        }
-        body.dark-mode .map-popup {
-            background: #1a1a1a;
-            color: #fff;
-            border-color: #333;
-        }
-        .map-pin.active .map-popup {
-            display: block;
         }
     </style>
 </head>
@@ -213,10 +140,7 @@
     <section class="map-section">
         <h2 class="map-title">Географски обхват на проектите</h2>
         <p class="map-subtitle">Част от нашите реализирани обекти и проекти в страната</p>
-        <div id="projectMap">
-            <!-- Зарежда локалния файл bulgaria-map.jpg от assets паката -->
-            <img class="map-bg-image" src="assets/bulgaria-map.jpg" alt="Карта на България">
-        </div>
+        <div id="projectMap"></div>
     </section>
 
     <footer class="main-footer">
@@ -247,6 +171,8 @@
         </div>
     </footer>
 
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="translations.js"></script>
     <script>
         // Firebase конфигурация
@@ -307,14 +233,17 @@
         }
 
         document.addEventListener("DOMContentLoaded", async function() {
-            const mapContainer = document.getElementById('projectMap');
+            // Инициализиране на Leaflet картата точно както в админ панела
+            const map = L.map('projectMap').setView([42.7339, 25.4858], 7);
 
-            // Зареждане на точките от Firebase базата данни с коригирани граници
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Зареждане на точките от Firebase базата данни
             try {
                 const mapSnapshot = await db.collection('mapLocations').get();
-                
-                const minLat = 41.00, maxLat = 44.40;
-                const minLng = 22.20, maxLng = 28.70;
 
                 if (!mapSnapshot.empty) {
                     mapSnapshot.forEach(doc => {
@@ -330,35 +259,10 @@
                         }
 
                         if (!isNaN(lat) && !isNaN(lng)) {
-                            const topPercent = ((maxLat - lat) / (maxLat - minLat)) * 100;
-                            const leftPercent = ((lng - minLng) / (maxLng - minLng)) * 100;
-
-                            const pinElement = document.createElement('div');
-                            pinElement.className = 'map-pin';
-                            // Безопасно позициониране в рамките на картата, без излишно изрязване
-                            pinElement.style.top = Math.max(0, Math.min(100, topPercent)) + '%';
-                            pinElement.style.left = Math.max(0, Math.min(100, leftPercent)) + '%';
-                            
-                            pinElement.innerHTML = `
-                                <div class="pin-head"></div>
-                                <div class="pin-needle"></div>
-                                <div class="map-popup">
-                                    <b>${loc.title || loc.name || 'Обект'}</b><br>${loc.desc || loc.description || ''}
-                                </div>
-                            `;
-
-                            pinElement.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                                document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
-                                pinElement.classList.toggle('active');
-                            });
-
-                            mapContainer.appendChild(pinElement);
+                            const marker = L.marker([lat, lng]).addTo(map);
+                            const popupContent = `<b>${loc.title || loc.name || 'Обект'}</b><br>${loc.desc || loc.description || ''}`;
+                            marker.bindPopup(popupContent);
                         }
-                    });
-
-                    document.addEventListener('click', () => {
-                        document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
                     });
                 }
             } catch (err) {
