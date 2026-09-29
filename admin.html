@@ -680,12 +680,15 @@
             document.getElementById(tabId).classList.add('active');
             if (btnElement) btnElement.classList.add('active');
             
-            // Ако отваряме секцията с картата, инциализираме или презареждаме картата, за да се покаже коректно
+            // Корекция за картата: Опреснява се винаги при отваряне на таба, за да работи интерактивността
             if (tabId === 'mapTab') {
                 setTimeout(() => {
                     const latVal = parseFloat(document.getElementById('mapLat').value) || 42.6977;
                     const lngVal = parseFloat(document.getElementById('mapLng').value) || 23.3219;
                     initAdminMap(latVal, lngVal);
+                    if (adminMap) {
+                        adminMap.invalidateSize();
+                    }
                 }, 150);
             }
 
@@ -727,11 +730,6 @@
             renderAdminTeam();
             renderAdminReviews();
             renderAdminMapLocations();
-            
-            // Инициализация на картата по подразбиране (ако сме директно на таба)
-            setTimeout(() => {
-                initAdminMap();
-            }, 200);
         });
 
         document.getElementById('aboutForm').addEventListener('submit', async (e) => {
@@ -835,6 +833,7 @@
                 const newLatLng = [loc.lat || 42.6977, loc.lng || 23.3219];
                 adminMarker.setLatLng(newLatLng);
                 adminMap.setView(newLatLng, 12);
+                adminMap.invalidateSize();
             }
 
             document.getElementById('mapFormSubTitle').innerText = "Редактиране на локация: " + loc.title;
@@ -855,6 +854,7 @@
                 const defaultPos = [42.6977, 23.3219];
                 adminMarker.setLatLng(defaultPos);
                 adminMap.setView(defaultPos, 7);
+                adminMap.invalidateSize();
             }
         }
 
@@ -1691,7 +1691,7 @@
                     price: document.getElementById('price').value,
                     videoUrl: videoUrl,
                     youtubeUrl: youtubeUrl,
-                    isFavorite: document.getElementById('isFav'].checked,
+                    isFavorite: document.getElementById('isFav').checked,
                     mainImage, floorPlans, facadeImages, sectionImage, gallery
                 };
 
