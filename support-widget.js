@@ -179,30 +179,18 @@ document.addEventListener('DOMContentLoaded', function () {
   let clientData = { type: '', location: '', timeline: '' };
 
   function showStep(stepElement) {
-    // Скриваме всички етапи
     [options, subOptions, locOptions, timeOptions, leadForm, action].forEach(el => {
       if (el) el.style.display = 'none';
     });
-    // Показваме само подадения активен етап
     if (stepElement) {
       stepElement.style.display = 'flex';
     }
   }
 
-  function typeMessage(text, callback) {
-    message.textContent = '';
-    let i = 0;
-    const speed = 15; 
-    function typing() {
-      if (i < text.length) {
-        message.textContent += text.charAt(i);
-        i++;
-        setTimeout(typing, speed);
-      } else if (callback) {
-        callback();
-      }
-    }
-    typing();
+  // Текстът се сменя моментално без излишно изписване буква по буква
+  function updateMessage(text, callback) {
+    message.textContent = text;
+    if (callback) callback();
   }
 
   document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -245,27 +233,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (type === 'no') {
         showStep(null);
-        typeMessage(t.msgNo);
+        updateMessage(t.msgNo);
       } else if (type === 'estimator') {
         showStep(null);
-        typeMessage(t.msgEstimator, () => {
+        updateMessage(t.msgEstimator, () => {
           action.textContent = t.btnEstimator;
           action.href = 'estimator.html';
           action.style.display = 'block';
         });
       } else if (type === 'ai') {
         showStep(null);
-        typeMessage(t.msgAi, () => {
+        updateMessage(t.msgAi, () => {
           action.textContent = t.btnAi;
           action.href = 'planner.html';
           action.style.display = 'block';
         });
       } else if (type === 'lead') {
-        typeMessage(t.msgLead, () => {
+        updateMessage(t.msgLead, () => {
           showStep(leadForm);
         });
       } else if (type === 'project') {
-        typeMessage(t.msgProject, () => {
+        updateMessage(t.msgProject, () => {
           showStep(subOptions);
         });
       }
@@ -276,11 +264,11 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!btn) return;
       if (btn.dataset.choice === 'back') {
         showStep(options);
-        typeMessage(t.message);
+        updateMessage(t.message);
         return;
       }
       clientData.type = btn.dataset.subchoice;
-      typeMessage(t.msgLoc, () => {
+      updateMessage(t.msgLoc, () => {
         showStep(locOptions);
       });
     });
@@ -290,11 +278,11 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!btn) return;
       if (btn.dataset.choice === 'back-to-sub') {
         showStep(subOptions);
-        typeMessage(t.msgProject);
+        updateMessage(t.msgProject);
         return;
       }
       clientData.location = btn.dataset.loc;
-      typeMessage(t.msgTime, () => {
+      updateMessage(t.msgTime, () => {
         showStep(timeOptions);
       });
     });
@@ -303,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const btn = event.target.closest('button');
       if (!btn) return;
       clientData.timeline = btn.dataset.time;
-      typeMessage(t.msgFinal, () => {
+      updateMessage(t.msgFinal, () => {
         action.textContent = t.btnFinal;
         action.href = `contact.html?type=${clientData.type}&loc=${clientData.location}&time=${clientData.timeline}`;
         action.style.display = 'block';
@@ -317,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       showStep(null);
-      typeMessage(t.msgEmailDone, () => {
+      updateMessage(t.msgEmailDone, () => {
         action.textContent = t.btnHome;
         action.href = 'index.html';
         action.style.display = 'block';
