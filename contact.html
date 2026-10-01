@@ -480,6 +480,20 @@
                 return;
             }
 
+            // Блокиране на събота (6) и неделя (0)
+            const selectedDate = new Date(dateVal);
+            const dayOfWeek = selectedDate.getDay();
+            
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                const currentLang = localStorage.getItem('siteLang') || 'bg';
+                container.innerHTML = '';
+                if (reasonBox) {
+                    reasonBox.style.display = 'block';
+                    reasonBox.innerHTML = `<strong>⚠️ ${currentLang === 'en' ? 'Weekend:' : 'Почивен ден:'}</strong> ${currentLang === 'en' ? 'Appointments are available only from Monday to Friday.' : 'Резервации се приемат само от понеделник до петък.'}`;
+                }
+                return;
+            }
+
             container.innerHTML = `<p style="color: #8c8275; font-size: 0.9rem; grid-column: 1 / -1;">Зареждане...</p>`;
 
             try {
