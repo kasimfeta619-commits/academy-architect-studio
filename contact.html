@@ -234,6 +234,9 @@
 
                     <div class="form-group">
                         <label data-key="booking-slots-label">Свободни и заети часове</label>
+                        <!-- Информационно съобщение при почивен ден/отпуск -->
+                        <div id="holidayReasonBox" style="display: none; padding: 10px 14px; background: #fdf6f0; border: 1px solid #f5c6cb; border-radius: 6px; color: #721c24; font-size: 0.9rem; margin-bottom: 8px;"></div>
+                        
                         <div id="slotsContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 8px;">
                             <p style="color: #8c8275; font-size: 0.9rem; grid-column: 1 / -1;" data-key="booking-select-date-first" id="defaultSlotText">Моля, първо изберете дата.</p>
                         </div>
@@ -462,8 +465,15 @@
         async function loadAvailableSlots() {
             const dateVal = document.getElementById('bookingDate').value;
             const container = document.getElementById('slotsContainer');
+            const reasonBox = document.getElementById('holidayReasonBox');
+            
             document.getElementById('selectedTimeSlot').value = '';
             document.getElementById('bookBtn').disabled = true;
+
+            if (reasonBox) {
+                reasonBox.style.display = 'none';
+                reasonBox.innerText = '';
+            }
 
             if (!dateVal) {
                 updateDefaultSlotText();
@@ -489,7 +499,16 @@
 
                 // 2. Проверяваме дали целият ден е блокиран от администратора в колекцията 'blockedDays'
                 const blockedSnapshot = await db.collection('blockedDays').where('date', '==', dateVal).get();
+                let holidayReason = '';
+
                 if (!blockedSnapshot.empty) {
+                    blockedSnapshot.forEach(doc => {
+                        const bData = doc.data();
+                        if (bData.reason) {
+                            holidayReason = bData.reason;
+                        }
+                    });
+
                     workingHours.forEach(hour => {
                         if (!bookedTimes.includes(hour)) {
                             bookedTimes.push(hour);
@@ -498,6 +517,14 @@
                 }
 
                 container.innerHTML = '';
+
+                // Показваме съобщението за причината при блокиран ден
+                if (!blockedSnapshot.empty && reasonBox) {
+                    reasonBox.style.display = 'block';
+                    const currentLang = localStorage.getItem('siteLang') || 'bg';
+                    const noticeText = currentLang === 'en' ? 'Selected date is closed: ' : 'Избраната дата е затворена: ';
+                    reasonBox.innerHTML = `<strong>⚠️ ${noticeText}</strong> ${holidayReason || (currentLang === 'en' ? 'Day off / Vacation' : 'Почивен ден / Отпуск')}`;
+                }
 
                 workingHours.forEach(hour => {
                     const isTaken = bookedTimes.includes(hour);
@@ -514,7 +541,7 @@
                     if (isTaken) {
                         slotBtn.style.background = '#f2dede';
                         slotBtn.style.color = '#a94442';
-                        slotBtn.title = 'Зает час';
+                        slotBtn.title = 'Зает час или почивен ден';
                         slotBtn.disabled = true;
                     } else {
                         slotBtn.style.background = 'var(--bg-color, #fff)';
@@ -544,6 +571,11 @@
 
         function resetSlotsContainer() {
             document.getElementById('slotsContainer').innerHTML = `<p style="color: #8c8275; font-size: 0.9rem; grid-column: 1 / -1;" data-key="booking-select-date-first" id="defaultSlotText"></p>`;
+            const reasonBox = document.getElementById('holidayReasonBox');
+            if (reasonBox) {
+                reasonBox.style.display = 'none';
+                reasonBox.innerText = '';
+            }
             updateDefaultSlotText();
         }
 
@@ -555,7 +587,7 @@
             const timeVal = document.getElementById('selectedTimeSlot').value;
 
             if (!dateVal || !timeVal) {
-                alert("Моля, изберете дата и свободен час!");
+                alert("Моля, изберете дата и свободен час с кликване!");
                 return;
             }
 
