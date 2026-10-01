@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle" data-key="page-title">Estimator | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <!-- Скрипт за мигновено зареждане на темата без премигване -->
     <script>
         (function() {
@@ -180,7 +185,7 @@
                 <!-- 1. ТИП ОБЕКТ -->
                 <div class="calc-group">
                     <label class="calc-label" data-key="label-type">Тип обект</label>
-                    <select id="projectType" class="calc-input">
+                    <select id="projectType" class="calc-input" onchange="calculateBudget()">
                         <option value="house" data-key="opt-house">Еднофамилна къща / Вила</option>
                         <option value="multi" data-key="opt-multi">Многофамилна жилищна сграда</option>
                         <option value="industrial" data-key="opt-industrial">Промишлена / Стопанска сграда</option>
@@ -191,7 +196,7 @@
                 <!-- 2. ЛОКАЦИЯ / РЕГИОН -->
                 <div class="calc-group">
                     <label class="calc-label" data-key="label-location">Локация / Населено място</label>
-                    <select id="projectLocation" class="calc-input">
+                    <select id="projectLocation" class="calc-input" onchange="calculateBudget()">
                         <optgroup label="Югозападна България & Благоевград" data-key="grp-sw">
                             <option value="gd_town" selected data-key="opt-gd-town">гр. Гоце Делчев</option>
                             <option value="gd_villages" data-key="opt-gd-villages">Регион Гоце Делчев (Гърмен, Хаджидимово, Сатовча)</option>
@@ -212,7 +217,7 @@
                 <!-- 3. ОБХВАТ НА ПРОЕКТИРАНЕ -->
                 <div class="calc-group">
                     <label class="calc-label" data-key="label-scope">Обхват на проектирането</label>
-                    <select id="projectScope" class="calc-input">
+                    <select id="projectScope" class="calc-input" onchange="calculateBudget()">
                         <option value="full" data-key="opt-scope-full">Пълен комплект (Архитектура + Всички Инженери)</option>
                         <option value="arch_only" data-key="opt-scope-arch">Само част "Архитектура" (Идеен проект)</option>
                         <option value="full_interior" data-key="opt-scope-interior">Пълен проект + 3D Визуализации & Интериор</option>
@@ -222,7 +227,7 @@
                 <!-- 4. РЗП В КВ.М -->
                 <div class="calc-group" style="margin-bottom: 25px;">
                     <label class="calc-label" data-key="label-area">Обща площ (РЗП в кв.м)</label>
-                    <input type="number" id="projectArea" min="10" value="160" required class="calc-input">
+                    <input type="number" id="projectArea" min="10" value="160" required class="calc-input" oninput="calculateBudget()">
                 </div>
 
                 <button type="submit" class="calc-btn" data-key="btn-calc">Изчисли бюджет</button>
@@ -282,6 +287,31 @@
     <!-- СКРИПТОВЕ -->
     <script src="translations.js"></script>
     <script>
+        // Инициализация на Firebase (същите настройки като в админ панела)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
+            authDomain: "architect-studio-1810c.firebaseapp.com",
+            projectId: "architect-studio-1810c",
+            storageBucket: "architect-studio-1810c.firebasestorage.app",
+            messagingSenderId: "1053914253758",
+            appId: "1:1053914253758:web:97d9bc28ac5465730311ef",
+            measurementId: "G-NN7GYSF55G"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // Динамични цени (по подразбиране или заредени от админ панела)
+        let estimatorConfigData = {
+            priceHouse: 22,
+            priceMulti: 18,
+            priceIndustrial: 15,
+            priceInterior: 25,
+            baseFee: 500
+        };
+
         // ДВУЕЗИЧЕН РЕЧНИК ЗА ТАЗИ СТРАНИЦА
         const pageTranslations = {
             bg: {
@@ -451,7 +481,33 @@
             if (menu) menu.style.display = 'none';
         });
 
-        // ИЗЧИСЛЯВАНЕ НА БЮДЖЕТА (С реалистични пазарни ставки)
+        // Зареждане на конфигурацията от Админ панела (Firebase / localStorage)
+        async function loadEstimatorConfig() {
+            try {
+                // Проверка в localStorage за бърз достъп
+                const localConfig = localStorage.getItem('estimatorConfig');
+                if (localConfig) {
+                    const parsed = JSON.parse(localConfig);
+                    estimatorConfigData = { ...estimatorConfigData, ...parsed };
+                }
+
+                // Зареждане на най-актуалното от Firebase Firestore
+                const docSnap = await db.collection('siteSettings').doc('estimatorConfig').get();
+                if (docSnap.exists) {
+                    const data = docSnap.data();
+                    if (data.priceHouse !== undefined) estimatorConfigData.priceHouse = Number(data.priceHouse);
+                    if (data.priceMulti !== undefined) estimatorConfigData.priceMulti = Number(data.priceMulti);
+                    if (data.priceIndustrial !== undefined) estimatorConfigData.priceIndustrial = Number(data.priceIndustrial);
+                    if (data.priceInterior !== undefined) estimatorConfigData.priceInterior = Number(data.priceInterior);
+                    if (data.baseFee !== undefined) estimatorConfigData.baseFee = Number(data.baseFee);
+                }
+            } catch (err) {
+                console.log("Грешка при зареждане на цените от базата данни:", err);
+            }
+            calculateBudget();
+        }
+
+        // ИЗЧИСЛЯВАНЕ НА БЮДЖЕТА
         function calculateBudget() {
             const type = document.getElementById('projectType').value;
             const location = document.getElementById('projectLocation').value;
@@ -460,12 +516,12 @@
 
             if (area <= 0) return;
 
-            // Базови пазарни ставки (по-адекватни на реалните условия)
-            let baseRate = 20; 
-            if (type === 'house') baseRate = 22;          
-            else if (type === 'multi') baseRate = 18;    
-            else if (type === 'industrial') baseRate = 15; 
-            else if (type === 'interior') baseRate = 25;   
+            // Използване на динамичните ставки от базата данни
+            let baseRate = estimatorConfigData.priceHouse; 
+            if (type === 'house') baseRate = estimatorConfigData.priceHouse;          
+            else if (type === 'multi') baseRate = estimatorConfigData.priceMulti;    
+            else if (type === 'industrial') baseRate = estimatorConfigData.priceIndustrial; 
+            else if (type === 'interior') baseRate = estimatorConfigData.priceInterior;   
 
             let locCoeff = 1.0;
             switch(location) {
@@ -502,7 +558,7 @@
             let sqmRate = baseRate * locCoeff * scopeCoeff;
             let total = area * sqmRate;
 
-            const minFee = 500;
+            const minFee = estimatorConfigData.baseFee || 500;
             if (total < minFee && scope !== 'arch_only') {
                 total = minFee;
                 sqmRate = total / area;
@@ -559,6 +615,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             setLanguage(currentLang);
             updateNavAuthStatus();
+            loadEstimatorConfig(); // Зарежда актуалните цени от администрацията
             
             const savedContact = localStorage.getItem('siteContact');
             if (savedContact) {
