@@ -1,4 +1,19 @@
 /* ==========================================
+   ОПТИМИЗАЦИЯ НА ЛОГО И ОСНОВНИ ИЗОБРАЖЕНИЯ
+   ========================================== */
+.logo-icon {
+    max-height: 32px !important;
+    width: auto !important;
+    object-fit: contain !important;
+}
+
+.logo-area img {
+    max-height: 32px !important;
+    width: auto !important;
+    object-fit: contain !important;
+}
+
+/* ==========================================
    ПЪЛНА МОБИЛНА ОПТИМИЗАЦИЯ ЗА ШАБЛОНИ И СТРАНИЦИ
    ========================================== */
 @media (max-width: 768px) {
