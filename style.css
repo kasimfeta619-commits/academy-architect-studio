@@ -457,7 +457,161 @@ body.dark-mode .btn-secondary {
 }
 
 /* ==========================================
-   MOBILE RESPONSIVENESS & HAMBURGER MENU
+   SUPPORT WIDGET (ЧАТА) СТИЛОВЕ
+   ========================================== */
+.support-widget {
+    position: fixed !important;
+    bottom: 25px !important;
+    right: 25px !important;
+    z-index: 99999 !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.support-screen {
+    position: absolute !important;
+    bottom: 70px !important;
+    right: 0 !important;
+    width: 320px !important;
+    max-height: 450px !important;
+    overflow-y: auto !important;
+    background: #fdfbf7 !important;
+    border: 1px solid #e6dfd5 !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    text-align: left !important;
+}
+
+.support-widget.is-collapsed .support-screen {
+    display: none !important;
+}
+
+.support-close {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    background: transparent !important;
+    border: none !important;
+    font-size: 1.2rem !important;
+    cursor: pointer !important;
+    color: #8c8275 !important;
+}
+
+.support-close:hover {
+    color: #1a1a1a !important;
+}
+
+.support-screen-face {
+    width: 36px !important;
+    height: 36px !important;
+    background: #1a1a1a !important;
+    color: #fff !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 5px !important;
+}
+
+.support-copy strong {
+    display: block !important;
+    font-size: 0.95rem !important;
+    color: #1a1a1a !important;
+    margin-bottom: 4px !important;
+}
+
+.support-message {
+    font-size: 0.85rem !important;
+    color: #666 !important;
+    line-height: 1.4 !important;
+    display: block !important;
+    margin-bottom: 5px !important;
+}
+
+.support-options,
+.support-sub-options,
+.support-location-options,
+.support-time-options,
+.support-lead-form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+.support-option {
+    background: #fff !important;
+    border: 1px solid #eadecc !important;
+    padding: 10px 14px !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    color: #1a1a1a !important;
+    font-weight: 500 !important;
+    width: 100% !important;
+    transition: all 0.2s ease !important;
+}
+
+.support-option:hover {
+    background: #1a1a1a !important;
+    color: #fff !important;
+    border-color: #1a1a1a !important;
+}
+
+.support-email-input {
+    padding: 10px !important;
+    border: 1px solid #eadecc !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+    outline: none !important;
+    background: #fff !important;
+    width: 100% !important;
+    color: #1a1a1a !important;
+}
+
+.support-trigger {
+    background: #1a1a1a !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 12px 20px !important;
+    border-radius: 30px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+}
+
+.support-trigger-dot {
+    width: 8px !important;
+    height: 8px !important;
+    background: #4ade80 !important;
+    border-radius: 50% !important;
+    display: inline-block !important;
+}
+
+.support-action {
+    display: block !important;
+    background: #1a1a1a !important;
+    color: #fff !important;
+    text-align: center !important;
+    padding: 10px 14px !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    margin-top: 5px !important;
+}
+
+/* ==========================================
+   МОБИЛНА ОПТИМИЗАЦИЯ И МЕДИЯ ЗАЯВКА
    ========================================== */
 .menu-toggle {
     display: none;
@@ -549,5 +703,17 @@ body.dark-mode .btn-secondary {
     main div[style*="grid-template-columns"] {
         grid-template-columns: 1fr !important;
         gap: 20px !important;
+    }
+
+    .support-widget {
+        bottom: 80px !important;
+        right: 15px !important;
+        z-index: 999999 !important;
+    }
+
+    .support-screen {
+        width: calc(100vw - 30px) !important;
+        max-height: 380px !important;
+        right: -5px !important;
     }
 }
