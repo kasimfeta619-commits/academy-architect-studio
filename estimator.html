@@ -303,12 +303,11 @@
         }
         const db = firebase.firestore();
 
-        // Динамични цени (по подразбиране или заредени от админ панела)
+        // Динамични цени синхронизирани с админ панела (цена архит., 3D, интериор и базова такса)
         let estimatorConfigData = {
-            priceHouse: 22,
-            priceMulti: 18,
-            priceIndustrial: 15,
-            priceInterior: 25,
+            priceArch: 30,
+            price3d: 10,
+            priceInterior: 40,
             baseFee: 500
         };
 
@@ -495,9 +494,8 @@
                 const docSnap = await db.collection('siteSettings').doc('estimatorConfig').get();
                 if (docSnap.exists) {
                     const data = docSnap.data();
-                    if (data.priceHouse !== undefined) estimatorConfigData.priceHouse = Number(data.priceHouse);
-                    if (data.priceMulti !== undefined) estimatorConfigData.priceMulti = Number(data.priceMulti);
-                    if (data.priceIndustrial !== undefined) estimatorConfigData.priceIndustrial = Number(data.priceIndustrial);
+                    if (data.priceArch !== undefined) estimatorConfigData.priceArch = Number(data.priceArch);
+                    if (data.price3d !== undefined) estimatorConfigData.price3d = Number(data.price3d);
                     if (data.priceInterior !== undefined) estimatorConfigData.priceInterior = Number(data.priceInterior);
                     if (data.baseFee !== undefined) estimatorConfigData.baseFee = Number(data.baseFee);
                 }
@@ -507,7 +505,7 @@
             calculateBudget();
         }
 
-        // ИЗЧИСЛЯВАНЕ НА БЮДЖЕТА
+        // ИЗЧИСЛЯВАНЕ НА БЮДЖЕТА (Синхронизирано с полетата от админ панела)
         function calculateBudget() {
             const type = document.getElementById('projectType').value;
             const location = document.getElementById('projectLocation').value;
@@ -516,39 +514,25 @@
 
             if (area <= 0) return;
 
-            // Използване на динамичните ставки от базата данни
-            let baseRate = estimatorConfigData.priceHouse; 
-            if (type === 'house') baseRate = estimatorConfigData.priceHouse;          
-            else if (type === 'multi') baseRate = estimatorConfigData.priceMulti;    
-            else if (type === 'industrial') baseRate = estimatorConfigData.priceIndustrial; 
-            else if (type === 'interior') baseRate = estimatorConfigData.priceInterior;   
+            // Базова ставка според обхвата/типа от администрацията
+            let baseRate = estimatorConfigData.priceArch || 30;
+            if (scope === 'full_interior' || type === 'interior') {
+                baseRate = estimatorConfigData.priceInterior || 40;
+            } else {
+                baseRate = estimatorConfigData.priceArch || 30;
+            }
 
             let locCoeff = 1.0;
             switch(location) {
-                case 'gd_town': 
-                    locCoeff = 1.00;
-                    break;
-                case 'gd_villages': 
-                    locCoeff = 0.85;
-                    break;
-                case 'resorts': 
-                    locCoeff = 1.25;
-                    break;
+                case 'gd_town': locCoeff = 1.00; break;
+                case 'gd_villages': locCoeff = 0.85; break;
+                case 'resorts': locCoeff = 1.25; break;
                 case 'blagoevgrad':
-                case 'regional_centers': 
-                    locCoeff = 1.35;
-                    break;
-                case 'large_cities': 
-                    locCoeff = 1.60;
-                    break;
-                case 'sofia': 
-                    locCoeff = 2.00;
-                    break;
-                case 'other_locations': 
-                    locCoeff = 0.90;
-                    break;
-                default: 
-                    locCoeff = 1.00;
+                case 'regional_centers': locCoeff = 1.35; break;
+                case 'large_cities': locCoeff = 1.60; break;
+                case 'sofia': locCoeff = 2.00; break;
+                case 'other_locations': locCoeff = 0.90; break;
+                default: locCoeff = 1.00;
             }
 
             let scopeCoeff = 1.0;
@@ -560,8 +544,7 @@
 
             const minFee = estimatorConfigData.baseFee || 500;
             if (total < minFee && scope !== 'arch_only') {
-                total = minFee;
-                sqmRate = total / area;
+                total += minFee;
             }
 
             let archShare = total * (scope === 'arch_only' ? 1.0 : 0.42);
