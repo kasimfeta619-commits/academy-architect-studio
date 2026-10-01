@@ -1,5 +1,21 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   if (document.querySelector('.support-widget')) return;
+
+  // Инициализация на Firebase (използва същите настройки като в contact.html)
+  const firebaseConfig = {
+      apiKey: "AIzaSyDeezhyddNjZyOeo9MyuwOuhXvFCCscUzg",
+      authDomain: "architect-studio-1810c.firebaseapp.com",
+      projectId: "architect-studio-1810c",
+      storageBucket: "architect-studio-1810c.firebasestorage.app",
+      messagingSenderId: "1053914253758",
+      appId: "1:1053914253758:web:97d9bc28ac5465730311ef",
+      measurementId: "G-NN7GYSF55G"
+  };
+
+  if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+  }
+  const db = (typeof firebase !== 'undefined') ? firebase.firestore() : null;
 
   const translations = {
     bg: {
@@ -8,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
       opt1: "✨ Искам уникален проект",
       opt2: "🧮 Трябва ми бърза цена (Калкулатор)",
       opt3: "🤖 Искам да тествам AI Планера",
-      opt4: "📥 Получи ценоразпис / брошура",
+      opt4: "📅 Запази час за консултация",
       opt5: "Само разглеждам, благодаря ☕",
       step1Title: "Стъпка 1 от 3: Избери имот",
       sub1: "🏡 Семейна къща",
@@ -23,33 +39,24 @@ document.addEventListener('DOMContentLoaded', function () {
       time1: "🚀 В най-скоро време",
       time2: "⏳ След 6 месеца или повече",
       time3: "🔍 Само събирам идеи засега",
-      leadTitle: "Въведи имейл за безплатна брошура:",
-      leadBtn: "Изпрати ми материала",
       triggerText: "Консултант",
       msgNo: "Разбрах! Разгледай спокойно портфолиото, а аз оставам на линия, ако размислиш. ☕",
       msgEstimator: "Можеш да изчислиш ориентировъчна стойност за секунди в нашия ценови калкулатор.",
       btnEstimator: "🧮 Към калкулатора",
       msgAi: "Нашите иновативни AI алгоритми ще ти помогнат с първоначалното разпределение.",
       btnAi: "🤖 Към AI Планера",
-      msgLead: "Въведи своя имейл и ще ти изпратим актуална брошура и ценоразпис веднага!",
       msgProject: "Супер! Нека преминем през 3 бързи стъпки. За какъв тип имот става въпрос?",
       msgLoc: "Отлично! Къде ще се намира бъдещият обект?",
       msgTime: "Кога планираш да стартираш проекта?",
       
-      // Нови текстове за запазване на час
-      msgBooking: "Чудесно! Избери удобен начин за среща с нашия водещ архитект:",
-      bookType1: "💻 Онлайн видео разговор (Zoom / Meet)",
-      bookType2: "☕ Среща на живо в архитектурното студио",
-      msgBookingSlot: "Избери желан ден и час за консултацията:",
-      slot1: "📅 Утре (Вторник) от 14:00 ч.",
-      slot2: "📅 Сряда от 10:30 ч.",
-      slot3: "📅 Четвъртък от 17:00 ч.",
-      msgBookingDetails: "Въведи своите данни за връзка, за да потвърдим часа:",
-      namePlaceholder: "Твоето име",
-      phonePlaceholder: "Телефон за връзка",
-      emailPlaceholder: "Имейл адрес",
-      confirmBookingBtn: "Потвърди запазването на часа",
-      msgBookingDone: "Успешно запази час за консултация! Архитектът ще се свърже с теб за потвърждение. Очакваме те! ☕",
+      // Текстове за запазване на час
+      msgBookingDate: "Избери дата за консултация с архитект:",
+      msgBookingTime: "Избери свободен час (през половин час):",
+      msgBookingDetails: "Въведи име и телефон за потвърждение:",
+      namePlaceholder: "Вашето име",
+      phonePlaceholder: "Телефон за връзка (+359...)",
+      confirmBookingBtn: "Запази часа сега",
+      msgBookingDone: "Успешно запази час! Данните са изпратени в системата и очакваме срещата ви. ☕",
       btnHome: "Към началната страница"
     },
     en: {
@@ -58,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
       opt1: "✨ I want a unique project",
       opt2: "🧮 I need a quick quote (Calculator)",
       opt3: "🤖 I want to test the AI Planner",
-      opt4: "📥 Get price list / brochure",
+      opt4: "📅 Book a consultation",
       opt5: "Just browsing, thanks ☕",
       step1Title: "Step 1 of 3: Choose property",
       sub1: "🏡 Family House",
@@ -73,32 +80,23 @@ document.addEventListener('DOMContentLoaded', function () {
       time1: "🚀 As soon as possible",
       time2: "⏳ In 6 months or more",
       time3: "🔍 Just gathering ideas for now",
-      leadTitle: "Enter email for a free brochure:",
-      leadBtn: "Send me the material",
       triggerText: "Consultant",
       msgNo: "Understood! Feel free to browse the portfolio, and I'll stay on standby if you change your mind. ☕",
       msgEstimator: "You can calculate an estimated cost in seconds using our price calculator.",
       btnEstimator: "🧮 To Calculator",
       msgAi: "Our innovative AI algorithms will help you with the initial floor plan layout.",
       btnAi: "🤖 To AI Planner",
-      msgLead: "Enter your email and we'll send you our current brochure and price list right away!",
       msgProject: "Great! Let's go through 3 quick steps. What type of property is this for?",
       msgLoc: "Excellent! Where will the future project be located?",
       msgTime: "When are you planning to start the project?",
       
-      msgBooking: "Great! Choose a preferred meeting type with our lead architect:",
-      bookType1: "💻 Online Video Call (Zoom / Meet)",
-      bookType2: "☕ In-person Meeting at the Studio",
-      msgBookingSlot: "Select a preferred day and time for the consultation:",
-      slot1: "📅 Tomorrow (Tuesday) at 14:00",
-      slot2: "📅 Wednesday at 10:30",
-      slot3: "📅 Thursday at 17:00",
-      msgBookingDetails: "Enter your contact details to confirm the appointment:",
+      msgBookingDate: "Select a date for consultation with the architect:",
+      msgBookingTime: "Select an available time slot:",
+      msgBookingDetails: "Enter your name and phone to confirm:",
       namePlaceholder: "Your Name",
-      phonePlaceholder: "Phone Number",
-      emailPlaceholder: "Email Address",
-      confirmBookingBtn: "Confirm Appointment",
-      msgBookingDone: "You have successfully booked a consultation! The architect will contact you to confirm. We look forward to meeting you! ☕",
+      phonePlaceholder: "Phone Number (+359...)",
+      confirmBookingBtn: "Book Slot Now",
+      msgBookingDone: "Appointment successfully booked! Sent to the system. We look forward to meeting you! ☕",
       btnHome: "To Homepage"
     }
   };
@@ -108,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (activeLangBtn && activeLangBtn.textContent.toLowerCase().includes('en')) {
       return 'en';
     }
-    return 'bg';
+    return localStorage.getItem('siteLang') || 'bg';
   }
 
   const widget = document.createElement('aside');
@@ -116,9 +114,32 @@ document.addEventListener('DOMContentLoaded', function () {
   widget.setAttribute('aria-label', 'Интелигентен помощник');
 
   let currentView = 'home';
-  let clientData = { type: '', location: '', timeline: '', meetingType: '', slot: '', name: '', phone: '', email: '' };
+  let clientData = { type: '', location: '', timeline: '', date: '', time: '', name: '', phone: '' };
+  const workingHours = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"];
+  let bookedSlotsForDate = [];
 
-  function renderWidgetContent() {
+  async function fetchBookedSlots(dateVal) {
+    if (!db) return [];
+    try {
+      const snapshot = await db.collection('studioBookings').get();
+      let taken = [];
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.datetime && data.datetime.startsWith(dateVal)) {
+          const parts = data.datetime.split(' ');
+          if (parts.length >= 2) {
+            taken.push(parts[1].substring(0, 5));
+          }
+        }
+      });
+      return taken;
+    } catch (err) {
+      console.error("Грешка при зареждане на часовете:", err);
+      return [];
+    }
+  }
+
+  async function renderWidgetContent() {
     const lang = getCurrentLang();
     const t = translations[lang];
 
@@ -132,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <button class="support-option" type="button" data-action="go-project">${t.opt1}</button>
           <button class="support-option" type="button" data-action="go-estimator">${t.opt2}</button>
           <button class="support-option" type="button" data-action="go-ai">${t.opt3}</button>
-          <button class="support-option" type="button" data-action="go-lead">${t.opt4}</button>
+          <button class="support-option" type="button" data-action="go-booking">${t.opt4}</button>
           <button class="support-option support-option-muted" type="button" data-action="go-no">${t.opt5}</button>
         </div>
       `;
@@ -169,51 +190,45 @@ document.addEventListener('DOMContentLoaded', function () {
           <button class="support-option support-option-muted" type="button" data-action="back-step2">${t.back}</button>
         </div>
       `;
-    } else if (currentView === 'booking-type') {
-      // Тук след въпросите преминаваме към запазване на час
-      messageText = t.msgBooking;
+    } else if (currentView === 'booking-date') {
+      messageText = t.msgBookingDate;
       contentHTML = `
         <div role="group" style="display: flex; flex-direction: column; gap: 8px;">
-          <button class="support-option" type="button" data-booktype="online">${t.bookType1}</button>
-          <button class="support-option" type="button" data-booktype="studio">${t.bookType2}</button>
-          <button class="support-option support-option-muted" type="button" data-action="back-step3">${t.back}</button>
+          <input type="date" class="support-date-input" value="${clientData.date}" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff; color: #1a1a1a;">
+          <button class="support-next-date support-option" type="button" style="background: #1a1a1a !important; color: #fff !important; text-align: center;">${lang === 'en' ? 'Next: Select Time' : 'Напред: Избери час'}</button>
+          <button class="support-option support-option-muted" type="button" data-action="back-home">${t.back}</button>
         </div>
       `;
-    } else if (currentView === 'booking-slot') {
-      messageText = t.msgBookingSlot;
+    } else if (currentView === 'booking-time') {
+      messageText = t.msgBookingTime;
+      let slotsHtml = '';
+      workingHours.forEach(slot => {
+        const isTaken = bookedSlotsForDate.includes(slot);
+        slotsHtml += `<button type="button" class="slot-pick-btn" data-slot="${slot}" style="padding: 6px; border-radius: 6px; border: 1px solid #eadecc; font-size: 0.75rem; font-weight: 600; cursor: ${isTaken ? 'not-allowed' : 'pointer'}; background: ${isTaken ? '#f2dede' : '#fff'}; color: ${isTaken ? '#a94442' : '#1a1a1a'};" ${isTaken ? 'disabled' : ''}>${slot}</button>`;
+      });
+
       contentHTML = `
         <div role="group" style="display: flex; flex-direction: column; gap: 8px;">
-          <button class="support-option" type="button" data-slot="tomorrow-14">${t.slot1}</button>
-          <button class="support-option" type="button" data-slot="wed-10">${t.slot2}</button>
-          <button class="support-option" type="button" data-slot="thu-17">${t.slot3}</button>
-          <button class="support-option support-option-muted" type="button" data-action="back-booking-type">${t.back}</button>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; max-height: 140px; overflow-y: auto;">
+            ${slotsHtml}
+          </div>
+          <button class="support-option support-option-muted" type="button" data-action="back-booking-date">${t.back}</button>
         </div>
       `;
     } else if (currentView === 'booking-details') {
       messageText = t.msgBookingDetails;
       contentHTML = `
         <div role="group" style="display: flex; flex-direction: column; gap: 8px;">
-          <input type="text" placeholder="${t.namePlaceholder}" class="support-name-input" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff;">
-          <input type="tel" placeholder="${t.phonePlaceholder}" class="support-phone-input" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff;">
-          <input type="email" placeholder="${t.emailPlaceholder}" class="support-email-input" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff;">
+          <input type="text" placeholder="${t.namePlaceholder}" class="support-name-input" value="${clientData.name}" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff;">
+          <input type="tel" placeholder="${t.phonePlaceholder}" class="support-phone-input" value="${clientData.phone}" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff;">
           <button class="support-confirm-booking support-option" type="button" style="background: #1a1a1a !important; color: #fff !important; text-align: center;">${t.confirmBookingBtn}</button>
-          <button class="support-option support-option-muted" type="button" data-action="back-booking-slot">${t.back}</button>
+          <button class="support-option support-option-muted" type="button" data-action="back-booking-time">${t.back}</button>
         </div>
       `;
     } else if (currentView === 'booking-done') {
       messageText = t.msgBookingDone;
       contentHTML = `
         <a class="support-option" href="index.html" style="background: #1a1a1a !important; color: #fff !important; text-align: center; text-decoration: none;">${t.btnHome}</a>
-      `;
-    } else if (currentView === 'lead') {
-      messageText = t.msgLead;
-      contentHTML = `
-        <div role="group" style="display: flex; flex-direction: column; gap: 8px;">
-          <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600;">${t.leadTitle}</span>
-          <input type="email" placeholder="your@email.com" class="support-email-input" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff;">
-          <button class="support-submit-email support-option" type="button" style="background: #1a1a1a !important; color: #fff !important; text-align: center;">${t.leadBtn}</button>
-          <button class="support-option support-option-muted" type="button" data-action="back-home">${t.back}</button>
-        </div>
       `;
     } else if (currentView === 'msg-no') {
       messageText = t.msgNo;
@@ -229,11 +244,6 @@ document.addEventListener('DOMContentLoaded', function () {
       contentHTML = `
         <a class="support-option" href="planner.html" style="background: #1a1a1a !important; color: #fff !important; text-align: center; text-decoration: none;">${t.btnAi}</a>
         <button class="support-option support-option-muted" type="button" data-action="back-home">${t.back}</button>
-      `;
-    } else if (currentView === 'email-done') {
-      messageText = t.msgEmailDone;
-      contentHTML = `
-        <a class="support-option" href="index.html" style="background: #1a1a1a !important; color: #fff !important; text-align: center; text-decoration: none;">${t.btnHome}</a>
       `;
     }
 
@@ -259,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
     attachListeners();
   }
 
-  renderWidgetContent();
+  await renderWidgetContent();
   document.body.appendChild(widget);
 
   function attachListeners() {
@@ -275,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (screenBody) {
-      screenBody.onclick = function (event) {
+      screenBody.onclick = async function (event) {
         const target = event.target;
 
         const actionBtn = target.closest('[data-action]');
@@ -284,16 +294,16 @@ document.addEventListener('DOMContentLoaded', function () {
           if (act === 'go-project') currentView = 'project-step1';
           else if (act === 'go-estimator') currentView = 'msg-estimator';
           else if (act === 'go-ai') currentView = 'msg-ai';
-          else if (act === 'go-lead') currentView = 'lead';
+          else if (act === 'go-booking') currentView = 'booking-date';
           else if (act === 'go-no') currentView = 'msg-no';
           else if (act === 'back-home') currentView = 'home';
           else if (act === 'back-step1') currentView = 'project-step1';
           else if (act === 'back-step2') currentView = 'project-step2';
           else if (act === 'back-step3') currentView = 'project-step3';
-          else if (act === 'back-booking-type') currentView = 'booking-type';
-          else if (act === 'back-booking-slot') currentView = 'booking-slot';
+          else if (act === 'back-booking-date') currentView = 'booking-date';
+          else if (act === 'back-booking-time') currentView = 'booking-time';
 
-          renderWidgetContent();
+          await renderWidgetContent();
           return;
         }
 
@@ -301,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (subBtn) {
           clientData.type = subBtn.dataset.sub;
           currentView = 'project-step2';
-          renderWidgetContent();
+          await renderWidgetContent();
           return;
         }
 
@@ -309,69 +319,89 @@ document.addEventListener('DOMContentLoaded', function () {
         if (locBtn) {
           clientData.location = locBtn.dataset.loc;
           currentView = 'project-step3';
-          renderWidgetContent();
+          await renderWidgetContent();
           return;
         }
 
         const timeBtn = target.closest('[data-time]');
         if (timeBtn) {
           clientData.timeline = timeBtn.dataset.time;
-          // След последната стъпка вместо директен линк, преминаваме към запазване на час!
-          currentView = 'booking-type';
-          renderWidgetContent();
+          currentView = 'booking-date';
+          await renderWidgetContent();
           return;
         }
 
-        // Избор на тип среща
-        const bookTypeBtn = target.closest('[data-booktype]');
-        if (bookTypeBtn) {
-          clientData.meetingType = bookTypeBtn.dataset.booktype;
-          currentView = 'booking-slot';
-          renderWidgetContent();
+        // Стъпка 1 от запазването: Избор на дата
+        if (target.classList.contains('support-next-date')) {
+          const dateInput = widget.querySelector('.support-date-input');
+          const val = dateInput ? dateInput.value : '';
+          const lang = getCurrentLang();
+          if (!val) {
+            alert(lang === 'en' ? 'Please select a date.' : 'Моля, изберете дата.');
+            return;
+          }
+          clientData.date = val;
+          bookedSlotsForDate = await fetchBookedSlots(val);
+          currentView = 'booking-time';
+          await renderWidgetContent();
           return;
         }
 
-        // Избор на часови слот
-        const slotBtn = target.closest('[data-slot]');
-        if (slotBtn) {
-          clientData.slot = slotBtn.dataset.slot;
+        // Стъпка 2 от запазването: Избор на свободен час
+        const slotBtn = target.closest('.slot-pick-btn');
+        if (slotBtn && !slotBtn.disabled) {
+          clientData.time = slotBtn.dataset.slot;
           currentView = 'booking-details';
-          renderWidgetContent();
+          await renderWidgetContent();
           return;
         }
 
-        // Потвърждаване на резервацията с данни
+        // Стъпка 3: Финално потвърждение и запис във Firebase `studioBookings`
         if (target.classList.contains('support-confirm-booking')) {
           const nameInput = widget.querySelector('.support-name-input');
           const phoneInput = widget.querySelector('.support-phone-input');
-          const emailInput = widget.querySelector('.support-email-input');
           
           clientData.name = nameInput ? nameInput.value.trim() : '';
           clientData.phone = phoneInput ? phoneInput.value.trim() : '';
-          clientData.email = emailInput ? emailInput.value.trim() : '';
           const lang = getCurrentLang();
 
-          if (!clientData.name || !clientData.phone || !clientData.email || !clientData.email.includes('@')) {
-            alert(lang === 'en' ? 'Please fill in all fields with a valid email.' : 'Моля, попълнете всички полета и въведете валиден имейл.');
+          if (!clientData.name || !clientData.phone) {
+            alert(lang === 'en' ? 'Please fill in your name and phone.' : 'Моля, попълнете име и телефон.');
             return;
           }
 
-          // Тук можеш да пратиш `clientData` към backend/сървър или имейл API ако желаеш
-          currentView = 'booking-done';
-          renderWidgetContent();
-          return;
-        }
+          const fullDatetime = `${clientData.date} ${clientData.time}:00`;
+          const serviceName = clientData.type 
+            ? `Консултация от уиджиет [Тип: ${clientData.type}, Локация: ${clientData.location}]` 
+            : 'Директен час през уиджиет';
 
-        if (target.classList.contains('support-submit-email')) {
-          const input = widget.querySelector('.support-email-input');
-          const emailVal = input ? input.value.trim() : '';
-          const lang = getCurrentLang();
-          if (!emailVal || !emailVal.includes('@')) {
-            alert(lang === 'en' ? 'Please enter a valid email address.' : 'Моля, въведете валиден имейл адрес.');
-            return;
+          const newBooking = {
+            name: clientData.name,
+            phone: clientData.phone,
+            service: serviceName,
+            datetime: fullDatetime,
+            createdAt: new Date().toISOString()
+          };
+
+          try {
+            if (db) {
+              // Записва директно в същата база данни и колекция като contact.html
+              await db.collection('studioBookings').add(newBooking);
+            } else {
+              let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
+              bookings.push(newBooking);
+              localStorage.setItem('studioBookings', JSON.stringify(bookings));
+            }
+            currentView = 'booking-done';
+            await renderWidgetContent();
+          } catch (err) {
+            console.error("Грешка при запис на час през уиджиета:", err);
+            let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
+            bookings.push(newBooking);
+            localStorage.setItem('studioBookings', JSON.stringify(bookings));
+            currentView = 'booking-done';
+            await renderWidgetContent();
           }
-          currentView = 'email-done';
-          renderWidgetContent();
           return;
         }
       };
@@ -380,9 +410,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      setTimeout(() => {
+      setTimeout(async () => {
         const wasOpen = !widget.classList.contains('is-collapsed');
-        renderWidgetContent();
+        await renderWidgetContent();
         if (wasOpen) widget.classList.remove('is-collapsed');
       }, 50);
     });
