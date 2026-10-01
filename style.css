@@ -633,11 +633,39 @@ body.dark-mode .project-img-box {
         gap: 30px;
         text-align: center;
     }
+
+    /* Перфектно подравняване и пропорции за снимки, чертежи и карти на мобилни */
+    .project-main-image, 
+    .project-img-box img,
+    .hero-main-img img,
+    #projectMap img.map-bg-image {
+        object-fit: contain !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .services-grid, 
+    .projects-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    /* Намаляване на излишните отстъпи на карти и форми на мобилни */
+    .calculator-card, 
+    .contact-card, 
+    .booking-card,
+    form {
+        padding: 15px !important;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
 }
 
 
 /* ==========================================
-   SUPPORT WIDGET STYLES (ОПТИМИЗИРАНИ ЗА МОБИЛНИ)
+   SUPPORT WIDGET STYLES (ФИНАЛНО ОПТИМИЗИРАНИ)
    ========================================== */
 .support-widget {
     position: fixed !important;
@@ -647,11 +675,18 @@ body.dark-mode .project-img-box {
     font-family: 'Inter', sans-serif !important;
 }
 
-/* На мобилни устройства избутваме уиджета малко по-нагоре, за да не закрива текста в картите */
+/* На мобилни устройства избутваме бутона нагоре, за да не закрива текста, чертежите и калкулатора */
 @media (max-width: 768px) {
     .support-widget {
-        bottom: 75px !important;
+        bottom: 95px !important;
         right: 15px !important;
+        z-index: 999999 !important;
+    }
+
+    .support-trigger {
+        padding: 10px 14px !important;
+        font-size: 0.8rem !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important;
     }
 }
 
