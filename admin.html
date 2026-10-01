@@ -433,7 +433,7 @@
                         <select id="mainCategory" required>
                             <option value="residential">🏠 Жилищна и многофамилна сграда</option>
                             <option value="commercial">🏢 Търговски обект и промишлена сграда</option>
-                            <option value="interior">🛋️️ Интериорен дизайн и обзавеждане</option>
+                            <option value="interior">🛋 Интериорен дизайн и обзавеждане</option>
                         </select>
                     </div>
 
@@ -522,7 +522,7 @@
             <div id="adminProjectsList"></div>
         </div>
 
-        <!-- РЕЗЕРВАЦИИ (Включващи управлението на часове и почивни дни) -->
+        <!-- РЕЗЕРВАЦИИ (Включващи блокиране на диапазон от-до и автоматично триене след 7 дни) -->
         <div id="bookingsTab" class="admin-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
                 <h3 style="margin: 0; font-weight: 400; font-size: 1.3rem;">Резервации и почивни дни</h3>
@@ -531,26 +531,32 @@
                 </button>
             </div>
 
-            <!-- Вградена секция за Почивни дни и отпуски -->
+            <!-- Секция за Блокиране на почивни дни (От - До) -->
             <div style="background: #fff; padding: 25px; border: 1px solid #eadecc; margin-bottom: 30px;">
-                <h4 style="margin-top: 0; font-size: 1rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Блокиране на почивни дни / отпуски</h4>
+                <h4 style="margin-top: 0; font-size: 1rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Блокиране на почивни дни / отпуски (Период от - до)</h4>
                 <form id="holidayForm">
-                    <div class="form-group">
-                        <label>Изберете дата за блокиране *</label>
-                        <input type="date" id="blockedDate" required>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label>Начална дата *</label>
+                            <input type="date" id="blockedStartDate" required>
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label>Крайна дата *</label>
+                            <input type="date" id="blockedEndDate" required>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Причина / Забележка (по избор)</label>
                         <input type="text" id="holidayReason" placeholder="напр. Годишен отпуск, Официален празник">
                     </div>
-                    <button type="submit" class="btn-action" style="padding: 12px 20px;">Блокирай деня</button>
+                    <button type="submit" class="btn-action" style="padding: 12px 20px;">Блокирай периода</button>
                 </form>
 
                 <h4 style="font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-top: 30px; margin-bottom: 15px;">Блокирани дати в системата</h4>
                 <div id="adminHolidaysList"></div>
             </div>
 
-            <h4 style="font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Запазени консултации</h4>
+            <h4 style="font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Запазени консултации (Миналите преди >7 дни се трият автоматично)</h4>
             <div id="adminBookingsList"></div>
         </div>
 
@@ -868,7 +874,7 @@
             }
         });
 
-        // ЛОГИКА ЗА ПОЧИВНИ ДНИ И ОТПУСКИ
+        // ЛОГИКА ЗА ПОЧИВНИ ДНИ (ДИАПАЗОН ОТ - ДО)
         async function renderAdminHolidays() {
             const listContainer = document.getElementById('adminHolidaysList');
             if (!listContainer) return;
@@ -886,35 +892,46 @@
                 return;
             }
 
-            listContainer.innerHTML = holidays.map((h) => `
-                <div class="project-item-admin">
-                    <div class="project-info-wrapper">
-                        <div>
-                            <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">🏖 ${h.date}</strong>
-                            <div style="font-size: 0.8rem; color: #8c8275;">Причина: ${h.reason || 'Почивен ден'}</div>
+            listContainer.innerHTML = holidays.map((h) => {
+                const periodText = h.endDate && h.endDate !== h.startDate ? `От ${h.startDate} до ${h.endDate}` : `${h.startDate}`;
+                return `
+                    <div class="project-item-admin">
+                        <div class="project-info-wrapper">
+                            <div>
+                                <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">🏖 ${periodText}</strong>
+                                <div style="font-size: 0.8rem; color: #8c8275;">Причина: ${h.reason || 'Почивен ден'}</div>
+                            </div>
+                        </div>
+                        <div class="admin-btns">
+                            <button class="btn-delete" onclick="deleteHoliday('${h.id}')">Изтрий</button>
                         </div>
                     </div>
-                    <div class="admin-btns">
-                        <button class="btn-delete" onclick="deleteHoliday('${h.id}')">Изтрий</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         document.getElementById('holidayForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const dateVal = document.getElementById('blockedDate').value;
+            const startDateVal = document.getElementById('blockedStartDate').value;
+            const endDateVal = document.getElementById('blockedEndDate').value || startDateVal;
             const reasonVal = document.getElementById('holidayReason').value.trim();
 
-            if (!dateVal) return;
+            if (!startDateVal) return;
+
+            if (endDateVal < startDateVal) {
+                alert("Крайната дата не може да бъде преди началната дата!");
+                return;
+            }
 
             try {
                 await db.collection('blockedDays').add({
-                    date: dateVal,
+                    startDate: startDateVal,
+                    endDate: endDateVal,
+                    date: startDateVal, // поддържаме съвместимост ако някъде се чете .date
                     reason: reasonVal || 'Почивен ден',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                alert('Датата е успешно блокирана в системата!');
+                alert('Периодът е успешно блокиран в системата!');
                 document.getElementById('holidayForm').reset();
                 renderAdminHolidays();
             } catch (err) {
@@ -923,7 +940,7 @@
         });
 
         async function deleteHoliday(id) {
-            if (confirm("Сигурни ли сте, че искате да премахнете този почивен ден?")) {
+            if (confirm("Сигурни ли сте, че искате да премахнете този почивен период?")) {
                 try {
                     await db.collection('blockedDays').doc(id).delete();
                     renderAdminHolidays();
@@ -1323,18 +1340,48 @@
             }
         }
 
+        // ЛОГИКА ЗА АВТОМАТИЧНО ТРИЕНЕ НА РЕЗЕРВАЦИИ СЛЕД 7 ДНИ
         async function renderAdminBookings() {
             const listContainer = document.getElementById('adminBookingsList');
             if (!listContainer) return;
-            let bookings = [];
             
+            let bookings = [];
+            const now = new Date();
+            const sevenDaysAgoMs = 7 * 24 * 60 * 60 * 1000;
+
             try {
                 const snapshot = await db.collection('studioBookings').get();
-                bookings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            } catch (err) {}
+                
+                for (const docSnap of snapshot.docs) {
+                    const b = docSnap.data();
+                    let shouldDelete = false;
+
+                    if (b.datetime) {
+                        try {
+                            // Очаква формат "YYYY-MM-DD HH:mm" или類似
+                            const parsedDate = new Date(b.datetime.replace(' ', 'T'));
+                            if (!isNaN(parsedDate.getTime())) {
+                                const diff = now.getTime() - parsedDate.getTime();
+                                if (diff > sevenDaysAgoMs) {
+                                    shouldDelete = true;
+                                }
+                            }
+                        } catch (err) {}
+                    }
+
+                    if (shouldDelete) {
+                        // Автоматично изтриване от базата данни, ако са минали над 7 дни
+                        await db.collection('studioBookings').doc(docSnap.id).delete();
+                    } else {
+                        bookings.push({ id: docSnap.id, ...b });
+                    }
+                }
+            } catch (err) {
+                console.error("Грешка при обработка на резервациите:", err);
+            }
             
             if (bookings.length === 0) {
-                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма запазени резервации.</p>`;
+                listContainer.innerHTML = `<p style="color: #8c8275;">Все още няма активни резервации (миналите преди повече от 7 дни са изтрити автоматично).</p>`;
                 return;
             }
 
