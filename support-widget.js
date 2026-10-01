@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
   if (document.querySelector('.support-widget')) return;
 
-  // Езиков речник за уиджета
   const translations = {
     bg: {
       title: "Здравей! 📐✨",
@@ -83,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
-  // Определяме текущия език (ако сайтът има бутони с класове .lang-btn активен или по дефолт е 'bg')
   function getCurrentLang() {
     const activeLangBtn = document.querySelector('.lang-btn.active');
     if (activeLangBtn && activeLangBtn.textContent.toLowerCase().includes('en')) {
@@ -93,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   const widget = document.createElement('aside');
-  widget.className = 'support-widget';
+  widget.className = 'support-widget is-collapsed';
   widget.setAttribute('aria-label', 'Интелигентен помощник');
 
   function renderWidget() {
@@ -110,8 +108,8 @@ document.addEventListener('DOMContentLoaded', function () {
           <span class="support-message">${t.message}</span>
         </div>
         
-        <!-- Етап 1: Главно меню -->
-        <div class="support-options" role="group">
+        <!-- Етап 1: Главно меню (показва се по подразбиране) -->
+        <div class="support-options" role="group" style="display: flex; flex-direction: column; gap: 8px;">
           <button class="support-option" type="button" data-choice="project">${t.opt1}</button>
           <button class="support-option" type="button" data-choice="estimator">${t.opt2}</button>
           <button class="support-option" type="button" data-choice="ai">${t.opt3}</button>
@@ -119,8 +117,8 @@ document.addEventListener('DOMContentLoaded', function () {
           <button class="support-option support-option-muted" type="button" data-choice="no">${t.opt5}</button>
         </div>
 
-        <!-- Етап 2: Избор на тип имот -->
-        <div class="support-sub-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
+        <!-- Етап 2: Избор на тип имот (скрит първоначално) -->
+        <div class="support-sub-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px;">
           <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">${t.step1Title}</span>
           <button class="support-option" type="button" data-subchoice="house">${t.sub1}</button>
           <button class="support-option" type="button" data-subchoice="apartment">${t.sub2}</button>
@@ -128,8 +126,8 @@ document.addEventListener('DOMContentLoaded', function () {
           <button class="support-option support-option-muted" type="button" data-choice="back">${t.back}</button>
         </div>
 
-        <!-- Етап 3: Избор на локация -->
-        <div class="support-location-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
+        <!-- Етап 3: Избор на локация (скрит първоначално) -->
+        <div class="support-location-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px;">
           <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">${t.step2Title}</span>
           <button class="support-option" type="button" data-loc="sofia">${t.loc1}</button>
           <button class="support-option" type="button" data-loc="nature">${t.loc2}</button>
@@ -137,16 +135,16 @@ document.addEventListener('DOMContentLoaded', function () {
           <button class="support-option support-option-muted" type="button" data-choice="back-to-sub">${t.backToSub}</button>
         </div>
 
-        <!-- Етап 4: Времева рамка -->
-        <div class="support-time-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
+        <!-- Етап 4: Времева рамка (скрит първоначално) -->
+        <div class="support-time-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px;">
           <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">${t.step3Title}</span>
           <button class="support-option" type="button" data-time="soon">${t.time1}</button>
           <button class="support-option" type="button" data-time="later">${t.time2}</button>
           <button class="support-option" type="button" data-time="ideas">${t.time3}</button>
         </div>
 
-        <!-- Форма за имейл -->
-        <div class="support-lead-form" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
+        <!-- Форма за имейл (скрита първоначално) -->
+        <div class="support-lead-form" hidden style="display: none; flex-direction: column; gap: 8px;">
           <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600;">${t.leadTitle}</span>
           <input type="email" placeholder="your@email.com" class="support-email-input" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff;">
           <button class="support-submit-email support-option" type="button" style="background: #1a1a1a !important; color: #fff !important; text-align: center;">${t.leadBtn}</button>
@@ -166,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function () {
   renderWidget();
   document.body.appendChild(widget);
 
-  const screen = widget.querySelector('.support-screen');
   let close = widget.querySelector('.support-close');
   let trigger = widget.querySelector('.support-trigger');
   let message = widget.querySelector('.support-message');
@@ -182,11 +179,12 @@ document.addEventListener('DOMContentLoaded', function () {
   let clientData = { type: '', location: '', timeline: '' };
 
   function hideAllSteps() {
-    options.style.display = 'none'; options.hidden = true;
-    subOptions.style.display = 'none'; subOptions.hidden = true;
-    locOptions.style.display = 'none'; locOptions.hidden = true;
-    timeOptions.style.display = 'none'; timeOptions.hidden = true;
-    leadForm.style.display = 'none'; leadForm.hidden = true;
+    [options, subOptions, locOptions, timeOptions, leadForm, action].forEach(el => {
+      if (el) {
+        el.style.display = 'none';
+        el.hidden = true;
+      }
+    });
   }
 
   function typeMessage(text, callback) {
@@ -205,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function () {
     typing();
   }
 
-  // Слушаме кликове по езиковите бутони на сайта, за да презаредим уиджета на съответния език динамично
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       setTimeout(() => {
@@ -213,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function () {
         widget.remove();
         renderWidget();
         document.body.appendChild(widget);
-        // Презаписваме референциите след повторното създаване
         rebindEvents();
         if (wasOpen) widget.classList.remove('is-collapsed');
       }, 50);
@@ -233,7 +229,6 @@ document.addEventListener('DOMContentLoaded', function () {
     emailInput = newWidget.querySelector('.support-email-input');
     submitEmailBtn = newWidget.querySelector('.support-submit-email');
     action = newWidget.querySelector('.support-action');
-
     attachListeners();
   }
 
