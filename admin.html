@@ -249,10 +249,8 @@
             <button class="tab-btn" onclick="switchTab('contactTab', this)">Контакти</button>
             <button class="tab-btn" onclick="switchTab('mapTab', this)">Карта</button>
             <button class="tab-btn" onclick="switchTab('estimatorTab', this)">Калкулатор</button>
-            <button class="tab-btn" onclick="switchTab('holidaysTab', this)">Почивни дни</button>
             <button class="tab-btn" onclick="switchTab('uploadTab', this)" id="uploadTabBtn">Качване</button>
             <button class="tab-btn" onclick="switchTab('projectsTab', this)">Проекти</button>
-            <button class="tab-btn" onclick="switchTab('detailTab', this)">Project Detail</button>
             <button class="tab-btn" onclick="switchTab('bookingsTab', this)">Резервации</button>
             <button class="tab-btn" onclick="switchTab('reviewsTab', this)">Мнения</button>
         </div>
@@ -418,26 +416,6 @@
             </form>
         </div>
 
-        <!-- НОВАТА СЕКЦИЯ ЗА ПОЧИВНИ ДНИ И ОТПУСКИ -->
-        <div id="holidaysTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Управление на почивни дни и отпуски</h3>
-            
-            <form id="holidayForm" style="background: #fff; padding: 20px; border: 1px solid #eadecc; margin-bottom: 30px;">
-                <div class="form-group">
-                    <label>Изберете дата за блокиране *</label>
-                    <input type="date" id="blockedDate" required>
-                </div>
-                <div class="form-group">
-                    <label>Причина / Забележка (по избор)</label>
-                    <input type="text" id="holidayReason" placeholder="напр. Годишен отпуск, Официален празник">
-                </div>
-                <button type="submit" class="btn-action">Блокирай деня</button>
-            </form>
-
-            <h4 style="font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Блокирани дати в системата</h4>
-            <div id="adminHolidaysList"></div>
-        </div>
-
         <div id="uploadTab" class="admin-section">
             <h3 id="formTitle" style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Качване на нов проект</h3>
             <form id="uploadForm">
@@ -544,19 +522,35 @@
             <div id="adminProjectsList"></div>
         </div>
 
-        <div id="detailTab" class="admin-section">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Управление на Project Detail елементи</h3>
-            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Тук можете да преглеждате проектите и да преценявате или премахвате детайли/медия от самите страници с подробности за проект (Project Detail).</p>
-            <div id="adminDetailList"></div>
-        </div>
-
+        <!-- РЕЗЕРВАЦИИ (Включващи управлението на часове и почивни дни) -->
         <div id="bookingsTab" class="admin-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0; font-weight: 400; font-size: 1.3rem;">Запазени консултации</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <h3 style="margin: 0; font-weight: 400; font-size: 1.3rem;">Резервации и почивни дни</h3>
                 <button onclick="downloadCalendar()" style="background: #1a1a1a; color: #fff; padding: 10px 15px; border: none; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; font-weight: 600;">
                     📥 Синхронизирай с Календар
                 </button>
             </div>
+
+            <!-- Вградена секция за Почивни дни и отпуски -->
+            <div style="background: #fff; padding: 25px; border: 1px solid #eadecc; margin-bottom: 30px;">
+                <h4 style="margin-top: 0; font-size: 1rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Блокиране на почивни дни / отпуски</h4>
+                <form id="holidayForm">
+                    <div class="form-group">
+                        <label>Изберете дата за блокиране *</label>
+                        <input type="date" id="blockedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Причина / Забележка (по избор)</label>
+                        <input type="text" id="holidayReason" placeholder="напр. Годишен отпуск, Официален празник">
+                    </div>
+                    <button type="submit" class="btn-action" style="padding: 12px 20px;">Блокирай деня</button>
+                </form>
+
+                <h4 style="font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-top: 30px; margin-bottom: 15px;">Блокирани дати в системата</h4>
+                <div id="adminHolidaysList"></div>
+            </div>
+
+            <h4 style="font-size: 0.95rem; text-transform: uppercase; color: #1a1a1a; margin-bottom: 15px;">Запазени консултации</h4>
             <div id="adminBookingsList"></div>
         </div>
 
@@ -781,7 +775,6 @@
             }
 
             renderAdminList();
-            renderAdminDetailList();
             renderAdminBookings();
             renderAdminTeam();
             renderAdminReviews();
@@ -1267,43 +1260,6 @@
             }).join('');
         }
 
-        async function renderAdminDetailList() {
-            const listContainer = document.getElementById('adminDetailList');
-            if (!listContainer) return;
-            let projects = [];
-            
-            try {
-                const snapshot = await db.collection('projects').get();
-                projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            } catch (err) {}
-            
-            if (projects.length === 0) {
-                listContainer.innerHTML = `<p style="color: #8c8275;">Няма налични проекти за управление на детайли.</p>`;
-                return;
-            }
-
-            listContainer.innerHTML = projects.map((p) => {
-                let thumbHtml = p.mainImage ? `<img src="${p.mainImage}" alt="${p.title}" class="admin-project-thumb">` : `<div class="admin-project-no-thumb">Няма снимка</div>`;
-                return `
-                    <div class="project-item-admin">
-                        <div class="project-info-wrapper">
-                            ${thumbHtml}
-                            <div>
-                                <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${p.title} (Детайли)</strong>
-                                <div style="font-size: 0.8rem; color: #8c8275;">
-                                    Планове: ${(p.floorPlans || []).length} | Фасади: ${(p.facadeImages || []).length} | Галерия: ${(p.gallery || []).length}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="admin-btns">
-                            <a href="project-detail.html?id=${p.id}" target="_blank" class="btn-view" style="text-decoration: none;">🌐 Отвори публичен детайл</a>
-                            <button class="btn-edit" onclick="editProject('${p.id}')">Управлявай / Махай детайли</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
         async function openPreviewModal(id) {
             let p = null;
             try {
@@ -1369,6 +1325,7 @@
 
         async function renderAdminBookings() {
             const listContainer = document.getElementById('adminBookingsList');
+            if (!listContainer) return;
             let bookings = [];
             
             try {
@@ -1629,7 +1586,6 @@
                 try {
                     await db.collection('projects').doc(id).delete();
                     renderAdminList();
-                    renderAdminDetailList();
                     resetProjectForm();
                 } catch (err) {
                     alert("Грешка при изтриване: " + err.message);
@@ -1864,8 +1820,7 @@
 
                 resetProjectForm();
                 renderAdminList();
-                renderAdminDetailList();
-                switchTab('projectsTab', document.querySelectorAll('.tab-btn')[7]);
+                switchTab('projectsTab', document.querySelectorAll('.tab-btn')[6]);
 
             } catch (err) {
                 console.error(err);
