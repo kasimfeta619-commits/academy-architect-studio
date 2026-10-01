@@ -637,14 +637,22 @@ body.dark-mode .project-img-box {
 
 
 /* ==========================================
-   SUPPORT WIDGET STYLES (ЧИСТИ И БЕЗОПАСНИ)
+   SUPPORT WIDGET STYLES (ОПТИМИЗИРАНИ ЗА МОБИЛНИ)
    ========================================== */
 .support-widget {
     position: fixed !important;
     bottom: 25px !important;
-    right: 25px !important;
+    right: 20px !important;
     z-index: 99999 !important;
     font-family: 'Inter', sans-serif !important;
+}
+
+/* На мобилни устройства избутваме уиджета малко по-нагоре, за да не закрива текста в картите */
+@media (max-width: 768px) {
+    .support-widget {
+        bottom: 75px !important;
+        right: 15px !important;
+    }
 }
 
 .support-screen {
@@ -652,8 +660,8 @@ body.dark-mode .project-img-box {
     bottom: 70px !important;
     right: 0 !important;
     width: 320px !important;
-    max-height: 420px !important; /* Ограничена височина за мобилни устройства */
-    overflow-y: auto !important;  /* Вътрешен скрол вместо прескачане */
+    max-height: 420px !important;
+    overflow-y: auto !important;
     background: #fdfbf7 !important;
     border: 1px solid #e6dfd5 !important;
     border-radius: 16px !important;
