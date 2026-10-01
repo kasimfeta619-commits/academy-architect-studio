@@ -1,86 +1,193 @@
 document.addEventListener('DOMContentLoaded', function () {
   if (document.querySelector('.support-widget')) return;
 
+  // Езиков речник за уиджета
+  const translations = {
+    bg: {
+      title: "Здравей! 📐✨",
+      message: "Аз съм твоят архитектурен асистент. Какво ще съградим заедно днес?",
+      opt1: "✨ Искам уникален проект",
+      opt2: "🧮 Трябва ми бърза цена (Калкулатор)",
+      opt3: "🤖 Искам да тествам AI Планера",
+      opt4: "📥 Получи ценоразпис / брошура",
+      opt5: "Само разглеждам, благодаря ☕",
+      step1Title: "Стъпка 1 от 3: Избери имот",
+      sub1: "🏡 Семейна къща",
+      sub2: "🏢 Жилищен апартамент",
+      sub3: "💼 Офис / Бизнес площ",
+      back: "← Назад",
+      step2Title: "Стъпка 2 от 3: Къде е имотът?",
+      loc1: "🏙️ София / Голям град",
+      loc2: "🌲 Извънградско / Планина",
+      loc3: "🌊 По морето",
+      backToSub: "← Назад",
+      step3Title: "Стъпка 3 от 3: Планиран старт",
+      time1: "🚀 В най-скоро време",
+      time2: "⏳ След 6 месеца или повече",
+      time3: "🔍 Само събирам идеи засега",
+      leadTitle: "Въведи имейл за безплатна брошура:",
+      leadBtn: "Изпрати ми материала",
+      triggerText: "Консултант",
+      msgNo: "Разбрах! Разгледай спокойно портфолиото, а аз оставам на линия, ако размислиш. ☕",
+      msgEstimator: "Можеш да изчислиш ориентировъчна стойност за секунди в нашия ценови калкулатор.",
+      btnEstimator: "🧮 Към калкулатора",
+      msgAi: "Нашите иновативни AI алгоритми ще ти помогнат с първоначалното разпределение.",
+      btnAi: "🤖 Към AI Планера",
+      msgLead: "Въведи своя имейл и ще ти изпратим актуална брошура и ценоразпис веднага!",
+      msgProject: "Супер! Нека преминем през 3 бързи стъпки. За какъв тип имот става въпрос?",
+      msgLoc: "Отлично! Къде ще се намира бъдещият обект?",
+      msgTime: "Кога планираш да стартираш проекта?",
+      msgFinal: "Благодаря за информацията! Подготвихме персонализиран запрос за твоя проект.",
+      btnFinal: "✨ Запази час за консултация",
+      msgEmailDone: "Готово! Материалите бяха изпратени успешно към посочената поща. Очакваме те! ☕",
+      btnHome: "Към началната страница"
+    },
+    en: {
+      title: "Hello! 📐✨",
+      message: "I am your architectural assistant. What shall we build together today?",
+      opt1: "✨ I want a unique project",
+      opt2: "🧮 I need a quick quote (Calculator)",
+      opt3: "🤖 I want to test the AI Planner",
+      opt4: "📥 Get price list / brochure",
+      opt5: "Just browsing, thanks ☕",
+      step1Title: "Step 1 of 3: Choose property",
+      sub1: "🏡 Family House",
+      sub2: "🏢 Apartment",
+      sub3: "💼 Office / Business Space",
+      back: "← Back",
+      step2Title: "Step 2 of 3: Where is the property?",
+      loc1: "🏙️ Sofia / Major City",
+      loc2: "🌲 Countryside / Mountain",
+      loc3: "🌊 By the Sea",
+      backToSub: "← Back",
+      step3Title: "Step 3 of 3: Planned Start",
+      time1: "🚀 As soon as possible",
+      time2: "⏳ In 6 months or more",
+      time3: "🔍 Just gathering ideas for now",
+      leadTitle: "Enter email for a free brochure:",
+      leadBtn: "Send me the material",
+      triggerText: "Consultant",
+      msgNo: "Understood! Feel free to browse the portfolio, and I'll stay on standby if you change your mind. ☕",
+      msgEstimator: "You can calculate an estimated cost in seconds using our price calculator.",
+      btnEstimator: "🧮 To Calculator",
+      msgAi: "Our innovative AI algorithms will help you with the initial floor plan layout.",
+      btnAi: "🤖 To AI Planner",
+      msgLead: "Enter your email and we'll send you our current brochure and price list right away!",
+      msgProject: "Great! Let's go through 3 quick steps. What type of property is this for?",
+      msgLoc: "Excellent! Where will the future project be located?",
+      msgTime: "When are you planning to start the project?",
+      msgFinal: "Thank you for the information! We have prepared a customized inquiry for your project.",
+      btnFinal: "✨ Book a Consultation",
+      msgEmailDone: "Done! The materials have been successfully sent to your inbox. We look forward to hearing from you! ☕",
+      btnHome: "To Homepage"
+    }
+  };
+
+  // Определяме текущия език (ако сайтът има бутони с класове .lang-btn активен или по дефолт е 'bg')
+  function getCurrentLang() {
+    const activeLangBtn = document.querySelector('.lang-btn.active');
+    if (activeLangBtn && activeLangBtn.textContent.toLowerCase().includes('en')) {
+      return 'en';
+    }
+    return 'bg';
+  }
+
   const widget = document.createElement('aside');
   widget.className = 'support-widget';
   widget.setAttribute('aria-label', 'Интелигентен помощник');
-  widget.innerHTML = `
-    <div class="support-screen" role="status" aria-live="polite">
-      <button class="support-close" type="button" aria-label="Затвори съобщението">×</button>
 
-      <div class="support-screen-face" aria-hidden="true"><span>АС</span></div>
-      <div class="support-copy">
-        <strong>Здравей! 📐✨</strong>
-        <span class="support-message">Аз съм твоят архитектурен асистент. Какво ще съградим заедно днес?</span>
+  function renderWidget() {
+    const lang = getCurrentLang();
+    const t = translations[lang];
+
+    widget.innerHTML = `
+      <div class="support-screen" role="status" aria-live="polite">
+        <button class="support-close" type="button" aria-label="Затвори">×</button>
+
+        <div class="support-screen-face" aria-hidden="true"><span>АС</span></div>
+        <div class="support-copy">
+          <strong>${t.title}</strong>
+          <span class="support-message">${t.message}</span>
+        </div>
+        
+        <!-- Етап 1: Главно меню -->
+        <div class="support-options" role="group">
+          <button class="support-option" type="button" data-choice="project">${t.opt1}</button>
+          <button class="support-option" type="button" data-choice="estimator">${t.opt2}</button>
+          <button class="support-option" type="button" data-choice="ai">${t.opt3}</button>
+          <button class="support-option" type="button" data-choice="lead">${t.opt4}</button>
+          <button class="support-option support-option-muted" type="button" data-choice="no">${t.opt5}</button>
+        </div>
+
+        <!-- Етап 2: Избор на тип имот -->
+        <div class="support-sub-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
+          <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">${t.step1Title}</span>
+          <button class="support-option" type="button" data-subchoice="house">${t.sub1}</button>
+          <button class="support-option" type="button" data-subchoice="apartment">${t.sub2}</button>
+          <button class="support-option" type="button" data-subchoice="office">${t.sub3}</button>
+          <button class="support-option support-option-muted" type="button" data-choice="back">${t.back}</button>
+        </div>
+
+        <!-- Етап 3: Избор на локация -->
+        <div class="support-location-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
+          <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">${t.step2Title}</span>
+          <button class="support-option" type="button" data-loc="sofia">${t.loc1}</button>
+          <button class="support-option" type="button" data-loc="nature">${t.loc2}</button>
+          <button class="support-option" type="button" data-loc="sea">${t.loc3}</button>
+          <button class="support-option support-option-muted" type="button" data-choice="back-to-sub">${t.backToSub}</button>
+        </div>
+
+        <!-- Етап 4: Времева рамка -->
+        <div class="support-time-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
+          <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">${t.step3Title}</span>
+          <button class="support-option" type="button" data-time="soon">${t.time1}</button>
+          <button class="support-option" type="button" data-time="later">${t.time2}</button>
+          <button class="support-option" type="button" data-time="ideas">${t.time3}</button>
+        </div>
+
+        <!-- Форма за имейл -->
+        <div class="support-lead-form" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
+          <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600;">${t.leadTitle}</span>
+          <input type="email" placeholder="your@email.com" class="support-email-input" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff;">
+          <button class="support-submit-email support-option" type="button" style="background: #1a1a1a !important; color: #fff !important; text-align: center;">${t.leadBtn}</button>
+          <button class="support-option support-option-muted" type="button" data-choice="back">${t.back}</button>
+        </div>
+
+        <a class="support-action" href="contact.html" hidden style="display: none;"></a>
       </div>
       
-      <!-- Етап 1: Главно меню -->
-      <div class="support-options" role="group" aria-label="Изберете опция">
-        <button class="support-option" type="button" data-choice="project">✨ Искам уникален проект</button>
-        <button class="support-option" type="button" data-choice="estimator">🧮 Трябва ми бърза цена (Калкулатор)</button>
-        <button class="support-option" type="button" data-choice="ai">🤖 Искам да тествам AI Планера</button>
-        <button class="support-option" type="button" data-choice="lead">📥 Получи ценоразпис / брошура</button>
-        <button class="support-option support-option-muted" type="button" data-choice="no">Само разглеждам, благодаря ☕</button>
-      </div>
+      <button class="support-trigger" type="button" aria-label="Отвори помощта">
+        <span class="support-trigger-dot" aria-hidden="true"></span>
+        <span class="support-trigger-text">${t.triggerText}</span>
+      </button>
+    `;
+  }
 
-      <!-- Етап 2: Избор на тип имот -->
-      <div class="support-sub-options" role="group" aria-label="Тип обект" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
-        <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">Стъпка 1 от 3: Избери имот</span>
-        <button class="support-option" type="button" data-subchoice="house">🏡 Семейна къща</button>
-        <button class="support-option" type="button" data-subchoice="apartment">🏢 Жилищен апартамент</button>
-        <button class="support-option" type="button" data-subchoice="office">💼 Офис / Бизнес площ</button>
-        <button class="support-option support-option-muted" type="button" data-choice="back">← Назад</button>
-      </div>
-
-      <!-- Етап 3: Избор на локация -->
-      <div class="support-location-options" role="group" aria-label="Локация" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
-        <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">Стъпка 2 от 3: Къде е имотът?</span>
-        <button class="support-option" type="button" data-loc="sofia">🏙️ София / Голям град</button>
-        <button class="support-option" type="button" data-loc="nature">🌲 Извънградско / Планина</button>
-        <button class="support-option" type="button" data-loc="sea">🌊 По морето</button>
-        <button class="support-option support-option-muted" type="button" data-choice="back-to-sub">← Назад</button>
-      </div>
-
-      <!-- Етап 4: Времева рамка -->
-      <div class="support-time-options" role="group" aria-label="Времева рамка" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
-        <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">Стъпка 3 от 3: Планиран старт</span>
-        <button class="support-option" type="button" data-time="soon">🚀 В най-скоро време</button>
-        <button class="support-option" type="button" data-time="later">⏳ След 6 месеца или повече</button>
-        <button class="support-option" type="button" data-time="ideas">🔍 Само събирам идеи засега</button>
-      </div>
-
-      <!-- Форма за имейл за брошура -->
-      <div class="support-lead-form" hidden style="display: none; flex-direction: column; gap: 8px; margin-top: 5px;">
-        <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600;">Въведи имейл за безплатна брошура:</span>
-        <input type="email" placeholder="your@email.com" class="support-email-input" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff;">
-        <button class="support-submit-email support-option" type="button" style="background: #1a1a1a !important; color: #fff !important; text-align: center;">Изпрати ми материала</button>
-        <button class="support-option support-option-muted" type="button" data-choice="back">← Назад към менюто</button>
-      </div>
-
-      <a class="support-action" href="contact.html" hidden style="display: none;">Към контактната форма</a>
-    </div>
-    
-    <button class="support-trigger" type="button" aria-label="Отвори помощта">
-      <span class="support-trigger-dot" aria-hidden="true"></span>
-      <span class="support-trigger-text">Консултант</span>
-    </button>
-  `;
+  renderWidget();
   document.body.appendChild(widget);
 
   const screen = widget.querySelector('.support-screen');
-  const close = widget.querySelector('.support-close');
-  const trigger = widget.querySelector('.support-trigger');
-  const message = widget.querySelector('.support-message');
-  const options = widget.querySelector('.support-options');
-  const subOptions = widget.querySelector('.support-sub-options');
-  const locOptions = widget.querySelector('.support-location-options');
-  const timeOptions = widget.querySelector('.support-time-options');
-  const leadForm = widget.querySelector('.support-lead-form');
-  const emailInput = widget.querySelector('.support-email-input');
-  const submitEmailBtn = widget.querySelector('.support-submit-email');
-  const action = widget.querySelector('.support-action');
+  let close = widget.querySelector('.support-close');
+  let trigger = widget.querySelector('.support-trigger');
+  let message = widget.querySelector('.support-message');
+  let options = widget.querySelector('.support-options');
+  let subOptions = widget.querySelector('.support-sub-options');
+  let locOptions = widget.querySelector('.support-location-options');
+  let timeOptions = widget.querySelector('.support-time-options');
+  let leadForm = widget.querySelector('.support-lead-form');
+  let emailInput = widget.querySelector('.support-email-input');
+  let submitEmailBtn = widget.querySelector('.support-submit-email');
+  let action = widget.querySelector('.support-action');
 
   let clientData = { type: '', location: '', timeline: '' };
+
+  function hideAllSteps() {
+    options.style.display = 'none'; options.hidden = true;
+    subOptions.style.display = 'none'; subOptions.hidden = true;
+    locOptions.style.display = 'none'; locOptions.hidden = true;
+    timeOptions.style.display = 'none'; timeOptions.hidden = true;
+    leadForm.style.display = 'none'; leadForm.hidden = true;
+  }
 
   function typeMessage(text, callback) {
     message.textContent = '';
@@ -98,135 +205,148 @@ document.addEventListener('DOMContentLoaded', function () {
     typing();
   }
 
-  // Главно меню
-  options.addEventListener('click', function (event) {
-    const choice = event.target.closest('[data-choice]');
-    if (!choice) return;
-    const type = choice.dataset.choice;
+  // Слушаме кликове по езиковите бутони на сайта, за да презаредим уиджета на съответния език динамично
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setTimeout(() => {
+        const wasOpen = !widget.classList.contains('is-collapsed');
+        widget.remove();
+        renderWidget();
+        document.body.appendChild(widget);
+        // Презаписваме референциите след повторното създаване
+        rebindEvents();
+        if (wasOpen) widget.classList.remove('is-collapsed');
+      }, 50);
+    });
+  });
 
-    options.style.display = 'none';
-    options.hidden = true;
+  function rebindEvents() {
+    const newWidget = document.querySelector('.support-widget');
+    close = newWidget.querySelector('.support-close');
+    trigger = newWidget.querySelector('.support-trigger');
+    message = newWidget.querySelector('.support-message');
+    options = newWidget.querySelector('.support-options');
+    subOptions = newWidget.querySelector('.support-sub-options');
+    locOptions = newWidget.querySelector('.support-location-options');
+    timeOptions = newWidget.querySelector('.support-time-options');
+    leadForm = newWidget.querySelector('.support-lead-form');
+    emailInput = newWidget.querySelector('.support-email-input');
+    submitEmailBtn = newWidget.querySelector('.support-submit-email');
+    action = newWidget.querySelector('.support-action');
 
-    if (type === 'no') {
-      typeMessage('Разбрах! Разгледай спокойно портфолиото, а аз оставам на линия, ако размислиш. ☕');
-    } else if (type === 'estimator') {
-      typeMessage('Можеш да изчислиш ориентировъчна стойност за секунди в нашия ценови калкулатор.', () => {
-        action.textContent = '🧮 Към калкулатора';
-        action.href = 'estimator.html';
-        action.style.display = 'block';
-        action.hidden = false;
+    attachListeners();
+  }
+
+  function attachListeners() {
+    const lang = getCurrentLang();
+    const t = translations[lang];
+
+    options.addEventListener('click', function (event) {
+      const choice = event.target.closest('[data-choice]');
+      if (!choice) return;
+      const type = choice.dataset.choice;
+      hideAllSteps();
+
+      if (type === 'no') {
+        typeMessage(t.msgNo);
+      } else if (type === 'estimator') {
+        typeMessage(t.msgEstimator, () => {
+          action.textContent = t.btnEstimator;
+          action.href = 'estimator.html';
+          action.style.display = 'block';
+          action.hidden = false;
+        });
+      } else if (type === 'ai') {
+        typeMessage(t.msgAi, () => {
+          action.textContent = t.btnAi;
+          action.href = 'planner.html';
+          action.style.display = 'block';
+          action.hidden = false;
+        });
+      } else if (type === 'lead') {
+        typeMessage(t.msgLead, () => {
+          leadForm.style.display = 'flex';
+          leadForm.hidden = false;
+        });
+      } else if (type === 'project') {
+        typeMessage(t.msgProject, () => {
+          subOptions.style.display = 'flex';
+          subOptions.hidden = false;
+        });
+      }
+    });
+
+    subOptions.addEventListener('click', function (event) {
+      const btn = event.target.closest('button');
+      if (!btn) return;
+      if (btn.dataset.choice === 'back') {
+        hideAllSteps();
+        options.style.display = 'flex';
+        options.hidden = false;
+        return;
+      }
+      clientData.type = btn.dataset.subchoice;
+      hideAllSteps();
+      typeMessage(t.msgLoc, () => {
+        locOptions.style.display = 'flex';
+        locOptions.hidden = false;
       });
-    } else if (type === 'ai') {
-      typeMessage('Нашите иновативни AI алгоритми ще ти помогнат с първоначалното разпределение.', () => {
-        action.textContent = '🤖 Към AI Планера';
-        action.href = 'planner.html';
-        action.style.display = 'block';
-        action.hidden = false;
-      });
-    } else if (type === 'lead') {
-      typeMessage('Въведи своя имейл и ще ти изпратим актуална брошура и ценоразпис веднага!', () => {
-        leadForm.style.display = 'flex';
-        leadForm.hidden = false;
-      });
-    } else if (type === 'project') {
-      typeMessage('Супер! Нека преминем през 3 бързи стъпки. За какъв тип имот става въпрос?', () => {
+    });
+
+    locOptions.addEventListener('click', function (event) {
+      const btn = event.target.closest('button');
+      if (!btn) return;
+      if (btn.dataset.choice === 'back-to-sub') {
+        hideAllSteps();
         subOptions.style.display = 'flex';
         subOptions.hidden = false;
+        return;
+      }
+      clientData.location = btn.dataset.loc;
+      hideAllSteps();
+      typeMessage(t.msgTime, () => {
+        timeOptions.style.display = 'flex';
+        timeOptions.hidden = false;
       });
-    }
-  });
-
-  // Стъпка 1: Избор на имот
-  subOptions.addEventListener('click', function (event) {
-    const btn = event.target.closest('button');
-    if (!btn) return;
-
-    if (btn.dataset.choice === 'back') {
-      subOptions.style.display = 'none';
-      subOptions.hidden = true;
-      options.style.display = 'flex';
-      options.hidden = false;
-      typeMessage('Какво друго искате да обсъдим днес? 📐');
-      return;
-    }
-
-    clientData.type = btn.dataset.subchoice;
-    subOptions.style.display = 'none';
-    subOptions.hidden = true;
-
-    typeMessage('Отлично! Къде ще се намира бъдещият обект?', () => {
-      locOptions.style.display = 'flex';
-      locOptions.hidden = false;
     });
-  });
 
-  // Стъпка 2: Избор на локация
-  locOptions.addEventListener('click', function (event) {
-    const btn = event.target.closest('button');
-    if (!btn) return;
-
-    if (btn.dataset.choice === 'back-to-sub') {
-      locOptions.style.display = 'none';
-      locOptions.hidden = true;
-      subOptions.style.display = 'flex';
-      subOptions.hidden = false;
-      typeMessage('Избери тип имот:');
-      return;
-    }
-
-    clientData.location = btn.dataset.loc;
-    locOptions.style.display = 'none';
-    locOptions.hidden = true;
-
-    typeMessage('Кога планираш да стартираш проекта?', () => {
-      timeOptions.style.display = 'flex';
-      timeOptions.hidden = false;
+    timeOptions.addEventListener('click', function (event) {
+      const btn = event.target.closest('button');
+      if (!btn) return;
+      clientData.timeline = btn.dataset.time;
+      hideAllSteps();
+      typeMessage(t.msgFinal, () => {
+        action.textContent = t.btnFinal;
+        action.href = `contact.html?type=${clientData.type}&loc=${clientData.location}&time=${clientData.timeline}`;
+        action.style.display = 'block';
+        action.hidden = false;
+      });
     });
-  });
 
-  // Стъпка 3: Времева рамка и финал
-  timeOptions.addEventListener('click', function (event) {
-    const btn = event.target.closest('button');
-    if (!btn) return;
-
-    clientData.timeline = btn.dataset.time;
-    timeOptions.style.display = 'none';
-    timeOptions.hidden = true;
-
-    typeMessage('Благодаря за информацията! Подготвихме персонализиран запрос за твоя проект.', () => {
-      action.textContent = '✨ Запази час за консултация';
-      action.href = `contact.html?type=${clientData.type}&loc=${clientData.location}&time=${clientData.timeline}`;
-      action.style.display = 'block';
-      action.hidden = false;
+    submitEmailBtn.addEventListener('click', function () {
+      const emailVal = emailInput.value.trim();
+      if (!emailVal || !emailVal.includes('@')) {
+        alert(lang === 'en' ? 'Please enter a valid email address.' : 'Моля, въведете валиден имейл адрес.');
+        return;
+      }
+      hideAllSteps();
+      typeMessage(t.msgEmailDone, () => {
+        action.textContent = t.btnHome;
+        action.href = 'index.html';
+        action.style.display = 'block';
+        action.hidden = false;
+      });
     });
-  });
 
-  // Обработка на имейл формата
-  submitEmailBtn.addEventListener('click', function () {
-    const emailVal = emailInput.value.trim();
-    if (!emailVal || !emailVal.includes('@')) {
-      alert('Моля, въведете валиден имейл адрес.');
-      return;
-    }
-    leadForm.style.display = 'none';
-    leadForm.hidden = true;
-    typeMessage('Готово! Материалите бяха изпратени успешно към посочената поща. Очакваме те! ☕', () => {
-      action.textContent = 'Към началната страница';
-      action.href = 'index.html';
-      action.style.display = 'block';
-      action.hidden = false;
+    close.addEventListener('click', function () {
+      widget.classList.add('is-collapsed');
+      trigger.focus();
     });
-  });
+    
+    trigger.addEventListener('click', function () {
+      widget.classList.remove('is-collapsed');
+    });
+  }
 
-  close.addEventListener('click', function () {
-    widget.classList.add('is-collapsed');
-    trigger.focus();
-  });
-  
-  trigger.addEventListener('click', function () {
-    widget.classList.remove('is-collapsed');
-    screen.classList.remove('is-reopened');
-    void screen.offsetWidth;
-    screen.classList.add('is-reopened');
-  });
+  attachListeners();
 });
