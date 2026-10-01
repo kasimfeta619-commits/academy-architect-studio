@@ -589,33 +589,56 @@ body.dark-mode .project-img-box {
 }
 
 @media (max-width: 768px) {
+    /* Фиксираме навигацията като мрежа, за да са логото и бургера перфектно успоредни */
     .navbar {
-        flex-wrap: wrap;
+        display: grid !important;
+        grid-template-columns: 1fr auto !important;
+        align-items: center !important;
         padding: 15px 5% !important;
-        position: relative;
+        position: sticky;
+    }
+
+    .logo-area {
+        grid-column: 1;
+        justify-self: start;
     }
 
     .menu-toggle {
-        display: block;
+        grid-column: 2;
+        display: block !important;
+        justify-self: end;
+        margin: 0;
+        line-height: 1;
+    }
+
+    /* Прехвърляме бутоните за език, тъмен режим и админ на нов ред отдолу, за да не се блъскат */
+    .header-actions {
+        grid-column: 1 / -1;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #f0eae1;
     }
 
     #nav-links {
         display: none !important;
         width: 100%;
+        grid-column: 1 / -1;
         flex-direction: column;
         gap: 15px !important;
-        padding: 20px 0;
+        padding: 15px 0 5px 0;
         border-top: 1px solid #e6dec9;
-        margin-top: 15px;
+        margin-top: 10px;
         text-align: center;
     }
 
     #nav-links.mobile-open {
         display: flex !important;
-    }
-
-    .header-actions {
-        gap: 10px;
     }
 
     .hero-section {
@@ -634,7 +657,6 @@ body.dark-mode .project-img-box {
         text-align: center;
     }
 
-    /* Перфектно подравняване и пропорции за снимки, чертежи и карти на мобилни */
     .project-main-image, 
     .project-img-box img,
     .hero-main-img img,
@@ -650,7 +672,6 @@ body.dark-mode .project-img-box {
         gap: 20px !important;
     }
 
-    /* Намаляване на излишните отстъпи на карти и форми на мобилни */
     .calculator-card, 
     .contact-card, 
     .booking-card,
@@ -675,17 +696,16 @@ body.dark-mode .project-img-box {
     font-family: 'Inter', sans-serif !important;
 }
 
-/* На мобилни устройства избутваме бутона нагоре, за да не закрива текста, чертежите и калкулатора */
 @media (max-width: 768px) {
     .support-widget {
-        bottom: 95px !important;
+        bottom: 110px !important;
         right: 15px !important;
         z-index: 999999 !important;
     }
 
     .support-trigger {
-        padding: 10px 14px !important;
-        font-size: 0.8rem !important;
+        padding: 8px 12px !important;
+        font-size: 0.75rem !important;
         box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important;
     }
 }
