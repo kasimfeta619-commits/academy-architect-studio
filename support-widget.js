@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <span class="support-message">${t.message}</span>
         </div>
         
-        <!-- Етап 1: Главно меню (показва се по подразбиране) -->
+        <!-- Етап 1: Главно меню -->
         <div class="support-options" role="group" style="display: flex; flex-direction: column; gap: 8px;">
           <button class="support-option" type="button" data-choice="project">${t.opt1}</button>
           <button class="support-option" type="button" data-choice="estimator">${t.opt2}</button>
@@ -117,8 +117,8 @@ document.addEventListener('DOMContentLoaded', function () {
           <button class="support-option support-option-muted" type="button" data-choice="no">${t.opt5}</button>
         </div>
 
-        <!-- Етап 2: Избор на тип имот (скрит първоначално) -->
-        <div class="support-sub-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px;">
+        <!-- Етап 2: Избор на тип имот -->
+        <div class="support-sub-options" role="group" style="display: none; flex-direction: column; gap: 8px;">
           <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">${t.step1Title}</span>
           <button class="support-option" type="button" data-subchoice="house">${t.sub1}</button>
           <button class="support-option" type="button" data-subchoice="apartment">${t.sub2}</button>
@@ -126,8 +126,8 @@ document.addEventListener('DOMContentLoaded', function () {
           <button class="support-option support-option-muted" type="button" data-choice="back">${t.back}</button>
         </div>
 
-        <!-- Етап 3: Избор на локация (скрит първоначално) -->
-        <div class="support-location-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px;">
+        <!-- Етап 3: Избор на локация -->
+        <div class="support-location-options" role="group" style="display: none; flex-direction: column; gap: 8px;">
           <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">${t.step2Title}</span>
           <button class="support-option" type="button" data-loc="sofia">${t.loc1}</button>
           <button class="support-option" type="button" data-loc="nature">${t.loc2}</button>
@@ -135,23 +135,23 @@ document.addEventListener('DOMContentLoaded', function () {
           <button class="support-option support-option-muted" type="button" data-choice="back-to-sub">${t.backToSub}</button>
         </div>
 
-        <!-- Етап 4: Времева рамка (скрит първоначално) -->
-        <div class="support-time-options" role="group" hidden style="display: none; flex-direction: column; gap: 8px;">
+        <!-- Етап 4: Времева рамка -->
+        <div class="support-time-options" role="group" style="display: none; flex-direction: column; gap: 8px;">
           <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600; text-transform: uppercase;">${t.step3Title}</span>
           <button class="support-option" type="button" data-time="soon">${t.time1}</button>
           <button class="support-option" type="button" data-time="later">${t.time2}</button>
           <button class="support-option" type="button" data-time="ideas">${t.time3}</button>
         </div>
 
-        <!-- Форма за имейл (скрита първоначално) -->
-        <div class="support-lead-form" hidden style="display: none; flex-direction: column; gap: 8px;">
+        <!-- Форма за имейл -->
+        <div class="support-lead-form" role="group" style="display: none; flex-direction: column; gap: 8px;">
           <span style="font-size: 0.8rem; color: #8c8275; font-weight: 600;">${t.leadTitle}</span>
           <input type="email" placeholder="your@email.com" class="support-email-input" style="padding: 10px; border: 1px solid #eadecc; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff;">
           <button class="support-submit-email support-option" type="button" style="background: #1a1a1a !important; color: #fff !important; text-align: center;">${t.leadBtn}</button>
           <button class="support-option support-option-muted" type="button" data-choice="back">${t.back}</button>
         </div>
 
-        <a class="support-action" href="contact.html" hidden style="display: none;"></a>
+        <a class="support-action" href="contact.html" style="display: none;"></a>
       </div>
       
       <button class="support-trigger" type="button" aria-label="Отвори помощта">
@@ -178,13 +178,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let clientData = { type: '', location: '', timeline: '' };
 
-  function hideAllSteps() {
+  function showStep(stepElement) {
+    // Скриваме всички етапи
     [options, subOptions, locOptions, timeOptions, leadForm, action].forEach(el => {
-      if (el) {
-        el.style.display = 'none';
-        el.hidden = true;
-      }
+      if (el) el.style.display = 'none';
     });
+    // Показваме само подадения активен етап
+    if (stepElement) {
+      stepElement.style.display = 'flex';
+    }
   }
 
   function typeMessage(text, callback) {
@@ -240,33 +242,31 @@ document.addEventListener('DOMContentLoaded', function () {
       const choice = event.target.closest('[data-choice]');
       if (!choice) return;
       const type = choice.dataset.choice;
-      hideAllSteps();
 
       if (type === 'no') {
+        showStep(null);
         typeMessage(t.msgNo);
       } else if (type === 'estimator') {
+        showStep(null);
         typeMessage(t.msgEstimator, () => {
           action.textContent = t.btnEstimator;
           action.href = 'estimator.html';
           action.style.display = 'block';
-          action.hidden = false;
         });
       } else if (type === 'ai') {
+        showStep(null);
         typeMessage(t.msgAi, () => {
           action.textContent = t.btnAi;
           action.href = 'planner.html';
           action.style.display = 'block';
-          action.hidden = false;
         });
       } else if (type === 'lead') {
         typeMessage(t.msgLead, () => {
-          leadForm.style.display = 'flex';
-          leadForm.hidden = false;
+          showStep(leadForm);
         });
       } else if (type === 'project') {
         typeMessage(t.msgProject, () => {
-          subOptions.style.display = 'flex';
-          subOptions.hidden = false;
+          showStep(subOptions);
         });
       }
     });
@@ -275,16 +275,13 @@ document.addEventListener('DOMContentLoaded', function () {
       const btn = event.target.closest('button');
       if (!btn) return;
       if (btn.dataset.choice === 'back') {
-        hideAllSteps();
-        options.style.display = 'flex';
-        options.hidden = false;
+        showStep(options);
+        typeMessage(t.message);
         return;
       }
       clientData.type = btn.dataset.subchoice;
-      hideAllSteps();
       typeMessage(t.msgLoc, () => {
-        locOptions.style.display = 'flex';
-        locOptions.hidden = false;
+        showStep(locOptions);
       });
     });
 
@@ -292,16 +289,13 @@ document.addEventListener('DOMContentLoaded', function () {
       const btn = event.target.closest('button');
       if (!btn) return;
       if (btn.dataset.choice === 'back-to-sub') {
-        hideAllSteps();
-        subOptions.style.display = 'flex';
-        subOptions.hidden = false;
+        showStep(subOptions);
+        typeMessage(t.msgProject);
         return;
       }
       clientData.location = btn.dataset.loc;
-      hideAllSteps();
       typeMessage(t.msgTime, () => {
-        timeOptions.style.display = 'flex';
-        timeOptions.hidden = false;
+        showStep(timeOptions);
       });
     });
 
@@ -309,12 +303,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const btn = event.target.closest('button');
       if (!btn) return;
       clientData.timeline = btn.dataset.time;
-      hideAllSteps();
       typeMessage(t.msgFinal, () => {
         action.textContent = t.btnFinal;
         action.href = `contact.html?type=${clientData.type}&loc=${clientData.location}&time=${clientData.timeline}`;
         action.style.display = 'block';
-        action.hidden = false;
       });
     });
 
@@ -324,12 +316,11 @@ document.addEventListener('DOMContentLoaded', function () {
         alert(lang === 'en' ? 'Please enter a valid email address.' : 'Моля, въведете валиден имейл адрес.');
         return;
       }
-      hideAllSteps();
+      showStep(null);
       typeMessage(t.msgEmailDone, () => {
         action.textContent = t.btnHome;
         action.href = 'index.html';
         action.style.display = 'block';
-        action.hidden = false;
       });
     });
 
