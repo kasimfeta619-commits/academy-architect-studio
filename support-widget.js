@@ -99,7 +99,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const t = translations[lang];
 
     widget.innerHTML = `
-      <div class="support-screen" role="status" aria-live="polite" style="max-height: none !important; height: auto !important; overflow: hidden !important;">
+      <!-- Фиксираме контейнера, за да не се разтяга на цял екран -->
+      <div class="support-screen" role="status" aria-live="polite" style="max-height: 420px !important; overflow-y: auto !important; display: flex; flex-direction: column;">
         <button class="support-close" type="button" aria-label="Затвори">×</button>
 
         <div class="support-screen-face" aria-hidden="true"><span>АС</span></div>
