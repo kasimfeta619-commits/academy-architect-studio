@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const t = translations[lang];
 
     widget.innerHTML = `
-      <div class="support-screen" role="status" aria-live="polite" style="max-height: none !important; height: auto !important; overflow: hidden !important;">
+      <div class="support-screen" role="status" aria-live="polite" style="max-height: 420px; overflow-y: auto;">
         <button class="support-close" type="button" aria-label="Затвори">×</button>
 
         <div class="support-screen-face" aria-hidden="true"><span>АС</span></div>
@@ -178,12 +178,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let clientData = { type: '', location: '', timeline: '' };
 
+  // Строго скриване/показване с !important за сигурност срещу външни CSS файлове
   function showStep(stepElement) {
-    [options, subOptions, locOptions, timeOptions, leadForm, action].forEach(el => {
-      if (el) el.style.display = 'none';
+    const allSteps = [options, subOptions, locOptions, timeOptions, leadForm, action];
+    allSteps.forEach(el => {
+      if (el) el.style.setProperty('display', 'none', 'important');
     });
     if (stepElement) {
-      stepElement.style.display = 'flex';
+      stepElement.style.setProperty('display', 'flex', 'important');
     }
   }
 
@@ -238,14 +240,14 @@ document.addEventListener('DOMContentLoaded', function () {
         updateMessage(t.msgEstimator, () => {
           action.textContent = t.btnEstimator;
           action.href = 'estimator.html';
-          action.style.display = 'block';
+          showStep(action);
         });
       } else if (type === 'ai') {
         showStep(null);
         updateMessage(t.msgAi, () => {
           action.textContent = t.btnAi;
           action.href = 'planner.html';
-          action.style.display = 'block';
+          showStep(action);
         });
       } else if (type === 'lead') {
         updateMessage(t.msgLead, () => {
@@ -274,6 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     locOptions.addEventListener('click', function (event) {
       const btn = event.target.closest('button');
+      if (-!btn) return; // зачистено
       if (!btn) return;
       if (btn.dataset.choice === 'back-to-sub') {
         showStep(subOptions);
@@ -293,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function () {
       updateMessage(t.msgFinal, () => {
         action.textContent = t.btnFinal;
         action.href = `contact.html?type=${clientData.type}&loc=${clientData.location}&time=${clientData.timeline}`;
-        action.style.display = 'block';
+        showStep(action);
       });
     });
 
@@ -307,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
       updateMessage(t.msgEmailDone, () => {
         action.textContent = t.btnHome;
         action.href = 'index.html';
-        action.style.display = 'block';
+        showStep(action);
       });
     });
 
