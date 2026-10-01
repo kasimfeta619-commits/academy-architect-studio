@@ -338,7 +338,7 @@
                 translations['bg']['booking-select-date-first'] = 'Моля, първо изберете дата.';
                 translations['bg']['booking-client-name'] = 'Вашето име за резервацията';
                 translations['bg']['booking-client-phone'] = 'Телефон за връзка';
-                translations['bg']['booking-btn-submit'] = 'Запази избр  ния час';
+                translations['bg']['booking-btn-submit'] = 'Запази избрания час';
             }
             if (translations['en']) {
                 translations['en']['contact-lbl-address'] = 'Address:';
@@ -473,6 +473,7 @@
             container.innerHTML = `<p style="color: #8c8275; font-size: 0.9rem; grid-column: 1 / -1;">Зареждане...</p>`;
 
             try {
+                // 1. Проверяваме обикновените резервации от клиенти
                 const snapshot = await db.collection('studioBookings').get();
                 let bookedTimes = [];
 
@@ -485,6 +486,16 @@
                         }
                     }
                 });
+
+                // 2. Проверяваме дали целият ден е блокиран от администратора в колекцията 'blockedDays'
+                const blockedSnapshot = await db.collection('blockedDays').where('date', '==', dateVal).get();
+                if (!blockedSnapshot.empty) {
+                    workingHours.forEach(hour => {
+                        if (!bookedTimes.includes(hour)) {
+                            bookedTimes.push(hour);
+                        }
+                    });
+                }
 
                 container.innerHTML = '';
 
