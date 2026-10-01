@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const t = translations[lang];
 
     widget.innerHTML = `
-      <div class="support-screen" role="status" aria-live="polite" style="max-height: 420px; overflow-y: auto;">
+      <div class="support-screen" role="status" aria-live="polite" style="max-height: none !important; height: auto !important; overflow: hidden !important;">
         <button class="support-close" type="button" aria-label="Затвори">×</button>
 
         <div class="support-screen-face" aria-hidden="true"><span>АС</span></div>
@@ -178,7 +178,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let clientData = { type: '', location: '', timeline: '' };
 
-  // Строго скриване/показване с !important за сигурност срещу външни CSS файлове
   function showStep(stepElement) {
     const allSteps = [options, subOptions, locOptions, timeOptions, leadForm, action];
     allSteps.forEach(el => {
@@ -276,7 +275,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     locOptions.addEventListener('click', function (event) {
       const btn = event.target.closest('button');
-      if (-!btn) return; // зачистено
       if (!btn) return;
       if (btn.dataset.choice === 'back-to-sub') {
         showStep(subOptions);
