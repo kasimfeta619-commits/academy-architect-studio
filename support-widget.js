@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const t = translations[lang];
 
     widget.innerHTML = `
-      <div class="support-screen" role="status" aria-live="polite">
+      <div class="support-screen" role="status" aria-live="polite" style="max-height: none !important; height: auto !important; overflow: hidden !important;">
         <button class="support-close" type="button" aria-label="Затвори">×</button>
 
         <div class="support-screen-face" aria-hidden="true"><span>АС</span></div>
@@ -187,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Текстът се сменя моментално без излишно изписване буква по буква
   function updateMessage(text, callback) {
     message.textContent = text;
     if (callback) callback();
