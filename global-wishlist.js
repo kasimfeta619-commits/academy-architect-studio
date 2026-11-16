@@ -40,9 +40,9 @@
             wishlistBtn.className = 'wishlist-nav-btn';
             
             const currentLang = localStorage.getItem('siteLang') || 'bg';
-            const btnText = currentLang === 'en' ? 'Favorites' : 'Любими';
+            const btnText = translations[currentLang]?.['wishlist-btn-text'] || (currentLang === 'en' ? 'Favorites' : 'Любими');
             
-            wishlistBtn.innerHTML = `❤️ <span>${btnText}</span> (<span id="wishlistCount">0</span>)`;
+            wishlistBtn.innerHTML = `❤️ <span data-key="wishlist-btn-text">${btnText}</span> (<span id="wishlistCount">0</span>)`;
             
             // При клик, ако сме на друга страница, препращаме към catalog.html, 
             // а ако сме на каталога – отваряме модалния прозорец за сравнение
