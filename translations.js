@@ -10,6 +10,9 @@ const translations = {
         "nav-estimator": "Калкулатор",
         "nav-contact": "Контакти",
         "nav-login": "Вход",
+        "nav-admin": "Админ",
+        "nav-profile": "Профил",
+        "nav-admin-title": "Админ панел / Профил",
         
         // Футър
         "footer-subtitle": "Дизайн и инженеринг",
@@ -55,6 +58,8 @@ const translations = {
         "featured-title": "Избрани проекти",
         "quote-text": "\"Добрата архитектура не просто заема пространство, тя му дава смисъл.\"",
         "quote-sub": "Вярваме, че всеки детайл е от значение при изграждането на перфектния дом или работно пространство.",
+        "map-title": "Географски обхват на проектите",
+        "map-subtitle": "Част от нашите реализирани обекти и проекти в страната",
 
         // Страница "За нас" и Екип
         "about-eyebrow": "КОИ СМЕ НИЕ",
@@ -109,7 +114,7 @@ const translations = {
         "services-main-desc": "Проектно студио с водещ екип предлага пълна гама от услуги – от първоначални консултации и предпроектни проучвания, през инвестиционно проектиране, до авторски надзор.",
         "services-stage1-tag": "ЕТАП 1",
         "services-stage1-title": "Консултации и предпроектни проучвания",
-        "services-stage1-desc": "Разглеждаме наличната документация и необходимостта от изходни данни. Коментираме фактора терен – наклон, географски посоки и разположение. Изследваме параметрите за застрояване – плътност, височина, максимално РЗП, озеленяване и отстояния от границите.",
+        "services-stage1-desc": "Разглеждаме наличната документация и нео��ходимостта от изходни данни. Коментираме фактора терен – наклон, географски посоки и разположение. Изследваме параметрите за застрояване – плътност, височина, максимално РЗП, озеленяване и отстояния от границите.",
         "services-stage2-tag": "ЕТАП 2",
         "services-stage2-title": "Инвестиционно проектиране",
         "services-stage2-desc": "Започва задължително с виза за проектиране, издадена от Общината. След уточняване на идейния проект и 3D визиите спрямо вашите изисквания, се пристъпва директно към техническата фаза за проектиране по всички специалности.",
@@ -168,14 +173,14 @@ const translations = {
         "project-floor-plans": "Разпределения по етажи",
         "project-facades": "Фасади и Разрези",
         "project-gallery": "Галерия",
-        "project-visuals": "Визуализации",
+        "project-visuals": "Визуали��ации",
         "spec-category": "Категория",
         "spec-style": "Стил",
         "spec-construction": "Конструкция",
         "spec-area": "Площ",
         "spec-floors": "Етажи",
         "spec-price": "Цена на проекта",
-        "loading-project": "Зареждане на детайлите за проекта..."
+        "loading-project": "Зареждане на детайлит�� за проекта..."
     },
     "en": {
         // Navigation & General
@@ -188,6 +193,9 @@ const translations = {
         "nav-estimator": "Estimator",
         "nav-contact": "Contacts",
         "nav-login": "Login",
+        "nav-admin": "Admin",
+        "nav-profile": "Profile",
+        "nav-admin-title": "Admin panel / Profile",
         
         // Footer
         "footer-subtitle": "Design & Engineering",
@@ -235,6 +243,8 @@ const translations = {
         // Quote
         "quote-text": "\"Good architecture doesn't just occupy space, it gives it meaning.\"",
         "quote-sub": "We believe that every detail matters when building the perfect home or workspace.",
+        "map-title": "Where Our Projects Take Shape",
+        "map-subtitle": "A selection of our completed projects and locations across Bulgaria",
 
         // About & Team
         "about-eyebrow": "WHO WE ARE",
