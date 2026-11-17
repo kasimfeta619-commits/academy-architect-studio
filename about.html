@@ -55,7 +55,7 @@
             
             <!-- Лява част - Изображение / Лого / Статус -->
             <div class="about-visual-box" style="background: #faf8f5; border: 1px solid #e6dfd5; padding: 40px; border-radius: 12px; text-align: center; position: relative;">
-                <img src="assets/main-graphic.png" alt="Academy Architect Studio" style="max-width: 280px; height: auto;" onerror="this.src='https://placehold.co/400x400?text=Studio'">
+                <img id="publicAboutImage" src="assets/main-graphic.png" alt="Academy Architect Studio" style="max-width: 100%; max-height: 340px; height: auto; object-fit: cover;" onerror="this.src='https://placehold.co/400x400?text=Studio'">
                 
                 <!-- Банер за последен проект / акцент -->
                 <div style="position: absolute; bottom: 20px; left: 20px; background: #1a1a1a; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 0.85rem; text-align: left;">
@@ -90,6 +90,8 @@
                 <p data-key="about-card3-desc" style="color: #666; font-size: 0.95rem; line-height: 1.5;">Всяко пространство се ражда от диалога с нашите клиенти, за да отговаря точно на техния начин на живот.</p>
             </div>
         </div>
+
+        <div id="publicAboutSections" class="about-extra-sections" hidden></div>
 
         <!-- ЛЕНТА: ЕКИП В СТУДИОТО -->
         <div class="team-section-wrapper" style="margin-top: 40px; border-top: 2px solid #e6dfd5; padding-top: 50px;">
@@ -196,6 +198,47 @@
                         descEl.removeAttribute('data-key');
                         descEl.textContent = aboutData.desc;
                         if (defaultDescEl) defaultDescEl.hidden = true;
+                    }
+
+                    const aboutImage = document.getElementById('publicAboutImage');
+                    if (aboutData.imageUrl && aboutImage) {
+                        aboutImage.src = aboutData.imageUrl;
+                        aboutImage.alt = aboutData.title || 'Academy Architect Studio';
+                    }
+
+                    const sectionsContainer = document.getElementById('publicAboutSections');
+                    const sections = Array.isArray(aboutData.sections) ? aboutData.sections : [];
+                    if (sectionsContainer && sections.length) {
+                        const sectionElements = sections.map((section, index) => {
+                            const sectionEl = document.createElement('section');
+                            sectionEl.className = `about-extra-section${section.imageUrl ? ' has-image' : ''}`;
+                            if (index % 2 === 1) sectionEl.classList.add('is-reversed');
+
+                            if (section.imageUrl) {
+                                const image = document.createElement('img');
+                                image.src = section.imageUrl;
+                                image.alt = section.title || 'Снимка към секцията За нас';
+                                image.loading = 'lazy';
+                                sectionEl.appendChild(image);
+                            }
+
+                            const content = document.createElement('div');
+                            content.className = 'about-extra-content';
+                            if (section.title) {
+                                const heading = document.createElement('h2');
+                                heading.textContent = section.title;
+                                content.appendChild(heading);
+                            }
+                            if (section.desc) {
+                                const paragraph = document.createElement('p');
+                                paragraph.textContent = section.desc;
+                                content.appendChild(paragraph);
+                            }
+                            sectionEl.appendChild(content);
+                            return sectionEl;
+                        });
+                        sectionsContainer.replaceChildren(...sectionElements);
+                        sectionsContainer.hidden = false;
                     }
                 }
             } catch (e) {

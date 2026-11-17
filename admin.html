@@ -256,11 +256,28 @@
         </div>
         
         <div id="aboutTab" class="admin-section active">
-            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 20px;">Редакция на страница "За нас"</h3>
+            <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Шаблон за страницата „За нас“</h3>
+            <p style="font-size: 0.9rem; color: #8c8275; margin-bottom: 24px;">Редактирай основното съдържание, добавяй снимки и подреждай допълнителни секции от едно място.</p>
             <form id="aboutForm">
-                <div class="form-group"><label>Заглавие</label><input type="text" id="aboutTitle"></div>
-                <div class="form-group"><label>Основен текст / Описание</label><textarea id="aboutDesc" style="height: 150px;"></textarea></div>
-                <button type="submit" class="btn-action">Запази промените "За нас"</button>
+                <div class="form-group"><label for="aboutTitle">Заглавие</label><input type="text" id="aboutTitle" placeholder="Кои сме ние"></div>
+                <div class="form-group"><label for="aboutDesc">Основен текст / Описание</label><textarea id="aboutDesc" style="height: 150px;" placeholder="Разкажи накратко за студиото и работата си."></textarea></div>
+
+                <div class="form-group">
+                    <label for="aboutImageUrl">Основна снимка</label>
+                    <input type="url" id="aboutImageUrl" placeholder="https://… или качи снимка от устройството">
+                    <input type="file" id="aboutImageFile" accept="image/*" aria-label="Качи основна снимка" style="margin-top: 10px;">
+                    <img id="aboutImagePreview" alt="Преглед на основната снимка" style="display: none; max-width: 220px; max-height: 160px; object-fit: cover; margin-top: 12px; border: 1px solid #eadecc;">
+                </div>
+
+                <div style="margin: 28px 0 18px;">
+                    <h4 style="margin: 0 0 8px; font-size: 1rem;">Допълнителни секции</h4>
+                    <p style="font-size: 0.85rem; color: #8c8275; margin: 0 0 16px;">Всяка секция може да има заглавие, текст и снимка. Подреди ги със стрелките.</p>
+                    <div id="aboutSectionsEditor" class="about-sections-editor"></div>
+                    <button type="button" id="addAboutSectionBtn" class="btn-action" style="margin-top: 14px; background: #8c8275;">Добави секция</button>
+                </div>
+
+                <button type="submit" id="aboutSubmitBtn" class="btn-action">Запази промените „За нас“</button>
+                <p id="aboutSaveStatus" role="status" aria-live="polite" style="margin: 10px 0 0; color: #8c8275;"></p>
             </form>
         </div>
 
@@ -736,6 +753,100 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        window.existingAboutImageUrl = '';
+
+        function createAboutSectionEditor(section = {}) {
+            const card = document.createElement('article');
+            card.className = 'about-section-editor';
+
+            const toolbar = document.createElement('div');
+            toolbar.className = 'about-section-toolbar';
+            const sectionTitle = document.createElement('strong');
+            sectionTitle.textContent = 'Секция';
+            toolbar.appendChild(sectionTitle);
+
+            [['up', 'Премести нагоре'], ['down', 'Премести надолу'], ['remove', 'Изтрий секцията']].forEach(([action, label]) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.dataset.action = action;
+                button.textContent = action === 'up' ? '↑' : action === 'down' ? '↓' : 'Изтрий';
+                button.setAttribute('aria-label', label);
+                toolbar.appendChild(button);
+            });
+            card.appendChild(toolbar);
+
+            const addField = (labelText, fieldName, value, multiline = false) => {
+                const label = document.createElement('label');
+                label.className = 'about-editor-field';
+                label.appendChild(document.createTextNode(labelText));
+                const field = document.createElement(multiline ? 'textarea' : 'input');
+                if (!multiline) field.type = 'text';
+                field.dataset.sectionField = fieldName;
+                field.value = value || '';
+                if (fieldName === 'title') field.maxLength = 120;
+                if (fieldName === 'desc') {
+                    field.maxLength = 5000;
+                    field.rows = 5;
+                }
+                label.appendChild(field);
+                card.appendChild(label);
+                return field;
+            };
+
+            addField('Заглавие на секцията', 'title', section.title);
+            addField('Текст', 'desc', section.desc, true);
+
+            const imageLabel = document.createElement('label');
+            imageLabel.className = 'about-editor-field';
+            imageLabel.appendChild(document.createTextNode('Линк към снимка'));
+            const imageUrl = document.createElement('input');
+            imageUrl.type = 'url';
+            imageUrl.dataset.sectionField = 'imageUrl';
+            imageUrl.value = section.imageUrl || '';
+            imageUrl.placeholder = 'https://…';
+            imageLabel.appendChild(imageUrl);
+            card.appendChild(imageLabel);
+
+            const fileLabel = document.createElement('label');
+            fileLabel.className = 'about-editor-field';
+            fileLabel.appendChild(document.createTextNode('Или качи снимка'));
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.dataset.sectionFile = 'image';
+            fileLabel.appendChild(fileInput);
+            card.appendChild(fileLabel);
+
+            const preview = document.createElement('img');
+            preview.className = 'about-section-editor-preview';
+            preview.alt = section.title ? `Преглед: ${section.title}` : 'Преглед на снимката към секцията';
+            preview.src = section.imageUrl || '';
+            preview.hidden = !section.imageUrl;
+            card.appendChild(preview);
+            return card;
+        }
+
+        function renderAboutSectionEditors(sections = []) {
+            const container = document.getElementById('aboutSectionsEditor');
+            container.replaceChildren(...sections.map(createAboutSectionEditor));
+        }
+
+        function showAboutImagePreview(preview, imageUrl) {
+            if (!preview) return;
+            preview.src = imageUrl || '';
+            preview.style.display = imageUrl ? 'block' : 'none';
+        }
+
+        async function uploadAboutImage(file, folder) {
+            if (!file) return '';
+            if (!file.type.startsWith('image/')) throw new Error('Моля, избери файл с изображение.');
+            if (file.size > 12 * 1024 * 1024) throw new Error('Размерът на снимката трябва да е до 12 MB.');
+            const compressedImage = await compressImage(file, 1400, 0.78);
+            const storageRef = storage.ref(`${folder}/${Date.now()}_${Math.random().toString(36).slice(2, 9)}.jpg`);
+            const snapshot = await storageRef.putString(compressedImage, 'data_url', { contentType: 'image/jpeg' });
+            return snapshot.ref.getDownloadURL();
+        }
+
         window.existingHeroVideoUrl = '';
 
         window.addEventListener('DOMContentLoaded', async () => {
@@ -745,6 +856,12 @@
                     const data = aboutDoc.data();
                     document.getElementById('aboutTitle').value = data.title || '';
                     document.getElementById('aboutDesc').value = data.desc || '';
+                    window.existingAboutImageUrl = data.imageUrl || '';
+                    document.getElementById('aboutImageUrl').value = window.existingAboutImageUrl;
+                    showAboutImagePreview(document.getElementById('aboutImagePreview'), window.existingAboutImageUrl);
+                    renderAboutSectionEditors(Array.isArray(data.sections) ? data.sections : []);
+                } else {
+                    renderAboutSectionEditors();
                 }
 
                 const heroDoc = await db.collection('siteSettings').doc('hero').get();
@@ -788,17 +905,113 @@
             renderAdminHolidays();
         });
 
+        document.getElementById('addAboutSectionBtn').addEventListener('click', () => {
+            const container = document.getElementById('aboutSectionsEditor');
+            if (container.children.length >= 8) {
+                alert('Можеш да добавиш до 8 секции.');
+                return;
+            }
+            container.appendChild(createAboutSectionEditor());
+        });
+
+        document.getElementById('aboutSectionsEditor').addEventListener('click', (event) => {
+            const button = event.target.closest('button[data-action]');
+            if (!button) return;
+            const card = button.closest('.about-section-editor');
+            const container = document.getElementById('aboutSectionsEditor');
+            if (button.dataset.action === 'remove') {
+                card.remove();
+            } else if (button.dataset.action === 'up' && card.previousElementSibling) {
+                container.insertBefore(card, card.previousElementSibling);
+            } else if (button.dataset.action === 'down' && card.nextElementSibling) {
+                container.insertBefore(card.nextElementSibling, card);
+            }
+        });
+
+        document.getElementById('aboutImageFile').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) showAboutImagePreview(document.getElementById('aboutImagePreview'), URL.createObjectURL(file));
+        });
+
+        document.getElementById('aboutImageUrl').addEventListener('input', (event) => {
+            if (!document.getElementById('aboutImageFile').files.length) {
+                showAboutImagePreview(document.getElementById('aboutImagePreview'), event.target.value.trim());
+            }
+        });
+
+        document.getElementById('aboutSectionsEditor').addEventListener('change', (event) => {
+            const card = event.target.closest('.about-section-editor');
+            if (!card) return;
+            const preview = card.querySelector('.about-section-editor-preview');
+            if (event.target.matches('[data-section-file="image"]') && event.target.files[0]) {
+                preview.src = URL.createObjectURL(event.target.files[0]);
+                preview.hidden = false;
+            } else if (event.target.matches('[data-section-field="imageUrl"]') && !card.querySelector('[data-section-file="image"]').files.length) {
+                preview.src = event.target.value.trim();
+                preview.hidden = !event.target.value.trim();
+            }
+        });
+
         document.getElementById('aboutForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const aboutData = {
-                title: document.getElementById('aboutTitle').value,
-                desc: document.getElementById('aboutDesc').value
-            };
+            const submitButton = document.getElementById('aboutSubmitBtn');
+            const status = document.getElementById('aboutSaveStatus');
+            const sectionCards = [...document.querySelectorAll('#aboutSectionsEditor .about-section-editor')];
+            const mainImageFile = document.getElementById('aboutImageFile').files[0];
+
+            if (sectionCards.length > 8) {
+                alert('Можеш да добавиш до 8 секции.');
+                return;
+            }
+
+            submitButton.disabled = true;
+            status.textContent = 'Качване на снимките и запазване…';
             try {
+                const mainImageUrlField = document.getElementById('aboutImageUrl');
+                const mainImageFileInput = document.getElementById('aboutImageFile');
+                let imageUrl = mainImageUrlField.value.trim();
+                if (mainImageFile) {
+                    imageUrl = await uploadAboutImage(mainImageFile, 'about/main');
+                    mainImageUrlField.value = imageUrl;
+                    mainImageFileInput.value = '';
+                    showAboutImagePreview(document.getElementById('aboutImagePreview'), imageUrl);
+                }
+
+                const sections = (await Promise.all(sectionCards.map(async (card, index) => {
+                    const imageFileInput = card.querySelector('[data-section-file="image"]');
+                    const imageFile = imageFileInput.files[0];
+                    const imageUrlField = card.querySelector('[data-section-field="imageUrl"]');
+                    let sectionImageUrl = imageUrlField.value.trim();
+                    if (imageFile) {
+                        sectionImageUrl = await uploadAboutImage(imageFile, `about/sections/${index + 1}`);
+                        imageUrlField.value = sectionImageUrl;
+                        imageFileInput.value = '';
+                        const preview = card.querySelector('.about-section-editor-preview');
+                        preview.src = sectionImageUrl;
+                        preview.hidden = false;
+                    }
+                    return {
+                        title: card.querySelector('[data-section-field="title"]').value.trim(),
+                        desc: card.querySelector('[data-section-field="desc"]').value.trim(),
+                        imageUrl: sectionImageUrl
+                    };
+                }))).filter((section) => section.title || section.desc || section.imageUrl);
+
+                const aboutData = {
+                    title: document.getElementById('aboutTitle').value.trim(),
+                    desc: document.getElementById('aboutDesc').value.trim(),
+                    imageUrl,
+                    sections
+                };
                 await db.collection('siteSettings').doc('about').set(aboutData);
-                alert('Страницата "За нас" е успешно обновена в облака!');
+                window.existingAboutImageUrl = imageUrl;
+                status.textContent = 'Промените са запазени успешно.';
+                alert('Страницата „За нас“ е обновена.');
             } catch (err) {
+                status.textContent = '';
                 alert('Грешка при запис: ' + err.message);
+            } finally {
+                submitButton.disabled = false;
             }
         });
 
