@@ -717,3 +717,127 @@ body.dark-mode .btn-secondary {
         right: -5px !important;
     }
 }
+
+.about-extra-sections[hidden] {
+    display: none;
+}
+
+.about-extra-sections {
+    display: grid;
+    gap: 24px;
+    margin: 0 0 64px;
+}
+
+.about-extra-section {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 28px;
+    border: 1px solid #e6dfd5;
+    border-radius: 12px;
+    background: #faf8f5;
+}
+
+.about-extra-section.is-reversed {
+    flex-direction: row-reverse;
+}
+
+.about-extra-section > img {
+    width: min(42%, 440px);
+    min-height: 220px;
+    max-height: 360px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.about-extra-section:not(.has-image) {
+    display: block;
+}
+
+.about-extra-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.about-extra-content h2 {
+    margin: 0 0 14px;
+}
+
+.about-extra-content p {
+    margin: 0;
+    color: #555;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+.about-section-editor {
+    display: grid;
+    gap: 14px;
+    margin: 0 0 14px;
+    padding: 18px;
+    border: 1px solid #eadecc;
+    background: #fff;
+}
+
+.about-section-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.about-section-toolbar strong {
+    margin-right: auto;
+}
+
+.about-section-toolbar button {
+    min-width: 38px;
+    min-height: 36px;
+    border: 1px solid #eadecc;
+    background: #faf8f5;
+    cursor: pointer;
+}
+
+.about-editor-field {
+    display: grid;
+    gap: 7px;
+    color: #8c8275;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.about-editor-field input,
+.about-editor-field textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #eadecc;
+    background: #fff;
+    color: #1a1a1a;
+    font: inherit;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.about-section-editor-preview {
+    max-width: 260px;
+    max-height: 180px;
+    object-fit: cover;
+    border: 1px solid #eadecc;
+}
+
+@media (max-width: 768px) {
+    .about-extra-section,
+    .about-extra-section.is-reversed {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 20px;
+    }
+
+    .about-extra-section > img {
+        width: 100%;
+        min-height: 0;
+        max-height: 300px;
+    }
+}
