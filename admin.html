@@ -631,9 +631,11 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
+        let adminAuthError = null;
         const adminAuthReady = firebase.auth().currentUser
             ? Promise.resolve(firebase.auth().currentUser)
             : firebase.auth().signInAnonymously().then(({ user }) => user).catch((error) => {
+                adminAuthError = error;
                 console.error("Auth error:", error);
                 return null;
             });
@@ -893,7 +895,11 @@
                     authTimeoutId = setTimeout(() => reject(new Error('Свързването с Firebase отне твърде дълго. Провери връзката и опитай отново.')), 20000);
                 })
             ]).finally(() => clearTimeout(authTimeoutId));
-            if (!user) throw new Error('Неуспешно влизане във Firebase. Презареди страницата и опитай отново.');
+            if (!user) {
+                const authCode = adminAuthError?.code ? ` (${adminAuthError.code})` : '';
+                const authMessage = adminAuthError?.message || 'неизвестна грешка';
+                throw new Error(`Firebase Auth${authCode}: ${authMessage}. Провери Authentication → Sign-in method → Anonymous и Authorized domains.`);
+            }
 
             onProgress('Подготовка на снимката…');
             const compressedImage = await compressAboutImage(file);
