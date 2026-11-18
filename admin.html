@@ -882,58 +882,24 @@
             });
         }
 
-        async function uploadAboutImage(file, folder, onProgress = () => {}) {
+        function blobToDataUrl(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Не успяхме да подготвим снимката за запис.'));
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        async function prepareAboutImage(file, onProgress = () => {}) {
             if (!file) return '';
             if (!file.type.startsWith('image/')) throw new Error('Моля, избери файл с изображение.');
             if (file.size > 12 * 1024 * 1024) throw new Error('Размерът на снимката трябва да е до 12 MB.');
 
-            onProgress('Изчакване на връзка със Storage…');
-            let authTimeoutId;
-            const user = await Promise.race([
-                adminAuthReady,
-                new Promise((_, reject) => {
-                    authTimeoutId = setTimeout(() => reject(new Error('Свързването с Firebase отне твърде дълго. Провери връзката и опитай отново.')), 20000);
-                })
-            ]).finally(() => clearTimeout(authTimeoutId));
-            if (!user) {
-                const authCode = adminAuthError?.code ? ` (${adminAuthError.code})` : '';
-                const authMessage = adminAuthError?.message || 'неизвестна грешка';
-                throw new Error(`Firebase Auth${authCode}: ${authMessage}. Провери Authentication → Sign-in method → Anonymous и Authorized domains.`);
-            }
-
-            onProgress('Подготовка на снимката…');
+            onProgress('Компресиране на снимката…');
             const compressedImage = await compressAboutImage(file);
-            const storageRef = storage.ref(`${folder}/${Date.now()}_${Math.random().toString(36).slice(2, 9)}.jpg`);
-            const uploadTask = storageRef.put(compressedImage, { contentType: 'image/jpeg' });
-
-            return new Promise((resolve, reject) => {
-                let finished = false;
-                const finish = (error, url) => {
-                    if (finished) return;
-                    finished = true;
-                    clearTimeout(timeoutId);
-                    if (error) reject(error);
-                    else resolve(url);
-                };
-                const timeoutId = setTimeout(() => {
-                    finish(new Error('Качването отне твърде дълго. Провери интернет връзката и настройките на Firebase Storage, след което опитай пак.'));
-                    uploadTask.cancel();
-                }, 120000);
-
-                uploadTask.on('state_changed', (snapshot) => {
-                    const percent = snapshot.totalBytes ? Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100) : 0;
-                    onProgress(`Качване на снимката… ${percent}%`);
-                }, (error) => {
-                    finish(new Error(`Firebase Storage не прие снимката (${error.code || 'грешка'}): ${error.message}`));
-                }, async () => {
-                    try {
-                        const url = await uploadTask.snapshot.ref.getDownloadURL();
-                        finish(null, url);
-                    } catch (error) {
-                        finish(new Error(`Снимката е качена, но линкът не се зареди: ${error.message}`));
-                    }
-                });
-            });
+            onProgress('Подготовка за безплатен запис…');
+            return blobToDataUrl(compressedImage);
         }
 
         window.existingHeroVideoUrl = '';
@@ -1054,13 +1020,13 @@
             }
 
             submitButton.disabled = true;
-            status.textContent = 'Качване на снимките и запазване…';
+            status.textContent = 'Подготовка на снимките и запазване…';
             try {
                 const mainImageUrlField = document.getElementById('aboutImageUrl');
                 const mainImageFileInput = document.getElementById('aboutImageFile');
                 let imageUrl = mainImageUrlField.value.trim();
                 if (mainImageFile) {
-                    imageUrl = await uploadAboutImage(mainImageFile, 'about/main', (message) => {
+                    imageUrl = await prepareAboutImage(mainImageFile, (message) => {
                         status.textContent = `Основна снимка: ${message}`;
                     });
                     mainImageUrlField.value = imageUrl;
@@ -1074,7 +1040,7 @@
                     const imageUrlField = card.querySelector('[data-section-field="imageUrl"]');
                     let sectionImageUrl = imageUrlField.value.trim();
                     if (imageFile) {
-                        sectionImageUrl = await uploadAboutImage(imageFile, `about/sections/${index + 1}`, (message) => {
+                        sectionImageUrl = await prepareAboutImage(imageFile, (message) => {
                             status.textContent = `Секция ${index + 1}: ${message}`;
                         });
                         imageUrlField.value = sectionImageUrl;
@@ -1096,6 +1062,10 @@
                     imageUrl,
                     sections
                 };
+                const aboutDataSize = new Blob([JSON.stringify(aboutData)]).size;
+                if (aboutDataSize > 900 * 1024) {
+                    throw new Error('Снимките надхвърлят лимита за един запис в базата. Намали размера или броя им и опитай пак.');
+                }
                 await db.collection('siteSettings').doc('about').set(aboutData);
                 window.existingAboutImageUrl = imageUrl;
                 status.textContent = 'Промените са запазени успешно.';
