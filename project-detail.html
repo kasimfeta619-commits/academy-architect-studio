@@ -239,7 +239,7 @@
                     try {
                         const parsedVideoUrl = new URL(projectVideoUrl, window.location.origin);
                         if (['http:', 'https:'].includes(parsedVideoUrl.protocol)) {
-                            videoContent = `<video controls playsinline preload="metadata" style="width:100%; border-radius:4px;"><source src="${parsedVideoUrl.href}" type="video/mp4">Your browser does not support video playback.</video>`;
+                            videoContent = `<video controls controlslist="nodownload" playsinline preload="metadata" style="width:100%; border-radius:4px;"><source src="${parsedVideoUrl.href}" type="video/mp4">Your browser does not support video playback.</video>`;
                         }
                     } catch (error) {
                         videoContent = '';

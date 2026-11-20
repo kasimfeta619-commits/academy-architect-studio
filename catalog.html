@@ -712,12 +712,10 @@
                     const isFav = favs.includes(projectId);
 
                     let mediaContent = '';
-                    if (p.videoUrl) {
-                        let embedUrl = p.videoUrl;
-                        if (embedUrl.includes('watch?v=')) {
-                            embedUrl = embedUrl.replace('watch?v=', 'embed/');
-                        }
-                        mediaContent = `<iframe src="${embedUrl}" title="${p.title || 'Video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                    const projectVideoUrl = p.youtubeUrl || p.videoUrl || '';
+                    const youtubeMatch = projectVideoUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+                    if (youtubeMatch) {
+                        mediaContent = `<iframe src="https://www.youtube-nocookie.com/embed/${youtubeMatch[1]}" title="${p.title || 'Project video'}" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
                     } else {
                         mediaContent = `<img src="${imgSrc}" alt="${p.title || 'Project'}" onerror="this.src='https://placehold.co/600x400?text=Image'">`;
                     }
