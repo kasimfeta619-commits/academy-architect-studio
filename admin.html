@@ -283,7 +283,7 @@
 
         <div id="settingsTab" class="admin-section">
             <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Общи настройки / Начален екран (Hero)</h3>
-            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Променяй заглавията и медията на началния екран. Снимките се записват в базата, а клиповете се показват чрез публичен линк, без платено хранилище.</p>
+            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Променяй заглавията и медията на началния екран. Снимките се записват в базата, а MP4 клиповете могат да се качват във Firebase Storage и да се гледат директно в сайта.</p>
             <form id="settingsForm">
                 <div class="form-group"><label>Главно заглавие (Hero Title)</label><input type="text" id="siteHeroTitle" placeholder="напр. Архитектурно студио и дизайн"></div>
                 <div class="form-group"><label>Подзаглавие / Описание</label><textarea id="siteHeroSubtitle" style="height: 100px;" placeholder="напр. Създаваме пространства с характер..."></textarea></div>
@@ -293,13 +293,16 @@
                     <div class="form-group">
                         <label for="siteHeroMediaMode">Избери тип медия</label>
                         <select id="siteHeroMediaMode">
-                            <option value="video">Клип от YouTube или публичен HTTPS линк</option>
+                            <option value="video">Видео: MP4 от компютъра или публичен линк</option>
                             <option value="image">Снимка от компютъра</option>
                         </select>
                     </div>
                     <div id="siteHeroVideoFields" class="form-group" style="margin-bottom: 0; display: block;">
-                        <label for="siteHeroVideoUrl">Видео линк (YouTube или MP4 HTTPS линк)</label>
-                        <input type="text" id="siteHeroVideoUrl" placeholder="напр. https://youtu.be/... или https://example.com/video.mp4">
+                        <label for="siteHeroVideoFile">Избери MP4 видео от компютъра (до 25 MB)</label>
+                        <input type="file" id="siteHeroVideoFile" accept="video/mp4,.mp4">
+                        <span style="display: block; font-size: 0.8rem; color: #8c8275; margin: 4px 0 12px;">Клипът се качва във Firebase Storage и се възпроизвежда в сайта. Нужно е Blaze billing; възможни са разходи за съхранение и гледания.</span>
+                        <label for="siteHeroVideoUrl">Или използвай YouTube / публичен MP4 линк</label>
+                        <input type="url" id="siteHeroVideoUrl" placeholder="https://youtu.be/... или https://example.com/video.mp4">
                         <span id="currentHeroVideoInfo" aria-live="polite" style="font-size: 0.8rem; color: #8c8275; margin-top: 4px;"></span>
                     </div>
                     <div id="siteHeroImageFields" class="form-group" style="margin-bottom: 0; display: none;">
@@ -508,9 +511,14 @@
                 <div id="mediaZone" class="project-form-zone">
                     <div style="background: #eadecc; padding: 15px; margin-bottom: 20px; border: 1px solid #d4c8b6;">
                         <h4 style="margin-top: 0; font-size: 0.9rem; text-transform: uppercase; color: #1a1a1a;">Видео презентация</h4>
+                        <div class="form-group">
+                            <label for="projectVideoFile">Избери MP4 видео от компютъра (до 25 MB)</label>
+                            <input type="file" id="projectVideoFile" accept="video/mp4,.mp4">
+                            <span style="display: block; font-size: 0.8rem; color: #8c8275; margin: 4px 0 12px;">Видеото се качва във Firebase Storage и се гледа в сайта. Нужно е Blaze billing; възможни са разходи според съхранението и гледанията.</span>
+                        </div>
                         <div class="form-group" style="margin-bottom: 0;">
-                            <label for="projectVideoUrl">YouTube или публичен HTTPS MP4 линк (без качване на видео файл)</label>
-                            <input type="url" id="projectVideoUrl" placeholder="напр. https://youtu.be/... или https://example.com/project.mp4">
+                            <label for="projectVideoUrl">Или постави YouTube / публичен HTTPS MP4 линк</label>
+                            <input type="url" id="projectVideoUrl" placeholder="https://youtu.be/... или https://example.com/project.mp4">
                             <span id="currentVideoInfo" aria-live="polite" style="font-size: 0.8rem; color: #8c8275; margin-top: 4px;"></span>
                         </div>
                     </div>
@@ -530,7 +538,7 @@
                 </div>
                 
                 <button type="submit" id="submitBtn" class="btn-action" style="margin-top: 20px;">Запази проекта в каталога</button>
-                <div id="uploadLoader" style="display:none; margin-top: 15px; font-weight: 600; color: #8c8275; text-align: center;">Подготовка на снимките и запис... Моля, изчакайте.</div>
+                <div id="uploadLoader" style="display:none; margin-top: 15px; font-weight: 600; color: #8c8275; text-align: center;">Подготовка на медията и запис... Моля, изчакайте.</div>
                 <button type="button" id="cancelBtn" onclick="resetProjectForm()" class="btn-action" style="margin-top: 10px; background: #8c8275; display: none;">Отказ</button>
             </form>
         </div>
@@ -676,6 +684,38 @@
                         resolve(event.target.result);
                     };
                 };
+            });
+        }
+
+        const MAX_VIDEO_UPLOAD_SIZE = 25 * 1024 * 1024;
+
+        async function uploadVideoFile(file, folder, onProgress = () => {}) {
+            if (!file || !/\.mp4$/i.test(file.name) || (file.type && file.type !== 'video/mp4')) {
+                throw new Error('Избери видео във формат MP4.');
+            }
+            if (file.size > MAX_VIDEO_UPLOAD_SIZE) {
+                throw new Error('Размерът на видеото трябва да е до 25 MB.');
+            }
+
+            const user = await adminAuthReady;
+            if (!user) {
+                throw new Error('Firebase удостоверяването не е готово. Влез отново и опитай пак.');
+            }
+
+            const fileId = window.crypto?.randomUUID
+                ? window.crypto.randomUUID()
+                : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+            const uploadTask = storage.ref(`${folder}/${fileId}.mp4`).put(file, { contentType: 'video/mp4' });
+
+            return new Promise((resolve, reject) => {
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    onProgress(progress);
+                }, (error) => {
+                    reject(new Error(`Firebase Storage отказа качването. Провери Blaze billing и Storage Rules. ${error.message}`));
+                }, () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(resolve).catch(reject);
+                });
             });
         }
 
@@ -936,7 +976,7 @@
                     } else {
                         window.existingHeroVideoUrl = hData.videoUrl || hData.mediaUrl || '';
                         document.getElementById('siteHeroVideoUrl').value = window.existingHeroVideoUrl;
-                        document.getElementById('currentHeroVideoInfo').textContent = window.existingHeroVideoUrl ? '✓ Има активен видео линк.' : '';
+                        document.getElementById('currentHeroVideoInfo').textContent = window.existingHeroVideoUrl ? '✓ Има активно видео за началния екран.' : '';
                     }
                     updateHeroMediaFields();
                 }
@@ -1000,6 +1040,18 @@
 
         document.getElementById('siteHeroMediaMode').addEventListener('change', updateHeroMediaFields);
         updateHeroMediaFields();
+
+        document.getElementById('siteHeroVideoFile').addEventListener('change', (event) => {
+            if (event.target.files[0]) {
+                document.getElementById('currentHeroVideoInfo').textContent = 'MP4 клипът ще се качи при запазване.';
+            }
+        });
+
+        document.getElementById('projectVideoFile').addEventListener('change', (event) => {
+            if (event.target.files[0]) {
+                document.getElementById('currentVideoInfo').textContent = 'MP4 клипът ще се качи при запазване.';
+            }
+        });
 
         document.getElementById('siteHeroImageFile').addEventListener('change', (event) => {
             const file = event.target.files[0];
@@ -1125,16 +1177,23 @@
                         : window.existingHeroImageUrl;
                     if (!mediaUrl) throw new Error('Избери снимка от компютъра.');
                 } else {
-                    mediaUrl = document.getElementById('siteHeroVideoUrl').value.trim() || window.existingHeroVideoUrl;
-                    if (!mediaUrl) throw new Error('Добави YouTube или публичен видео линк.');
-                    const parsedVideoUrl = new URL(mediaUrl);
-                    if (parsedVideoUrl.protocol !== 'https:') {
-                        throw new Error('Видео линкът трябва да започва с https://.');
-                    }
-                    const videoHost = parsedVideoUrl.hostname.toLowerCase();
-                    const isYoutubeHost = videoHost === 'youtube.com' || videoHost.endsWith('.youtube.com') || videoHost === 'youtu.be';
-                    if (isYoutubeHost && !/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)[A-Za-z0-9_-]{11}/i.test(mediaUrl)) {
-                        throw new Error('Добави валиден публичен YouTube линк или HTTPS MP4 адрес.');
+                    const videoFile = document.getElementById('siteHeroVideoFile').files[0];
+                    if (videoFile) {
+                        mediaUrl = await uploadVideoFile(videoFile, 'hero-videos', (progress) => {
+                            loader.textContent = `Качване на началното видео: ${progress}%`;
+                        });
+                    } else {
+                        mediaUrl = document.getElementById('siteHeroVideoUrl').value.trim() || window.existingHeroVideoUrl;
+                        if (!mediaUrl) throw new Error('Избери MP4 видео или добави публичен видео линк.');
+                        const parsedVideoUrl = new URL(mediaUrl);
+                        if (parsedVideoUrl.protocol !== 'https:') {
+                            throw new Error('Видео линкът трябва да започва с https://.');
+                        }
+                        const videoHost = parsedVideoUrl.hostname.toLowerCase();
+                        const isYoutubeHost = videoHost === 'youtube.com' || videoHost.endsWith('.youtube.com') || videoHost === 'youtu.be';
+                        if (isYoutubeHost && !/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)[A-Za-z0-9_-]{11}/i.test(mediaUrl)) {
+                            throw new Error('Добави валиден публичен YouTube линк или HTTPS MP4 адрес.');
+                        }
                     }
                 }
 
@@ -1156,7 +1215,8 @@
                 } else {
                     window.existingHeroVideoUrl = mediaUrl;
                     document.getElementById('siteHeroVideoUrl').value = mediaUrl;
-                    document.getElementById('currentHeroVideoInfo').textContent = '✓ Видео линкът е запазен.';
+                    document.getElementById('siteHeroVideoFile').value = '';
+                    document.getElementById('currentHeroVideoInfo').textContent = '✓ Видеото е запазено и ще се възпроизвежда в сайта.';
                 }
                 document.getElementById('settingsLoader').textContent = 'Подготовка на медията и запис... Моля, изчакайте.';
                 alert('Настройките на началния екран са успешно запазени.');
@@ -1635,7 +1695,7 @@
                 videoSectionHtml = `
                     <div style="margin-bottom: 20px;">
                         <h4>Видео презентация (Файл)</h4>
-                        <video controls style="width: 100%; max-height: 400px; border-radius: 4px; background: #000;">
+                        <video controls controlslist="nodownload" style="width: 100%; max-height: 400px; border-radius: 4px; background: #000;">
                             <source src="${p.videoUrl}" type="video/mp4">
                             Вашият браузър не поддържа видео елемента.
                         </video>
@@ -2120,13 +2180,19 @@
             const submitBtn = document.getElementById('submitBtn');
 
             loader.style.display = 'block';
+            loader.textContent = 'Подготовка на медията и запис... Моля, изчакайте.';
             submitBtn.disabled = true;
 
             try {
                 const projectVideoUrl = document.getElementById('projectVideoUrl').value.trim();
+                const projectVideoFile = document.getElementById('projectVideoFile').files[0];
                 let videoUrl = '';
                 let youtubeUrl = '';
-                if (projectVideoUrl) {
+                if (projectVideoFile) {
+                    videoUrl = await uploadVideoFile(projectVideoFile, 'project-videos', (progress) => {
+                        loader.textContent = `Качване на видеото: ${progress}%`;
+                    });
+                } else if (projectVideoUrl) {
                     const parsedVideoUrl = new URL(projectVideoUrl);
                     if (parsedVideoUrl.protocol !== 'https:') {
                         throw new Error('Видео линкът трябва да започва с https://.');
