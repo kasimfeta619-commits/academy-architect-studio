@@ -11,8 +11,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-client.js"></script>
 
     <!-- Leaflet CSS & JS за интерактивната карта -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -27,14 +25,32 @@
         })();
 
         (function() {
-            document.documentElement.style.visibility = 'hidden';
-            window.siteSupabase.auth.getUser().then(({ data, error }) => {
-                if (!error && data.user?.email?.toLowerCase() === window.SITE_ADMIN_EMAIL) {
-                    document.documentElement.style.visibility = '';
-                    return;
-                }
-                window.location.replace('login.html?admin=1');
-            }).catch(() => window.location.replace('login.html?admin=1'));
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isAdmin = localStorage.getItem('isAdmin');
+            
+            const userEmail = (
+                localStorage.getItem('loggedInUserEmail') || 
+                localStorage.getItem('userEmail') || 
+                localStorage.getItem('email') || 
+                ''
+            ).trim().toLowerCase(); 
+
+            const myAdminEmail = 'admin@architect.bg';
+
+            if (userEmail === myAdminEmail || isAdmin === 'true') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('isAdmin', 'true');
+                return;
+            }
+
+            if (isLoggedIn !== 'true') {
+                alert('Моля, влезте в профила си, за да достъпите админ панела.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            alert('Достъпът е разрешен само за администратори!');
+            window.location.href = 'index.html';
         })();
     </script>
 
@@ -267,7 +283,7 @@
 
         <div id="settingsTab" class="admin-section">
             <h3 style="margin-top: 0; font-weight: 400; font-size: 1.3rem; margin-bottom: 10px;">Общи настройки / Начален екран (Hero)</h3>
-            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Променяй заглавията и медията на началния екран. Качи MP4 клип директно от компютъра си или избери снимка.</p>
+            <p style="font-size: 0.85rem; color: #8c8275; margin-bottom: 25px;">Променяй заглавията и медията на началния екран. Снимките се записват в базата, а MP4 клиповете могат да се качват във Firebase Storage и да се гледат директно в сайта.</p>
             <form id="settingsForm">
                 <div class="form-group"><label>Главно заглавие (Hero Title)</label><input type="text" id="siteHeroTitle" placeholder="напр. Архитектурно студио и дизайн"></div>
                 <div class="form-group"><label>Подзаглавие / Описание</label><textarea id="siteHeroSubtitle" style="height: 100px;" placeholder="напр. Създаваме пространства с характер..."></textarea></div>
@@ -277,14 +293,16 @@
                     <div class="form-group">
                         <label for="siteHeroMediaMode">Избери тип медия</label>
                         <select id="siteHeroMediaMode">
-                            <option value="video">Видео: MP4 от компютъра</option>
+                            <option value="video">Видео: MP4 от компютъра или публичен линк</option>
                             <option value="image">Снимка от компютъра</option>
                         </select>
                     </div>
                     <div id="siteHeroVideoFields" class="form-group" style="margin-bottom: 0; display: block;">
                         <label for="siteHeroVideoFile">Избери MP4 видео от компютъра (до 25 MB)</label>
-                        <input type="file" id="siteHeroVideoFile" accept="video/mp4,.mp4" aria-describedby="heroVideoUploadHelp">
-                        <span id="heroVideoUploadHelp" style="display: block; font-size: 0.8rem; color: #8c8275; margin: 4px 0 12px;">Видеото се качва директно в Supabase Storage. В безплатния план размерът е ограничен до 25 MB.</span>
+                        <input type="file" id="siteHeroVideoFile" accept="video/mp4,.mp4">
+                        <span style="display: block; font-size: 0.8rem; color: #8c8275; margin: 4px 0 12px;">Клипът се качва във Firebase Storage и се възпроизвежда в сайта. Нужно е Blaze billing; възможни са разходи за съхранение и гледания.</span>
+                        <label for="siteHeroVideoUrl">Или използвай YouTube / публичен MP4 линк</label>
+                        <input type="url" id="siteHeroVideoUrl" placeholder="https://youtu.be/... или https://example.com/video.mp4">
                         <span id="currentHeroVideoInfo" aria-live="polite" style="font-size: 0.8rem; color: #8c8275; margin-top: 4px;"></span>
                     </div>
                     <div id="siteHeroImageFields" class="form-group" style="margin-bottom: 0; display: none;">
@@ -496,7 +514,7 @@
                         <div class="form-group">
                             <label for="projectVideoFile">Избери MP4 видео от компютъра (до 25 MB)</label>
                             <input type="file" id="projectVideoFile" accept="video/mp4,.mp4">
-                            <span style="display: block; font-size: 0.8rem; color: #8c8275; margin: 4px 0 12px;">Видеото се качва директно в Supabase Storage. Размерът е ограничен до 25 MB на файл.</span>
+                            <span style="display: block; font-size: 0.8rem; color: #8c8275; margin: 4px 0 12px;">Видеото се качва във Firebase Storage и се гледа в сайта. Нужно е Blaze billing; възможни са разходи според съхранението и гледанията.</span>
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
                             <label for="projectVideoUrl">Или постави YouTube / публичен HTTPS MP4 линк</label>
@@ -671,90 +689,71 @@
 
         const MAX_VIDEO_UPLOAD_SIZE = 25 * 1024 * 1024;
 
-        async function uploadSupabaseVideoFile(file, objectPath, onProgress = () => {}) {
+        async function uploadVideoFile(file, folder, onProgress = () => {}) {
             if (!file || !/\.mp4$/i.test(file.name) || (file.type && file.type !== 'video/mp4')) {
                 throw new Error('Избери видео във формат MP4.');
             }
             if (file.size > MAX_VIDEO_UPLOAD_SIZE) {
                 throw new Error('Размерът на видеото трябва да е до 25 MB.');
             }
-            if (objectPath !== 'hero-video.mp4' && !/^project-videos\/[0-9a-z-]+\.mp4$/i.test(objectPath)) {
-                throw new Error('Невалиден път за видео файла.');
+
+            const user = await adminAuthReady;
+            if (!user) {
+                throw new Error('Firebase удостоверяването не е готово. Влез отново и опитай пак.');
             }
 
-            const { data, error } = await window.siteSupabase.auth.getSession();
-            const session = data?.session;
-            if (error || !session || session.user?.email?.toLowerCase() !== window.SITE_ADMIN_EMAIL) {
-                throw new Error('Сесията на администратора е изтекла. Влез отново и опитай пак.');
-            }
-
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                let settled = false;
-                let stallTimer;
-
-                const finish = (callback, value) => {
-                    if (settled) return;
-                    settled = true;
-                    window.clearTimeout(stallTimer);
-                    callback(value);
-                };
-                const resetStallTimer = () => {
-                    window.clearTimeout(stallTimer);
-                    stallTimer = window.setTimeout(() => {
-                        xhr.abort();
-                        finish(reject, new Error('Качването е прекъснато след 2 минути без пренос на данни. Провери връзката и опитай отново.'));
-                    }, 120000);
-                };
-
-                const encodedPath = objectPath.split('/').map(encodeURIComponent).join('/');
-                xhr.open('POST', `${window.SUPABASE_URL}/storage/v1/object/hero-videos/${encodedPath}`);
-                xhr.timeout = 10 * 60 * 1000;
-                xhr.setRequestHeader('apikey', window.SUPABASE_PUBLISHABLE_KEY);
-                xhr.setRequestHeader('Authorization', `Bearer ${session.access_token}`);
-                xhr.setRequestHeader('Content-Type', 'video/mp4');
-                xhr.setRequestHeader('x-upsert', 'true');
-                xhr.upload.addEventListener('progress', (event) => {
-                    if (event.loaded > 0) resetStallTimer();
-                    if (event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
-                });
-                xhr.onload = () => {
-                    if (xhr.status < 200 || xhr.status >= 300) {
-                        let message = `Supabase Storage отказа качването (HTTP ${xhr.status}).`;
-                        try {
-                            const response = JSON.parse(xhr.responseText);
-                            message = response.message || response.error || message;
-                        } catch (error) {
-                            // Keep the generic response when Storage returns non-JSON data.
-                        }
-                        finish(reject, new Error(message));
-                        return;
-                    }
-
-                    const { data: publicData } = window.siteSupabase.storage.from('hero-videos').getPublicUrl(objectPath);
-                    finish(resolve, `${publicData.publicUrl}?v=${Date.now()}`);
-                };
-                xhr.onerror = () => finish(reject, new Error('Неуспешна мрежова връзка при качване на видеото.'));
-                xhr.ontimeout = () => finish(reject, new Error('Качването надхвърли максималното време. Опитай с по-малък клип или по-бърза връзка.'));
-                xhr.onabort = () => finish(reject, new Error('Качването беше прекъснато.'));
-                resetStallTimer();
-                xhr.send(file);
-            });
-        }
-
-        async function uploadVideoFile(file, folder, onProgress = () => {}) {
-            if (folder !== 'project-videos') {
-                throw new Error('Невалидна папка за видео файл.');
-            }
             const fileId = window.crypto?.randomUUID
                 ? window.crypto.randomUUID()
                 : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-            return uploadSupabaseVideoFile(file, `${folder}/${fileId}.mp4`, onProgress);
+            const uploadTask = storage.ref(`${folder}/${fileId}.mp4`).put(file, { contentType: 'video/mp4' });
+
+            return new Promise((resolve, reject) => {
+                let settled = false;
+                let lastBytesTransferred = 0;
+                let timeoutId;
+
+                const fail = (error) => {
+                    if (settled) return;
+                    settled = true;
+                    window.clearTimeout(timeoutId);
+                    reject(error);
+                };
+
+                const resetStallTimeout = () => {
+                    window.clearTimeout(timeoutId);
+                    timeoutId = window.setTimeout(() => {
+                        const error = new Error('Firebase Storage не е прехвърлил данни в продължение на 2 минути. Това не е ограничението от 25 MB. Провери Blaze billing, Storage bucket-а и Storage Rules; ако проблемът остане, провери връзката и опитай отново.');
+                        error.code = 'storage/upload-stalled';
+                        fail(error);
+                        uploadTask.cancel();
+                    }, 120000);
+                };
+
+                resetStallTimeout();
+                uploadTask.on('state_changed', (snapshot) => {
+                    if (snapshot.bytesTransferred > lastBytesTransferred) {
+                        lastBytesTransferred = snapshot.bytesTransferred;
+                        resetStallTimeout();
+                    }
+                    const progress = snapshot.totalBytes
+                        ? Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                        : 0;
+                    onProgress(progress);
+                }, (error) => {
+                    fail(new Error(`Firebase Storage отказа качването (код: ${error.code || 'неизвестен'}). Провери Blaze billing, Storage bucket-а и Storage Rules. ${error.message}`));
+                }, () => {
+                    window.clearTimeout(timeoutId);
+                    uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+                        if (settled) return;
+                        settled = true;
+                        resolve(url);
+                    }).catch(fail);
+                });
+            });
         }
 
-        async function handleExit() {
+        function handleExit() {
             if (confirm("Сигурни ли сте, че искате да излезете от админ панела?")) {
-                await window.siteSupabase.auth.signOut();
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('isAdmin');
                 localStorage.removeItem('loggedInUserEmail');
@@ -1008,8 +1007,9 @@
                         showAboutImagePreview(document.getElementById('siteHeroImagePreview'), window.existingHeroImageUrl);
                         document.getElementById('currentHeroImageInfo').textContent = window.existingHeroImageUrl ? '✓ Има активна снимка за началния екран.' : '';
                     } else {
-                    window.existingHeroVideoUrl = hData.videoUrl || hData.mediaUrl || '';
-                    document.getElementById('currentHeroVideoInfo').textContent = window.existingHeroVideoUrl ? '✓ Има активно видео за началния екран.' : '';
+                        window.existingHeroVideoUrl = hData.videoUrl || hData.mediaUrl || '';
+                        document.getElementById('siteHeroVideoUrl').value = window.existingHeroVideoUrl;
+                        document.getElementById('currentHeroVideoInfo').textContent = window.existingHeroVideoUrl ? '✓ Има активно видео за началния екран.' : '';
                     }
                     updateHeroMediaFields();
                 }
@@ -1212,12 +1212,21 @@
                 } else {
                     const videoFile = document.getElementById('siteHeroVideoFile').files[0];
                     if (videoFile) {
-                        mediaUrl = await uploadSupabaseVideoFile(videoFile, 'hero-video.mp4', (progress) => {
+                        mediaUrl = await uploadVideoFile(videoFile, 'hero-videos', (progress) => {
                             loader.textContent = `Качване на началното видео: ${progress}%`;
                         });
                     } else {
-                        mediaUrl = window.existingHeroVideoUrl;
-                        if (!mediaUrl) throw new Error('Избери MP4 видео от компютъра.');
+                        mediaUrl = document.getElementById('siteHeroVideoUrl').value.trim() || window.existingHeroVideoUrl;
+                        if (!mediaUrl) throw new Error('Избери MP4 видео или добави публичен видео линк.');
+                        const parsedVideoUrl = new URL(mediaUrl);
+                        if (parsedVideoUrl.protocol !== 'https:') {
+                            throw new Error('Видео линкът трябва да започва с https://.');
+                        }
+                        const videoHost = parsedVideoUrl.hostname.toLowerCase();
+                        const isYoutubeHost = videoHost === 'youtube.com' || videoHost.endsWith('.youtube.com') || videoHost === 'youtu.be';
+                        if (isYoutubeHost && !/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)[A-Za-z0-9_-]{11}/i.test(mediaUrl)) {
+                            throw new Error('Добави валиден публичен YouTube линк или HTTPS MP4 адрес.');
+                        }
                     }
                 }
 
@@ -1238,6 +1247,7 @@
                     document.getElementById('currentHeroImageInfo').textContent = '✓ Снимката е запазена.';
                 } else {
                     window.existingHeroVideoUrl = mediaUrl;
+                    document.getElementById('siteHeroVideoUrl').value = mediaUrl;
                     document.getElementById('siteHeroVideoFile').value = '';
                     document.getElementById('currentHeroVideoInfo').textContent = '✓ Видеото е запазено и ще се възпроизвежда в сайта.';
                 }
