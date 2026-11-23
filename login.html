@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход / Регистрация | Academy Architect Studio</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
     <script>
         (function() {
             const savedTheme = localStorage.getItem('siteTheme');
@@ -154,15 +156,18 @@
                     <h2 style="font-weight: 400; font-size: 1.5rem; margin-bottom: 25px; text-align: center;">Вход за администратор</h2>
                     <form onsubmit="handleAdminLogin(event)">
                         <div class="form-group">
-                            <label>Админ имейл</label>
-                            <input type="email" id="adminEmail" required placeholder="admin@domain.com">
+                            <label for="adminEmail">Админ имейл</label>
+                            <input type="email" id="adminEmail" required autocomplete="username" placeholder="admin@architect.bg">
                         </div>
                         <div class="form-group">
-                            <label>Админ парола</label>
-                            <input type="password" id="adminPass" required placeholder="••••••••">
+                            <label for="adminPass">Админ парола</label>
+                            <input type="password" id="adminPass" required autocomplete="current-password" placeholder="Въведи паролата си">
                         </div>
                         <button type="submit" class="btn-submit">Влизане в админ панел</button>
                     </form>
+                    <p id="adminAuthStatus" role="status" aria-live="polite" style="min-height: 1.3em; color: #8c8275; font-size: 0.85rem;"></p>
+                    <button type="button" class="switch-link" onclick="handleAdminSignUp()">Създай защитен админ профил</button>
+                    <button type="button" class="switch-link" onclick="handleAdminPasswordReset()">Забравена парола?</button>
                 </div>
             </div>
 
@@ -171,31 +176,46 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            checkAuthStatus();
+        document.addEventListener("DOMContentLoaded", async function() {
+            await checkAuthStatus();
+            if (new URLSearchParams(window.location.search).has('admin')) {
+                const adminTabButton = document.querySelector('.login-tab[onclick*="adminTab"]');
+                if (adminTabButton) switchLoginTab('adminTab', adminTabButton);
+            }
         });
 
-        function checkAuthStatus() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            const userEmail = localStorage.getItem('loggedInUserEmail');
-            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+        async function checkAuthStatus() {
+            let adminUser = null;
+            try {
+                const { data } = await window.siteSupabase.auth.getUser();
+                if (data.user?.email?.toLowerCase() === window.SITE_ADMIN_EMAIL) {
+                    adminUser = data.user;
+                }
+            } catch (error) {
+                console.error('Supabase admin session check failed:', error);
+            }
 
-            if (isLoggedIn && userEmail) {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const localEmail = localStorage.getItem('loggedInUserEmail');
+            const userEmail = adminUser?.email || (isLoggedIn ? localEmail : null);
+            const isAdmin = Boolean(adminUser);
+
+            if (userEmail) {
                 document.getElementById('loggedOutView').style.display = 'none';
                 document.getElementById('loggedInView').style.display = 'block';
                 document.getElementById('displayUserEmail').textContent = userEmail;
 
-                // Пресмятаме брой харесани проекти за този потребител
                 const userFavKey = `favorites_${userEmail.trim().toLowerCase()}`;
                 const userFavs = JSON.parse(localStorage.getItem(userFavKey) || '[]');
                 const favCountEl = document.getElementById('userFavCount');
                 if (favCountEl) favCountEl.textContent = userFavs.length;
 
                 const adminBtn = document.getElementById('adminPanelBtn');
+                adminBtn.style.display = isAdmin ? 'block' : 'none';
                 if (isAdmin) {
-                    adminBtn.style.display = 'block';
-                } else {
-                    adminBtn.style.display = 'none';
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('loggedInUserEmail', adminUser.email);
+                    localStorage.setItem('isAdmin', 'true');
                 }
             } else {
                 document.getElementById('loggedOutView').style.display = 'block';
@@ -263,30 +283,80 @@
             }
         }
 
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('adminEmail').value.trim().toLowerCase();
-            const pass = document.getElementById('adminPass').value;
-
-            const ADMIN_EMAIL = "admin@architect.bg";
-            const ADMIN_PASS = "Arch#Studio2026!Secured";
-
-            if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('loggedInUserEmail', email);
-                localStorage.setItem('isAdmin', 'true');
-                
-                window.location.href = "admin.html";
-            } else {
-                alert("Грешен имейл или парола за администратор!");
-            }
+        function setAdminAuthStatus(message) {
+            const status = document.getElementById('adminAuthStatus');
+            if (status) status.textContent = message;
         }
 
-        function handleLogout() {
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+            const password = document.getElementById('adminPass').value;
+            setAdminAuthStatus('Проверка на профила...');
+
+            if (email !== window.SITE_ADMIN_EMAIL) {
+                setAdminAuthStatus('Невалиден администраторски профил.');
+                return;
+            }
+
+            const { data, error } = await window.siteSupabase.auth.signInWithPassword({ email, password });
+            if (error || data.user?.email?.toLowerCase() !== window.SITE_ADMIN_EMAIL) {
+                setAdminAuthStatus('Входът не беше успешен. Провери имейла, паролата и потвърждението на имейла.');
+                return;
+            }
+
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('loggedInUserEmail', data.user.email);
+            localStorage.setItem('isAdmin', 'true');
+            window.location.href = 'admin.html';
+        }
+
+        async function handleAdminSignUp() {
+            const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+            const password = document.getElementById('adminPass').value;
+            if (email !== window.SITE_ADMIN_EMAIL) {
+                setAdminAuthStatus(`Използвай администраторския адрес ${window.SITE_ADMIN_EMAIL}.`);
+                return;
+            }
+            if (password.length < 12) {
+                setAdminAuthStatus('Защитената парола трябва да е поне 12 знака.');
+                return;
+            }
+
+            setAdminAuthStatus('Изпращане на потвърждение...');
+            const { error } = await window.siteSupabase.auth.signUp({
+                email,
+                password,
+                options: { emailRedirectTo: window.SUPABASE_AUTH_REDIRECT_URL }
+            });
+            if (error) {
+                setAdminAuthStatus('Заявката не беше приета. Ако профилът вече съществува, използвай вход или възстановяване на парола.');
+                return;
+            }
+            setAdminAuthStatus('Провери пощата на администраторския адрес и потвърди регистрацията, после влез отново тук.');
+        }
+
+        async function handleAdminPasswordReset() {
+            const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+            if (email !== window.SITE_ADMIN_EMAIL) {
+                setAdminAuthStatus(`Въведи администраторския адрес ${window.SITE_ADMIN_EMAIL}.`);
+                return;
+            }
+
+            const { error } = await window.siteSupabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.SUPABASE_AUTH_REDIRECT_URL
+            });
+            setAdminAuthStatus(error
+                ? 'Не успяхме да изпратим заявката. Провери настройките за имейл или опитай отново.'
+                : 'Ако профилът съществува, ще получиш инструкции за възстановяване на паролата.');
+        }
+
+        async function handleLogout() {
+            await window.siteSupabase.auth.signOut();
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('loggedInUserEmail');
             localStorage.removeItem('isAdmin');
-            checkAuthStatus();
+            await checkAuthStatus();
         }
     </script>
     <script src="global-wishlist.js"></script>
