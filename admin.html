@@ -27,13 +27,13 @@
         (function() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const isAdmin = localStorage.getItem('isAdmin');
-            
+
             const userEmail = (
-                localStorage.getItem('loggedInUserEmail') || 
-                localStorage.getItem('userEmail') || 
-                localStorage.getItem('email') || 
+                localStorage.getItem('loggedInUserEmail') ||
+                localStorage.getItem('userEmail') ||
+                localStorage.getItem('email') ||
                 ''
-            ).trim().toLowerCase(); 
+            ).trim().toLowerCase();
 
             const myAdminEmail = 'admin@architect.bg';
 
