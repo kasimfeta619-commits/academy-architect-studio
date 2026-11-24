@@ -1,7 +1,6 @@
 function initAuthUI() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('isUserLoggedIn') === 'true';
-    const isAdmin = localStorage.getItem('isAdmin') === 'true';
-    const userName = localStorage.getItem('userName') || (isAdmin ? 'Админ' : 'Профил');
+    const userName = localStorage.getItem('userName') || 'Профил';
 
     if (!isLoggedIn) return;
 

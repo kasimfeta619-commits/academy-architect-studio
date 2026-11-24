@@ -211,14 +211,13 @@
             if (!container) return;
 
             const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('isUserLoggedIn') === 'true';
-            const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
             if (isUserLoggedIn) {
-                const targetPage = isAdmin ? 'admin.html' : 'login.html';
+                const targetPage = 'login.html';
                 const lang = localStorage.getItem('siteLang') || 'bg';
-                const labelKey = isAdmin ? 'nav-admin' : 'nav-profile';
-                const authLabel = translations[lang]?.[labelKey] || (isAdmin ? 'Админ' : 'Профил');
-                const authTitle = translations[lang]?.['nav-admin-title'] || 'Админ панел / Профил';
+                const labelKey = 'nav-profile';
+                const authLabel = translations[lang]?.[labelKey] || 'Профил';
+                const authTitle = 'Профил';
                 container.innerHTML = `
                     <a href="${targetPage}" title="${authTitle}" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;">
                         <div style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; background: rgba(0,0,0,0.05); border-radius: 50%;">

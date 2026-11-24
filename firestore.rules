@@ -1,0 +1,111 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function adminWithTotp() {
+      return request.auth != null
+        && request.auth.token.email == 'admin@architect.bg'
+        && request.auth.token.firebase.get('sign_in_second_factor', null) == 'totp';
+    }
+
+    function validPublicBooking(bookingId) {
+      let data = request.resource.data;
+      return request.auth == null
+        && data.keys().hasOnly(['name', 'phone', 'email', 'service', 'datetime', 'createdAt', 'date', 'time', 'slotId'])
+        && data.keys().hasAll(['name', 'phone', 'service', 'datetime'])
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 120
+        && data.phone is string && data.phone.size() > 0 && data.phone.size() <= 60
+        && data.service is string && data.service.size() > 0 && data.service.size() <= 200
+        && data.datetime is string && data.datetime.size() > 0 && data.datetime.size() <= 500
+        && (!('email' in data) || (data.email is string && data.email.size() <= 254))
+        && (!('createdAt' in data) || data.createdAt is string)
+        && ((!('slotId' in data) && !('date' in data) && !('time' in data)) || (
+          data.slotId is string
+          && data.date is string
+          && data.time is string
+          && existsAfter(/databases/$(database)/documents/bookingSlots/$(data.slotId))
+          && getAfter(/databases/$(database)/documents/bookingSlots/$(data.slotId)).data.bookingId == bookingId
+          && getAfter(/databases/$(database)/documents/bookingSlots/$(data.slotId)).data.date == data.date
+          && getAfter(/databases/$(database)/documents/bookingSlots/$(data.slotId)).data.time == data.time
+        ));
+    }
+
+    function validPublicReview() {
+      let data = request.resource.data;
+      return request.auth == null
+        && data.keys().hasOnly(['author', 'comment', 'rating', 'approved', 'createdAt'])
+        && data.keys().hasAll(['author', 'comment', 'rating', 'approved', 'createdAt'])
+        && data.author is string && data.author.size() > 0 && data.author.size() <= 120
+        && data.comment is string && data.comment.size() > 0 && data.comment.size() <= 3000
+        && data.rating is int && data.rating >= 1 && data.rating <= 5
+        && data.approved == false;
+    }
+
+    match /siteSettings/{documentId} {
+      allow read: if true;
+      allow write: if adminWithTotp();
+    }
+
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create, delete: if adminWithTotp();
+      allow update: if adminWithTotp() || (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['views'])
+        && request.resource.data.views is int
+        && request.resource.data.views == resource.data.get('views', 0) + 1
+      );
+
+      match /reviews/{reviewId} {
+        allow read: if adminWithTotp() || resource.data.approved == true;
+        allow create: if adminWithTotp() || validPublicReview();
+        allow update, delete: if adminWithTotp();
+      }
+    }
+
+    match /teamMembers/{memberId} {
+      allow read: if true;
+      allow write: if adminWithTotp();
+    }
+
+    match /mapLocations/{locationId} {
+      allow read: if true;
+      allow write: if adminWithTotp();
+    }
+
+    match /blockedDays/{blockedDayId} {
+      allow read: if true;
+      allow write: if adminWithTotp();
+    }
+
+    match /bookingSlots/{slotId} {
+      allow read: if true;
+      allow create: if adminWithTotp() || (request.auth == null
+        && request.resource.data.keys().hasOnly(['date', 'time', 'bookingId'])
+        && request.resource.data.keys().hasAll(['date', 'time', 'bookingId'])
+        && request.resource.data.date is string
+        && request.resource.data.time is string
+        && request.resource.data.bookingId is string
+        && !exists(/databases/$(database)/documents/bookingSlots/$(slotId))
+        && existsAfter(/databases/$(database)/documents/studioBookings/$(request.resource.data.bookingId))
+        && getAfter(/databases/$(database)/documents/studioBookings/$(request.resource.data.bookingId)).data.slotId == slotId
+        && getAfter(/databases/$(database)/documents/studioBookings/$(request.resource.data.bookingId)).data.date == request.resource.data.date
+        && getAfter(/databases/$(database)/documents/studioBookings/$(request.resource.data.bookingId)).data.time == request.resource.data.time);
+      allow update: if adminWithTotp();
+      allow delete: if adminWithTotp();
+    }
+
+    match /studioBookings/{bookingId} {
+      allow read: if adminWithTotp();
+      allow create: if adminWithTotp() || validPublicBooking(bookingId);
+      allow update, delete: if adminWithTotp();
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if adminWithTotp() || resource.data.approved == true;
+      allow write: if adminWithTotp();
+    }
+
+    match /{document=**} {
+      allow read, write: if adminWithTotp();
+    }
+  }
+}
