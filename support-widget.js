@@ -118,25 +118,32 @@ document.addEventListener('DOMContentLoaded', async function () {
   const workingHours = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"];
   let bookedSlotsForDate = [];
 
+  function bookingSlotId(date, time) {
+    return `${date}_${time.replace(':', '-')}`;
+  }
+
   async function fetchBookedSlots(dateVal) {
     if (!db) return [];
     try {
-      const snapshot = await db.collection('studioBookings').get();
-      let taken = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        if (data.datetime && data.datetime.startsWith(dateVal)) {
-          const parts = data.datetime.split(' ');
-          if (parts.length >= 2) {
-            taken.push(parts[1].substring(0, 5));
-          }
-        }
-      });
-      return taken;
+      const snapshot = await db.collection('bookingSlots').where('date', '==', dateVal).get();
+      return snapshot.docs.map((slotDoc) => slotDoc.data().time).filter(Boolean);
     } catch (err) {
       console.error("Грешка при зареждане на часовете:", err);
       return [];
     }
+  }
+
+  async function saveStudioBooking(booking) {
+    if (!db) throw new Error('Услугата за резервации временно не е достъпна.');
+    const bookingRef = db.collection('studioBookings').doc();
+    const slotId = bookingSlotId(clientData.date, clientData.time);
+    const slotRef = db.collection('bookingSlots').doc(slotId);
+    await db.runTransaction(async (transaction) => {
+      const existingSlot = await transaction.get(slotRef);
+      if (existingSlot.exists) throw new Error('Този час току-що беше зает. Избери друг час.');
+      transaction.set(bookingRef, { ...booking, date: clientData.date, time: clientData.time, slotId });
+      transaction.set(slotRef, { date: clientData.date, time: clientData.time, bookingId: bookingRef.id });
+    });
   }
 
   async function renderWidgetContent() {
@@ -384,23 +391,12 @@ document.addEventListener('DOMContentLoaded', async function () {
           };
 
           try {
-            if (db) {
-              // Записва директно в същата база данни и колекция като contact.html
-              await db.collection('studioBookings').add(newBooking);
-            } else {
-              let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
-              bookings.push(newBooking);
-              localStorage.setItem('studioBookings', JSON.stringify(bookings));
-            }
+            await saveStudioBooking(newBooking);
             currentView = 'booking-done';
             await renderWidgetContent();
           } catch (err) {
             console.error("Грешка при запис на час през уиджиета:", err);
-            let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
-            bookings.push(newBooking);
-            localStorage.setItem('studioBookings', JSON.stringify(bookings));
-            currentView = 'booking-done';
-            await renderWidgetContent();
+            alert(err.message || 'Не успяхме да запазим часа. Опитай отново.');
           }
           return;
         }

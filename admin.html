@@ -17,45 +17,19 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        (function() {
-            const savedTheme = localStorage.getItem('siteTheme');
-            if (savedTheme === 'dark') {
+        document.documentElement.classList.add('admin-auth-pending');
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('siteTheme') === 'dark') {
                 document.body.classList.add('dark-mode');
             }
-        })();
-
-        (function() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const isAdmin = localStorage.getItem('isAdmin');
-
-            const userEmail = (
-                localStorage.getItem('loggedInUserEmail') ||
-                localStorage.getItem('userEmail') ||
-                localStorage.getItem('email') ||
-                ''
-            ).trim().toLowerCase();
-
-            const myAdminEmail = 'admin@architect.bg';
-
-            if (userEmail === myAdminEmail || isAdmin === 'true') {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('isAdmin', 'true');
-                return;
-            }
-
-            if (isLoggedIn !== 'true') {
-                alert('Моля, влезте в профила си, за да достъпите админ панела.');
-                window.location.href = 'login.html';
-                return;
-            }
-
-            alert('Достъпът е разрешен само за администратори!');
-            window.location.href = 'index.html';
-        })();
+        });
     </script>
 
     <style>
         body { background-color: var(--bg-color, #fbf9f4); color: var(--text-color, #1a1a1a); font-family: sans-serif; margin: 0; transition: background-color 0.3s, color 0.3s; }
+        html.admin-auth-pending body > :not(#adminAuthGate) { display: none !important; }
+        .admin-auth-gate { min-height: 100vh; display: grid; place-items: center; padding: 24px; text-align: center; color: #8c8275; }
+        .admin-auth-gate[hidden] { display: none; }
         .admin-container { padding: 30px 5%; max-width: 1100px; margin: 0 auto; min-height: 80vh; }
         .back-home-link { display: inline-block; margin-bottom: 15px; color: #8c8275; text-decoration: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         .back-home-link:hover { color: var(--text-color, #1a1a1a); }
@@ -212,6 +186,7 @@
     </style>
 </head>
 <body>
+    <div id="adminAuthGate" class="admin-auth-gate" role="status" aria-live="polite">Проверка на защитен администраторски достъп…</div>
 
     <header class="navbar" style="padding: 15px 5%; border-bottom: 1px solid #eadecc; display: flex; align-items: center; justify-content: space-between; background: #fbf9f4;">
         <a href="index.html" class="logo-area" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
@@ -640,14 +615,63 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        let adminAuthError = null;
-        const adminAuthReady = firebase.auth().currentUser
-            ? Promise.resolve(firebase.auth().currentUser)
-            : firebase.auth().signInAnonymously().then(({ user }) => user).catch((error) => {
-                adminAuthError = error;
-                console.error("Auth error:", error);
-                return null;
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[character]);
+        }
+
+        let adminAuthResolved = false;
+        let adminAuthRedirecting = false;
+        const adminAuth = firebase.auth();
+        const adminAuthReady = new Promise((resolve) => {
+            const denyAdminAccess = async () => {
+                if (adminAuthRedirecting) return;
+                adminAuthRedirecting = true;
+                const gate = document.getElementById('adminAuthGate');
+                if (gate) gate.textContent = 'Входът изисква администраторски акаунт с TOTP. Пренасочване…';
+                await adminAuth.signOut().catch(() => {});
+                resolve(null);
+                window.location.replace('login.html?admin=1');
+            };
+
+            adminAuth.onAuthStateChanged(async (user) => {
+                if (adminAuthResolved) {
+                    if (!user && !adminAuthRedirecting) await denyAdminAccess();
+                    return;
+                }
+
+                if (!user || user.email?.toLowerCase() !== 'admin@architect.bg') {
+                    adminAuthResolved = true;
+                    await denyAdminAccess();
+                    return;
+                }
+
+                try {
+                    const tokenResult = await user.getIdTokenResult(true);
+                    const signedInWithTotp = tokenResult.claims.firebase?.sign_in_second_factor === 'totp';
+                    const hasTotpEnrolled = user.multiFactor.enrolledFactors.some((factor) => factor.factorId === 'totp');
+                    if (!signedInWithTotp || !hasTotpEnrolled) {
+                        adminAuthResolved = true;
+                        await denyAdminAccess();
+                        return;
+                    }
+
+                    adminAuthResolved = true;
+                    const gate = document.getElementById('adminAuthGate');
+                    if (gate) gate.hidden = true;
+                    document.documentElement.classList.remove('admin-auth-pending');
+                    resolve(user);
+                } catch {
+                    adminAuthResolved = true;
+                    await denyAdminAccess();
+                }
             });
+        });
 
         function getYouTubeEmbedUrl(url) {
             if (!url) return '';
@@ -709,40 +733,40 @@
 
             return new Promise((resolve, reject) => {
                 let settled = false;
-                let lastBytesTransferred = 0;
-                let timeoutId;
+                const bucketName = firebase.app().options.storageBucket || 'не е зададен';
 
                 const fail = (error) => {
                     if (settled) return;
                     settled = true;
-                    window.clearTimeout(timeoutId);
                     reject(error);
                 };
 
-                const resetStallTimeout = () => {
-                    window.clearTimeout(timeoutId);
-                    timeoutId = window.setTimeout(() => {
-                        const error = new Error('Firebase Storage не е прехвърлил данни в продължение на 2 минути. Това не е ограничението от 25 MB. Провери Blaze billing, Storage bucket-а и Storage Rules; ако проблемът остане, провери връзката и опитай отново.');
-                        error.code = 'storage/upload-stalled';
-                        fail(error);
-                        uploadTask.cancel();
-                    }, 120000);
+                const describeStorageError = (error) => {
+                    const code = error.code || 'storage/unknown';
+                    const details = `${error.message || ''} ${error.serverResponse || ''}`;
+                    const isMissingBucket = code === 'storage/bucket-not-found'
+                        || code === 'storage/no-default-bucket'
+                        || (code === 'storage/unknown' && /\b404\b|bucket.*not found/i.test(details));
+
+                    if (isMissingBucket) {
+                        return new Error(`Firebase Storage не намира bucket „${bucketName}“. Създай или потвърди Storage bucket във Firebase Console и провери, че името му съвпада с настройката storageBucket. ${error.message || ''}`);
+                    }
+
+                    if (code === 'storage/unauthorized') {
+                        return new Error(`Firebase Storage отказа достъп до bucket „${bucketName}“ (storage/unauthorized). Провери Storage Rules и правата на потребителя. ${error.message || ''}`);
+                    }
+
+                    return new Error(`Firebase Storage отказа качването (код: ${code}; bucket: „${bucketName}“). ${error.message || 'Провери Firebase Storage конфигурацията и връзката.'}`);
                 };
 
-                resetStallTimeout();
                 uploadTask.on('state_changed', (snapshot) => {
-                    if (snapshot.bytesTransferred > lastBytesTransferred) {
-                        lastBytesTransferred = snapshot.bytesTransferred;
-                        resetStallTimeout();
-                    }
                     const progress = snapshot.totalBytes
                         ? Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
                         : 0;
                     onProgress(progress);
                 }, (error) => {
-                    fail(new Error(`Firebase Storage отказа качването (код: ${error.code || 'неизвестен'}). Провери Blaze billing, Storage bucket-а и Storage Rules. ${error.message}`));
+                    fail(describeStorageError(error));
                 }, () => {
-                    window.clearTimeout(timeoutId);
                     uploadTask.snapshot.ref.getDownloadURL().then((url) => {
                         if (settled) return;
                         settled = true;
@@ -752,13 +776,13 @@
             });
         }
 
-        function handleExit() {
-            if (confirm("Сигурни ли сте, че искате да излезете от админ панела?")) {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('isAdmin');
-                localStorage.removeItem('loggedInUserEmail');
-                window.location.href = 'index.html';
-            }
+        async function handleExit() {
+            if (!confirm("Сигурни ли сте, че искате да излезете от админ панела?")) return;
+            await adminAuth.signOut();
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('isAdmin');
+            localStorage.removeItem('loggedInUserEmail');
+            window.location.replace('login.html?admin=1');
         }
 
         function toggleDarkMode() {
@@ -980,6 +1004,9 @@
         window.existingHeroImageUrl = '';
 
         window.addEventListener('DOMContentLoaded', async () => {
+            const adminUser = await adminAuthReady;
+            if (!adminUser) return;
+
             try {
                 const aboutDoc = await db.collection('siteSettings').doc('about').get();
                 if (aboutDoc.exists) {
@@ -1034,6 +1061,8 @@
                 console.log("Firebase sync note:", err);
             }
 
+            await migrateLegacyReviewVisibility().catch((error) => console.error('Неуспешна миграция на видимостта на старите отзиви:', error));
+            await migrateLegacyBookingSlots().catch((error) => console.error('Неуспешна миграция на публичните часови слотове:', error));
             renderAdminList();
             renderAdminBookings();
             renderAdminTeam();
@@ -1761,6 +1790,66 @@
             }
         }
 
+        function bookingSlotId(date, time) {
+            return `${date}_${time.replace(':', '-')}`;
+        }
+
+        async function migrateLegacyReviewApproval(collectionRef) {
+            const snapshot = await collectionRef.get();
+            const pendingUpdates = snapshot.docs.filter((reviewDoc) => !Object.prototype.hasOwnProperty.call(reviewDoc.data(), 'approved'));
+
+            for (let index = 0; index < pendingUpdates.length; index += 400) {
+                const batch = db.batch();
+                pendingUpdates.slice(index, index + 400).forEach((reviewDoc) => batch.update(reviewDoc.ref, { approved: true }));
+                await batch.commit();
+            }
+        }
+
+        async function migrateLegacyReviewVisibility() {
+            const projectsSnapshot = await db.collection('projects').get();
+            for (const projectDoc of projectsSnapshot.docs) {
+                await migrateLegacyReviewApproval(projectDoc.ref.collection('reviews'));
+            }
+            await migrateLegacyReviewApproval(db.collection('reviews'));
+        }
+
+        async function migrateLegacyBookingSlots() {
+            const snapshot = await db.collection('studioBookings').get();
+            const datetimePattern = /^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}):\d{2}$/;
+
+            for (const bookingDoc of snapshot.docs) {
+                const booking = bookingDoc.data();
+                if (booking.slotId || typeof booking.datetime !== 'string') continue;
+                const match = booking.datetime.match(datetimePattern);
+                if (!match) continue;
+
+                const [, date, time] = match;
+                const slotId = bookingSlotId(date, time);
+                const slotRef = db.collection('bookingSlots').doc(slotId);
+                await db.runTransaction(async (transaction) => {
+                    const [freshBooking, existingSlot] = await Promise.all([
+                        transaction.get(bookingDoc.ref),
+                        transaction.get(slotRef)
+                    ]);
+                    if (!freshBooking.exists || freshBooking.data().slotId || existingSlot.exists) return;
+                    transaction.set(slotRef, { date, time, bookingId: bookingDoc.id });
+                    transaction.update(bookingDoc.ref, { date, time, slotId });
+                });
+            }
+        }
+
+        async function deleteBookingRecord(bookingRef) {
+            await db.runTransaction(async (transaction) => {
+                const bookingSnapshot = await transaction.get(bookingRef);
+                if (!bookingSnapshot.exists) return;
+                const booking = bookingSnapshot.data();
+                if (booking.slotId) {
+                    transaction.delete(db.collection('bookingSlots').doc(booking.slotId));
+                }
+                transaction.delete(bookingRef);
+            });
+        }
+
         // ЛОГИКА ЗА АВТОМАТИЧНО ТРИЕНЕ НА РЕЗЕРВАЦИИ СЛЕД 7 ДНИ
         async function renderAdminBookings() {
             const listContainer = document.getElementById('adminBookingsList');
@@ -1790,7 +1879,7 @@
                     }
 
                     if (shouldDelete) {
-                        await db.collection('studioBookings').doc(docSnap.id).delete();
+                        await deleteBookingRecord(docSnap.ref);
                     } else {
                         bookings.push({ id: docSnap.id, ...b });
                     }
@@ -1808,8 +1897,8 @@
                 return `
                     <div class="booking-item-admin">
                         <div>
-                            <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${b.name} (${b.phone})</strong>
-                            <div style="font-size: 0.8rem; color: #8c8275;">Услуга: ${b.service} | Дата и час: ${b.datetime}</div>
+                            <strong style="font-size: 1.05rem; display: block; margin-bottom: 3px;">${escapeHtml(b.name)} (${escapeHtml(b.phone)})</strong>
+                            <div style="font-size: 0.8rem; color: #8c8275;">Услуга: ${escapeHtml(b.service)} | Дата и час: ${escapeHtml(b.datetime)}</div>
                         </div>
                         <div class="admin-btns">
                             <button class="btn-delete" onclick="deleteBooking('${b.id}')">Изтрий</button>
@@ -1822,7 +1911,7 @@
         async function deleteBooking(id) {
             if (confirm("Сигурни ли сте, че искате да изтриете тази резервация?")) {
                 try {
-                    await db.collection('studioBookings').doc(id).delete();
+                    await deleteBookingRecord(db.collection('studioBookings').doc(id));
                     renderAdminBookings();
                 } catch (err) {
                     alert("Грешка при изтриване: " + err.message);
@@ -1896,17 +1985,17 @@
                 
                 const approveBtnText = isApproved ? 'Скрий' : 'Одобри';
                 const approveBtnColor = isApproved ? '#8c8275' : '#2ecc71';
-                const projectTag = r.projectTitle ? `<div style="font-size: 0.75rem; color: #8c8275; margin-bottom: 2px;">📌 Проект: ${r.projectTitle}</div>` : '';
+                const projectTag = r.projectTitle ? `<div style="font-size: 0.75rem; color: #8c8275; margin-bottom: 2px;">📌 Проект: ${escapeHtml(r.projectTitle)}</div>` : '';
 
                 return `
                     <div class="review-item-admin">
                         <div style="flex: 1;">
                             ${projectTag}
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 3px;">
-                                <strong style="font-size: 1.05rem;">${r.author || 'Анонимен'}</strong>
+                                <strong style="font-size: 1.05rem;">${escapeHtml(r.author || 'Анонимен')}</strong>
                                 ${statusBadge}
                             </div>
-                            <div style="font-size: 0.8rem; color: #8c8275;">Оценка: ${r.rating || '5'}★ | "${r.text || ''}"</div>
+                            <div style="font-size: 0.8rem; color: #8c8275;">Оценка: ${escapeHtml(r.rating || '5')}★ | "${escapeHtml(r.text || '')}"</div>
                         </div>
                         <div class="admin-btns">
                             <button class="btn-view" style="background: ${approveBtnColor};" onclick="toggleApproveReview('${r.id}', ${isApproved}, '${r.source || ''}', '${r.projectId || ''}', ${r.index !== undefined ? r.index : -1})">${approveBtnText}</button>

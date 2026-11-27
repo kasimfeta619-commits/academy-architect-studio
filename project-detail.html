@@ -176,7 +176,7 @@
                 await loadProjectAndReviews();
             } catch (err) {
                 console.error(err);
-                document.getElementById('projectContainer').innerHTML = `<p style="color:red; text-align:center;">Грешка при зареждане: ${err.message}</p>`;
+                document.getElementById('projectContainer').innerHTML = `<p style="color:red; text-align:center;">Грешка при зареждане: ${escapeHtml(err.message)}</p>`;
             }
         }
 
@@ -190,7 +190,7 @@
             }
             
             try {
-                const reviewsSnapshot = await db.collection('projects').doc(project.id).collection('reviews').orderBy('createdAt', 'desc').get();
+                const reviewsSnapshot = await db.collection('projects').doc(project.id).collection('reviews').where('approved', '==', true).get();
                 project.reviews = reviewsSnapshot.docs.map(doc => doc.data());
             } catch(e) {
                 project.reviews = [];
@@ -198,6 +198,16 @@
 
             window.activeProjectData = project;
             renderFullPage();
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[character]);
         }
 
         function renderFullPage() {
@@ -222,8 +232,8 @@
                 ? `<div style="font-size: 0.8rem; color: #8c8275;">${currentLang === 'en' ? 'No reviews yet.' : 'Все още няма ревюта.'}</div>`
                 : project.reviews.map(r => `
                     <div class="review-item">
-                        <div class="review-item-author">${r.author} <span style="color: #d4af37; float: right;">${'★'.repeat(r.rating)}</span></div>
-                        <div style="color: #555; margin-top: 3px;">${r.comment}</div>
+                        <div class="review-item-author">${escapeHtml(r.author)} <span style="color: #d4af37; float: right;">${'★'.repeat(Math.max(0, Math.min(5, Number(r.rating) || 0)))}</span></div>
+                        <div style="color: #555; margin-top: 3px;">${escapeHtml(r.comment)}</div>
                     </div>
                 `).join('');
 
@@ -438,6 +448,7 @@
                 author: authorInput,
                 comment: commentInput,
                 rating: selectedRating,
+                approved: false,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 

@@ -373,6 +373,38 @@
         }
         const db = firebase.firestore();
 
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[character]);
+        }
+
+        function bookingSlotId(date, time) {
+            return `${date}_${time.replace(':', '-')}`;
+        }
+
+        async function saveStudioBooking(booking, date, time) {
+            const bookingRef = db.collection('studioBookings').doc();
+            if (!date || !time) {
+                await bookingRef.set(booking);
+                return bookingRef.id;
+            }
+
+            const slotId = bookingSlotId(date, time);
+            const slotRef = db.collection('bookingSlots').doc(slotId);
+            await db.runTransaction(async (transaction) => {
+                const existingSlot = await transaction.get(slotRef);
+                if (existingSlot.exists) throw new Error('Този час току-що беше зает. Избери друг час.');
+                transaction.set(bookingRef, { ...booking, date, time, slotId });
+                transaction.set(slotRef, { date, time, bookingId: bookingRef.id });
+            });
+            return bookingRef.id;
+        }
+
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
@@ -396,32 +428,11 @@
                                    localStorage.getItem('currentUser') !== null;
 
             if (isUserLoggedIn) {
-                const userRole = (localStorage.getItem('userRole') || localStorage.getItem('role') || '').toLowerCase();
-                const rawName = (localStorage.getItem('userName') || localStorage.getItem('username') || localStorage.getItem('currentUser') || '').toLowerCase();
-                
-                let parsedRole = '';
-                let parsedName = '';
-                try {
-                    const storedUser = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('loggedUser') || '{}');
-                    if (storedUser && typeof storedUser === 'object') {
-                        parsedRole = (storedUser.role || storedUser.userRole || '').toLowerCase();
-                        parsedName = (storedUser.username || storedUser.name || storedUser.email || '').toLowerCase();
-                    }
-                } catch (e) {}
-
-                const isAdmin = userRole === 'admin' || 
-                                parsedRole === 'admin' || 
-                                rawName === 'admin' || 
-                                parsedName === 'admin' || 
-                                rawName.includes('admin@') || 
-                                parsedName.includes('admin@') || 
-                                localStorage.getItem('isAdmin') === 'true';
-
-                const labelKey = isAdmin ? 'nav-admin' : 'nav-profile';
-                const targetLink = isAdmin ? 'admin.html' : 'profile.html';
+                const labelKey = 'nav-profile';
+                const targetLink = 'profile.html';
 
                 const currentLang = localStorage.getItem('siteLang') || 'bg';
-                let displayText = isAdmin ? 'Админ' : 'Профил';
+                let displayText = 'Профил';
 
                 if (typeof translations !== 'undefined' && translations[currentLang] && translations[currentLang][labelKey]) {
                     displayText = translations[currentLang][labelKey];
@@ -497,19 +508,9 @@
             container.innerHTML = `<p style="color: #8c8275; font-size: 0.9rem; grid-column: 1 / -1;">Зареждане...</p>`;
 
             try {
-                // 1. Проверяваме обикновените резервации от клиенти
-                const snapshot = await db.collection('studioBookings').get();
-                let bookedTimes = [];
-
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    if (data.datetime && data.datetime.startsWith(dateVal)) {
-                        const parts = data.datetime.split(' ');
-                        if (parts.length >= 2) {
-                            bookedTimes.push(parts[1].substring(0, 5));
-                        }
-                    }
-                });
+                // Четем само дата и час; имената и телефоните стоят в личната колекция.
+                const snapshot = await db.collection('bookingSlots').where('date', '==', dateVal).get();
+                const bookedTimes = snapshot.docs.map((slotDoc) => slotDoc.data().time).filter(Boolean);
 
                 // 2. Проверяваме дали целият ден е блокиран от администратора в колекцията 'blockedDays'
                 const blockedSnapshot = await db.collection('blockedDays').where('date', '==', dateVal).get();
@@ -537,7 +538,7 @@
                     reasonBox.style.display = 'block';
                     const currentLang = localStorage.getItem('siteLang') || 'bg';
                     const noticeText = currentLang === 'en' ? 'Selected date is closed: ' : 'Избраната дата е затворена: ';
-                    reasonBox.innerHTML = `<strong>⚠️ ${noticeText}</strong> ${holidayReason || (currentLang === 'en' ? 'Day off / Vacation' : 'Почивен ден / Отпуск')}`;
+                    reasonBox.innerHTML = `<strong>⚠️ ${noticeText}</strong> ${escapeHtml(holidayReason || (currentLang === 'en' ? 'Day off / Vacation' : 'Почивен ден / Отпуск'))}`;
                 }
 
                 workingHours.forEach(hour => {
@@ -616,19 +617,13 @@
             };
 
             try {
-                await db.collection('studioBookings').add(newBooking);
+                await saveStudioBooking(newBooking, dateVal, timeVal);
                 alert('Успешно запазихте своя час!');
                 document.getElementById('clientBookingForm').reset();
                 resetSlotsContainer();
                 document.getElementById('bookBtn').disabled = true;
             } catch (err) {
-                let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
-                bookings.push(newBooking);
-                localStorage.setItem('studioBookings', JSON.stringify(bookings));
-                alert('Успешно запазихте своя час!');
-                document.getElementById('clientBookingForm').reset();
-                resetSlotsContainer();
-                document.getElementById('bookBtn').disabled = true;
+                alert(err.message || 'Не успяхме да запазим часа. Опитай отново.');
             }
         }
 
@@ -650,15 +645,11 @@
             };
 
             try {
-                await db.collection('studioBookings').add(newBooking);
+                await saveStudioBooking(newBooking);
                 alert('Благодарим ви! Вашето запитване беше изпратено успешно.');
                 document.getElementById('contactForm').reset();
             } catch (err) {
-                let bookings = JSON.parse(localStorage.getItem('studioBookings') || '[]');
-                bookings.push(newBooking);
-                localStorage.setItem('studioBookings', JSON.stringify(bookings));
-                alert('Благодарим ви! Вашето запитване беше изпратено успешно.');
-                document.getElementById('contactForm').reset();
+                alert(err.message || 'Не успяхме да изпратим запитването. Опитай отново.');
             }
         }
 
