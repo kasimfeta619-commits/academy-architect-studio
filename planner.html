@@ -203,8 +203,34 @@
             min-width: 0;
             border-radius: 8px;
             overflow: hidden;
-            background: #e8edf0;
+            background-color: #88cef0;
+            background-image:
+                radial-gradient(ellipse 18% 7% at 19% 23%, rgba(255, 255, 255, 0.82) 0 42%, transparent 100%),
+                radial-gradient(ellipse 14% 6% at 74% 31%, rgba(255, 255, 255, 0.76) 0 40%, transparent 100%),
+                linear-gradient(180deg, #70bfe9 0%, #b9e1f5 60%, #edf5f7 100%);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+        }
+        .underlay-legend {
+            position: absolute;
+            top: 59px;
+            left: 21px;
+            z-index: 5;
+            display: none;
+            padding: 6px 9px;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 6px;
+            color: #35516d;
+            background: rgba(255, 255, 255, 0.88);
+            font-size: 10px;
+            pointer-events: none;
+        }
+        .underlay-legend::before {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            margin-right: 7px;
+            border-top: 2px dashed #3b82f6;
+            vertical-align: middle;
         }
         .viewport-label {
             position: absolute;
@@ -411,6 +437,7 @@
         <div id="canvas3d" role="img" aria-label="Триизмерна визуализация на проекта"></div>
         <div class="viewport-label viewport-label-2d"><strong>2D</strong><span>РАБОТЕН ПЛАН</span></div>
         <div class="viewport-label viewport-label-3d"><strong>3D</strong><span>ОБЕМЕН ПРЕГЛЕД</span></div>
+        <div id="underlayLegend" class="underlay-legend" aria-label="Пунктираният контур показва план от по-долен етаж">Контур от по-долен етаж</div>
         <div id="hint" role="status" aria-live="polite">Режим: Външна стена. Светла височина: 260 см.</div>
 
         <div id="propertiesPanel" aria-live="polite">
@@ -430,9 +457,9 @@
     const LEVEL_HEIGHT = 2.60;
 
     const themes = [
-        { name: "Модерен Бял", wall: 0xffffff, floor: 0xe2e8f0, roof: 0x334155, bg: 0xe8edf0 },
-        { name: "Топъл Дървен Уют", wall: 0xfdfbf7, floor: 0xd97706, roof: 0x78350f, bg: 0xfef3c7 },
-        { name: "Индустриален Лофт", wall: 0x94a3b8, floor: 0x334155, roof: 0x0f172a, bg: 0x1e293b }
+        { name: "Модерен Бял", wall: 0xffffff, floor: 0xe2e8f0, roof: 0x334155 },
+        { name: "Топъл Дървен Уют", wall: 0xfdfbf7, floor: 0xd97706, roof: 0x78350f },
+        { name: "Индустриален Лофт", wall: 0x94a3b8, floor: 0x334155, roof: 0x0f172a }
     ];
     let currentThemeIdx = 0;
 
@@ -466,8 +493,8 @@
     const propContent = document.getElementById('propContent');
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(themes[0].bg);
-    scene.fog = new THREE.FogExp2(themes[0].bg, 0.015);
+    scene.background = null;
+    scene.fog = new THREE.FogExp2(0xddeef6, 0.004);
 
     const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
@@ -481,7 +508,7 @@
     sunLight.castShadow = true;
     scene.add(sunLight);
 
-    const ground = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshStandardMaterial({ color: 0xb7c2b5, roughness: 0.88 }));
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshStandardMaterial({ color: 0x6eab5e, roughness: 0.88 }));
     ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true;
     scene.add(ground);
 
@@ -558,8 +585,6 @@
     function cycleTheme() {
         currentThemeIdx = (currentThemeIdx + 1) % themes.length;
         let t = themes[currentThemeIdx];
-        scene.background.setHex(t.bg);
-        scene.fog.color.setHex(t.bg);
         wallMat.color.setHex(t.wall);
         floorMat.color.setHex(t.floor);
         roofMat.color.setHex(t.roof);
@@ -738,6 +763,33 @@
             ctx.fillStyle = "#0f172a"; ctx.font = `bold ${11/zoom}px Inter`; ctx.textAlign = "center";
             ctx.fillText(slab.name || "Стая", cx, cy);
         });
+
+        if (currentLevel > 0) {
+            ctx.save();
+            ctx.lineWidth = 2.5 / zoom;
+            ctx.setLineDash([8 / zoom, 5 / zoom]);
+            for (let levelIndex = 0; levelIndex < currentLevel; levelIndex++) {
+                const underlay = levels[levelIndex];
+                ctx.strokeStyle = levelIndex === currentLevel - 1 ? "rgba(37, 99, 235, 0.78)" : "rgba(100, 116, 139, 0.52)";
+                (underlay.walls || []).forEach(wall => {
+                    ctx.beginPath();
+                    ctx.moveTo(wall.x1, wall.y1);
+                    ctx.lineTo(wall.x2, wall.y2);
+                    ctx.stroke();
+                });
+                (underlay.slabs || []).forEach(slab => {
+                    if (!slab.pts?.length) return;
+                    ctx.beginPath();
+                    slab.pts.forEach((point, index) => {
+                        if (index === 0) ctx.moveTo(point.x, point.y);
+                        else ctx.lineTo(point.x, point.y);
+                    });
+                    ctx.closePath();
+                    ctx.stroke();
+                });
+            }
+            ctx.restore();
+        }
 
         active.walls.forEach((w, idx) => {
             let isSel = (selectedElement && selectedElement.type === 'wall' && selectedElement.index === idx);
@@ -1081,6 +1133,7 @@
     function changeLevel() {
         currentLevel = (currentLevel + 1) % 3;
         document.getElementById('btn-level').innerText = currentLevel + 1;
+        document.getElementById('underlayLegend').style.display = currentLevel > 0 ? 'block' : 'none';
         lastPoint = null; polyPoints = []; draggedItem = null; selectedElement = null;
         propertiesPanel.style.display = 'none';
         update3D();
