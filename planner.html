@@ -2,124 +2,409 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>ARCHI PLANNER: Ultimate Pro Edition</title>
+    <title>ARCHI PLANNER | Архитектурно работно пространство</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Inter', system-ui, sans-serif; overflow: hidden; background: #0b0f19; }
-        .app-container { display: grid; grid-template-columns: 85px 1fr; height: 100vh; transition: all 0.3s ease; }
-        
-        .toolbar { 
-            background: #111827; color: #fff; display: flex; flex-direction: column; align-items: center;
-            padding: 8px 4px; gap: 4px; border-right: 1px solid #1f2937; z-index: 10; overflow-y: auto; 
+        :root {
+            color-scheme: dark;
+            --app-bg: #171a1f;
+            --panel-bg: #22262c;
+            --panel-raised: #2a3037;
+            --panel-border: #373e46;
+            --text-primary: #f0f1f2;
+            --text-muted: #9ca5ad;
+            --accent: #69c5bd;
+            --accent-strong: #3aa69d;
         }
-        
-        .section-title { font-size: 7px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-top: 3px; text-align: center; letter-spacing: 0.5px; writing-mode: vertical-rl; transform: rotate(180deg); margin-bottom: 2px; }
 
+        * { box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--app-bg); color: var(--text-primary); font-family: Inter, system-ui, sans-serif; }
+        .app-container {
+            display: grid;
+            grid-template-columns: 236px minmax(0, 1fr);
+            grid-template-rows: 68px minmax(0, 1fr);
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            min-width: 0;
+            min-height: 0;
+            background: var(--app-bg);
+        }
+
+        .topbar {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+            padding: 0 22px;
+            background: #20242a;
+            border-bottom: 1px solid var(--panel-border);
+            box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+            z-index: 20;
+        }
+        .topbar-back {
+            display: grid;
+            place-items: center;
+            width: 30px;
+            height: 30px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border: 1px solid var(--panel-border);
+            border-radius: 7px;
+            font-size: 18px;
+            transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+        }
+        .topbar-back:hover { color: var(--text-primary); border-color: #59616a; background: var(--panel-raised); }
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(105, 197, 189, 0.45);
+            border-radius: 9px;
+            color: var(--accent);
+            background: rgba(105, 197, 189, 0.1);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
+        .brand-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+        .brand-copy strong { font-size: 12px; letter-spacing: 0.12em; white-space: nowrap; }
+        .brand-copy span { color: var(--text-muted); font-size: 10px; letter-spacing: 0.04em; white-space: nowrap; }
+        .topbar-divider { width: 1px; height: 30px; margin: 0 8px; background: var(--panel-border); }
+        .workspace-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+        .workspace-copy strong { font-size: 12px; font-weight: 600; }
+        .workspace-copy span { color: var(--text-muted); font-size: 10px; }
+        .topbar-status { display: flex; align-items: center; gap: 7px; margin-left: auto; color: var(--text-muted); font-size: 10px; white-space: nowrap; }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px rgba(105, 197, 189, 0.42); }
+        .topbar-actions { display: flex; align-items: center; gap: 7px; }
+        .topbar button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 38px;
+            height: 34px;
+            padding: 0 11px;
+            border: 1px solid var(--panel-border);
+            border-radius: 7px;
+            color: #d7dce0;
+            background: #292e34;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: background 160ms ease, border-color 160ms ease;
+        }
+        .topbar button:hover { transform: none; border-color: #59616a; background: #343b42; }
+        .topbar button.primary-action { border-color: var(--accent-strong); color: #10211f; background: var(--accent); }
+        .topbar button.primary-action:hover { border-color: #80d7cf; background: #80d7cf; }
+
+        .toolbar {
+            grid-column: 1;
+            grid-row: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 5px;
+            min-height: 0;
+            padding: 15px 12px 16px;
+            overflow-y: auto;
+            color: var(--text-primary);
+            background: var(--panel-bg);
+            border-right: 1px solid var(--panel-border);
+            scrollbar-color: #48515a transparent;
+            scrollbar-width: thin;
+            z-index: 10;
+        }
+        .toolbar-heading { padding: 2px 3px 7px; color: #e7e9eb; font-size: 12px; font-weight: 650; letter-spacing: 0.02em; }
         .area-card {
-            background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #38bdf8;
-            border-radius: 8px; padding: 5px; width: 65px; text-align: center; box-shadow: 0 4px 10px rgba(56, 189, 248, 0.15); margin-bottom: 3px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            column-gap: 8px;
+            width: 100%;
+            margin: 0 0 7px;
+            padding: 11px 12px;
+            border: 1px solid rgba(105, 197, 189, 0.34);
+            border-radius: 9px;
+            text-align: left;
+            background: linear-gradient(135deg, rgba(105, 197, 189, 0.12), rgba(105, 197, 189, 0.035));
         }
-        .area-title { font-size: 7px; font-weight: 700; color: #38bdf8; text-transform: uppercase; }
-        .area-val { font-size: 11px; font-weight: 900; color: #ffffff; margin: 1px 0; }
-        .area-sub { font-size: 7px; color: #94a3b8; }
+        .area-title { grid-column: 1; color: var(--accent); font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+        .area-val { grid-column: 2; grid-row: 1 / span 2; color: #fff; font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; }
+        .area-sub { grid-column: 1; color: var(--text-muted); font-size: 10px; }
+        .section-title {
+            margin: 11px 3px 3px;
+            color: #8f99a2;
+            font-size: 9px;
+            font-weight: 750;
+            letter-spacing: 0.12em;
+            text-align: left;
+        }
+        .toolbar button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 9px;
+            width: 100%;
+            min-height: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            padding: 0 10px;
+            border: 1px solid transparent;
+            border-radius: 7px;
+            color: #cfd4d8;
+            background: transparent;
+            font-size: 15px;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+        }
+        .toolbar button:hover { transform: none; border-color: #3c444c; color: #fff; background: #2a3037; }
+        .toolbar button.active { border-color: rgba(105, 197, 189, 0.42); color: #eafffd; background: rgba(105, 197, 189, 0.14) !important; box-shadow: inset 2px 0 0 var(--accent); }
+        .toolbar .tool-btn::after { content: attr(data-label); color: inherit; font-size: 11px; font-weight: 550; white-space: nowrap; }
+        .toolbar .level-btn { justify-content: center; width: 100%; min-height: 34px; margin-bottom: 5px; color: #eafffd; background: #344d4b; border-color: #52716e; }
+        .toolbar .level-btn.active { background: #345b57 !important; }
+        .toolbar .utility-btn { font-size: 13px; }
+        .toolbar .utility-btn::after { content: attr(data-label); font-size: 10px; }
+        button:focus-visible, a:focus-visible { outline: 2px solid #8be0d9; outline-offset: 2px; }
 
-        .viewport { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; position: relative; width: 100%; height: 100%; }
-        .viewport.max-3d { grid-template-columns: 0fr 1fr !important; }
+        .viewport {
+            grid-column: 2;
+            grid-row: 2;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 9px;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-width: 0;
+            min-height: 0;
+            padding: 10px;
+            overflow: hidden;
+            background: #191d22;
+        }
+        .viewport.max-3d { grid-template-columns: 0fr minmax(0, 1fr) !important; }
         .viewport.max-3d #canvas2d { opacity: 0; pointer-events: none; }
-        
-        #canvas2d { background: #f8fafc; width: 100%; height: 100%; cursor: crosshair; transition: opacity 0.3s; }
-        #canvas3d { background: #87CEEB; width: 100%; height: 100%; border-left: 2px solid #1e293b; position: relative; } 
-        
-        button { 
-            width: 50px; height: 34px; cursor: pointer; border: 1px solid #374151; border-radius: 6px; 
-            transition: all 0.2s ease; display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: bold; position: relative; background: #1f2937; color: #f3f4f6; flex-shrink: 0;
+        #canvas2d {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+            border-radius: 8px;
+            background: #f4f5f3;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+            transition: opacity 0.3s;
         }
-        button:hover { background: #374151; transform: scale(1.05); }
-        button.active { border-color: #38bdf8; background: #0284c7 !important; color: white; box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); }
+        #canvas3d {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-width: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #e8edf0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+        }
+        .viewport-label {
+            position: absolute;
+            top: 21px;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            color: #f2f4f5;
+            background: rgba(30, 35, 40, 0.88);
+            font-size: 9px;
+            font-weight: 650;
+            letter-spacing: 0.07em;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+        }
+        .viewport-label strong { color: var(--accent); font-size: 9px; }
+        .viewport-label-2d { left: 21px; }
+        .viewport-label-3d { left: calc(50% + 14px); }
+        .viewport.max-3d .viewport-label-2d { display: none; }
+        .viewport.max-3d .viewport-label-3d { left: 21px; }
 
-        .level-btn { font-size: 12px; font-weight: bold; background: #4f46e5; border-color: #4338ca; }
-        .level-btn.active { background: #6366f1 !important; }
-
-        #hint { position: absolute; bottom: 15px; left: 100px; background: rgba(15, 23, 42, 0.92); color: #f8fafc; padding: 8px 14px; border-radius: 8px; font-size: 12px; pointer-events: none; border-left: 4px solid #10b981; box-shadow: 0 4px 6px rgba(0,0,0,0.3); font-weight: 500; z-index: 100; }
-        
+        #hint {
+            position: absolute;
+            bottom: 18px;
+            left: 20px;
+            z-index: 10;
+            max-width: min(420px, calc(100% - 40px));
+            padding: 9px 13px;
+            border: 1px solid rgba(105, 197, 189, 0.24);
+            border-left: 3px solid var(--accent);
+            border-radius: 7px;
+            color: #e4e8e9;
+            background: rgba(31, 36, 41, 0.93);
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.22);
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.45;
+            pointer-events: none;
+        }
         #propertiesPanel {
-            position: absolute; top: 15px; right: 15px; background: rgba(15, 23, 42, 0.95); border: 1px solid #38bdf8;
-            padding: 12px; border-radius: 8px; color: #fff; width: 200px; display: none; z-index: 200; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            position: absolute;
+            top: 58px;
+            right: 19px;
+            z-index: 12;
+            display: none;
+            width: min(240px, calc(100% - 38px));
+            padding: 14px;
+            border: 1px solid #48525a;
+            border-radius: 9px;
+            color: var(--text-primary);
+            background: rgba(35, 40, 46, 0.97);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
         }
-        #propertiesPanel h4 { margin: 0 0 8px 0; font-size: 13px; color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 4px; }
-        #propertiesPanel label { font-size: 11px; color: #94a3b8; display: block; margin-top: 6px; }
-        #propertiesPanel input, #propertiesPanel select { width: 100%; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 4px; border-radius: 4px; font-size: 11px; margin-top: 2px; }
+        #propertiesPanel h4 { margin: 0 0 10px; padding-bottom: 9px; border-bottom: 1px solid var(--panel-border); color: var(--accent); font-size: 12px; }
+        #propertiesPanel label { display: block; margin-top: 9px; color: var(--text-muted); font-size: 10px; }
+        #propertiesPanel input, #propertiesPanel select { width: 100%; margin-top: 4px; padding: 7px 8px; border: 1px solid #46505a; border-radius: 6px; color: #f1f3f4; background: #2a3037; font: inherit; font-size: 11px; }
+
+        @media (max-width: 880px) {
+            .topbar { gap: 9px; padding: 0 12px; }
+            .workspace-copy, .topbar-status { display: none; }
+            .topbar-divider { margin-right: auto; }
+            .app-container { grid-template-columns: 72px minmax(0, 1fr); }
+            .toolbar { align-items: center; padding: 11px 7px; }
+            .toolbar-heading { display: none; }
+            .area-card { grid-template-columns: 1fr; justify-items: center; padding: 8px 3px; }
+            .area-title, .area-sub { display: none; }
+            .area-val { grid-column: 1; grid-row: 1; font-size: 15px; }
+            .section-title { width: 100%; margin: 9px 0 3px; overflow: hidden; font-size: 7px; text-align: center; letter-spacing: 0; }
+            .toolbar button { justify-content: center; gap: 0; padding: 0 3px; }
+            .toolbar .tool-btn::after, .toolbar .utility-btn::after { display: none; }
+            .toolbar .level-btn { width: 100%; }
+            .viewport { gap: 6px; padding: 7px; }
+            .viewport-label-2d { left: 17px; }
+            .viewport-label-3d { left: calc(50% + 10px); }
+            .viewport.max-3d .viewport-label-3d { left: 17px; }
+            #hint { bottom: 14px; left: 14px; }
+        }
+        @media (max-width: 600px) {
+            .app-container { grid-template-rows: 58px minmax(0, 1fr); grid-template-columns: 60px minmax(0, 1fr); }
+            .topbar { gap: 7px; padding: 0 8px; }
+            .topbar-back { width: 27px; height: 27px; }
+            .brand-mark { width: 30px; height: 30px; }
+            .brand-copy strong { font-size: 10px; letter-spacing: 0.08em; }
+            .brand-copy span { font-size: 8px; }
+            .topbar-divider { display: none; }
+            .topbar-actions { gap: 4px; }
+            .topbar button { min-width: 32px; height: 31px; padding: 0 7px; font-size: 9px; }
+            .topbar button[data-compact-label] { font-size: 0; }
+            .topbar button[data-compact-label]::after { content: attr(data-compact-label); font-size: 9px; }
+            .toolbar { gap: 3px; padding: 8px 5px; }
+            .section-title { font-size: 0; height: 1px; margin: 6px 0 2px; background: #3a4148; }
+            .toolbar button { min-height: 32px; height: 32px; font-size: 14px; }
+            .viewport { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
+            .viewport.max-3d { grid-template-columns: minmax(0, 1fr) !important; grid-template-rows: 0fr minmax(0, 1fr) !important; }
+            .viewport.max-3d #canvas2d { display: none; }
+            .viewport-label { top: 14px; padding: 6px 8px; font-size: 8px; }
+            .viewport-label-2d, .viewport-label-3d { left: 16px; }
+            .viewport-label-3d { top: calc(50% + 3px); }
+            .viewport.max-3d .viewport-label-3d { top: 14px; }
+            #hint { bottom: 12px; left: 12px; max-width: calc(100% - 24px); padding: 7px 9px; font-size: 10px; }
+            #propertiesPanel { top: 45px; right: 12px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+        }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="toolbar">
-        <div class="area-card">
-            <div class="area-title">ЗП</div>
+    <header class="topbar">
+        <a class="topbar-back" href="index.html" aria-label="Назад към сайта" title="Назад към сайта">‹</a>
+        <div class="brand-mark" aria-hidden="true">AA</div>
+        <div class="brand-copy">
+            <strong>ARCHI PLANNER</strong>
+            <span>РАБОТНО ПРОСТРАНСТВО</span>
+        </div>
+        <div class="topbar-divider" aria-hidden="true"></div>
+        <div class="workspace-copy">
+            <strong>Архитектурен планировчик</strong>
+            <span>2D план · жива 3D визуализация</span>
+        </div>
+        <div class="topbar-status"><span class="status-dot" aria-hidden="true"></span>Работна сесия</div>
+        <div class="topbar-actions" aria-label="Бързи действия">
+            <button type="button" onclick="undo()" aria-label="Отмени последното действие" title="Отмени" data-compact-label="↶">Отмени</button>
+            <button type="button" onclick="redo()" aria-label="Повтори действието" title="Повтори" data-compact-label="↷">Повтори</button>
+            <button type="button" onclick="toggleMaximize3D()" aria-label="Фокус върху 3D изгледа" title="Фокус 3D" data-compact-label="3D">3D фокус</button>
+            <button type="button" class="primary-action" onclick="saveProject()" aria-label="Запази проекта като JSON файл" title="Запази проекта">Запази</button>
+        </div>
+    </header>
+
+    <aside class="toolbar" aria-label="Инструменти за планиране">
+        <div class="toolbar-heading">Инструменти</div>
+        <div class="area-card" aria-label="Текуща площ">
+            <div class="area-title">Застроена площ</div>
             <div class="area-val" id="currentAreaDisplay">0.0</div>
-            <div class="area-sub">m²</div>
+            <div class="area-sub">кв. м</div>
         </div>
 
-        <button class="level-btn active" id="btn-level" onclick="changeLevel()" title="🏢 Смени Етаж">1</button>
+        <div class="section-title">ЕТАЖ</div>
+        <button class="level-btn active" id="btn-level" type="button" onclick="changeLevel()" aria-label="Смени етаж" title="Смени етаж">1</button>
 
         <div class="section-title">РЕЖИМИ</div>
-        <button class="tool-btn" id="btn-select" onclick="setTool('select')" title="🖱️ Избор и Свойства">🖱️</button>
-        <button class="tool-btn" id="btn-eraser" onclick="setTool('eraser')" title="🧽 Гумичка (Изтриване)">🧽</button>
+        <button class="tool-btn" id="btn-select" type="button" onclick="setTool('select')" aria-label="Избор и свойства" data-label="Избор и свойства" title="Избор и свойства">🖱️</button>
+        <button class="tool-btn" id="btn-eraser" type="button" onclick="setTool('eraser')" aria-label="Гумичка — изтриване" data-label="Гумичка" title="Гумичка — изтриване">🧽</button>
 
-        <div class="section-title">СТЕНИ</div>
-        <button class="tool-btn active" id="btn-outer-wall" onclick="setTool('outer-wall')" title="🧱 Външна стена">🧱в</button>
-        <button class="tool-btn" id="btn-inner-wall" onclick="setTool('inner-wall')" title="🧱 Вътрешна стена">🧱ин</button>
-        <button class="tool-btn" id="btn-railing" onclick="setTool('railing')" title="🛡️ Парапет">🛡️</button>
-        <button class="tool-btn" id="btn-column" onclick="setTool('column')" title="🏛️ Колона">🏛️</button>
-        
+        <div class="section-title">СТЕНИ И КОНСТРУКЦИЯ</div>
+        <button class="tool-btn active" id="btn-outer-wall" type="button" onclick="setTool('outer-wall')" aria-label="Външна стена" data-label="Външна стена" title="Външна стена">🧱</button>
+        <button class="tool-btn" id="btn-inner-wall" type="button" onclick="setTool('inner-wall')" aria-label="Вътрешна стена" data-label="Вътрешна стена" title="Вътрешна стена">🧱</button>
+        <button class="tool-btn" id="btn-railing" type="button" onclick="setTool('railing')" aria-label="Парапет" data-label="Парапет" title="Парапет">▥</button>
+        <button class="tool-btn" id="btn-column" type="button" onclick="setTool('column')" aria-label="Колона" data-label="Колона" title="Колона">▤</button>
+
         <div class="section-title">ВРАТИ</div>
-        <button class="tool-btn" id="btn-ext-door" onclick="setTool('ext-door')" title="🚪 Външна врата">🚪Вън</button>
-        <button class="tool-btn" id="btn-int-door" onclick="setTool('int-door')" title="🚪 Интериорна врата">🚪Инт</button>
-        <button class="tool-btn" id="btn-san-door" onclick="setTool('san-door')" title="🚪 Санитарна врата">🚪Сан</button>
+        <button class="tool-btn" id="btn-ext-door" type="button" onclick="setTool('ext-door')" aria-label="Външна врата" data-label="Външна врата" title="Външна врата">🚪</button>
+        <button class="tool-btn" id="btn-int-door" type="button" onclick="setTool('int-door')" aria-label="Интериорна врата" data-label="Интериорна врата" title="Интериорна врата">🚪</button>
+        <button class="tool-btn" id="btn-san-door" type="button" onclick="setTool('san-door')" aria-label="Санитарна врата" data-label="Санитарна врата" title="Санитарна врата">🚪</button>
 
         <div class="section-title">ПРОЗОРЦИ</div>
-        <button class="tool-btn" id="btn-french-window" onclick="setTool('french-window')" title="🪟 Френски прозорец">🪟Фр</button>
-        <button class="tool-btn" id="btn-san-window" onclick="setTool('san-window')" title="🪟 Санитарен прозорец">🪟60</button>
-        <button class="tool-btn" id="btn-kitchen-window" onclick="setTool('kitchen-window')" title="🪟 Кухненски прозорец">🪟120</button>
-        <button class="tool-btn" id="btn-std-window" onclick="setTool('std-window')" title="🪟 Стандартен прозорец">🪟150</button>
+        <button class="tool-btn" id="btn-french-window" type="button" onclick="setTool('french-window')" aria-label="Френски прозорец" data-label="Френски прозорец" title="Френски прозорец">▣</button>
+        <button class="tool-btn" id="btn-san-window" type="button" onclick="setTool('san-window')" aria-label="Санитарен прозорец" data-label="Санитарен прозорец" title="Санитарен прозорец">▣</button>
+        <button class="tool-btn" id="btn-kitchen-window" type="button" onclick="setTool('kitchen-window')" aria-label="Кухненски прозорец" data-label="Кухненски прозорец" title="Кухненски прозорец">▣</button>
+        <button class="tool-btn" id="btn-std-window" type="button" onclick="setTool('std-window')" aria-label="Стандартен прозорец" data-label="Стандартен прозорец" title="Стандартен прозорец">▣</button>
 
         <div class="section-title">СТЪЛБИ</div>
-        <button class="tool-btn" id="btn-stairs" onclick="setTool('stairs')" title="🪜 Стълбище">🪜</button>
+        <button class="tool-btn" id="btn-stairs" type="button" onclick="setTool('stairs')" aria-label="Стълбище" data-label="Стълбище" title="Стълбище">▤</button>
 
-        <div class="section-title">МЕБЕЛИ</div>
-        <button class="tool-btn" id="btn-sofa" onclick="setTool('sofa')" title="🛋️ Диван">🛋️</button>
-        <button class="tool-btn" id="btn-bed" onclick="setTool('bed')" title="🛏️ Легло">🛏️</button>
-        <button class="tool-btn" id="btn-table" onclick="setTool('table')" title="🪑 Маса">🪑</button>
-        <button class="tool-btn" id="btn-toilet" onclick="setTool('toilet')" title="🚽 Тоалетна">🚽</button>
-        <button class="tool-btn" id="btn-sink" onclick="setTool('sink')" title="🚰 Мивка">🚰</button>
-        <button class="tool-btn" id="btn-shower" onclick="setTool('shower')" title="🚿 Душ / Вана">🚿</button>
-        <button class="tool-btn" id="btn-kitchen" onclick="setTool('kitchen')" title="🍳 Кухненски шкаф">🍳</button>
-        <button class="tool-btn" id="btn-fridge" onclick="setTool('fridge')" title="🧊 Хладилник">🧊</button>
-        
-        <div class="section-title">ЕКСТРИ</div>
-        <button class="tool-btn" id="btn-slab" onclick="setTool('slab')" title="⚡ Плоча / Стая">⚡</button>
-        <button class="tool-btn" id="btn-roof" onclick="setTool('roof')" title="🏠 Покрив">🏠</button>
+        <div class="section-title">МЕБЕЛИ И ОБОРУДВАНЕ</div>
+        <button class="tool-btn" id="btn-sofa" type="button" onclick="setTool('sofa')" aria-label="Диван" data-label="Диван" title="Диван">▰</button>
+        <button class="tool-btn" id="btn-bed" type="button" onclick="setTool('bed')" aria-label="Легло" data-label="Легло" title="Легло">▱</button>
+        <button class="tool-btn" id="btn-table" type="button" onclick="setTool('table')" aria-label="Маса" data-label="Маса" title="Маса">▱</button>
+        <button class="tool-btn" id="btn-toilet" type="button" onclick="setTool('toilet')" aria-label="Тоалетна" data-label="Тоалетна" title="Тоалетна">◉</button>
+        <button class="tool-btn" id="btn-sink" type="button" onclick="setTool('sink')" aria-label="Мивка" data-label="Мивка" title="Мивка">◉</button>
+        <button class="tool-btn" id="btn-shower" type="button" onclick="setTool('shower')" aria-label="Душ или вана" data-label="Душ / вана" title="Душ или вана">◌</button>
+        <button class="tool-btn" id="btn-kitchen" type="button" onclick="setTool('kitchen')" aria-label="Кухненски шкаф" data-label="Кухненски шкаф" title="Кухненски шкаф">▤</button>
+        <button class="tool-btn" id="btn-fridge" type="button" onclick="setTool('fridge')" aria-label="Хладилник" data-label="Хладилник" title="Хладилник">▯</button>
 
-        <div class="section-title">СТИЛ</div>
-        <button style="color:#ec4899" onclick="toggleMaximize3D()" title="📺 3D Пълен екран">📺</button>
-        <button style="color:#a855f7" onclick="cycleTheme()" title="🎨 Смени стил">🎨</button>
+        <div class="section-title">ПЛОЧИ И ПОКРИВ</div>
+        <button class="tool-btn" id="btn-slab" type="button" onclick="setTool('slab')" aria-label="Плоча или стая" data-label="Плоча / стая" title="Плоча или стая">▰</button>
+        <button class="tool-btn" id="btn-roof" type="button" onclick="setTool('roof')" aria-label="Покрив" data-label="Покрив" title="Покрив">⌂</button>
 
-        <div class="section-title">ФАЙЛ</div>
-        <button style="color:#38bdf8" onclick="saveProject()" title="💾 Запази">💾</button>
-        <button style="color:#38bdf8" onclick="loadProjectPrompt()" title="📂 Зареди">📂</button>
-        <button style="color:#38bdf8" onclick="exportImage()" title="📷 Снимка (PNG)">📷</button>
-        <button style="color:#f97316" onclick="undo()" title="↩️ Отмени">↩️</button>
-        <button style="color:#f97316" onclick="redo()" title="🔄 Върни">🔄</button>
-        <button style="color:#dc2626" onclick="location.reload()" title="🔄 Рестарт">🔄</button>
-    </div>
+        <div class="section-title">НАСТРОЙКИ И ФАЙЛ</div>
+        <button class="utility-btn" type="button" onclick="cycleTheme()" aria-label="Смени визуалния стил" data-label="Смени стил" title="Смени визуалния стил">◐</button>
+        <button class="utility-btn" type="button" onclick="loadProjectPrompt()" aria-label="Зареди проект от JSON файл" data-label="Зареди проект" title="Зареди проект">Зареди</button>
+        <button class="utility-btn" type="button" onclick="exportImage()" aria-label="Експортирай план като PNG" data-label="Експорт PNG" title="Експортирай план като PNG">PNG</button>
+        <button class="utility-btn" type="button" onclick="location.reload()" aria-label="Рестартирай редактора" data-label="Рестарт" title="Рестартирай редактора">↻</button>
+    </aside>
 
     <div class="viewport" id="viewportGrid">
-        <canvas id="canvas2d"></canvas>
-        <div id="canvas3d"></div>
-        <div id="hint">Режим: Външна стена. Светла височина: 260 см.</div>
-        
-        <div id="propertiesPanel">
+        <canvas id="canvas2d" aria-label="Двумерен план, върху който се чертае"></canvas>
+        <div id="canvas3d" role="img" aria-label="Триизмерна визуализация на проекта"></div>
+        <div class="viewport-label viewport-label-2d"><strong>2D</strong><span>РАБОТЕН ПЛАН</span></div>
+        <div class="viewport-label viewport-label-3d"><strong>3D</strong><span>ОБЕМЕН ПРЕГЛЕД</span></div>
+        <div id="hint" role="status" aria-live="polite">Режим: Външна стена. Светла височина: 260 см.</div>
+
+        <div id="propertiesPanel" aria-live="polite">
             <h4>Свойства на елемент</h4>
             <div id="propContent">Кликнете върху елемент с инструмент "Избор", за да го редактирате.</div>
         </div>
@@ -136,7 +421,7 @@
     const LEVEL_HEIGHT = 2.60;
 
     const themes = [
-        { name: "Модерен Бял", wall: 0xffffff, floor: 0xe2e8f0, roof: 0x334155, bg: 0xdbeafe },
+        { name: "Модерен Бял", wall: 0xffffff, floor: 0xe2e8f0, roof: 0x334155, bg: 0xe8edf0 },
         { name: "Топъл Дървен Уют", wall: 0xfdfbf7, floor: 0xd97706, roof: 0x78350f, bg: 0xfef3c7 },
         { name: "Индустриален Лофт", wall: 0x94a3b8, floor: 0x334155, roof: 0x0f172a, bg: 0x1e293b }
     ];
@@ -187,7 +472,7 @@
     sunLight.castShadow = true;
     scene.add(sunLight);
 
-    const ground = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.9 }));
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshStandardMaterial({ color: 0xb7c2b5, roughness: 0.88 }));
     ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true;
     scene.add(ground);
 
@@ -575,7 +860,17 @@
         propertiesPanel.style.display = 'none';
         document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active')); 
         if(document.getElementById('btn-' + t)) document.getElementById('btn-' + t).classList.add('active'); 
-        hintBox.innerText = `Режим: ${t}.`;
+        const toolNames = {
+            select: 'Избор и свойства', eraser: 'Изтриване', 'outer-wall': 'Външна стена',
+            'inner-wall': 'Вътрешна стена', railing: 'Парапет', column: 'Колона',
+            'ext-door': 'Външна врата', 'int-door': 'Интериорна врата', 'san-door': 'Санитарна врата',
+            'french-window': 'Френски прозорец', 'san-window': 'Санитарен прозорец',
+            'kitchen-window': 'Кухненски прозорец', 'std-window': 'Стандартен прозорец',
+            stairs: 'Стълбище', sofa: 'Диван', bed: 'Легло', table: 'Маса', toilet: 'Тоалетна',
+            sink: 'Мивка', shower: 'Душ или вана', kitchen: 'Кухненски шкаф', fridge: 'Хладилник',
+            slab: 'Плоча или стая', roof: 'Покрив'
+        };
+        hintBox.innerText = `Активен инструмент: ${toolNames[t] || t}.`;
         draw2D(); 
     }
 
