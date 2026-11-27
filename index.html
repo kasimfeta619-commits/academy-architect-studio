@@ -112,10 +112,9 @@
         </div>
 
         <div class="hero-image-area">
-            <!-- Динамичен контейнер за видео или снимка -->
             <div class="hero-main-img" id="heroMediaContainer">
-                <video autoplay muted loop playsinline>
-                    <source src="assets/hero-video.mp4" type="video/mp4">
+                <video id="homeArchitectureVideo" muted loop playsinline preload="metadata" poster="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-CYleUf7FDSUkspJtbU5UK6LrMafceo.png" aria-label="Бавно видео представяне на архитектурен проект">
+                    <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/My_first_board_A_modern_two-story_house_with_a_white_and_wood_NOqlVS4n-7gUr2SeVKW5quJx310PYC6da6ObnJ9.mp4" type="video/mp4">
                     Вашият браузър не поддържа видео елемента.
                 </video>
             </div>
@@ -237,17 +236,35 @@
             }
         }
 
+        function configureHeroVideoPlayback(video) {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) {
+                video.autoplay = false;
+                video.pause();
+                return;
+            }
+
+            const applySlowPlayback = () => {
+                if (video.playbackRate !== 0.22) video.playbackRate = 0.22;
+                video.defaultPlaybackRate = 0.22;
+            };
+
+            video.addEventListener('loadedmetadata', applySlowPlayback, { once: true });
+            if (video.readyState >= 1) applySlowPlayback();
+            video.play().catch(() => {});
+        }
+
         document.addEventListener("DOMContentLoaded", async function() {
+            const homeHeroVideo = document.getElementById('homeArchitectureVideo');
+            if (homeHeroVideo) configureHeroVideoPlayback(homeHeroVideo);
+
             // Зареждане на динамичната Hero секция от Firebase
             try {
                 const heroDoc = await db.collection('siteSettings').doc('hero').get();
                 if (heroDoc.exists) {
                     const heroData = heroDoc.data();
-                    const mediaContainer = document.getElementById('heroMediaContainer');
                     const heroHeadingEl = document.querySelector('.hero-text-area h1');
                     const heroDescriptionEl = document.querySelector('.hero-text-area > p');
-                    const mediaUrl = heroData.videoUrl || heroData.mediaUrl;
-
                     if (heroData.title && heroHeadingEl) {
                         heroHeadingEl.removeAttribute('data-key');
                         heroHeadingEl.textContent = heroData.title;
@@ -255,40 +272,6 @@
                     if (heroData.subtitle && heroDescriptionEl) {
                         heroDescriptionEl.removeAttribute('data-key');
                         heroDescriptionEl.textContent = heroData.subtitle;
-                    }
-
-                    if (mediaUrl && mediaContainer) {
-                        if (heroData.mediaType === 'image') {
-                            const image = document.createElement('img');
-                            image.src = mediaUrl;
-                            image.alt = 'Studio presentation';
-                            image.style.cssText = 'width: 100%; height: 100%; object-fit: cover; border-radius: inherit;';
-                            mediaContainer.replaceChildren(image);
-                        } else {
-                            const youtubeMatch = mediaUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-                            if (youtubeMatch) {
-                                const embed = document.createElement('iframe');
-                                embed.src = `https://www.youtube-nocookie.com/embed/${youtubeMatch[1]}?autoplay=1&mute=1&loop=1&playlist=${youtubeMatch[1]}&playsinline=1`;
-                                embed.title = 'Studio presentation video';
-                                embed.allow = 'autoplay; encrypted-media; picture-in-picture';
-                                embed.allowFullscreen = true;
-                                embed.style.cssText = 'width: 100%; height: 100%; border: 0; border-radius: inherit;';
-                                mediaContainer.replaceChildren(embed);
-                            } else {
-                                const video = document.createElement('video');
-                                video.autoplay = true;
-                                video.muted = true;
-                                video.loop = true;
-                                video.playsInline = true;
-                                const source = document.createElement('source');
-                                source.src = mediaUrl;
-                                source.type = 'video/mp4';
-                                video.appendChild(source);
-                                mediaContainer.replaceChildren(video);
-                                video.playbackRate = 0.4;
-                                video.play().catch(() => {});
-                            }
-                        }
                     }
                 }
             } catch (err) {
